@@ -1,4 +1,4 @@
-import { authConfig, constantTimeEqual, COOKIE_NAME, createSession, passwordDigest, platformNext, SESSION_SECONDS } from '../lib/session';
+import { authConfig, constantTimeEqual, COOKIE_NAME, createSession, passwordDigest, platformNext, SESSION_SECONDS } from '../lib/session.js';
 
 export async function POST(request: Request): Promise<Response> {
   let form: FormData;

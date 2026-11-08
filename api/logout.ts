@@ -1,4 +1,4 @@
-import { COOKIE_NAME } from '../lib/session';
+import { COOKIE_NAME } from '../lib/session.js';
 
 export function GET(request: Request): Response {
   return new Response(null, { status: 303, headers: {

@@ -1,4 +1,4 @@
-import { COOKIE_NAME, verifySession } from './lib/session';
+import { COOKIE_NAME, verifySession } from './lib/session.js';
 
 export const config = { matcher: ['/plataforma', '/plataforma/:path*'] };
 
