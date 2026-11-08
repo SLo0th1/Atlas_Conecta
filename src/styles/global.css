@@ -16,3 +16,4 @@ details.card>summary{display:flex;align-items:center;gap:.6rem}details.card>summ
 @media(max-width:700px){.appbar{flex-wrap:nowrap;gap:.5rem;padding:.6rem;min-height:64px;position:sticky}.app-org,.user-name{display:none}.appbar #drawer-toggle{display:block;margin:0;padding:.5rem}.appbar #search-toggle{display:block;margin-left:auto;padding:.4rem .6rem}.appbar .global-search{display:none;position:absolute;top:100%;left:0;right:0;padding:.6rem;background:var(--surface);border-bottom:1px solid var(--line)}.appbar .global-search.search-open{display:flex}.app-user{margin-left:0}.appbar .submenu{right:.6rem}.sidebar{position:fixed;min-height:0;height:100dvh;overflow:auto}.side-links{position:static;max-height:none;overflow:visible}.sla-bar{flex-wrap:wrap}.sla-bar>div{flex:1 1 40%!important}}
 
 .form-grid>div{display:grid;gap:.4rem;align-content:start}
+

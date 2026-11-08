@@ -1,24 +1,29 @@
 ---
-import Base from '../layouts/Base.astro';
+import Base from '../layouts/Base.astro';import Icon from '../components/Icon.astro';
 ---
 <Base title="Entrar na plataforma">
   <meta slot="head" name="robots" content="noindex" />
-  <section class="prose">
+  <section class="login-layout"><div class="login-intro"><img class="logo-card" src="/brand/prefeitura-goiania.png" alt="Prefeitura de Goiânia" width="240" height="80"/><h2>Central de compras públicas</h2><p>Conecte planejamento, inteligência e resultados para a cidade.</p><ul><li><Icon name="box"/>Processos</li><li><Icon name="trend"/>Preços</li><li><Icon name="sparkles"/>Documentos com IA</li></ul><p>Ambiente de homologação · dados de exemplo</p></div><div class="login-form">
     <h1>Entrar na plataforma</h1>
     <p>Acesso restrito à equipe. Ambiente demonstrativo.</p>
     <p id="login-error" class="notice" role="alert" hidden>E-mail ou senha inválidos. Tente novamente.</p>
-    <form method="post" action="/api/login/" class="form-grid">
-      <div class="full"><label for="login-email">E-mail</label><input id="login-email" name="email" type="email" autocomplete="username" required /></div>
-      <div class="full"><label for="login-password">Senha</label><input id="login-password" name="senha" type="password" autocomplete="current-password" required /></div>
+    <form method="post" data-astro-reload action="/api/login/" class="form-grid">
+      <div class="full"><label for="login-email">E-mail</label><div class="input-icon"><Icon name="mail"/><input id="login-email" name="email" type="email" autocomplete="username" required /></div></div>
+      <div class="full"><label for="login-password">Senha</label><div class="input-icon"><Icon name="lock"/><input id="login-password" name="senha" type="password" autocomplete="current-password" required /><button type="button" id="password-toggle" aria-label="Mostrar senha" aria-pressed="false"><span class="password-eye"><Icon name="eye"/></span><span class="password-eye-off"><Icon name="eye-off"/></span></button></div></div>
       <input id="login-next" type="hidden" name="next" value="/plataforma/" />
-      <div class="full"><button type="submit">Entrar</button></div>
+      <div class="full"><button class="primary" type="submit">Entrar<Icon name="arrow-right" size={16}/></button></div>
     </form>
-  </section>
+<p><a href="/">Voltar ao site</a></p></div></section>
 </Base>
 <script>
+document.addEventListener('astro:page-load',()=>{
+
+  document.querySelector('#password-toggle')?.addEventListener('click',e=>{const b=e.currentTarget as HTMLButtonElement;const input=document.querySelector<HTMLInputElement>('#login-password')!;const show=input.type==='password';input.type=show?'text':'password';b.setAttribute('aria-pressed',String(show));b.setAttribute('aria-label',show?'Ocultar senha':'Mostrar senha')});
   const params = new URLSearchParams(location.search);
   const next = document.querySelector<HTMLInputElement>('#login-next');
   if (next) next.value = params.get('next') || '/plataforma/';
   const error = document.querySelector<HTMLElement>('#login-error');
   if (error && params.get('erro') === '1') error.hidden = false;
+
+});
 </script>

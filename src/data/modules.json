@@ -105,7 +105,6 @@
     "group": "Operação",
     "columns": [
       "ID",
-      "Code",
       "Objeto",
       "Processo",
       "Status",
@@ -116,7 +115,6 @@
     "rows": [
       [
         "GYN-001",
-        "GYN-001",
         "Alimentos para escolas",
         "PE 045/2026 – SME",
         "Em análise",
@@ -125,7 +123,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-002",
         "GYN-002",
         "Materiais para unidades de saúde",
         "PE 046/2026 – SMS",
@@ -136,7 +133,6 @@
       ],
       [
         "GYN-003",
-        "GYN-003",
         "Manutenção de praças",
         "PE 047/2026 – SEINFRA",
         "Concluído",
@@ -145,7 +141,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-004",
         "GYN-004",
         "Equipamentos de informática",
         "PE 048/2026 – SEMAD",
@@ -156,7 +151,6 @@
       ],
       [
         "GYN-005",
-        "GYN-005",
         "Mobiliário escolar",
         "PE 049/2026 – SME",
         "Em andamento",
@@ -165,7 +159,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-006",
         "GYN-006",
         "Limpeza de prédios públicos",
         "PE 050/2026 – SMS",
@@ -176,7 +169,6 @@
       ],
       [
         "GYN-007",
-        "GYN-007",
         "Serviços de jardinagem",
         "PE 051/2026 – SEINFRA",
         "Em análise",
@@ -185,7 +177,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-008",
         "GYN-008",
         "Material esportivo",
         "PE 052/2026 – SEMAD",
@@ -196,7 +187,6 @@
       ],
       [
         "GYN-009",
-        "GYN-009",
         "Transporte de materiais",
         "PE 053/2026 – SME",
         "Concluído",
@@ -205,7 +195,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-010",
         "GYN-010",
         "Papelaria sustentável",
         "PE 054/2026 – SMS",
@@ -216,7 +205,6 @@
       ],
       [
         "GYN-011",
-        "GYN-011",
         "Manutenção de iluminação",
         "PE 055/2026 – SEINFRA",
         "Em andamento",
@@ -225,7 +213,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-012",
         "GYN-012",
         "Uniformes escolares",
         "PE 056/2026 – SME",
@@ -244,7 +231,6 @@
     "group": "Operação",
     "columns": [
       "ID",
-      "Code",
       "Objeto",
       "Processo",
       "Status",
@@ -255,7 +241,6 @@
     "rows": [
       [
         "GYN-001",
-        "GYN-001",
         "Alimentos para escolas",
         "PE 045/2026 – SME",
         "Em análise",
@@ -264,7 +249,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-002",
         "GYN-002",
         "Materiais para unidades de saúde",
         "PE 046/2026 – SMS",
@@ -275,7 +259,6 @@
       ],
       [
         "GYN-003",
-        "GYN-003",
         "Manutenção de praças",
         "PE 047/2026 – SEINFRA",
         "Concluído",
@@ -284,7 +267,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-004",
         "GYN-004",
         "Equipamentos de informática",
         "PE 048/2026 – SEMAD",
@@ -295,7 +277,6 @@
       ],
       [
         "GYN-005",
-        "GYN-005",
         "Mobiliário escolar",
         "PE 049/2026 – SME",
         "Em andamento",
@@ -304,7 +285,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-006",
         "GYN-006",
         "Limpeza de prédios públicos",
         "PE 050/2026 – SMS",
@@ -315,7 +295,6 @@
       ],
       [
         "GYN-007",
-        "GYN-007",
         "Serviços de jardinagem",
         "PE 051/2026 – SEINFRA",
         "Em análise",
@@ -324,7 +303,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-008",
         "GYN-008",
         "Material esportivo",
         "PE 052/2026 – SEMAD",
@@ -335,7 +313,6 @@
       ],
       [
         "GYN-009",
-        "GYN-009",
         "Transporte de materiais",
         "PE 053/2026 – SME",
         "Concluído",
@@ -344,7 +321,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-010",
         "GYN-010",
         "Papelaria sustentável",
         "PE 054/2026 – SMS",
@@ -355,7 +331,6 @@
       ],
       [
         "GYN-011",
-        "GYN-011",
         "Manutenção de iluminação",
         "PE 055/2026 – SEINFRA",
         "Em andamento",
@@ -364,7 +339,6 @@
         "30/12/2026"
       ],
       [
-        "GYN-012",
         "GYN-012",
         "Uniformes escolares",
         "PE 056/2026 – SME",
@@ -1410,79 +1384,66 @@
     "group": "Automação",
     "columns": [
       "ID",
-      "Code",
       "Status",
       "Criado em"
     ],
     "rows": [
       [
         "GYN-001",
-        "GYN-001",
         "Em análise",
         "01/11/2026"
       ],
       [
-        "GYN-002",
         "GYN-002",
         "Em andamento",
         "02/11/2026"
       ],
       [
         "GYN-003",
-        "GYN-003",
         "Concluído",
         "03/11/2026"
       ],
       [
-        "GYN-004",
         "GYN-004",
         "Em análise",
         "04/11/2026"
       ],
       [
         "GYN-005",
-        "GYN-005",
         "Em andamento",
         "05/11/2026"
       ],
       [
-        "GYN-006",
         "GYN-006",
         "Concluído",
         "06/11/2026"
       ],
       [
         "GYN-007",
-        "GYN-007",
         "Em análise",
         "07/11/2026"
       ],
       [
-        "GYN-008",
         "GYN-008",
         "Em andamento",
         "08/11/2026"
       ],
       [
         "GYN-009",
-        "GYN-009",
         "Concluído",
         "09/11/2026"
       ],
       [
-        "GYN-010",
         "GYN-010",
         "Em análise",
         "10/11/2026"
       ],
       [
         "GYN-011",
-        "GYN-011",
         "Em andamento",
         "11/11/2026"
       ],
       [
-        "GYN-012",
         "GYN-012",
         "Concluído",
         "12/11/2026"
@@ -2026,7 +1987,6 @@
     "group": "Cadastros",
     "columns": [
       "ID",
-      "Code",
       "Nome",
       "Endereço",
       "CNPJ"
@@ -2034,13 +1994,11 @@
     "rows": [
       [
         "GYN-001",
-        "GYN-001",
         "Unidade Educação 1",
         "Rua Exemplo, 100 — Setor Central",
         "00.000.000/0000-00"
       ],
       [
-        "GYN-002",
         "GYN-002",
         "Unidade Saúde 2",
         "Rua Exemplo, 101 — Setor Central",
@@ -2048,13 +2006,11 @@
       ],
       [
         "GYN-003",
-        "GYN-003",
         "Unidade Infraestrutura 3",
         "Rua Exemplo, 102 — Setor Central",
         "00.000.000/0000-00"
       ],
       [
-        "GYN-004",
         "GYN-004",
         "Unidade Administração 4",
         "Rua Exemplo, 103 — Setor Central",
@@ -2062,13 +2018,11 @@
       ],
       [
         "GYN-005",
-        "GYN-005",
         "Unidade Educação 5",
         "Rua Exemplo, 104 — Setor Central",
         "00.000.000/0000-00"
       ],
       [
-        "GYN-006",
         "GYN-006",
         "Unidade Saúde 6",
         "Rua Exemplo, 105 — Setor Central",
@@ -2076,13 +2030,11 @@
       ],
       [
         "GYN-007",
-        "GYN-007",
         "Unidade Infraestrutura 7",
         "Rua Exemplo, 106 — Setor Central",
         "00.000.000/0000-00"
       ],
       [
-        "GYN-008",
         "GYN-008",
         "Unidade Administração 8",
         "Rua Exemplo, 107 — Setor Central",
@@ -2090,13 +2042,11 @@
       ],
       [
         "GYN-009",
-        "GYN-009",
         "Unidade Educação 9",
         "Rua Exemplo, 108 — Setor Central",
         "00.000.000/0000-00"
       ],
       [
-        "GYN-010",
         "GYN-010",
         "Unidade Saúde 10",
         "Rua Exemplo, 109 — Setor Central",
@@ -2104,13 +2054,11 @@
       ],
       [
         "GYN-011",
-        "GYN-011",
         "Unidade Infraestrutura 11",
         "Rua Exemplo, 110 — Setor Central",
         "00.000.000/0000-00"
       ],
       [
-        "GYN-012",
         "GYN-012",
         "Unidade Educação 12",
         "Rua Exemplo, 111 — Setor Central",
