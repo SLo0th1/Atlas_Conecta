@@ -1,6 +1,6 @@
 # Atlas Goiânia Conecta
 
-Projeto local em Astro 7.4.7 + TypeScript e CSS próprio. Site estático e protótipo navegável, sem backend e sem dependência de rede em tempo de execução. Identidade, SVGs e textos próprios; a referência foi utilizada para a estrutura dos módulos, colunas e campos.
+Projeto local em Astro 7.4.7 + TypeScript e CSS próprio. Site estático e protótipo navegável, com login da plataforma por Functions e Routing Middleware da Vercel. Identidade, SVGs e textos próprios; a referência foi utilizada para a estrutura dos módulos, colunas e campos.
 
 ## Como rodar
 
@@ -42,7 +42,7 @@ ASTRO_TELEMETRY_DISABLED=1 npm run build
 
 Todos os processos, valores, CNPJs, pessoas, fornecedores, secretarias associadas a registros, indicadores, SLAs e ofertas são inventados. O projeto não representa a Prefeitura de Goiânia e não utiliza dados operacionais dela. Diligências, embarcações e fluxos de marketplace do mapa também foram mantidos como demonstração; locais de entrega adaptam o módulo de portos ao contexto municipal.
 
-Busca, filtros, ordenação, paginação, visualização de registros, rascunhos de documentos e cesta funcionam no navegador. Ações de cadastro, exportação, configuração, negociação, envio e IA são simuladas e exibem **“protótipo: nada é gravado”**. Não há API, autenticação, geração real por IA ou transação. Os campos da referência são controles demonstrativos; valores e opções são exemplos, e não regras do sistema real.
+Busca, filtros, ordenação, paginação, visualização de registros, rascunhos de documentos e cesta funcionam no navegador. Ações de cadastro, exportação, configuração, negociação, envio e IA são simuladas e exibem **“protótipo: nada é gravado”**. As APIs de login/logout autenticam o acesso à plataforma na Vercel; não há geração real por IA ou transação. Os campos da referência são controles demonstrativos; valores e opções são exemplos, e não regras do sistema real.
 
 A preferência de tema fica no `localStorage`. A cesta usa `sessionStorage` apenas para permitir a navegação entre catálogo, oferta e cotação e desaparece ao encerrar a sessão da aba. Nenhum dado é enviado a um servidor. O formulário público valida os campos e prepara um link `mailto:`, sem envio automático. A abertura de um aplicativo de e-mail depende da configuração do dispositivo.
 
@@ -64,3 +64,7 @@ Playwright foi executado: Chromium 0 passaram/17 falharam ao iniciar (`bootstrap
 O preview padrão usa 4321. `--ignore-lock` mantém Astro 7 em primeiro plano, evitando o modo automático de segundo plano em agentes. Para porta ocupada: `PLAYWRIGHT_PORT=4322 npm test` (porta da execução registrada). A primeira tentativa deixou um preview em segundo plano em 4321, PID 52487; o ambiente recusou encerrá-lo com EPERM. Encerrar pelo terminal do usuário com `npx astro preview stop`.
 
 A plataforma tem barra própria, busca global nos registros do painel, notificações ilustrativas, menu da conta e gaveta móvel com Escape e ciclo de foco. Tabelas têm etiquetas de status e primeira coluna fixa na rolagem móvel. Insights têm resumos e corpos distintos.
+
+## Login da plataforma
+
+Configurar `AUTH_EMAIL`, `AUTH_PASSWORD_SHA256` (SHA-256 hexadecimal minúsculo da senha) e `AUTH_SECRET` na Vercel. Nenhuma credencial deve ser incluída no código. Configuração ausente bloqueia o login. Sessão de 8 horas em cookie HttpOnly e Secure; logout em `/api/logout`. O preview estático local não executa a autenticação da Vercel. Instruções para trocar a senha em `../ENTREGA-CODEX.md`, seção Rodada 3.

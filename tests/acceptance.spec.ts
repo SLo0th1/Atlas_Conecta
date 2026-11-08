@@ -36,3 +36,12 @@ test('rodada 2: barra móvel em uma linha e busca expansível',async({page})=>{
 test('rodada 2: sidebar até o fim e summary sem marcador nativo',async({page})=>{
  await page.setViewportSize({width:1280,height:700});await page.goto('/plataforma/gestao-publica/');const sidebar=await page.locator('.sidebar').boundingBox();const workspace=await page.locator('.workspace').boundingBox();expect(sidebar!.y+sidebar!.height).toBeCloseTo(workspace!.y+workspace!.height,0);for(const summary of await page.locator('summary').all())expect(await summary.evaluate(e=>getComputedStyle(e).listStyleType)).toBe('none');await page.screenshot({path:test.info().outputPath('rodada2-sidebar-fullpage.png'),fullPage:true});
 });
+
+ test('login tem campos acessíveis e passa no axe', async ({page}) => {
+  await page.goto('/entrar/?erro=1&next=%2Fplataforma%2Fprocessos%2F');
+  await expect(page.getByLabel('E-mail', {exact:true})).toHaveAttribute('autocomplete', 'username');
+  await expect(page.getByLabel('Senha', {exact:true})).toHaveAttribute('type', 'password');
+  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.locator('input[name="next"]')).toHaveValue('/plataforma/processos/');
+  expect((await new AxeBuilder({page}).analyze()).violations).toEqual([]);
+});
