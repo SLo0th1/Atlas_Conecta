@@ -1,0 +1,4 @@
+---
+const {title='Volume de processos por mês',stages=false}=Astro.props;const values=stages?[10,8,9,7]:[12,18,15,24,29,34];const labels=stages?['Planejamento','Pesquisa','Revisão','Publicação']:['Jun','Jul','Ago','Set','Out','Nov'];
+---
+<article class="card"><h2 style="font-size:1.2rem">{title}</h2><svg class="chart" viewBox="0 0 600 180" role="img" aria-label={`${title}: ${labels.map((l,i)=>`${l} ${values[i]}`).join(", ")}. Dados de exemplo.`}><path d="M35 140H580" stroke="currentColor" opacity=".3"/>{values.map((v,i)=><g><rect x={55+i*(stages?140:85)} y={140-v*3} width="45" height={v*3} rx="4" fill="var(--accent)"/><text x={77+i*(stages?140:85)} y={130-v*3} fill="currentColor" text-anchor="middle" font-size="12">{v}</text><text x={77+i*(stages?140:85)} y="165" fill="currentColor" text-anchor="middle" font-size="12">{labels[i]}</text></g>)}</svg><small>Dados de exemplo · 2026</small></article>

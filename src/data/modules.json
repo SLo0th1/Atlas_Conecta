@@ -1,0 +1,2651 @@
+[
+  {
+    "slug": "",
+    "title": "Painel",
+    "group": "Operação",
+    "columns": [
+      "CÓDIGO",
+      "PROCESSO",
+      "OBJETO",
+      "STATUS",
+      "AÇÃO"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "PE 045/2026 – SME",
+        "Alimentos para escolas",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "GYN-002",
+        "PE 046/2026 – SMS",
+        "Materiais para unidades de saúde",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "GYN-003",
+        "PE 047/2026 – SEINFRA",
+        "Manutenção de praças",
+        "Concluído",
+        "Visualizar"
+      ],
+      [
+        "GYN-004",
+        "PE 048/2026 – SEMAD",
+        "Equipamentos de informática",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "GYN-005",
+        "PE 049/2026 – SME",
+        "Mobiliário escolar",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "GYN-006",
+        "PE 050/2026 – SMS",
+        "Medicamentos básicos",
+        "Concluído",
+        "Visualizar"
+      ],
+      [
+        "GYN-007",
+        "PE 051/2026 – SEINFRA",
+        "Reforma de calçadas",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "GYN-008",
+        "PE 052/2026 – SEMAD",
+        "Material de expediente",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "GYN-009",
+        "PE 053/2026 – SME",
+        "Transporte escolar",
+        "Concluído",
+        "Visualizar"
+      ],
+      [
+        "GYN-010",
+        "PE 054/2026 – SMS",
+        "Equipamentos hospitalares",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "GYN-011",
+        "PE 055/2026 – SEINFRA",
+        "Manutenção de iluminação",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "GYN-012",
+        "PE 056/2026 – SME",
+        "Uniformes escolares",
+        "Concluído",
+        "Visualizar"
+      ]
+    ],
+    "fields": [],
+    "source": "01"
+  },
+  {
+    "slug": "processos",
+    "title": "Processos / Licitações",
+    "group": "Operação",
+    "columns": [
+      "ID",
+      "Code",
+      "Objeto",
+      "Processo",
+      "Status",
+      "Comprador(a)",
+      "Criado em",
+      "Expira em"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "GYN-001",
+        "Alimentos para escolas",
+        "PE 045/2026 – SME",
+        "Em análise",
+        "Educação",
+        "01/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-002",
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "PE 046/2026 – SMS",
+        "Em andamento",
+        "Saúde",
+        "02/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-003",
+        "GYN-003",
+        "Manutenção de praças",
+        "PE 047/2026 – SEINFRA",
+        "Concluído",
+        "Infraestrutura",
+        "03/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-004",
+        "GYN-004",
+        "Equipamentos de informática",
+        "PE 048/2026 – SEMAD",
+        "Em análise",
+        "Administração",
+        "04/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-005",
+        "GYN-005",
+        "Mobiliário escolar",
+        "PE 049/2026 – SME",
+        "Em andamento",
+        "Educação",
+        "05/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-006",
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "PE 050/2026 – SMS",
+        "Concluído",
+        "Saúde",
+        "06/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-007",
+        "GYN-007",
+        "Serviços de jardinagem",
+        "PE 051/2026 – SEINFRA",
+        "Em análise",
+        "Infraestrutura",
+        "07/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-008",
+        "GYN-008",
+        "Material esportivo",
+        "PE 052/2026 – SEMAD",
+        "Em andamento",
+        "Administração",
+        "08/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-009",
+        "GYN-009",
+        "Transporte de materiais",
+        "PE 053/2026 – SME",
+        "Concluído",
+        "Educação",
+        "09/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-010",
+        "GYN-010",
+        "Papelaria sustentável",
+        "PE 054/2026 – SMS",
+        "Em análise",
+        "Saúde",
+        "10/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-011",
+        "GYN-011",
+        "Manutenção de iluminação",
+        "PE 055/2026 – SEINFRA",
+        "Em andamento",
+        "Infraestrutura",
+        "11/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-012",
+        "GYN-012",
+        "Uniformes escolares",
+        "PE 056/2026 – SME",
+        "Concluído",
+        "Educação",
+        "12/11/2026",
+        "30/12/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "04"
+  },
+  {
+    "slug": "cotacoes",
+    "title": "Cotações",
+    "group": "Operação",
+    "columns": [
+      "ID",
+      "Code",
+      "Objeto",
+      "Processo",
+      "Status",
+      "Comprador(a)",
+      "Criado em",
+      "Expira em"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "GYN-001",
+        "Alimentos para escolas",
+        "PE 045/2026 – SME",
+        "Em análise",
+        "Educação",
+        "01/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-002",
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "PE 046/2026 – SMS",
+        "Em andamento",
+        "Saúde",
+        "02/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-003",
+        "GYN-003",
+        "Manutenção de praças",
+        "PE 047/2026 – SEINFRA",
+        "Concluído",
+        "Infraestrutura",
+        "03/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-004",
+        "GYN-004",
+        "Equipamentos de informática",
+        "PE 048/2026 – SEMAD",
+        "Em análise",
+        "Administração",
+        "04/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-005",
+        "GYN-005",
+        "Mobiliário escolar",
+        "PE 049/2026 – SME",
+        "Em andamento",
+        "Educação",
+        "05/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-006",
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "PE 050/2026 – SMS",
+        "Concluído",
+        "Saúde",
+        "06/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-007",
+        "GYN-007",
+        "Serviços de jardinagem",
+        "PE 051/2026 – SEINFRA",
+        "Em análise",
+        "Infraestrutura",
+        "07/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-008",
+        "GYN-008",
+        "Material esportivo",
+        "PE 052/2026 – SEMAD",
+        "Em andamento",
+        "Administração",
+        "08/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-009",
+        "GYN-009",
+        "Transporte de materiais",
+        "PE 053/2026 – SME",
+        "Concluído",
+        "Educação",
+        "09/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-010",
+        "GYN-010",
+        "Papelaria sustentável",
+        "PE 054/2026 – SMS",
+        "Em análise",
+        "Saúde",
+        "10/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-011",
+        "GYN-011",
+        "Manutenção de iluminação",
+        "PE 055/2026 – SEINFRA",
+        "Em andamento",
+        "Infraestrutura",
+        "11/11/2026",
+        "30/12/2026"
+      ],
+      [
+        "GYN-012",
+        "GYN-012",
+        "Uniformes escolares",
+        "PE 056/2026 – SME",
+        "Concluído",
+        "Educação",
+        "12/11/2026",
+        "30/12/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "21"
+  },
+  {
+    "slug": "solicitacoes",
+    "title": "Solicitações",
+    "group": "Operação",
+    "columns": [
+      "ID",
+      "Objeto",
+      "Documento",
+      "Data e hora",
+      "Status documento",
+      "Status solicitação"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "Alimentos para escolas",
+        "01/11/2026",
+        "Em análise",
+        "Em análise"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "Materiais para unidades de saúde",
+        "02/11/2026",
+        "Em andamento",
+        "Em andamento"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "Manutenção de praças",
+        "03/11/2026",
+        "Concluído",
+        "Concluído"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "Equipamentos de informática",
+        "04/11/2026",
+        "Em análise",
+        "Em análise"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "Mobiliário escolar",
+        "05/11/2026",
+        "Em andamento",
+        "Em andamento"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "Limpeza de prédios públicos",
+        "06/11/2026",
+        "Concluído",
+        "Concluído"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "Serviços de jardinagem",
+        "07/11/2026",
+        "Em análise",
+        "Em análise"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "Material esportivo",
+        "08/11/2026",
+        "Em andamento",
+        "Em andamento"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "Transporte de materiais",
+        "09/11/2026",
+        "Concluído",
+        "Concluído"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "Papelaria sustentável",
+        "10/11/2026",
+        "Em análise",
+        "Em análise"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "Manutenção de iluminação",
+        "11/11/2026",
+        "Em andamento",
+        "Em andamento"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "Uniformes escolares",
+        "12/11/2026",
+        "Concluído",
+        "Concluído"
+      ]
+    ],
+    "fields": [],
+    "source": "06"
+  },
+  {
+    "slug": "recursos",
+    "title": "Recursos",
+    "group": "Operação",
+    "columns": [
+      "SOLICITAÇÃO / LICITAÇÃO",
+      "TIPO",
+      "DATA",
+      "SITUAÇÃO",
+      "AÇÃO"
+    ],
+    "rows": [
+      [
+        "PE 045/2026 – SME",
+        "Compra",
+        "01/11/2026",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "PE 046/2026 – SMS",
+        "Serviço",
+        "02/11/2026",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "PE 047/2026 – SEINFRA",
+        "Compra",
+        "03/11/2026",
+        "Concluído",
+        "Visualizar"
+      ],
+      [
+        "PE 048/2026 – SEMAD",
+        "Serviço",
+        "04/11/2026",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "PE 049/2026 – SME",
+        "Compra",
+        "05/11/2026",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "PE 050/2026 – SMS",
+        "Serviço",
+        "06/11/2026",
+        "Concluído",
+        "Visualizar"
+      ],
+      [
+        "PE 051/2026 – SEINFRA",
+        "Compra",
+        "07/11/2026",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "PE 052/2026 – SEMAD",
+        "Serviço",
+        "08/11/2026",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "PE 053/2026 – SME",
+        "Compra",
+        "09/11/2026",
+        "Concluído",
+        "Visualizar"
+      ],
+      [
+        "PE 054/2026 – SMS",
+        "Serviço",
+        "10/11/2026",
+        "Em análise",
+        "Visualizar"
+      ],
+      [
+        "PE 055/2026 – SEINFRA",
+        "Compra",
+        "11/11/2026",
+        "Em andamento",
+        "Visualizar"
+      ],
+      [
+        "PE 056/2026 – SME",
+        "Serviço",
+        "12/11/2026",
+        "Concluído",
+        "Visualizar"
+      ]
+    ],
+    "fields": [],
+    "source": "09"
+  },
+  {
+    "slug": "diligencias",
+    "title": "Diligências",
+    "group": "Operação",
+    "columns": [
+      "Código",
+      "Descrição",
+      "Status",
+      "Atualizado"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "Em análise",
+        "01/11/2026"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "Em andamento",
+        "02/11/2026"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "Concluído",
+        "03/11/2026"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "Em análise",
+        "04/11/2026"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "Em andamento",
+        "05/11/2026"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "Concluído",
+        "06/11/2026"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "Em análise",
+        "07/11/2026"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "Em andamento",
+        "08/11/2026"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "Concluído",
+        "09/11/2026"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "Em análise",
+        "10/11/2026"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "Em andamento",
+        "11/11/2026"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "Concluído",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "02"
+  },
+  {
+    "slug": "documentos",
+    "title": "Documentos da licitação com IA",
+    "group": "Planejamento",
+    "columns": [
+      "Código",
+      "Objeto",
+      "Tipo",
+      "Data"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "ETP",
+        "01/11/2026"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "DFD",
+        "02/11/2026"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "TR",
+        "03/11/2026"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "EDITAL",
+        "04/11/2026"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "ETP",
+        "05/11/2026"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "DFD",
+        "06/11/2026"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "TR",
+        "07/11/2026"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "EDITAL",
+        "08/11/2026"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "ETP",
+        "09/11/2026"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "DFD",
+        "10/11/2026"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "TR",
+        "11/11/2026"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "EDITAL",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "05"
+  },
+  {
+    "slug": "gestao-publica",
+    "title": "Gestão Pública",
+    "group": "Planejamento",
+    "columns": [
+      "PROCESSO",
+      "OBJETO",
+      "SECRETARIA",
+      "ETAPA",
+      "SITUAÇÃO",
+      "ATUALIZADO",
+      "Prioridade",
+      "SLA",
+      "Saúde da carteira"
+    ],
+    "rows": [
+      [
+        "PE 045/2026 – SME",
+        "Alimentos para escolas",
+        "Educação",
+        "Planejamento",
+        "Em análise",
+        "01/11/2026",
+        "Alta",
+        "Vencido",
+        "Atenção"
+      ],
+      [
+        "PE 046/2026 – SMS",
+        "Materiais para unidades de saúde",
+        "Saúde",
+        "Pesquisa de preços",
+        "Em andamento",
+        "02/11/2026",
+        "Normal",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 047/2026 – SEINFRA",
+        "Manutenção de praças",
+        "Infraestrutura",
+        "Revisão técnica",
+        "Concluído",
+        "03/11/2026",
+        "Normal",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 048/2026 – SEMAD",
+        "Equipamentos de informática",
+        "Administração",
+        "Planejamento",
+        "Em análise",
+        "04/11/2026",
+        "Alta",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 049/2026 – SME",
+        "Mobiliário escolar",
+        "Educação",
+        "Pesquisa de preços",
+        "Em andamento",
+        "05/11/2026",
+        "Normal",
+        "Vencido",
+        "Atenção"
+      ],
+      [
+        "PE 050/2026 – SMS",
+        "Limpeza de prédios públicos",
+        "Saúde",
+        "Revisão técnica",
+        "Concluído",
+        "06/11/2026",
+        "Normal",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 051/2026 – SEINFRA",
+        "Serviços de jardinagem",
+        "Infraestrutura",
+        "Planejamento",
+        "Em análise",
+        "07/11/2026",
+        "Alta",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 052/2026 – SEMAD",
+        "Material esportivo",
+        "Administração",
+        "Pesquisa de preços",
+        "Em andamento",
+        "08/11/2026",
+        "Normal",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 053/2026 – SME",
+        "Transporte de materiais",
+        "Educação",
+        "Revisão técnica",
+        "Concluído",
+        "09/11/2026",
+        "Normal",
+        "Vencido",
+        "Atenção"
+      ],
+      [
+        "PE 054/2026 – SMS",
+        "Papelaria sustentável",
+        "Saúde",
+        "Planejamento",
+        "Em análise",
+        "10/11/2026",
+        "Alta",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 055/2026 – SEINFRA",
+        "Manutenção de iluminação",
+        "Infraestrutura",
+        "Pesquisa de preços",
+        "Em andamento",
+        "11/11/2026",
+        "Normal",
+        "Em dia",
+        "Saudável"
+      ],
+      [
+        "PE 056/2026 – SME",
+        "Uniformes escolares",
+        "Educação",
+        "Revisão técnica",
+        "Concluído",
+        "12/11/2026",
+        "Normal",
+        "Em dia",
+        "Saudável"
+      ]
+    ],
+    "fields": [
+      "data_inicio:date ()",
+      "data_fim:date ()",
+      "status:select-one ()",
+      "prioridade:select-one ()",
+      "equipe:select-one ()"
+    ],
+    "source": "07"
+  },
+  {
+    "slug": "pareceres",
+    "title": "Pareceres técnicos",
+    "group": "Planejamento",
+    "columns": [
+      "RC",
+      "Fornecedor",
+      "Resposta",
+      "Data",
+      "Status"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Cerrado Suprimentos (fictício)",
+        "Alimentos para escolas",
+        "01/11/2026",
+        "Em análise"
+      ],
+      [
+        "GYN-002",
+        "Ipê Serviços (fictício)",
+        "Materiais para unidades de saúde",
+        "02/11/2026",
+        "Em andamento"
+      ],
+      [
+        "GYN-003",
+        "Buriti Comércio (fictício)",
+        "Manutenção de praças",
+        "03/11/2026",
+        "Concluído"
+      ],
+      [
+        "GYN-004",
+        "Cerrado Suprimentos (fictício)",
+        "Equipamentos de informática",
+        "04/11/2026",
+        "Em análise"
+      ],
+      [
+        "GYN-005",
+        "Ipê Serviços (fictício)",
+        "Mobiliário escolar",
+        "05/11/2026",
+        "Em andamento"
+      ],
+      [
+        "GYN-006",
+        "Buriti Comércio (fictício)",
+        "Limpeza de prédios públicos",
+        "06/11/2026",
+        "Concluído"
+      ],
+      [
+        "GYN-007",
+        "Cerrado Suprimentos (fictício)",
+        "Serviços de jardinagem",
+        "07/11/2026",
+        "Em análise"
+      ],
+      [
+        "GYN-008",
+        "Ipê Serviços (fictício)",
+        "Material esportivo",
+        "08/11/2026",
+        "Em andamento"
+      ],
+      [
+        "GYN-009",
+        "Buriti Comércio (fictício)",
+        "Transporte de materiais",
+        "09/11/2026",
+        "Concluído"
+      ],
+      [
+        "GYN-010",
+        "Cerrado Suprimentos (fictício)",
+        "Papelaria sustentável",
+        "10/11/2026",
+        "Em análise"
+      ],
+      [
+        "GYN-011",
+        "Ipê Serviços (fictício)",
+        "Manutenção de iluminação",
+        "11/11/2026",
+        "Em andamento"
+      ],
+      [
+        "GYN-012",
+        "Buriti Comércio (fictício)",
+        "Uniformes escolares",
+        "12/11/2026",
+        "Concluído"
+      ]
+    ],
+    "fields": [],
+    "source": "08"
+  },
+  {
+    "slug": "banco-de-precos",
+    "title": "Banco de preços",
+    "group": "Preços",
+    "columns": [
+      "Edital",
+      "Número do item",
+      "Data compra",
+      "UF",
+      "Município",
+      "UASG",
+      "Fornecedor",
+      "Objeto da compra",
+      "Descrição detalhada do item",
+      "UND",
+      "Quantidade",
+      "Preço unitário"
+    ],
+    "rows": [
+      [
+        "PE 045/2026 – SME",
+        1,
+        "01/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Cerrado Suprimentos (fictício)",
+        "Alimentos para escolas",
+        "Alimentos para escolas — especificação demonstrativa",
+        "UN",
+        100,
+        42.5
+      ],
+      [
+        "PE 046/2026 – SMS",
+        2,
+        "02/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Ipê Serviços (fictício)",
+        "Materiais para unidades de saúde",
+        "Materiais para unidades de saúde — especificação demonstrativa",
+        "UN",
+        120,
+        56.2
+      ],
+      [
+        "PE 047/2026 – SEINFRA",
+        3,
+        "03/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Buriti Comércio (fictício)",
+        "Manutenção de praças",
+        "Manutenção de praças — especificação demonstrativa",
+        "UN",
+        140,
+        69.9
+      ],
+      [
+        "PE 048/2026 – SEMAD",
+        4,
+        "04/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Cerrado Suprimentos (fictício)",
+        "Equipamentos de informática",
+        "Equipamentos de informática — especificação demonstrativa",
+        "UN",
+        160,
+        83.6
+      ],
+      [
+        "PE 049/2026 – SME",
+        5,
+        "05/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Ipê Serviços (fictício)",
+        "Mobiliário escolar",
+        "Mobiliário escolar — especificação demonstrativa",
+        "UN",
+        180,
+        97.3
+      ],
+      [
+        "PE 050/2026 – SMS",
+        6,
+        "06/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Buriti Comércio (fictício)",
+        "Limpeza de prédios públicos",
+        "Medicamentos básicos — especificação demonstrativa",
+        "UN",
+        200,
+        111.0
+      ],
+      [
+        "PE 051/2026 – SEINFRA",
+        7,
+        "07/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Cerrado Suprimentos (fictício)",
+        "Serviços de jardinagem",
+        "Reforma de calçadas — especificação demonstrativa",
+        "UN",
+        220,
+        124.7
+      ],
+      [
+        "PE 052/2026 – SEMAD",
+        8,
+        "08/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Ipê Serviços (fictício)",
+        "Material esportivo",
+        "Material de expediente — especificação demonstrativa",
+        "UN",
+        240,
+        138.4
+      ],
+      [
+        "PE 053/2026 – SME",
+        9,
+        "09/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Buriti Comércio (fictício)",
+        "Transporte de materiais",
+        "Transporte escolar — especificação demonstrativa",
+        "UN",
+        260,
+        152.1
+      ],
+      [
+        "PE 054/2026 – SMS",
+        10,
+        "10/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Cerrado Suprimentos (fictício)",
+        "Papelaria sustentável",
+        "Equipamentos hospitalares — especificação demonstrativa",
+        "UN",
+        280,
+        165.8
+      ],
+      [
+        "PE 055/2026 – SEINFRA",
+        11,
+        "11/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Ipê Serviços (fictício)",
+        "Manutenção de iluminação",
+        "Manutenção de iluminação — especificação demonstrativa",
+        "UN",
+        300,
+        179.5
+      ],
+      [
+        "PE 056/2026 – SME",
+        12,
+        "12/11/2026",
+        "GO",
+        "Goiânia",
+        "000000 (exemplo)",
+        "Buriti Comércio (fictício)",
+        "Uniformes escolares",
+        "Uniformes escolares — especificação demonstrativa",
+        "UN",
+        320,
+        193.2
+      ]
+    ],
+    "fields": [],
+    "source": "10"
+  },
+  {
+    "slug": "atas",
+    "title": "Ata de preços",
+    "group": "Preços",
+    "columns": [
+      "Ata",
+      "Compra",
+      "Vigência",
+      "UASG gerenciadora",
+      "PDM",
+      "Item",
+      "Descrição",
+      "Fornecedor",
+      "Quantidade homologada",
+      "Quantidade empenhada",
+      "Valor unitário",
+      "Valor total"
+    ],
+    "rows": [
+      [
+        "ARP 001/2026",
+        "PE 045/2026 – SME",
+        "30/10/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        1,
+        "Alimentos para escolas",
+        "Cerrado Suprimentos (fictício)",
+        100,
+        100,
+        42.5,
+        4250.0
+      ],
+      [
+        "ARP 002/2026",
+        "PE 046/2026 – SMS",
+        "30/11/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        2,
+        "Materiais para unidades de saúde",
+        "Ipê Serviços (fictício)",
+        120,
+        120,
+        56.2,
+        6744.0
+      ],
+      [
+        "ARP 003/2026",
+        "PE 047/2026 – SEINFRA",
+        "30/06/2027",
+        "000000 (exemplo)",
+        "Material municipal",
+        3,
+        "Manutenção de praças",
+        "Buriti Comércio (fictício)",
+        140,
+        140,
+        69.9,
+        9786.0
+      ],
+      [
+        "ARP 004/2026",
+        "PE 048/2026 – SEMAD",
+        "30/10/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        4,
+        "Equipamentos de informática",
+        "Cerrado Suprimentos (fictício)",
+        160,
+        160,
+        83.6,
+        13376.0
+      ],
+      [
+        "ARP 005/2026",
+        "PE 049/2026 – SME",
+        "30/11/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        5,
+        "Mobiliário escolar",
+        "Ipê Serviços (fictício)",
+        180,
+        180,
+        97.3,
+        17514.0
+      ],
+      [
+        "ARP 006/2026",
+        "PE 050/2026 – SMS",
+        "30/06/2027",
+        "000000 (exemplo)",
+        "Material municipal",
+        6,
+        "Limpeza de prédios públicos",
+        "Buriti Comércio (fictício)",
+        200,
+        200,
+        111.0,
+        22200.0
+      ],
+      [
+        "ARP 007/2026",
+        "PE 051/2026 – SEINFRA",
+        "30/10/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        7,
+        "Serviços de jardinagem",
+        "Cerrado Suprimentos (fictício)",
+        220,
+        220,
+        124.7,
+        27434.0
+      ],
+      [
+        "ARP 008/2026",
+        "PE 052/2026 – SEMAD",
+        "30/11/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        8,
+        "Material esportivo",
+        "Ipê Serviços (fictício)",
+        240,
+        240,
+        138.4,
+        33216.0
+      ],
+      [
+        "ARP 009/2026",
+        "PE 053/2026 – SME",
+        "30/06/2027",
+        "000000 (exemplo)",
+        "Material municipal",
+        9,
+        "Transporte de materiais",
+        "Buriti Comércio (fictício)",
+        260,
+        260,
+        152.1,
+        39546.0
+      ],
+      [
+        "ARP 010/2026",
+        "PE 054/2026 – SMS",
+        "30/10/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        10,
+        "Papelaria sustentável",
+        "Cerrado Suprimentos (fictício)",
+        280,
+        280,
+        165.8,
+        46424.0
+      ],
+      [
+        "ARP 011/2026",
+        "PE 055/2026 – SEINFRA",
+        "30/11/2026",
+        "000000 (exemplo)",
+        "Material municipal",
+        11,
+        "Manutenção de iluminação",
+        "Ipê Serviços (fictício)",
+        300,
+        300,
+        179.5,
+        53850.0
+      ],
+      [
+        "ARP 012/2026",
+        "PE 056/2026 – SME",
+        "30/06/2027",
+        "000000 (exemplo)",
+        "Material municipal",
+        12,
+        "Uniformes escolares",
+        "Buriti Comércio (fictício)",
+        320,
+        320,
+        193.2,
+        61824.0
+      ]
+    ],
+    "fields": [],
+    "source": "11"
+  },
+  {
+    "slug": "piloto-automatico",
+    "title": "Piloto automático",
+    "group": "Automação",
+    "columns": [
+      "ID",
+      "Code",
+      "Status",
+      "Criado em"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "GYN-001",
+        "Em análise",
+        "01/11/2026"
+      ],
+      [
+        "GYN-002",
+        "GYN-002",
+        "Em andamento",
+        "02/11/2026"
+      ],
+      [
+        "GYN-003",
+        "GYN-003",
+        "Concluído",
+        "03/11/2026"
+      ],
+      [
+        "GYN-004",
+        "GYN-004",
+        "Em análise",
+        "04/11/2026"
+      ],
+      [
+        "GYN-005",
+        "GYN-005",
+        "Em andamento",
+        "05/11/2026"
+      ],
+      [
+        "GYN-006",
+        "GYN-006",
+        "Concluído",
+        "06/11/2026"
+      ],
+      [
+        "GYN-007",
+        "GYN-007",
+        "Em análise",
+        "07/11/2026"
+      ],
+      [
+        "GYN-008",
+        "GYN-008",
+        "Em andamento",
+        "08/11/2026"
+      ],
+      [
+        "GYN-009",
+        "GYN-009",
+        "Concluído",
+        "09/11/2026"
+      ],
+      [
+        "GYN-010",
+        "GYN-010",
+        "Em análise",
+        "10/11/2026"
+      ],
+      [
+        "GYN-011",
+        "GYN-011",
+        "Em andamento",
+        "11/11/2026"
+      ],
+      [
+        "GYN-012",
+        "GYN-012",
+        "Concluído",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "12"
+  },
+  {
+    "slug": "marketplace",
+    "title": "Marketplace",
+    "group": "Mercado",
+    "columns": [
+      "Código",
+      "Descrição",
+      "Status",
+      "Atualizado"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "Em análise",
+        "01/11/2026"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "Em andamento",
+        "02/11/2026"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "Concluído",
+        "03/11/2026"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "Em análise",
+        "04/11/2026"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "Em andamento",
+        "05/11/2026"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "Concluído",
+        "06/11/2026"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "Em análise",
+        "07/11/2026"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "Em andamento",
+        "08/11/2026"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "Concluído",
+        "09/11/2026"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "Em análise",
+        "10/11/2026"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "Em andamento",
+        "11/11/2026"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "Concluído",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [
+      "q:text (Buscar produtos, serviços, marcas ou fornecedores)",
+      "category:select-one (Categoria)",
+      "state:select-one (UF atendida)",
+      "national:checkbox (Atendimento nacional)"
+    ],
+    "source": "03"
+  },
+  {
+    "slug": "minha-cotacao",
+    "title": "Minha cotação",
+    "group": "Mercado",
+    "columns": [
+      "Código",
+      "Descrição",
+      "Status",
+      "Atualizado"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "Em análise",
+        "01/11/2026"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "Em andamento",
+        "02/11/2026"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "Concluído",
+        "03/11/2026"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "Em análise",
+        "04/11/2026"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "Em andamento",
+        "05/11/2026"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "Concluído",
+        "06/11/2026"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "Em análise",
+        "07/11/2026"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "Em andamento",
+        "08/11/2026"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "Concluído",
+        "09/11/2026"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "Em análise",
+        "10/11/2026"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "Em andamento",
+        "11/11/2026"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "Concluído",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "23"
+  },
+  {
+    "slug": "pedidos",
+    "title": "Solicitações enviadas",
+    "group": "Mercado",
+    "columns": [
+      "Número",
+      "Tipo",
+      "Fornecedor",
+      "Situação",
+      "Data"
+    ],
+    "rows": [
+      [
+        "Alimentos para escolas",
+        "Compra",
+        "Cerrado Suprimentos (fictício)",
+        "Em análise",
+        "01/11/2026"
+      ],
+      [
+        "Materiais para unidades de saúde",
+        "Serviço",
+        "Ipê Serviços (fictício)",
+        "Em andamento",
+        "02/11/2026"
+      ],
+      [
+        "Manutenção de praças",
+        "Compra",
+        "Buriti Comércio (fictício)",
+        "Concluído",
+        "03/11/2026"
+      ],
+      [
+        "Equipamentos de informática",
+        "Serviço",
+        "Cerrado Suprimentos (fictício)",
+        "Em análise",
+        "04/11/2026"
+      ],
+      [
+        "Mobiliário escolar",
+        "Compra",
+        "Ipê Serviços (fictício)",
+        "Em andamento",
+        "05/11/2026"
+      ],
+      [
+        "Limpeza de prédios públicos",
+        "Serviço",
+        "Buriti Comércio (fictício)",
+        "Concluído",
+        "06/11/2026"
+      ],
+      [
+        "Serviços de jardinagem",
+        "Compra",
+        "Cerrado Suprimentos (fictício)",
+        "Em análise",
+        "07/11/2026"
+      ],
+      [
+        "Material esportivo",
+        "Serviço",
+        "Ipê Serviços (fictício)",
+        "Em andamento",
+        "08/11/2026"
+      ],
+      [
+        "Transporte de materiais",
+        "Compra",
+        "Buriti Comércio (fictício)",
+        "Concluído",
+        "09/11/2026"
+      ],
+      [
+        "Papelaria sustentável",
+        "Serviço",
+        "Cerrado Suprimentos (fictício)",
+        "Em análise",
+        "10/11/2026"
+      ],
+      [
+        "Manutenção de iluminação",
+        "Compra",
+        "Ipê Serviços (fictício)",
+        "Em andamento",
+        "11/11/2026"
+      ],
+      [
+        "Uniformes escolares",
+        "Serviço",
+        "Buriti Comércio (fictício)",
+        "Concluído",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "24"
+  },
+  {
+    "slug": "negociacoes",
+    "title": "Painel e negociações",
+    "group": "Mercado",
+    "columns": [
+      "Negociação",
+      "Contexto",
+      "Situação",
+      "Mensagens não lidas"
+    ],
+    "rows": [
+      [
+        "NEG 001/2026",
+        "Alimentos para escolas",
+        "Em análise",
+        0
+      ],
+      [
+        "NEG 002/2026",
+        "Materiais para unidades de saúde",
+        "Em andamento",
+        1
+      ],
+      [
+        "NEG 003/2026",
+        "Manutenção de praças",
+        "Concluído",
+        2
+      ],
+      [
+        "NEG 004/2026",
+        "Equipamentos de informática",
+        "Em análise",
+        3
+      ],
+      [
+        "NEG 005/2026",
+        "Mobiliário escolar",
+        "Em andamento",
+        0
+      ],
+      [
+        "NEG 006/2026",
+        "Limpeza de prédios públicos",
+        "Concluído",
+        1
+      ],
+      [
+        "NEG 007/2026",
+        "Serviços de jardinagem",
+        "Em análise",
+        2
+      ],
+      [
+        "NEG 008/2026",
+        "Material esportivo",
+        "Em andamento",
+        3
+      ],
+      [
+        "NEG 009/2026",
+        "Transporte de materiais",
+        "Concluído",
+        0
+      ],
+      [
+        "NEG 010/2026",
+        "Papelaria sustentável",
+        "Em análise",
+        1
+      ],
+      [
+        "NEG 011/2026",
+        "Manutenção de iluminação",
+        "Em andamento",
+        2
+      ],
+      [
+        "NEG 012/2026",
+        "Uniformes escolares",
+        "Concluído",
+        3
+      ]
+    ],
+    "fields": [],
+    "source": "25"
+  },
+  {
+    "slug": "produtos",
+    "title": "Produtos e serviços",
+    "group": "Cadastros",
+    "columns": [
+      "id",
+      "Codigo",
+      "Nome",
+      "UN",
+      "Fabricante"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "GYN-001",
+        "Alimentos para escolas",
+        "UN",
+        "Cerrado Suprimentos (fictício)"
+      ],
+      [
+        "GYN-002",
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "UN",
+        "Ipê Serviços (fictício)"
+      ],
+      [
+        "GYN-003",
+        "GYN-003",
+        "Manutenção de praças",
+        "UN",
+        "Buriti Comércio (fictício)"
+      ],
+      [
+        "GYN-004",
+        "GYN-004",
+        "Equipamentos de informática",
+        "UN",
+        "Cerrado Suprimentos (fictício)"
+      ],
+      [
+        "GYN-005",
+        "GYN-005",
+        "Mobiliário escolar",
+        "UN",
+        "Ipê Serviços (fictício)"
+      ],
+      [
+        "GYN-006",
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "UN",
+        "Buriti Comércio (fictício)"
+      ],
+      [
+        "GYN-007",
+        "GYN-007",
+        "Serviços de jardinagem",
+        "UN",
+        "Cerrado Suprimentos (fictício)"
+      ],
+      [
+        "GYN-008",
+        "GYN-008",
+        "Material esportivo",
+        "UN",
+        "Ipê Serviços (fictício)"
+      ],
+      [
+        "GYN-009",
+        "GYN-009",
+        "Transporte de materiais",
+        "UN",
+        "Buriti Comércio (fictício)"
+      ],
+      [
+        "GYN-010",
+        "GYN-010",
+        "Papelaria sustentável",
+        "UN",
+        "Cerrado Suprimentos (fictício)"
+      ],
+      [
+        "GYN-011",
+        "GYN-011",
+        "Manutenção de iluminação",
+        "UN",
+        "Ipê Serviços (fictício)"
+      ],
+      [
+        "GYN-012",
+        "GYN-012",
+        "Uniformes escolares",
+        "UN",
+        "Buriti Comércio (fictício)"
+      ]
+    ],
+    "fields": [
+      "file:file (Arquivo)"
+    ],
+    "source": "13"
+  },
+  {
+    "slug": "fornecedores",
+    "title": "Fornecedores",
+    "group": "Cadastros",
+    "columns": [
+      "Nome",
+      "Criado em"
+    ],
+    "rows": [
+      [
+        "Cerrado Suprimentos 1 (fictício)",
+        "01/11/2026"
+      ],
+      [
+        "Ipê Serviços 2 (fictício)",
+        "02/11/2026"
+      ],
+      [
+        "Buriti Comércio 3 (fictício)",
+        "03/11/2026"
+      ],
+      [
+        "Cerrado Suprimentos 4 (fictício)",
+        "04/11/2026"
+      ],
+      [
+        "Ipê Serviços 5 (fictício)",
+        "05/11/2026"
+      ],
+      [
+        "Buriti Comércio 6 (fictício)",
+        "06/11/2026"
+      ],
+      [
+        "Cerrado Suprimentos 7 (fictício)",
+        "07/11/2026"
+      ],
+      [
+        "Ipê Serviços 8 (fictício)",
+        "08/11/2026"
+      ],
+      [
+        "Buriti Comércio 9 (fictício)",
+        "09/11/2026"
+      ],
+      [
+        "Cerrado Suprimentos 10 (fictício)",
+        "10/11/2026"
+      ],
+      [
+        "Ipê Serviços 11 (fictício)",
+        "11/11/2026"
+      ],
+      [
+        "Buriti Comércio 12 (fictício)",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "14"
+  },
+  {
+    "slug": "enderecos",
+    "title": "Endereços",
+    "group": "Cadastros",
+    "columns": [
+      "ID",
+      "Code",
+      "Nome",
+      "Endereço",
+      "CNPJ"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "GYN-001",
+        "Unidade Educação 1",
+        "Rua Exemplo, 100 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-002",
+        "GYN-002",
+        "Unidade Saúde 2",
+        "Rua Exemplo, 101 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-003",
+        "GYN-003",
+        "Unidade Infraestrutura 3",
+        "Rua Exemplo, 102 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-004",
+        "GYN-004",
+        "Unidade Administração 4",
+        "Rua Exemplo, 103 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-005",
+        "GYN-005",
+        "Unidade Educação 5",
+        "Rua Exemplo, 104 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-006",
+        "GYN-006",
+        "Unidade Saúde 6",
+        "Rua Exemplo, 105 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-007",
+        "GYN-007",
+        "Unidade Infraestrutura 7",
+        "Rua Exemplo, 106 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-008",
+        "GYN-008",
+        "Unidade Administração 8",
+        "Rua Exemplo, 107 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-009",
+        "GYN-009",
+        "Unidade Educação 9",
+        "Rua Exemplo, 108 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-010",
+        "GYN-010",
+        "Unidade Saúde 10",
+        "Rua Exemplo, 109 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-011",
+        "GYN-011",
+        "Unidade Infraestrutura 11",
+        "Rua Exemplo, 110 — Setor Central",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-012",
+        "GYN-012",
+        "Unidade Educação 12",
+        "Rua Exemplo, 111 — Setor Central",
+        "00.000.000/0000-00"
+      ]
+    ],
+    "fields": [
+      "file:file (Arquivo)"
+    ],
+    "source": "15"
+  },
+  {
+    "slug": "locais-de-entrega",
+    "title": "Locais de entrega",
+    "group": "Cadastros",
+    "columns": [
+      "ID",
+      "Código",
+      "Nome",
+      "Endereço",
+      "Cidade",
+      "UF",
+      "CNPJ"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "GYN-001",
+        "Unidade Educação 1",
+        "Rua Exemplo, 100 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-002",
+        "GYN-002",
+        "Unidade Saúde 2",
+        "Rua Exemplo, 101 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-003",
+        "GYN-003",
+        "Unidade Infraestrutura 3",
+        "Rua Exemplo, 102 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-004",
+        "GYN-004",
+        "Unidade Administração 4",
+        "Rua Exemplo, 103 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-005",
+        "GYN-005",
+        "Unidade Educação 5",
+        "Rua Exemplo, 104 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-006",
+        "GYN-006",
+        "Unidade Saúde 6",
+        "Rua Exemplo, 105 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-007",
+        "GYN-007",
+        "Unidade Infraestrutura 7",
+        "Rua Exemplo, 106 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-008",
+        "GYN-008",
+        "Unidade Administração 8",
+        "Rua Exemplo, 107 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-009",
+        "GYN-009",
+        "Unidade Educação 9",
+        "Rua Exemplo, 108 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-010",
+        "GYN-010",
+        "Unidade Saúde 10",
+        "Rua Exemplo, 109 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-011",
+        "GYN-011",
+        "Unidade Infraestrutura 11",
+        "Rua Exemplo, 110 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-012",
+        "GYN-012",
+        "Unidade Educação 12",
+        "Rua Exemplo, 111 — Setor Central",
+        "Goiânia",
+        "GO",
+        "00.000.000/0000-00"
+      ]
+    ],
+    "fields": [],
+    "source": "16"
+  },
+  {
+    "slug": "embarcacoes",
+    "title": "Embarcações",
+    "group": "Cadastros",
+    "columns": [
+      "ID",
+      "Nome",
+      "Endereço",
+      "Telefone",
+      "CNPJ"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "Rua Exemplo, 100 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "Rua Exemplo, 101 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "Rua Exemplo, 102 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "Rua Exemplo, 103 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "Rua Exemplo, 104 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "Rua Exemplo, 105 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "Rua Exemplo, 106 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "Rua Exemplo, 107 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "Rua Exemplo, 108 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "Rua Exemplo, 109 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "Rua Exemplo, 110 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "Rua Exemplo, 111 — Setor Central",
+        "(62) 0000-0000",
+        "00.000.000/0000-00"
+      ]
+    ],
+    "fields": [],
+    "source": "17"
+  },
+  {
+    "slug": "relatorios",
+    "title": "Relatórios",
+    "group": "Conta",
+    "columns": [
+      "Código",
+      "Descrição",
+      "Status",
+      "Atualizado"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "Em análise",
+        "01/11/2026"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "Em andamento",
+        "02/11/2026"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "Concluído",
+        "03/11/2026"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "Em análise",
+        "04/11/2026"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "Em andamento",
+        "05/11/2026"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "Concluído",
+        "06/11/2026"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "Em análise",
+        "07/11/2026"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "Em andamento",
+        "08/11/2026"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "Concluído",
+        "09/11/2026"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "Em análise",
+        "10/11/2026"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "Em andamento",
+        "11/11/2026"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "Concluído",
+        "12/11/2026"
+      ]
+    ],
+    "fields": [],
+    "source": "18"
+  },
+  {
+    "slug": "perfil",
+    "title": "Perfil",
+    "group": "Conta",
+    "columns": [
+      "Código",
+      "Descritivo"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares"
+      ]
+    ],
+    "fields": [
+      "file:file",
+      "name:text",
+      "phone:text",
+      "socinal_name:text",
+      "email:email",
+      "address:text",
+      "city:text",
+      "state:text",
+      "country:text",
+      "zip_code:text",
+      "cnpj:text",
+      "ie:text",
+      "website:url",
+      "classproducts[]:select-multiple",
+      "agencia:text",
+      "conta:text",
+      "banco:text",
+      "pix:text",
+      "cargo:text",
+      "mail:email",
+      "und_consumidora:text",
+      "end_consumidora:text",
+      "migracao:select-one",
+      "group_tax:select-one",
+      "platform_checkin:select-one",
+      "current_contract:select-one",
+      "current_demand:number",
+      "consume_month:number",
+      "invoice_energy:file",
+      "annual_balance:file",
+      "social_contract:file",
+      "doc_partner:file",
+      "energy_authorize:checkbox",
+      "name:text (Nome:)",
+      "email:email (E-mail:)",
+      "phone:text (Telefone:)",
+      "password:text (Senha temporária / nova senha:)",
+      "permission:select-one (Permissão)",
+      "cnpj:text (CNPJ:)",
+      "address:text (Endreço completo:)",
+      "public_management_sub_permission:select-one (Subpermissão da Área técnica:)",
+      "new_password:password (Nova senha)",
+      "new_password_confirmation:password (Confirmar nova senha)"
+    ],
+    "source": "19"
+  },
+  {
+    "slug": "configuracoes",
+    "title": "Configurações",
+    "group": "Conta",
+    "columns": [
+      "ID",
+      "Nome",
+      "Status"
+    ],
+    "rows": [
+      [
+        "GYN-001",
+        "Alimentos para escolas",
+        "Em análise"
+      ],
+      [
+        "GYN-002",
+        "Materiais para unidades de saúde",
+        "Em andamento"
+      ],
+      [
+        "GYN-003",
+        "Manutenção de praças",
+        "Concluído"
+      ],
+      [
+        "GYN-004",
+        "Equipamentos de informática",
+        "Em análise"
+      ],
+      [
+        "GYN-005",
+        "Mobiliário escolar",
+        "Em andamento"
+      ],
+      [
+        "GYN-006",
+        "Limpeza de prédios públicos",
+        "Concluído"
+      ],
+      [
+        "GYN-007",
+        "Serviços de jardinagem",
+        "Em análise"
+      ],
+      [
+        "GYN-008",
+        "Material esportivo",
+        "Em andamento"
+      ],
+      [
+        "GYN-009",
+        "Transporte de materiais",
+        "Concluído"
+      ],
+      [
+        "GYN-010",
+        "Papelaria sustentável",
+        "Em análise"
+      ],
+      [
+        "GYN-011",
+        "Manutenção de iluminação",
+        "Em andamento"
+      ],
+      [
+        "GYN-012",
+        "Uniformes escolares",
+        "Concluído"
+      ]
+    ],
+    "fields": [
+      "obs:textarea",
+      "considerar_difal_julgamento:select-one (Considerar DIFAL no julgamento?)",
+      "document:text",
+      "name:text",
+      "email:email",
+      "key:text",
+      "url:text",
+      "user:text",
+      "password:password",
+      "email:text",
+      "manifesto_automatico:checkbox (MANIFESTO AUTOMÁTICO)",
+      "avaliacao_autoridade_recursos:checkbox (Exigir avaliação da autoridade após parecer do pregoeiro)",
+      "title:text (Título da declaração)",
+      "description:textarea (Descrição da declaração)",
+      "enabled:checkbox (Ativar identidade visual personalizada)",
+      "brand_name:text (Nome da marca)",
+      "ai_name:text (Nome da IA)",
+      "logo:file (Logotipo)",
+      "remove_logo:checkbox (Remover logotipo personalizado)",
+      "favicon:file (Favicon)",
+      "remove_favicon:checkbox (Remover favicon personalizado)",
+      "primary_color:color (Cor principal)",
+      "secondary_color:color (Cor secundária)",
+      "header_color:color (Fundo do cabeçalho)",
+      "header_text_color:color (Texto do cabeçalho)",
+      "sidebar_color:color (Fundo do menu lateral)",
+      "sidebar_text_color:color (Texto do menu lateral)",
+      "background_color:color (Fundo das páginas)",
+      "text_color:color (Cor dos textos)",
+      "font_family:select-one (Fonte do sistema)",
+      "border_radius:range (Arredondamento: 10px)",
+      "title:text (Título)",
+      "description:textarea (Descrição)"
+    ],
+    "source": "20"
+  }
+]

@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro';import Insights from '../../components/Insights.astro';
+export function getStaticPaths(){return ['artigo','estudo-de-caso','guia','boletim'].map(tipo=>({params:{tipo}}));}const {tipo}=Astro.params;
+---
+<Base title={`Insights: ${tipo}`}><section><h1>Insights: {tipo}</h1><Insights tipo={tipo}/></section></Base>

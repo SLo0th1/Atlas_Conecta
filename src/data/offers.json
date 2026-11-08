@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "title": "Alimentos para escolas",
+    "type": "Produto",
+    "category": "Alimentos",
+    "uf": "DF",
+    "provider": "Cerrado Suprimentos (fictício)",
+    "price": 85.9,
+    "national": true
+  },
+  {
+    "id": 2,
+    "title": "Materiais para unidades de saúde",
+    "type": "Produto",
+    "category": "Saúde",
+    "uf": "GO",
+    "provider": "Ipê Serviços (fictício)",
+    "price": 112.9,
+    "national": false
+  },
+  {
+    "id": 3,
+    "title": "Manutenção de praças",
+    "type": "Serviço",
+    "category": "Infraestrutura",
+    "uf": "GO",
+    "provider": "Buriti Comércio (fictício)",
+    "price": 139.9,
+    "national": false
+  },
+  {
+    "id": 4,
+    "title": "Equipamentos de informática",
+    "type": "Produto",
+    "category": "Administração",
+    "uf": "DF",
+    "provider": "Cerrado Suprimentos (fictício)",
+    "price": 166.9,
+    "national": true
+  },
+  {
+    "id": 5,
+    "title": "Mobiliário escolar",
+    "type": "Produto",
+    "category": "Educação",
+    "uf": "GO",
+    "provider": "Ipê Serviços (fictício)",
+    "price": 193.9,
+    "national": false
+  },
+  {
+    "id": 6,
+    "title": "Limpeza de prédios públicos",
+    "type": "Produto",
+    "category": "Saúde",
+    "uf": "GO",
+    "provider": "Buriti Comércio (fictício)",
+    "price": 220.9,
+    "national": false
+  },
+  {
+    "id": 7,
+    "title": "Serviços de jardinagem",
+    "type": "Serviço",
+    "category": "Infraestrutura",
+    "uf": "DF",
+    "provider": "Cerrado Suprimentos (fictício)",
+    "price": 247.9,
+    "national": true
+  },
+  {
+    "id": 8,
+    "title": "Material esportivo",
+    "type": "Produto",
+    "category": "Administração",
+    "uf": "GO",
+    "provider": "Ipê Serviços (fictício)",
+    "price": 274.9,
+    "national": false
+  },
+  {
+    "id": 9,
+    "title": "Transporte de materiais",
+    "type": "Serviço",
+    "category": "Educação",
+    "uf": "GO",
+    "provider": "Buriti Comércio (fictício)",
+    "price": 301.9,
+    "national": false
+  },
+  {
+    "id": 10,
+    "title": "Papelaria sustentável",
+    "type": "Produto",
+    "category": "Saúde",
+    "uf": "DF",
+    "provider": "Cerrado Suprimentos (fictício)",
+    "price": 328.9,
+    "national": true
+  },
+  {
+    "id": 11,
+    "title": "Manutenção de iluminação",
+    "type": "Serviço",
+    "category": "Infraestrutura",
+    "uf": "GO",
+    "provider": "Ipê Serviços (fictício)",
+    "price": 355.9,
+    "national": false
+  },
+  {
+    "id": 12,
+    "title": "Uniformes escolares",
+    "type": "Produto",
+    "category": "Educação",
+    "uf": "GO",
+    "provider": "Buriti Comércio (fictício)",
+    "price": 382.9,
+    "national": false
+  }
+]
