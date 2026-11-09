@@ -1,0 +1,867 @@
+{
+  "versao": 1,
+  "atualizado_em": "2026-11-09",
+  "fonte_funcoes": "https://www1.siop.planejamento.gov.br/siopdoc/lib/exe/fetch.php/ploa:portaria42_consolidada.pdf",
+  "status": "rascunho_pendente_validacao",
+  "pendencias_confirmacao": [
+    "Versão consolidada usada (SIOP) refere a Portaria SOF/ME nº 2.520/2022; alterações posteriores a 2022 não foram verificadas.",
+    "Nomes dos órgãos concedentes (ministérios, fundos, Funasa) refletem a estrutura conhecida e precisam ser conferidos contra a estrutura federal vigente.",
+    "Palavras-chave (ex.: PNAB, Minha Casa Minha Vida) não foram conferidas em fonte oficial; são termos de busca, não códigos.",
+    "Rótulos de tipos_transferencia são categorias internas do Atlas, não códigos oficiais; validar com a tipologia dos coletores (Transferegov, Portal da Transparência).",
+    "Associação tema-subfunção é curadoria própria (subfunções podem ser combinadas com outras funções, Portaria 42/1999); validar com a prefeitura.",
+    "Funções 14 (Direitos da Cidadania) e 25 (Energia) existem no mapa oficial mas não foram associadas a tema; avaliar temas 'direitos humanos' e 'energia/iluminação'."
+  ],
+  "temas": [
+    {
+      "id": "drenagem",
+      "nome": "Drenagem urbana e manejo de águas pluviais",
+      "funcoes": [
+        {
+          "codigo": "15",
+          "nome": "Urbanismo",
+          "subfuncoes": [
+            {
+              "codigo": "451",
+              "nome": "Infra-Estrutura Urbana"
+            },
+            {
+              "codigo": "452",
+              "nome": "Serviços Urbanos"
+            }
+          ]
+        },
+        {
+          "codigo": "17",
+          "nome": "Saneamento",
+          "subfuncoes": [
+            {
+              "codigo": "512",
+              "nome": "Saneamento Básico Urbano"
+            }
+          ]
+        },
+        {
+          "codigo": "18",
+          "nome": "Gestão Ambiental",
+          "subfuncoes": [
+            {
+              "codigo": "544",
+              "nome": "Recursos Hídricos"
+            }
+          ]
+        },
+        {
+          "codigo": "06",
+          "nome": "Segurança Pública",
+          "subfuncoes": [
+            {
+              "codigo": "182",
+              "nome": "Defesa Civil"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério das Cidades",
+        "Ministério da Integração e do Desenvolvimento Regional (MIDR)",
+        "Caixa Econômica Federal (mandatária)"
+      ],
+      "palavras_chave": [
+        "drenagem",
+        "águas pluviais",
+        "galeria pluvial",
+        "bacia de contenção",
+        "canalização de córrego",
+        "contenção de encostas",
+        "erosão",
+        "alagamento",
+        "enchente",
+        "macrodrenagem",
+        "microdrenagem"
+      ],
+      "tipos_transferencia": [
+        "contrato_de_repasse",
+        "convenio",
+        "transferencia_especial"
+      ]
+    },
+    {
+      "id": "saneamento",
+      "nome": "Saneamento (água, esgoto e resíduos sólidos)",
+      "funcoes": [
+        {
+          "codigo": "17",
+          "nome": "Saneamento",
+          "subfuncoes": [
+            {
+              "codigo": "511",
+              "nome": "Saneamento Básico Rural"
+            },
+            {
+              "codigo": "512",
+              "nome": "Saneamento Básico Urbano"
+            }
+          ]
+        },
+        {
+          "codigo": "18",
+          "nome": "Gestão Ambiental",
+          "subfuncoes": [
+            {
+              "codigo": "542",
+              "nome": "Controle Ambiental"
+            },
+            {
+              "codigo": "543",
+              "nome": "Recuperação de Áreas Degradadas"
+            }
+          ]
+        },
+        {
+          "codigo": "10",
+          "nome": "Saúde",
+          "subfuncoes": [
+            {
+              "codigo": "305",
+              "nome": "Vigilância Epidemiológica"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério das Cidades",
+        "Ministério da Integração e do Desenvolvimento Regional (MIDR)",
+        "Ministério do Meio Ambiente e Mudança do Clima (MMA)",
+        "Fundação Nacional de Saúde (Funasa)",
+        "Caixa Econômica Federal (mandatária)"
+      ],
+      "palavras_chave": [
+        "saneamento",
+        "abastecimento de água",
+        "esgotamento sanitário",
+        "esgoto",
+        "resíduos sólidos",
+        "coleta seletiva",
+        "aterro sanitário",
+        "reciclagem",
+        "estação de tratamento",
+        "ETE",
+        "ETA",
+        "lixão"
+      ],
+      "tipos_transferencia": [
+        "contrato_de_repasse",
+        "convenio",
+        "transferencia_especial"
+      ]
+    },
+    {
+      "id": "mobilidade_urbana",
+      "nome": "Mobilidade urbana e transporte",
+      "funcoes": [
+        {
+          "codigo": "15",
+          "nome": "Urbanismo",
+          "subfuncoes": [
+            {
+              "codigo": "451",
+              "nome": "Infra-Estrutura Urbana"
+            },
+            {
+              "codigo": "453",
+              "nome": "Transportes Coletivos Urbanos"
+            }
+          ]
+        },
+        {
+          "codigo": "26",
+          "nome": "Transporte",
+          "subfuncoes": [
+            {
+              "codigo": "782",
+              "nome": "Transporte Rodoviário"
+            },
+            {
+              "codigo": "783",
+              "nome": "Transporte Ferroviário"
+            },
+            {
+              "codigo": "785",
+              "nome": "Transportes Especiais"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério das Cidades",
+        "Ministério dos Transportes",
+        "Caixa Econômica Federal (mandatária)"
+      ],
+      "palavras_chave": [
+        "mobilidade urbana",
+        "transporte coletivo",
+        "corredor de ônibus",
+        "BRT",
+        "ciclovia",
+        "calçada",
+        "acessibilidade",
+        "pavimentação",
+        "sinalização viária",
+        "semáforo",
+        "terminal de ônibus",
+        "VLT",
+        "metrô",
+        "trânsito"
+      ],
+      "tipos_transferencia": [
+        "contrato_de_repasse",
+        "convenio",
+        "transferencia_especial"
+      ]
+    },
+    {
+      "id": "habitacao",
+      "nome": "Habitação e regularização fundiária",
+      "funcoes": [
+        {
+          "codigo": "16",
+          "nome": "Habitação",
+          "subfuncoes": [
+            {
+              "codigo": "481",
+              "nome": "Habitação Rural"
+            },
+            {
+              "codigo": "482",
+              "nome": "Habitação Urbana"
+            }
+          ]
+        },
+        {
+          "codigo": "15",
+          "nome": "Urbanismo",
+          "subfuncoes": [
+            {
+              "codigo": "451",
+              "nome": "Infra-Estrutura Urbana"
+            }
+          ]
+        },
+        {
+          "codigo": "04",
+          "nome": "Administração",
+          "subfuncoes": [
+            {
+              "codigo": "127",
+              "nome": "Ordenamento Territorial"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério das Cidades",
+        "Caixa Econômica Federal (agente operador)"
+      ],
+      "palavras_chave": [
+        "habitação",
+        "moradia",
+        "habitação de interesse social",
+        "Minha Casa Minha Vida",
+        "regularização fundiária",
+        "urbanização de assentamentos",
+        "melhoria habitacional",
+        "aluguel social",
+        "reassentamento"
+      ],
+      "tipos_transferencia": [
+        "contrato_de_repasse",
+        "convenio",
+        "transferencia_especial"
+      ]
+    },
+    {
+      "id": "saude",
+      "nome": "Saúde",
+      "funcoes": [
+        {
+          "codigo": "10",
+          "nome": "Saúde",
+          "subfuncoes": [
+            {
+              "codigo": "301",
+              "nome": "Atenção Básica"
+            },
+            {
+              "codigo": "302",
+              "nome": "Assistência Hospitalar e Ambulatorial"
+            },
+            {
+              "codigo": "303",
+              "nome": "Suporte Profilático e Terapêutico"
+            },
+            {
+              "codigo": "304",
+              "nome": "Vigilância Sanitária"
+            },
+            {
+              "codigo": "305",
+              "nome": "Vigilância Epidemiológica"
+            },
+            {
+              "codigo": "306",
+              "nome": "Alimentação e Nutrição"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério da Saúde",
+        "Fundo Nacional de Saúde (FNS)",
+        "Fundação Nacional de Saúde (Funasa)"
+      ],
+      "palavras_chave": [
+        "saúde",
+        "atenção básica",
+        "UBS",
+        "UPA",
+        "hospital",
+        "média e alta complexidade",
+        "vigilância em saúde",
+        "vigilância sanitária",
+        "vigilância epidemiológica",
+        "SAMU",
+        "ambulância",
+        "equipamentos de saúde",
+        "emenda parlamentar saúde",
+        "PAB",
+        "incremento MAC"
+      ],
+      "tipos_transferencia": [
+        "fundo_a_fundo",
+        "convenio",
+        "transferencia_especial",
+        "emenda_parlamentar"
+      ]
+    },
+    {
+      "id": "educacao",
+      "nome": "Educação",
+      "funcoes": [
+        {
+          "codigo": "12",
+          "nome": "Educação",
+          "subfuncoes": [
+            {
+              "codigo": "361",
+              "nome": "Ensino Fundamental"
+            },
+            {
+              "codigo": "362",
+              "nome": "Ensino Médio"
+            },
+            {
+              "codigo": "363",
+              "nome": "Ensino Profissional"
+            },
+            {
+              "codigo": "365",
+              "nome": "Educação Infantil"
+            },
+            {
+              "codigo": "366",
+              "nome": "Educação de Jovens e Adultos"
+            },
+            {
+              "codigo": "367",
+              "nome": "Educação Especial"
+            },
+            {
+              "codigo": "368",
+              "nome": "Educação Básica"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério da Educação (MEC)",
+        "Fundo Nacional de Desenvolvimento da Educação (FNDE)"
+      ],
+      "palavras_chave": [
+        "educação",
+        "escola",
+        "creche",
+        "pré-escola",
+        "ensino fundamental",
+        "educação infantil",
+        "educação de jovens e adultos",
+        "transporte escolar",
+        "alimentação escolar",
+        "PNAE",
+        "PDDE",
+        "PNATE",
+        "FUNDEB",
+        "quadra escolar",
+        "tempo integral",
+        "livro didático"
+      ],
+      "tipos_transferencia": [
+        "fundo_a_fundo",
+        "convenio",
+        "transferencia_legal_automatica",
+        "emenda_parlamentar",
+        "transferencia_especial"
+      ]
+    },
+    {
+      "id": "assistencia_social",
+      "nome": "Assistência social",
+      "funcoes": [
+        {
+          "codigo": "08",
+          "nome": "Assistência Social",
+          "subfuncoes": [
+            {
+              "codigo": "241",
+              "nome": "Assistência à Pessoa Idosa"
+            },
+            {
+              "codigo": "242",
+              "nome": "Assistência à Pessoa com Deficiência"
+            },
+            {
+              "codigo": "243",
+              "nome": "Assistência à Criança e ao Adolescente"
+            },
+            {
+              "codigo": "244",
+              "nome": "Assistência Comunitária"
+            },
+            {
+              "codigo": "245",
+              "nome": "Serviços Socioassistenciais"
+            },
+            {
+              "codigo": "246",
+              "nome": "Segurança de Renda"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério do Desenvolvimento e Assistência Social, Família e Combate à Fome (MDS)",
+        "Fundo Nacional de Assistência Social (FNAS)",
+        "Ministério dos Direitos Humanos e da Cidadania"
+      ],
+      "palavras_chave": [
+        "assistência social",
+        "CRAS",
+        "CREAS",
+        "SUAS",
+        "acolhimento",
+        "população em situação de rua",
+        "centro POP",
+        "Bolsa Família",
+        "Cadastro Único",
+        "pessoa idosa",
+        "pessoa com deficiência",
+        "criança e adolescente",
+        "segurança alimentar",
+        "restaurante popular",
+        "banco de alimentos"
+      ],
+      "tipos_transferencia": [
+        "fundo_a_fundo",
+        "convenio",
+        "emenda_parlamentar",
+        "transferencia_especial"
+      ]
+    },
+    {
+      "id": "meio_ambiente",
+      "nome": "Meio ambiente",
+      "funcoes": [
+        {
+          "codigo": "18",
+          "nome": "Gestão Ambiental",
+          "subfuncoes": [
+            {
+              "codigo": "541",
+              "nome": "Preservação e Conservação Ambiental"
+            },
+            {
+              "codigo": "542",
+              "nome": "Controle Ambiental"
+            },
+            {
+              "codigo": "543",
+              "nome": "Recuperação de Áreas Degradadas"
+            },
+            {
+              "codigo": "544",
+              "nome": "Recursos Hídricos"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério do Meio Ambiente e Mudança do Clima (MMA)",
+        "Fundo Nacional do Meio Ambiente (FNMA)",
+        "Fundo Clima"
+      ],
+      "palavras_chave": [
+        "meio ambiente",
+        "parque urbano",
+        "arborização",
+        "recuperação de nascentes",
+        "área degradada",
+        "educação ambiental",
+        "unidade de conservação",
+        "mudanças climáticas",
+        "adaptação climática",
+        "recursos hídricos",
+        "fiscalização ambiental"
+      ],
+      "tipos_transferencia": [
+        "convenio",
+        "contrato_de_repasse",
+        "termo_de_fomento_ou_colaboracao",
+        "transferencia_especial"
+      ]
+    },
+    {
+      "id": "cultura",
+      "nome": "Cultura",
+      "funcoes": [
+        {
+          "codigo": "13",
+          "nome": "Cultura",
+          "subfuncoes": [
+            {
+              "codigo": "391",
+              "nome": "Patrimônio Histórico, Artístico e Arqueológico"
+            },
+            {
+              "codigo": "392",
+              "nome": "Difusão Cultural"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério da Cultura (MinC)",
+        "Fundo Nacional de Cultura (FNC)"
+      ],
+      "palavras_chave": [
+        "cultura",
+        "Lei Paulo Gustavo",
+        "Lei Aldir Blanc",
+        "PNAB",
+        "patrimônio histórico",
+        "teatro",
+        "biblioteca",
+        "museu",
+        "centro cultural",
+        "festival",
+        "fomento cultural",
+        "Pontos de Cultura"
+      ],
+      "tipos_transferencia": [
+        "fundo_a_fundo",
+        "convenio",
+        "transferencia_especial",
+        "emenda_parlamentar"
+      ]
+    },
+    {
+      "id": "esporte_lazer",
+      "nome": "Esporte e lazer",
+      "funcoes": [
+        {
+          "codigo": "27",
+          "nome": "Desporto e Lazer",
+          "subfuncoes": [
+            {
+              "codigo": "811",
+              "nome": "Desporto de Rendimento"
+            },
+            {
+              "codigo": "812",
+              "nome": "Desporto Comunitário"
+            },
+            {
+              "codigo": "813",
+              "nome": "Lazer"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério do Esporte",
+        "Ministério da Educação (esporte educacional)"
+      ],
+      "palavras_chave": [
+        "esporte",
+        "lazer",
+        "quadra poliesportiva",
+        "ginásio",
+        "estádio",
+        "academia ao ar livre",
+        "praça esportiva",
+        "pista de atletismo",
+        "esporte comunitário",
+        "complexo esportivo",
+        "Bolsa Atleta",
+        "Segundo Tempo"
+      ],
+      "tipos_transferencia": [
+        "convenio",
+        "contrato_de_repasse",
+        "transferencia_especial",
+        "emenda_parlamentar"
+      ]
+    },
+    {
+      "id": "seguranca_publica",
+      "nome": "Segurança pública",
+      "funcoes": [
+        {
+          "codigo": "06",
+          "nome": "Segurança Pública",
+          "subfuncoes": [
+            {
+              "codigo": "181",
+              "nome": "Policiamento"
+            },
+            {
+              "codigo": "182",
+              "nome": "Defesa Civil"
+            },
+            {
+              "codigo": "183",
+              "nome": "Informação e Inteligência"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério da Justiça e Segurança Pública (MJSP)",
+        "Fundo Nacional de Segurança Pública (FNSP)",
+        "Secretaria Nacional de Segurança Pública (Senasp)",
+        "Ministério da Integração e do Desenvolvimento Regional (MIDR - Defesa Civil)"
+      ],
+      "palavras_chave": [
+        "segurança pública",
+        "guarda municipal",
+        "videomonitoramento",
+        "câmeras de segurança",
+        "viatura",
+        "Pronasci",
+        "Defesa Civil",
+        "prevenção à violência",
+        "policiamento comunitário",
+        "central de monitoramento"
+      ],
+      "tipos_transferencia": [
+        "fundo_a_fundo",
+        "convenio",
+        "transferencia_especial",
+        "emenda_parlamentar"
+      ]
+    },
+    {
+      "id": "desenvolvimento_urbano",
+      "nome": "Desenvolvimento urbano e infraestrutura",
+      "funcoes": [
+        {
+          "codigo": "15",
+          "nome": "Urbanismo",
+          "subfuncoes": [
+            {
+              "codigo": "451",
+              "nome": "Infra-Estrutura Urbana"
+            },
+            {
+              "codigo": "452",
+              "nome": "Serviços Urbanos"
+            }
+          ]
+        },
+        {
+          "codigo": "04",
+          "nome": "Administração",
+          "subfuncoes": [
+            {
+              "codigo": "127",
+              "nome": "Ordenamento Territorial"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério das Cidades",
+        "Caixa Econômica Federal (mandatária)",
+        "Ministério da Integração e do Desenvolvimento Regional (MIDR)"
+      ],
+      "palavras_chave": [
+        "desenvolvimento urbano",
+        "infraestrutura urbana",
+        "pavimentação",
+        "recapeamento",
+        "iluminação pública",
+        "praça",
+        "requalificação urbana",
+        "espaço público",
+        "equipamento comunitário",
+        "plano diretor",
+        "cadastro territorial",
+        "urbanização",
+        "mercado municipal",
+        "cemitério",
+        "serviços urbanos"
+      ],
+      "tipos_transferencia": [
+        "contrato_de_repasse",
+        "convenio",
+        "transferencia_especial",
+        "emenda_parlamentar"
+      ]
+    },
+    {
+      "id": "turismo",
+      "nome": "Turismo",
+      "funcoes": [
+        {
+          "codigo": "23",
+          "nome": "Comércio e Serviços",
+          "subfuncoes": [
+            {
+              "codigo": "695",
+              "nome": "Turismo"
+            }
+          ]
+        },
+        {
+          "codigo": "13",
+          "nome": "Cultura",
+          "subfuncoes": [
+            {
+              "codigo": "391",
+              "nome": "Patrimônio Histórico, Artístico e Arqueológico"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério do Turismo",
+        "Embratur"
+      ],
+      "palavras_chave": [
+        "turismo",
+        "infraestrutura turística",
+        "sinalização turística",
+        "polo turístico",
+        "evento turístico",
+        "roteiro turístico",
+        "centro de convenções",
+        "orla",
+        "destino turístico"
+      ],
+      "tipos_transferencia": [
+        "convenio",
+        "contrato_de_repasse",
+        "transferencia_especial",
+        "emenda_parlamentar"
+      ]
+    },
+    {
+      "id": "desenvolvimento_economico",
+      "nome": "Desenvolvimento econômico, trabalho e inovação",
+      "funcoes": [
+        {
+          "codigo": "23",
+          "nome": "Comércio e Serviços",
+          "subfuncoes": [
+            {
+              "codigo": "661",
+              "nome": "Promoção Industrial"
+            },
+            {
+              "codigo": "691",
+              "nome": "Promoção Comercial"
+            },
+            {
+              "codigo": "692",
+              "nome": "Comercialização"
+            }
+          ]
+        },
+        {
+          "codigo": "11",
+          "nome": "Trabalho",
+          "subfuncoes": [
+            {
+              "codigo": "333",
+              "nome": "Empregabilidade"
+            },
+            {
+              "codigo": "334",
+              "nome": "Fomento ao Trabalho"
+            }
+          ]
+        },
+        {
+          "codigo": "19",
+          "nome": "Ciência e Tecnologia",
+          "subfuncoes": [
+            {
+              "codigo": "572",
+              "nome": "Desenvolvimento Tecnológico e Engenharia"
+            }
+          ]
+        },
+        {
+          "codigo": "20",
+          "nome": "Agricultura",
+          "subfuncoes": [
+            {
+              "codigo": "606",
+              "nome": "Extensão Rural"
+            },
+            {
+              "codigo": "608",
+              "nome": "Promoção da Produção Agropecuária"
+            }
+          ]
+        }
+      ],
+      "orgaos_concedentes": [
+        "Ministério do Desenvolvimento, Indústria, Comércio e Serviços (MDIC)",
+        "Ministério do Trabalho e Emprego (MTE)",
+        "Ministério da Ciência, Tecnologia e Inovação (MCTI)",
+        "Ministério do Desenvolvimento Agrário e Agricultura Familiar (MDA)",
+        "Ministério da Agricultura e Pecuária (MAPA)"
+      ],
+      "palavras_chave": [
+        "desenvolvimento econômico",
+        "empreendedorismo",
+        "microempreendedor",
+        "Sala do Empreendedor",
+        "feira",
+        "qualificação profissional",
+        "empregabilidade",
+        "SINE",
+        "inovação",
+        "cidade inteligente",
+        "agricultura familiar",
+        "distrito empresarial",
+        "arranjo produtivo local"
+      ],
+      "tipos_transferencia": [
+        "convenio",
+        "contrato_de_repasse",
+        "transferencia_especial",
+        "emenda_parlamentar"
+      ]
+    }
+  ]
+}

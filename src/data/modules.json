@@ -997,6 +997,219 @@
     "source": "08"
   },
   {
+    "slug": "captacao",
+    "title": "Principal",
+    "group": "Captação",
+    "columns": [
+      "Código",
+      "Origem",
+      "Objeto",
+      "Status"
+    ],
+    "rows": [
+      [
+        "CAP-001",
+        "Demanda SME",
+        "Alimentos para escolas",
+        "Em andamento"
+      ],
+      [
+        "CAP-002",
+        "Demanda SMS",
+        "Materiais para unidades de saúde",
+        "Em análise"
+      ],
+      [
+        "CAP-003",
+        "Demanda SEINFRA",
+        "Manutenção de praças",
+        "Concluído"
+      ]
+    ],
+    "fields": [],
+    "source": "captacao"
+  },
+  {
+    "slug": "captacao-oportunidades",
+    "title": "Oportunidades",
+    "group": "Captação",
+    "columns": [
+      "Código",
+      "Programa",
+      "Concedente",
+      "Tema",
+      "Prazo da proposta",
+      "Status"
+    ],
+    "rows": [
+      [
+        "OPO-001",
+        "Programa de drenagem urbana (exemplo)",
+        "Ministério das Cidades",
+        "Drenagem",
+        "30/11/2026",
+        "Aberto"
+      ],
+      [
+        "OPO-002",
+        "Custeio da atenção primária (exemplo)",
+        "Ministério da Saúde",
+        "Saúde",
+        "15/12/2026",
+        "Aberto"
+      ],
+      [
+        "OPO-003",
+        "Mobilidade sustentável (exemplo)",
+        "Ministério das Cidades",
+        "Mobilidade",
+        "20/12/2026",
+        "Em análise"
+      ],
+      [
+        "OPO-004",
+        "Reforma de escolas (exemplo)",
+        "FNDE",
+        "Educação",
+        "10/01/2027",
+        "Aberto"
+      ]
+    ],
+    "fields": [],
+    "source": "captacao-oportunidades"
+  },
+  {
+    "slug": "captacao-acompanhamento",
+    "title": "Acompanhamento",
+    "group": "Captação",
+    "columns": [
+      "Código",
+      "Instrumento",
+      "Concedente",
+      "Valor pactuado",
+      "Valor liberado",
+      "Valor a liberar",
+      "Vigência",
+      "Situação"
+    ],
+    "rows": [
+      [
+        "ACO-001",
+        "Convênio 001/2026 (exemplo)",
+        "Ministério das Cidades",
+        1000000,
+        400000,
+        600000,
+        "31/03/2027",
+        "Em execução"
+      ],
+      [
+        "ACO-002",
+        "Contrato de repasse 002/2026 (exemplo)",
+        "Ministério da Saúde",
+        2500000,
+        2500000,
+        0,
+        "30/06/2027",
+        "Em execução"
+      ],
+      [
+        "ACO-003",
+        "Transferência especial 003/2026 (exemplo)",
+        "Emenda parlamentar",
+        800000,
+        0,
+        800000,
+        "31/12/2026",
+        "Atenção"
+      ]
+    ],
+    "fields": [],
+    "source": "captacao-acompanhamento"
+  },
+  {
+    "slug": "captacao-alertas",
+    "title": "Alertas",
+    "group": "Captação",
+    "columns": [
+      "Código",
+      "Alerta",
+      "Instrumento",
+      "Gravidade",
+      "Responsável",
+      "Situação"
+    ],
+    "rows": [
+      [
+        "ALE-001",
+        "Vigência termina em 30 dias (exemplo)",
+        "ACO-003",
+        "Alta",
+        "Planejamento",
+        "Aberto"
+      ],
+      [
+        "ALE-002",
+        "Pendência no CAUC (exemplo)",
+        "ACO-001",
+        "Alta",
+        "Fazenda",
+        "Em andamento"
+      ],
+      [
+        "ALE-003",
+        "Novo desembolso registrado (exemplo)",
+        "ACO-002",
+        "Baixa",
+        "Saúde",
+        "Resolvido"
+      ]
+    ],
+    "fields": [],
+    "source": "captacao-alertas"
+  },
+  {
+    "slug": "captacao-projetos",
+    "title": "Projetos",
+    "group": "Captação",
+    "columns": [
+      "Código",
+      "Projeto",
+      "Oportunidade",
+      "Secretaria",
+      "Versão",
+      "Situação"
+    ],
+    "rows": [
+      [
+        "PRJ-001",
+        "Drenagem do setor (exemplo)",
+        "OPO-001",
+        "Infraestrutura",
+        "v2",
+        "Em elaboração"
+      ],
+      [
+        "PRJ-002",
+        "Ampliação da atenção primária (exemplo)",
+        "OPO-002",
+        "Saúde",
+        "v1",
+        "Em revisão"
+      ],
+      [
+        "PRJ-003",
+        "Reforma de escolas (exemplo)",
+        "OPO-004",
+        "Educação",
+        "v3",
+        "Aguardando aprovação"
+      ]
+    ],
+    "fields": [],
+    "source": "captacao-projetos"
+  },
+  {
     "slug": "banco-de-precos",
     "title": "Banco de preços",
     "group": "Preços",

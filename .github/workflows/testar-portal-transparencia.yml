@@ -1,0 +1,25 @@
+# Testa se a chave do Portal da Transparência (segredo PORTAL_TRANSPARENCIA_CHAVE) é aceita.
+# Mostra APENAS o código HTTP; a chave nunca é impressa. Execução manual ou ao alterar este arquivo na branch captacao-fase0.
+name: Testar chave do Portal da Transparência
+on:
+  workflow_dispatch:
+  push:
+    branches: [captacao-fase0]
+    paths: ['.github/workflows/testar-portal-transparencia.yml']
+permissions:
+  contents: read
+jobs:
+  testar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consulta de convênios de Goiânia (somente status)
+        env:
+          CHAVE: ${{ secrets.PORTAL_TRANSPARENCIA_CHAVE }}
+        run: |
+          if [ -z "$CHAVE" ]; then echo "Segredo PORTAL_TRANSPARENCIA_CHAVE ausente"; exit 1; fi
+          codigo=$(curl -s -o resposta.json -w '%{http_code}' \
+            -H "chave-api-dados: $CHAVE" -H 'Accept: application/json' \
+            'https://api.portaldatransparencia.gov.br/api-de-dados/convenios?codigoIBGE=5208707&pagina=1')
+          echo "HTTP $codigo"
+          echo "Registros na primeira página: $(python3 -c "import json;print(len(json.load(open('resposta.json'))))" 2>/dev/null || echo 'resposta não é JSON')"
+          [ "$codigo" = "200" ]
