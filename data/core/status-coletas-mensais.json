@@ -1,0 +1,29 @@
+{
+ "atualizado_em": "2026-11-10T03:34:31.094Z",
+ "coletores": {
+  "educacao": {
+   "script": "coletores/inep-educacao.ts",
+   "ultima_tentativa": "2026-11-10T03:15:07.190Z",
+   "resultado": "falha",
+   "tentativas": 3,
+   "erro": "if (tentativa === 3) throw new Error(`${url}: ${(e         ).message}`);",
+   "ultimo_sucesso": null
+  },
+  "saneamento": {
+   "script": "coletores/sinisa.ts",
+   "ultima_tentativa": "2026-11-10T03:16:31.350Z",
+   "resultado": "ok",
+   "tentativas": 1,
+   "erro": null,
+   "ultimo_sucesso": "2026-11-10T03:16:31.350Z"
+  },
+  "cnes": {
+   "script": "coletores/cnes.ts",
+   "ultima_tentativa": "2026-11-10T03:34:31.094Z",
+   "resultado": "ok",
+   "tentativas": 1,
+   "erro": null,
+   "ultimo_sucesso": "2026-11-10T03:34:31.094Z"
+  }
+ }
+}

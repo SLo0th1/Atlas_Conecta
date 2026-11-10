@@ -47,7 +47,7 @@
       "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Abastecimento de água, ano de referência 2024",
       "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_Resultados_Ref2024.zip",
       "data_referencia": "ano de referência 2024",
-      "data_coleta": "2026-11-10T02:16:44.028Z",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
       "id_carga": "sinisa-agua-2024-2026-11-10"
     }
   },
@@ -82,7 +82,7 @@
       "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Esgotamento sanitário, ano de referência 2024",
       "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_ESGOTO_Planilhas_2024.zip",
       "data_referencia": "ano de referência 2024",
-      "data_coleta": "2026-11-10T02:16:44.028Z",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
       "id_carga": "sinisa-esgoto-2024-2026-11-10"
     }
   },
@@ -118,7 +118,7 @@
       "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Manejo de resíduos sólidos urbanos, ano de referência 2024",
       "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_RESIDUOS_planilhas_2024.zip",
       "data_referencia": "ano de referência 2024",
-      "data_coleta": "2026-11-10T02:16:44.028Z",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
       "id_carga": "sinisa-residuos-2024-2026-11-10"
     }
   },
@@ -152,7 +152,7 @@
       "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Drenagem e manejo de águas pluviais urbanas, ano de referência 2024",
       "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_AGUASPLUVIAIS_Informacoes_Indicadores_2025.zip",
       "data_referencia": "ano de referência 2024",
-      "data_coleta": "2026-11-10T02:16:44.028Z",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
       "id_carga": "sinisa-drenagem-2024-2026-11-10"
     }
   },
@@ -160,7 +160,7 @@
     "fonte": "Ministério das Cidades — SINISA (planilhas de resultados 2024)",
     "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/",
     "data_referencia": "ano de referência 2024",
-    "data_coleta": "2026-11-10T02:16:44.028Z",
+    "data_coleta": "2026-11-10T03:15:07.349Z",
     "id_carga": "sinisa-2026-11-10"
   }
 }
