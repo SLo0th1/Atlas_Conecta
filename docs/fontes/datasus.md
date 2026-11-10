@@ -38,5 +38,32 @@ CNES (estabelecimentos): `codigo_cnes`, `nome_fantasia`, `codigo_tipo_unidade`, 
 - Município usa 6 dígitos (sem dígito verificador): 520870 em vez de 5208707.
 - FTP do DATASUS não respondeu; TabNet é o único meio testado para séries SIH/SIA.
 
-**Data da última validação: 2026-11-09**
-**Status: PARCIAL**
+## Coletor CNES (coletores/cnes.ts) - validado em 2026-11-10
+Rodar: `node coletores/cnes.ts` (leva ~20 min por causa da paginação e da pausa de 350 ms). Saída: `data/core/cnes-5208707.json` (proveniência, resumo, leitos, lista de unidades públicas e hospitais).
+
+### Endpoints usados e testados (sem chave)
+- `/cnes/tipounidades?limit=200`: códigos e descrições dos tipos de unidade (HTTP 200).
+- `/cnes/estabelecimentos?codigo_municipio=520870&limit=20&offset=N`: HTTP 200. O limite REAL é 20 por página (limit maior é ignorado); paginação por offset termina em página vazia (261 páginas).
+- `/assistencia-a-saude/cnes-leitos?co_ibge=520870&nu_comp=AAAAMM&limit=20&offset=N`: HTTP 200. Com nu_comp devolve só 1 registro por página (901 páginas para 202607); sem nu_comp mistura competências de 2008 em diante. Coletor testa os últimos 8 meses e usa o mais recente com dados (202607).
+- NÃO usados: `/assistencia-a-saude/hospitais-e-leitos` (só aceita filtro `uf`, que dá HTTP 500; sem filtro devolve mais de 1 milhão de linhas históricas de todo o país); `/assistencia-a-saude/cnes-equipamentos` (com co_ibge devolveu um registro vazio, sem equipamentos; não confiável). Equipamentos: sem dado útil, pendente.
+- Instabilidade: ocorreu HTTP 503 intermitente em uma carga; o coletor tenta 6 vezes com espera progressiva.
+
+### Campos reais (estabelecimento)
+codigo_cnes, nome_razao_social, nome_fantasia, tipo_gestao (M/E/D), descricao_esfera_administrativa, codigo_tipo_unidade, bairro_estabelecimento, latitude/longitude, descricao_natureza_juridica_estabelecimento (código IBGE da natureza jurídica, ex.: 4000), estabelecimento_faz_atendimento_ambulatorial_sus (SIM/NAO), estabelecimento_possui_atendimento_hospitalar/centro_cirurgico/centro_obstetrico/centro_neonatal (0/1), codigo_motivo_desabilitacao_estabelecimento, data_atualizacao. Leitos: nu_comp, co_ibge, co_cnes, tp_unidade, no_grupo_nat_jur, tp_leito, ds_leito, qt_existente, qt_sus.
+
+### Contagens obtidas (Goiânia, carga 2026-11-10, dados até 2026-11-06)
+- 5.207 estabelecimentos, 4.494 ativos (713 desabilitados). Resumo calculado sobre os ativos.
+- Por tipo: 2.446 consultórios isolados, 997 clínicas/centros de especialidade, 395 SADT isolado, 182 farmácias, 129 policlínicas, 88 centros de saúde/UBS, 68 hospitais especializados, 44 hospitais gerais, 13 hospital-dia, 12 CAPS, 8 pronto atendimento (UPA), 37 unidades móveis/urgência.
+- Hospitais (tipos HOSPITAL*): 125. Com internação: 123.
+- Natureza jurídica: 2.265 empresarial, 1.901 pessoa física, 213 administração pública, 115 sem fins lucrativos.
+- Leitos (competência 202607): 131 estabelecimentos, 7.638 leitos existentes, 3.928 SUS, 1.197 UTI (565 SUS). Por grupo: privado 3.933, público 2.337, sem fins lucrativos 1.368.
+
+### Limitações
+- Esfera administrativa e gestão no CNES indicam quem GERE (4.453 aparecem como municipais, incluindo privados contratados); a propriedade pública é pela natureza jurídica (213). Não usar esfera como "público".
+- Contagens por tipo usam a descrição do tipo; UBS = "CENTRO DE SAUDE/UNIDADE BASICA", UPA = "PRONTO ATENDIMENTO" (aproximação, conferir com a prefeitura).
+- LGPD: a lista nominal exclui consultórios isolados e pessoa física (apenas contagens); sem telefone, e-mail, CNPJ ou profissionais.
+- Sem equipamentos; leitos dependem de endpoint lento (1 registro por página).
+- O arquivo atual foi ajustado por filtro sobre a carga de 2026-11-10 (lista sem consultórios; hospitais e remoção das contagens "publicas_*" enganosas). Uma nova execução completa do coletor gera o mesmo conteúdo já com essas regras.
+
+**Data da última validação: 2026-11-10**
+**Status: VALIDADO (CNES estabelecimentos e leitos); equipamentos pendentes**

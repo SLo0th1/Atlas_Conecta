@@ -72,3 +72,24 @@ test('SICONFI e FNS: indicadores essenciais presentes', () => {
   const f = le('fns-capitais-2026.json');
   assert.equal(f.capitais.length, 27);
 });
+
+test('CNES: sem consultório isolado nem pessoa física na lista nominal (LGPD)', () => {
+  const j = le('cnes-5208707.json');
+  assert.ok(j.resumo.total_estabelecimentos > 1000, 'poucos estabelecimentos: a API pode ter mudado');
+  assert.ok(j.leitos.leitos_existentes > 0, 'leitos ausentes');
+  const lista = j.unidades_publicas_e_hospitais as any[];
+  assert.ok(lista.length > 100);
+  assert.equal(lista.filter((u) => /CONSULTORIO ISOLADO/i.test(u.tipo)).length, 0, 'consultório isolado na lista nominal');
+  assert.equal(lista.filter((u) => /pessoa f[ií]sica/i.test(String(u.natureza ?? ''))).length, 0, 'pessoa física na lista nominal');
+  for (const u of lista.slice(0, 50)) for (const proibido of ['cpf', 'telefone', 'email', 'profissional']) assert.ok(!(proibido in u), `campo ${proibido} não deve existir`);
+});
+
+test('SINISA: indicadores com código e ressalvas preservadas', () => {
+  const j = le('saneamento-5208707.json');
+  for (const c of ['agua', 'esgoto', 'residuos', 'drenagem']) {
+    const ind = j[c].indicadores;
+    assert.ok(Object.keys(ind).length >= 3, `${c}: poucos indicadores`);
+    for (const i of Object.values(ind) as any[]) assert.ok(i.codigo && typeof i.valor === 'number', `${c}: indicador sem código ou valor`);
+  }
+  assert.ok(j.residuos.indicadores.disposicao_final_inadequada.ressalva, 'a ressalva do indicador suspeito não pode ser perdida');
+});
