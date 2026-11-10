@@ -3,6 +3,8 @@
 // Se a carga de um conjunto não existir, a guia cai no conteúdo de exemplo do modules.json.
 // As regras de alerta seguem docs/regras-alertas.md; os limites abaixo são PARÂMETROS A DEFINIR com o dono do produto.
 import { dados, type Documento } from './index.ts';
+import { br, curto, diasAte, hoje, nomeTema, reais } from './formato.ts';
+import { detalheOportunidade } from './detalhes.ts';
 
 const IBGE = 5208707; // município piloto (data/config/municipio.json); multimunicípio entra com a seleção de município
 
@@ -13,26 +15,10 @@ const DIAS_PRAZO_PROGRAMA = 15;
 const DIAS_DEFASAGEM = 3;
 
 type Modulo = {
-  slug: string; title: string; group: string; columns: string[]; rows: (string | number)[][]; fields: string[]; source: string; fonte?: string;
+  slug: string; title: string; group: string; columns: string[]; rows: (string | number)[][]; fields: string[]; source: string; fonte?: string; detalhes?: unknown[];
 };
 
-const hoje = new Date();
-const diasAte = (iso: string | null | undefined, ref = hoje): number | null => {
-  if (!iso) return null;
-  const d = /^\d{2}\/\d{2}\/\d{4}$/.test(iso) ? `${iso.slice(6)}-${iso.slice(3, 5)}-${iso.slice(0, 2)}` : iso.slice(0, 10);
-  const t = Date.parse(`${d}T00:00:00Z`);
-  return Number.isNaN(t) ? null : Math.round((t - Date.UTC(ref.getFullYear(), ref.getMonth(), ref.getDate())) / 86400000);
-};
-const br = (iso: string | null | undefined): string => {
-  if (!iso) return '—';
-  if (/^\d{2}\/\d{2}\/\d{4}$/.test(iso)) return iso;
-  const [a, m, d] = iso.slice(0, 10).split('-');
-  return `${d}/${m}/${a}`;
-};
-const curto = (s: string | null | undefined, n = 90) => ((s ?? '').replace(/\s+/g, ' ').trim().slice(0, n) + ((s ?? '').length > n ? '…' : '')) || '—';
-const reais = (n: number) => n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
 const dataColeta = (d?: Documento) => (d?.proveniencia?.data_coleta ? br(String(d.proveniencia.data_coleta)) : 'sem carga');
-const nomeTema = (id: string) => (dados.listarTemas().find((t) => t.id === id)?.nome ?? id).replace(/ e manejo.*$/i, '');
 
 function oportunidades(): Modulo | null {
   const d = dados.programasAbertos(IBGE);
@@ -53,7 +39,7 @@ function oportunidades(): Modulo | null {
   });
   return {
     slug: 'captacao-oportunidades', title: 'Oportunidades', group: 'Captação',
-    columns: ['Código', 'Programa', 'Concedente', 'Modalidade', 'Prazo', 'Tema', 'Status'], rows, fields: [], source: 'captacao-oportunidades',
+    columns: ['Código', 'Programa', 'Concedente', 'Modalidade', 'Prazo', 'Tema', 'Status'], rows, detalhes: (d.programas as Documento[]).map(detalheOportunidade), fields: [], source: 'captacao-oportunidades',
     fonte: `Programas do Transferegov abertos e elegíveis a prefeituras de GO (${rows.length}). Fonte: Transferegov, arquivo siconv_programa; coleta em ${dataColeta(d)}. Temas por palavras-chave (rascunho).`,
   };
 }

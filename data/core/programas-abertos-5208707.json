@@ -3,7 +3,7 @@
   "fonte": "Transferegov — arquivo aberto siconv_programa.zip (Discricionárias e Legais)",
   "url_origem": "https://api-publica.transferegov.gestao.gov.br/downloads/dadosgov/siconv_programa.zip",
   "data_referencia": "Mon, 09 Nov 2026 11:13:02 GMT",
-  "data_coleta": "2026-11-10T00:50:07.247Z",
+  "data_coleta": "2026-11-10T01:12:43.669Z",
   "id_carga": "programas-abertos-2026-11-10"
  },
  "criterio": "situação DISPONIBILIZADO, com algum prazo (proposta, emendas ou beneficiário específico) igual ou posterior à data da coleta, aberto a \"Administração Pública Municipal\" na UF do município (ou sem UF). Classificação por tema = correspondência de palavras-chave de data/config/temas.json (rascunho, a validar).",
@@ -65,7 +65,30 @@
    ],
    "temas": [
     "seguranca_publica"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 65,
+    "propostas_municipais": 48,
+    "valor_repasse_municipal": {
+     "minimo": 198000,
+     "mediana": 250000,
+     "maximo": 2000000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "GOIÂNIA",
+      "valor": 2000000,
+      "situacao": "Proposta/Plano de Trabalho Complementado em Análise"
+     }
+    ],
+    "municipios_do_estado_total": 1,
+    "capitais_que_propuseram": [
+     "SÃO PAULO/SP",
+     "GOIÂNIA/GO"
+    ]
+   }
   },
   {
    "codigo": "3000020260004",
@@ -114,7 +137,21 @@
    ],
    "temas": [
     "seguranca_publica"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 20,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "4200020260003",
@@ -164,7 +201,47 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 136,
+    "propostas_municipais": 125,
+    "valor_repasse_municipal": {
+     "minimo": 0.01,
+     "mediana": 461338,
+     "maximo": 1046133
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "APARECIDA DE GOIÂNIA",
+      "valor": 584795,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CRIXÁS",
+      "valor": 530000,
+      "situacao": "Proposta/Plano de Trabalho Complementado Enviado para Análise"
+     },
+     {
+      "municipio": "APARECIDA DE GOIÂNIA",
+      "valor": 461338,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "GOIÂNIA",
+      "valor": 461338,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 4,
+    "capitais_que_propuseram": [
+     "PORTO ALEGRE/RS",
+     "ARACAJU/SE",
+     "CURITIBA/PR",
+     "GOIÂNIA/GO"
+    ]
+   }
   },
   {
    "codigo": "5100020260027",
@@ -214,7 +291,83 @@
    ],
    "temas": [
     "esporte_lazer"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 381,
+    "propostas_municipais": 375,
+    "valor_repasse_municipal": {
+     "minimo": 196000,
+     "mediana": 483752.68,
+     "maximo": 7831000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "PADRE BERNARDO",
+      "valor": 196000,
+      "situacao": "Proposta/Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "ITUMBIARA",
+      "valor": 487000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "POSSE",
+      "valor": 974000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "APARECIDA DE GOIÂNIA",
+      "valor": 390000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CACHOEIRA DE GOIÁS",
+      "valor": 196000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CIDADE OCIDENTAL",
+      "valor": 838259.46,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "FAZENDA NOVA",
+      "valor": 390000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "SANTA FÉ DE GOIÁS",
+      "valor": 390000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "PIRENÓPOLIS",
+      "valor": 196000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "ITAPIRAPUÃ",
+      "valor": 390000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 11,
+    "capitais_que_propuseram": [
+     "SÃO PAULO/SP",
+     "RIO BRANCO/AC",
+     "NATAL/RN",
+     "RIO DE JANEIRO/RJ",
+     "RECIFE/PE",
+     "CAMPO GRANDE/MS",
+     "MANAUS/AM",
+     "PORTO VELHO/RO",
+     "BELO HORIZONTE/MG",
+     "MACAPÁ/AP"
+    ]
+   }
   },
   {
    "codigo": "5100020260011",
@@ -264,7 +417,42 @@
    ],
    "temas": [
     "esporte_lazer"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 58,
+    "propostas_municipais": 57,
+    "valor_repasse_municipal": {
+     "minimo": 196000,
+     "mediana": 487000,
+     "maximo": 17190000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "PLANALTINA",
+      "valor": 196000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "ARAÇU",
+      "valor": 487000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "JUSSARA",
+      "valor": 487000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CORUMBÁ DE GOIÁS",
+      "valor": 779200,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 4,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5100020260013",
@@ -316,7 +504,75 @@
    "temas": [
     "educacao",
     "esporte_lazer"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 137,
+    "propostas_municipais": 132,
+    "valor_repasse_municipal": {
+     "minimo": 196000,
+     "mediana": 196000,
+     "maximo": 2940000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "SANTO ANTÔNIO DO DESCOBERTO",
+      "valor": 196000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "GOIANIRA",
+      "valor": 196000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "ANICUNS",
+      "valor": 196000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "ANÁPOLIS",
+      "valor": 245000,
+      "situacao": "Proposta/Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "SÃO FRANCISCO DE GOIÁS",
+      "valor": 196000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "CORUMBAÍBA",
+      "valor": 490000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "COCALZINHO DE GOIÁS",
+      "valor": 203840,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "GOIANÉSIA",
+      "valor": 367500,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "PIRENÓPOLIS",
+      "valor": 980000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "ANICUNS",
+      "valor": 196000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho em Complementação"
+     }
+    ],
+    "municipios_do_estado_total": 11,
+    "capitais_que_propuseram": [
+     "PALMAS/TO",
+     "PORTO ALEGRE/RS"
+    ]
+   }
   },
   {
    "codigo": "5100020260026",
@@ -367,7 +623,83 @@
    "temas": [
     "educacao",
     "esporte_lazer"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 370,
+    "propostas_municipais": 359,
+    "valor_repasse_municipal": {
+     "minimo": 0.01,
+     "mediana": 264992,
+     "maximo": 4900000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "PIRENÓPOLIS",
+      "valor": 264992,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "ANÁPOLIS",
+      "valor": 361138.82,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "SILVÂNIA",
+      "valor": 588000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "SIMOLÂNDIA",
+      "valor": 245000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "FAZENDA NOVA",
+      "valor": 361138.82,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "FAZENDA NOVA",
+      "valor": 50000,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "FORMOSA",
+      "valor": 306593.98,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "FAZENDA NOVA",
+      "valor": 111138.82,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "PADRE BERNARDO",
+      "valor": 588000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "ANÁPOLIS",
+      "valor": 196000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado em Análise"
+     }
+    ],
+    "municipios_do_estado_total": 10,
+    "capitais_que_propuseram": [
+     "PORTO VELHO/RO",
+     "TERESINA/PI",
+     "PORTO ALEGRE/RS",
+     "CAMPO GRANDE/MS",
+     "SÃO PAULO/SP",
+     "VITÓRIA/ES",
+     "ARACAJU/SE",
+     "FORTALEZA/CE",
+     "RIO BRANCO/AC",
+     "PALMAS/TO"
+    ]
+   }
   },
   {
    "codigo": "5300020260002",
@@ -416,7 +748,74 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 558,
+    "propostas_municipais": 541,
+    "valor_repasse_municipal": {
+     "minimo": 78375,
+     "mediana": 1000000,
+     "maximo": 49950000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "ANHANGUERA",
+      "valor": 199800,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "DAMIANÓPOLIS",
+      "valor": 1500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ANHANGUERA",
+      "valor": 249750,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ANHANGUERA",
+      "valor": 599400,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ANHANGUERA",
+      "valor": 199800,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "SÃO DOMINGOS",
+      "valor": 499500,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "SILVÂNIA",
+      "valor": 960000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "CRISTALINA",
+      "valor": 1500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ANHANGUERA",
+      "valor": 199800,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "DOVERLÂNDIA",
+      "valor": 599400,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 11,
+    "capitais_que_propuseram": [
+     "PALMAS/TO"
+    ]
+   }
   },
   {
    "codigo": "5300020260014",
@@ -465,7 +864,78 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 793,
+    "propostas_municipais": 779,
+    "valor_repasse_municipal": {
+     "minimo": 191000,
+     "mediana": 573000,
+     "maximo": 23614569
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "FAZENDA NOVA",
+      "valor": 382000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "ÁGUAS LINDAS DE GOIÁS",
+      "valor": 1343808,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "PLANALTINA",
+      "valor": 859500,
+      "situacao": "Proposta Aprovada e Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "NIQUELÂNDIA",
+      "valor": 387571,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "TAQUARAL DE GOIÁS",
+      "valor": 484308,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "PORTEIRÃO",
+      "valor": 533797,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "GOIANÉSIA",
+      "valor": 769571,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "FAZENDA NOVA",
+      "valor": 1814500,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "BURITI ALEGRE",
+      "valor": 1645255,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "AMERICANO DO BRASIL",
+      "valor": 764000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 11,
+    "capitais_que_propuseram": [
+     "SÃO PAULO/SP",
+     "PORTO VELHO/RO",
+     "MANAUS/AM",
+     "PORTO ALEGRE/RS",
+     "MACAPÁ/AP"
+    ]
+   }
   },
   {
    "codigo": "5300020260016",
@@ -514,7 +984,69 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 382,
+    "propostas_municipais": 372,
+    "valor_repasse_municipal": {
+     "minimo": 191000,
+     "mediana": 573000,
+     "maximo": 9913392
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "SIMOLÂNDIA",
+      "valor": 191000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "ANÁPOLIS",
+      "valor": 955000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "COLINAS DO SUL",
+      "valor": 191000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CIDADE OCIDENTAL",
+      "valor": 191000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "FLORES DE GOIÁS",
+      "valor": 191000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "VALPARAÍSO DE GOIÁS",
+      "valor": 955000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado Enviado para Análise"
+     },
+     {
+      "municipio": "CRISTALINA",
+      "valor": 191000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "ALEXÂNIA",
+      "valor": 3010357,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "MORRO AGUDO DE GOIÁS",
+      "valor": 539618,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 9,
+    "capitais_que_propuseram": [
+     "BOA VISTA/RR"
+    ]
+   }
   },
   {
    "codigo": "5300020260001",
@@ -563,7 +1095,78 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 5530,
+    "propostas_municipais": 5429,
+    "valor_repasse_municipal": {
+     "minimo": 4500,
+     "mediana": 1488510,
+     "maximo": 118800000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "PIRENÓPOLIS",
+      "valor": 3000000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "PIRENÓPOLIS",
+      "valor": 800000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "SÃO DOMINGOS",
+      "valor": 9990000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ARAGOIÂNIA",
+      "valor": 1200000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ANHANGUERA",
+      "valor": 599400,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ESTRELA DO NORTE",
+      "valor": 1498500,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "MOIPORÁ",
+      "valor": 1498500,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "CROMÍNIA",
+      "valor": 490000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "SILVÂNIA",
+      "valor": 499500,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "MOSSÂMEDES",
+      "valor": 1000000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 53,
+    "capitais_que_propuseram": [
+     "JOÃO PESSOA/PB",
+     "BOA VISTA/RR",
+     "MACAPÁ/AP",
+     "BELÉM/PA",
+     "ARACAJU/SE"
+    ]
+   }
   },
   {
    "codigo": "5400020260021",
@@ -614,7 +1217,82 @@
    ],
    "temas": [
     "turismo"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 546,
+    "propostas_municipais": 466,
+    "valor_repasse_municipal": {
+     "minimo": 0.01,
+     "mediana": 309000,
+     "maximo": 6630127.98
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "LAGOA SANTA",
+      "valor": 200000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "TEREZÓPOLIS DE GOIÁS",
+      "valor": 125000,
+      "situacao": "Proposta/Plano de Trabalho Complementado Enviado para Análise"
+     },
+     {
+      "municipio": "APORÉ",
+      "valor": 300000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "VALPARAÍSO DE GOIÁS",
+      "valor": 125000,
+      "situacao": "Proposta/Plano de Trabalho em Análise"
+     },
+     {
+      "municipio": "TURVÂNIA",
+      "valor": 200000,
+      "situacao": "Proposta/Plano de Trabalho Cadastrados"
+     },
+     {
+      "municipio": "SÃO DOMINGOS",
+      "valor": 200000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "PIRENÓPOLIS",
+      "valor": 237000,
+      "situacao": "Proposta/Plano de Trabalho Complementado Enviado para Análise"
+     },
+     {
+      "municipio": "CRIXÁS",
+      "valor": 125000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "FAZENDA NOVA",
+      "valor": 500000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "SÃO MIGUEL DO ARAGUAIA",
+      "valor": 562851,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     }
+    ],
+    "municipios_do_estado_total": 17,
+    "capitais_que_propuseram": [
+     "PORTO VELHO/RO",
+     "PORTO ALEGRE/RS",
+     "SALVADOR/BA",
+     "FORTALEZA/CE",
+     "RIO DE JANEIRO/RJ",
+     "RIO BRANCO/AC",
+     "CURITIBA/PR",
+     "MANAUS/AM",
+     "MACAPÁ/AP"
+    ]
+   }
   },
   {
    "codigo": "5300020260036",
@@ -664,7 +1342,55 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 983,
+    "propostas_municipais": 950,
+    "valor_repasse_municipal": {
+     "minimo": 199000,
+     "mediana": 1498500,
+     "maximo": 42576321.68
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "CACHOEIRA DE GOIÁS",
+      "valor": 1367256.6,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ITAPURANGA",
+      "valor": 399600,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ITAPURANGA",
+      "valor": 719280,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ITAUÇU",
+      "valor": 1900000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ITAPURANGA",
+      "valor": 449550,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ITAPURANGA",
+      "valor": 699300,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 6,
+    "capitais_que_propuseram": [
+     "ARACAJU/SE",
+     "BOA VISTA/RR"
+    ]
+   }
   },
   {
    "codigo": "3600020260073",
@@ -716,7 +1442,21 @@
    "temas": [
     "saude",
     "desenvolvimento_economico"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 2,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2629120260003",
@@ -767,7 +1507,21 @@
    "temas": [
     "educacao",
     "desenvolvimento_economico"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 1,
+    "propostas_municipais": 1,
+    "valor_repasse_municipal": {
+     "minimo": 4950000,
+     "mediana": 4950000,
+     "maximo": 4950000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2200020260004",
@@ -818,7 +1572,77 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 4313,
+    "propostas_municipais": 4278,
+    "valor_repasse_municipal": {
+     "minimo": 1,
+     "mediana": 999000,
+     "maximo": 70793471.37
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "ARAGOIÂNIA",
+      "valor": 500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "PIRACANJUBA",
+      "valor": 1300000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "IPIRANGA DE GOIÁS",
+      "valor": 1498000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "JARAGUÁ",
+      "valor": 845000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "MORRINHOS",
+      "valor": 750000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "JARAGUÁ",
+      "valor": 645000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "AVELINÓPOLIS",
+      "valor": 500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "PORANGATU",
+      "valor": 400000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "DIORAMA",
+      "valor": 1400000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "DIORAMA",
+      "valor": 1400000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 68,
+    "capitais_que_propuseram": [
+     "FLORIANÓPOLIS/SC",
+     "BOA VISTA/RR",
+     "SÃO LUÍS/MA",
+     "PORTO VELHO/RO"
+    ]
+   }
   },
   {
    "codigo": "2629820260001",
@@ -867,7 +1691,74 @@
    ],
    "temas": [
     "educacao"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 444,
+    "propostas_municipais": 437,
+    "valor_repasse_municipal": {
+     "minimo": 1707.54,
+     "mediana": 299319.38,
+     "maximo": 22000000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "SANTA BÁRBARA DE GOIÁS",
+      "valor": 128321.55,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "GOIANDIRA",
+      "valor": 28052.25,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "GOIANDIRA",
+      "valor": 6165.03,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "DAMOLÂNDIA",
+      "valor": 44267.79,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "RIO VERDE",
+      "valor": 84048.03,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "ITUMBIARA",
+      "valor": 299549.7,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "SANTA RITA DO NOVO DESTINO",
+      "valor": 175028.49,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "GOIANDIRA",
+      "valor": 73097.07,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "SANTA BÁRBARA DE GOIÁS",
+      "valor": 43456.5,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "RIO VERDE",
+      "valor": 127165.5,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 30,
+    "capitais_que_propuseram": [
+     "JOÃO PESSOA/PB"
+    ]
+   }
   },
   {
    "codigo": "2200020260006",
@@ -918,7 +1809,77 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 2642,
+    "propostas_municipais": 2607,
+    "valor_repasse_municipal": {
+     "minimo": 99000,
+     "mediana": 1500000,
+     "maximo": 83160000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "HIDROLINA",
+      "valor": 1400000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "CRISTALINA",
+      "valor": 1495000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "GOIÁS",
+      "valor": 2000000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "LUZIÂNIA",
+      "valor": 1500000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "EDEALINA",
+      "valor": 1495000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "ORIZONA",
+      "valor": 400000,
+      "situacao": "Proposta/Plano de Trabalho Complementado Enviado para Análise"
+     },
+     {
+      "municipio": "NOVO GAMA",
+      "valor": 19800000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "BONFINÓPOLIS",
+      "valor": 955000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "SANTO ANTÔNIO DO DESCOBERTO",
+      "valor": 865000,
+      "situacao": "Proposta/Plano de Trabalho Complementado Enviado para Análise"
+     },
+     {
+      "municipio": "SANTO ANTÔNIO DO DESCOBERTO",
+      "valor": 865000,
+      "situacao": "Proposta/Plano de Trabalho Complementado Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 68,
+    "capitais_que_propuseram": [
+     "MANAUS/AM",
+     "PORTO VELHO/RO",
+     "MACAPÁ/AP",
+     "BELÉM/PA"
+    ]
+   }
   },
   {
    "codigo": "2220320260041",
@@ -966,7 +1927,21 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2220320260003",
@@ -1014,7 +1989,21 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2220320260001",
@@ -1062,7 +2051,21 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2200020260013",
@@ -1113,7 +2116,72 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 344,
+    "propostas_municipais": 336,
+    "valor_repasse_municipal": {
+     "minimo": 0.01,
+     "mediana": 477500,
+     "maximo": 5161652.76
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "VILA BOA",
+      "valor": 191000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "ALVORADA DO NORTE",
+      "valor": 191000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "MUNDO NOVO",
+      "valor": 573000,
+      "situacao": "Proposta/Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "SIMOLÂNDIA",
+      "valor": 126122.08,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "PLANALTINA",
+      "valor": 191000,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "ÁGUA FRIA DE GOIÁS",
+      "valor": 126122.08,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "VALPARAÍSO DE GOIÁS",
+      "valor": 128240.27,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "COLINAS DO SUL",
+      "valor": 126122.08,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "GUARAÍTA",
+      "valor": 287416.8,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "ALEXÂNIA",
+      "valor": 191000,
+      "situacao": "Proposta Aprovada e Plano de Trabalho Complementado Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 20,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260023",
@@ -1163,7 +2231,82 @@
    ],
    "temas": [
     "desenvolvimento_urbano"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 1039,
+    "propostas_municipais": 1021,
+    "valor_repasse_municipal": {
+     "minimo": 0.01,
+     "mediana": 594541,
+     "maximo": 19617224
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "CABECEIRAS",
+      "valor": 438596,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "VALPARAÍSO DE GOIÁS",
+      "valor": 2870813,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "NERÓPOLIS",
+      "valor": 408881,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CRISTALINA",
+      "valor": 956115,
+      "situacao": "Proposta/Plano de Trabalho Rejeitados por Impedimento técnico"
+     },
+     {
+      "municipio": "ITAGUARI",
+      "valor": 974658,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "ITAUÇU",
+      "valor": 1364522,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "NOVA GLÓRIA",
+      "valor": 974658,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "ARUANÃ",
+      "valor": 566251,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "JESÚPOLIS",
+      "valor": 469226.3,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "FORMOSA",
+      "valor": 1485584,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 44,
+    "capitais_que_propuseram": [
+     "NATAL/RN",
+     "MACAPÁ/AP",
+     "BOA VISTA/RR",
+     "MANAUS/AM",
+     "RECIFE/PE",
+     "SALVADOR/BA",
+     "SÃO PAULO/SP",
+     "PORTO VELHO/RO",
+     "FORTALEZA/CE"
+    ]
+   }
   },
   {
    "codigo": "2200020260022",
@@ -1214,7 +2357,75 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 3333,
+    "propostas_municipais": 3310,
+    "valor_repasse_municipal": {
+     "minimo": 1,
+     "mediana": 627325,
+     "maximo": 43000000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "CAMPO ALEGRE DE GOIÁS",
+      "valor": 500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "JUSSARA",
+      "valor": 600000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "CAMPOS VERDES",
+      "valor": 500000,
+      "situacao": "Proposta/Plano de Trabalho Cadastrados"
+     },
+     {
+      "municipio": "ALTO HORIZONTE",
+      "valor": 1200000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "HEITORAÍ",
+      "valor": 500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "CAMPO ALEGRE DE GOIÁS",
+      "valor": 800000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ITARUMÃ",
+      "valor": 800000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "PALESTINA DE GOIÁS",
+      "valor": 500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "RUBIATABA",
+      "valor": 600000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ITABERAÍ",
+      "valor": 600000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 45,
+    "capitais_que_propuseram": [
+     "PORTO VELHO/RO",
+     "BOA VISTA/RR"
+    ]
+   }
   },
   {
    "codigo": "2200020260014",
@@ -1265,7 +2476,37 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 81,
+    "propostas_municipais": 80,
+    "valor_repasse_municipal": {
+     "minimo": 203988,
+     "mediana": 382000,
+     "maximo": 2865000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "BELA VISTA DE GOIÁS",
+      "valor": 686216.2,
+      "situacao": "Proposta Aprovada e Plano de Trabalho em Complementação"
+     },
+     {
+      "municipio": "NAZÁRIO",
+      "valor": 1020466.21,
+      "situacao": "Proposta/Plano de Trabalho Complementado em Análise"
+     },
+     {
+      "municipio": "BALIZA",
+      "valor": 334250,
+      "situacao": "Proposta/Plano de Trabalho em Complementação"
+     }
+    ],
+    "municipios_do_estado_total": 3,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260022",
@@ -1315,7 +2556,24 @@
    ],
    "temas": [
     "desenvolvimento_urbano"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 15,
+    "propostas_municipais": 14,
+    "valor_repasse_municipal": {
+     "minimo": 2235406,
+     "mediana": 2488038,
+     "maximo": 95693779
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": [
+     "CAMPO GRANDE/MS",
+     "NATAL/RN"
+    ]
+   }
   },
   {
    "codigo": "2629820260002",
@@ -1364,7 +2622,21 @@
    ],
    "temas": [
     "educacao"
-   ]
+   ],
+   "subtipo": "ECTI",
+   "subtipo_descricao": "Convênios ECTI - Decreto 8240, de 21 de maio de 2014.",
+   "historico": {
+    "propostas_total": 42,
+    "propostas_municipais": 1,
+    "valor_repasse_municipal": {
+     "minimo": 200000,
+     "mediana": 200000,
+     "maximo": 200000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2220320260002",
@@ -1412,7 +2684,21 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2629120260004",
@@ -1463,7 +2749,21 @@
    "temas": [
     "educacao",
     "desenvolvimento_economico"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 4,
+    "propostas_municipais": 1,
+    "valor_repasse_municipal": {
+     "minimo": 965000,
+     "mediana": 965000,
+     "maximo": 965000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2200020260018",
@@ -1514,7 +2814,74 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 908,
+    "propostas_municipais": 900,
+    "valor_repasse_municipal": {
+     "minimo": 99900,
+     "mediana": 1495500,
+     "maximo": 31796277.56
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "ITAPIRAPUÃ",
+      "valor": 605000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "PILAR DE GOIÁS",
+      "valor": 605000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "ACREÚNA",
+      "valor": 1500000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "MUTUNÓPOLIS",
+      "valor": 2000000,
+      "situacao": "Proposta/Plano de Trabalho Cadastrados"
+     },
+     {
+      "municipio": "SÃO SIMÃO",
+      "valor": 605000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "SÃO FRANCISCO DE GOIÁS",
+      "valor": 605000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "MOZARLÂNDIA",
+      "valor": 800000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "PORTELÂNDIA",
+      "valor": 1888000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "MUTUNÓPOLIS",
+      "valor": 1900000,
+      "situacao": "Proposta/Plano de Trabalho Cadastrados"
+     },
+     {
+      "municipio": "CACHOEIRA DE GOIÁS",
+      "valor": 1367256.6,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     }
+    ],
+    "municipios_do_estado_total": 11,
+    "capitais_que_propuseram": [
+     "BOA VISTA/RR"
+    ]
+   }
   },
   {
    "codigo": "5600020260013",
@@ -1565,7 +2932,23 @@
    ],
    "temas": [
     "mobilidade_urbana"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 3,
+    "propostas_municipais": 3,
+    "valor_repasse_municipal": {
+     "minimo": 3444976,
+     "mediana": 3827751,
+     "maximo": 9569377
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": [
+     "ARACAJU/SE"
+    ]
+   }
   },
   {
    "codigo": "2220320260025",
@@ -1613,7 +2996,21 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5100020260006",
@@ -1662,7 +3059,21 @@
    ],
    "temas": [
     "esporte_lazer"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 8,
+    "propostas_municipais": 8,
+    "valor_repasse_municipal": {
+     "minimo": 196000,
+     "mediana": 225400,
+     "maximo": 225400
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2220320260021",
@@ -1684,7 +3095,72 @@
    "ufs": [
     "GO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 10,
+    "propostas_municipais": 10,
+    "valor_repasse_municipal": {
+     "minimo": 1432500,
+     "mediana": 1528000,
+     "maximo": 1910000
+    },
+    "municipios_do_estado": [
+     {
+      "municipio": "PORTELÂNDIA",
+      "valor": 1432500,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "MAMBAÍ",
+      "valor": 1910000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CORUMBÁ DE GOIÁS",
+      "valor": 1432500,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "GOIATUBA",
+      "valor": 1528000,
+      "situacao": "Proposta/Plano de Trabalho Enviado para Análise"
+     },
+     {
+      "municipio": "JATAÍ",
+      "valor": 1528000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "BURITI ALEGRE",
+      "valor": 1910000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "DAMIANÓPOLIS",
+      "valor": 1528000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "TURVELÂNDIA",
+      "valor": 1528000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "MORRINHOS",
+      "valor": 1528000,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     },
+     {
+      "municipio": "CAMPO ALEGRE DE GOIÁS",
+      "valor": 1432500,
+      "situacao": "Proposta/Plano de Trabalho Aprovados"
+     }
+    ],
+    "municipios_do_estado_total": 10,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2220320260024",
@@ -1706,7 +3182,21 @@
    "ufs": [
     "GO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "2200020260017",
@@ -1757,7 +3247,21 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 53,
+    "propostas_municipais": 52,
+    "valor_repasse_municipal": {
+     "minimo": 262052,
+     "mediana": 287455,
+     "maximo": 6685000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260007",
@@ -1808,7 +3312,21 @@
    ],
    "temas": [
     "saneamento"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260006",
@@ -1858,7 +3376,21 @@
    ],
    "temas": [
     "drenagem"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260008",
@@ -1909,7 +3441,21 @@
    ],
    "temas": [
     "saneamento"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260009",
@@ -1960,7 +3506,21 @@
    ],
    "temas": [
     "saneamento"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260004",
@@ -2010,7 +3570,21 @@
    ],
    "temas": [
     "mobilidade_urbana"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5400020260001",
@@ -2061,7 +3635,23 @@
    ],
    "temas": [
     "turismo"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 278,
+    "propostas_municipais": 258,
+    "valor_repasse_municipal": {
+     "minimo": 0.01,
+     "mediana": 500000,
+     "maximo": 5350000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": [
+     "JOÃO PESSOA/PB"
+    ]
+   }
   },
   {
    "codigo": "3090520260001",
@@ -2112,7 +3702,21 @@
    ],
    "temas": [
     "seguranca_publica"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 4,
+    "propostas_municipais": 3,
+    "valor_repasse_municipal": {
+     "minimo": 2500000,
+     "mediana": 3580000,
+     "maximo": 24884256
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260001",
@@ -2158,7 +3762,21 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 1,
+    "propostas_municipais": 1,
+    "valor_repasse_municipal": {
+     "minimo": 565261.15,
+     "mediana": 565261.15,
+     "maximo": 565261.15
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260027",
@@ -2204,7 +3822,23 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 2,
+    "propostas_municipais": 2,
+    "valor_repasse_municipal": {
+     "minimo": 56889952,
+     "mediana": 61344166.95,
+     "maximo": 61344166.95
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": [
+     "BELO HORIZONTE/MG"
+    ]
+   }
   },
   {
    "codigo": "2041120260005",
@@ -2253,7 +3887,23 @@
    ],
    "temas": [
     "cultura"
-   ]
+   ],
+   "subtipo": "NOVO PAC - FORMALIZAÇÃO",
+   "subtipo_descricao": "DECRETO Nº 11.855, DE 26 DE DEZEMBRO DE 2023. Dispõe sobre termos de compromisso relativos às transferências obrigatórias de recursos da União para a execução de ações do Programa de Aceleração do Crescimento - Novo PAC.",
+   "historico": {
+    "propostas_total": 3,
+    "propostas_municipais": 3,
+    "valor_repasse_municipal": {
+     "minimo": 1500000,
+     "mediana": 4500000,
+     "maximo": 5200000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": [
+     "BELO HORIZONTE/MG"
+    ]
+   }
   },
   {
    "codigo": "5100020260007",
@@ -2302,7 +3952,21 @@
    ],
    "temas": [
     "esporte_lazer"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 1,
+    "propostas_municipais": 1,
+    "valor_repasse_municipal": {
+     "minimo": 500000,
+     "mediana": 500000,
+     "maximo": 500000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5100020260029",
@@ -2351,7 +4015,21 @@
    ],
    "temas": [
     "esporte_lazer"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 1,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "3600020260076",
@@ -2402,7 +4080,21 @@
    ],
    "temas": [
     "saude"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 16,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260002",
@@ -2452,7 +4144,21 @@
    ],
    "temas": [
     "drenagem"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5500020260021",
@@ -2501,7 +4207,21 @@
    ],
    "temas": [
     "assistencia_social"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 10,
+    "propostas_municipais": 10,
+    "valor_repasse_municipal": {
+     "minimo": 824004,
+     "mediana": 893158,
+     "maximo": 1434000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "3600020260089",
@@ -2552,7 +4272,21 @@
    ],
    "temas": [
     "saude"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 5,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "3600020260090",
@@ -2603,7 +4337,21 @@
    ],
    "temas": [
     "saude"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 1,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5300020260033",
@@ -2652,7 +4400,21 @@
     "SP",
     "TO"
    ],
-   "temas": []
+   "temas": [],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 2,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5400020260002",
@@ -2702,7 +4464,21 @@
    ],
    "temas": [
     "turismo"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 62,
+    "propostas_municipais": 62,
+    "valor_repasse_municipal": {
+     "minimo": 243750,
+     "mediana": 1461988.3,
+     "maximo": 20984585.65
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5400020260018",
@@ -2751,7 +4527,21 @@
    ],
    "temas": [
     "turismo"
-   ]
+   ],
+   "subtipo": null,
+   "subtipo_descricao": null,
+   "historico": {
+    "propostas_total": 9,
+    "propostas_municipais": 7,
+    "valor_repasse_municipal": {
+     "minimo": 250000,
+     "mediana": 500000,
+     "maximo": 500000
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260003",
@@ -2800,7 +4590,21 @@
    ],
    "temas": [
     "mobilidade_urbana"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "5600020260026",
@@ -2849,7 +4653,21 @@
    ],
    "temas": [
     "desenvolvimento_urbano"
-   ]
+   ],
+   "subtipo": "NOVO PAC",
+   "subtipo_descricao": "SELEÇÃO",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   },
   {
    "codigo": "3600020260097",
@@ -2898,7 +4716,21 @@
    ],
    "temas": [
     "saude"
-   ]
+   ],
+   "subtipo": "NOVO PAC - FORMALIZAÇÃO",
+   "subtipo_descricao": "DECRETO Nº 11.855, DE 26 DE DEZEMBRO DE 2023. Dispõe sobre termos de compromisso relativos às transferências obrigatórias de recursos da União para a execução de ações do Programa de Aceleração do Crescimento - Novo PAC.",
+   "historico": {
+    "propostas_total": 0,
+    "propostas_municipais": 0,
+    "valor_repasse_municipal": {
+     "minimo": null,
+     "mediana": null,
+     "maximo": null
+    },
+    "municipios_do_estado": [],
+    "municipios_do_estado_total": 0,
+    "capitais_que_propuseram": []
+   }
   }
  ]
 }
