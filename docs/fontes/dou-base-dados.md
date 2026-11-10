@@ -55,3 +55,15 @@ Formato da lista de municípios e valores (tabela no texto ou anexo/PDF): NÃO C
 - https://github.com/Imprensa-Nacional
 - https://github.com/Imprensa-Nacional/inlabs
 - https://datadryad.org/dataset/doi:10.15146/R3D96N (secundária)
+
+## Atualização 2026-11-09 — captura do dono (navegador, página oficial "Base de Dados")
+O WebFetch e o curl não conectam a `in.gov.br` (socket hang up), mas a página abre no navegador do dono. O que ela informa (lido em capturas de tela):
+- **Formato:** XML compactado em **ZIP**, organizado como **Ano > Mês > arquivo.zip**.
+- **Nome dos arquivos (padrão mensal):** `S01`/`S02`/`S03` (Seção 1, 2 ou 3) + **mês (2 dígitos) + ano (4 dígitos)**. Ex.: `S01102026.zip` = Seção 1 de outubro/2026. Seção 1 = atos normativos de interesse geral (leis, decretos, resoluções, **portarias**); Seção 2 = atos de pessoal; Seção 3 = extratos de contratos, convênios, editais, licitações e comunicados.
+- **Exceção de outubro/2026:** arquivos **atualizados diariamente**, com o nome seguido de `HoraMinutoSegundo` (HHmmss). Estrutura de pastas: `Dados Abertos/2026/10/20261021/D01, D01E, D02, D02E, D03`.
+- O conteúdo em XML **não substitui** a versão certificada (PDF). O **dicionário de dados será divulgado em data a definir** (campos do XML ainda não documentados).
+- Também há publicação em `dados.gov.br` (organização `imprensa-nacional-in`), atualizada conforme o Plano de Dados Abertos do órgão.
+- A página tem seletores de **ano** e **mês**; para outubro/2026 aparecem `S01102026.zip`, `S03102026.zip` e `S02102026.zip`.
+- **Ainda não confirmado:** o endereço (URL) real de download de cada ZIP, o tamanho e se exige algum cadastro. Falta o dono copiar o endereço de um link (clique direito → "Copiar endereço do link").
+- Uso para o FNAS: portarias da SNAS ficam na **Seção 1**; filtrar por órgão "Ministério do Desenvolvimento e Assistência Social" e por "Fundo Nacional de Assistência Social"/"Goiânia".
+**Status: PARCIAL** (estrutura conhecida; URL e campos do XML a confirmar).
