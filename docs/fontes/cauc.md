@@ -40,4 +40,9 @@ Colunas: UF, Nome do Ente Federado, Código IBGE, Código SIAFI, Região, Popula
 
 **Data da última validação: 2026-11-09**
 
-**Status: OK**
+**Status: OK** (coletor `coletores/cauc.ts` implementado e testado em 2026-11-09)
+
+## Atualização 2026-11-09 — interpretação confirmada e coletor
+- Metadado oficial (PDF, Tesouro Transparente): a célula traz a **data de validade** da comprovação do requisito; `!` = não foi possível obter a comprovação (pendência); `Desabilitado` = item indisponível na data para todos os entes. Itens e descrições em `data/config/cauc-itens.json` (28 itens).
+- Formato real das datas no CSV: **dd/mm/aa** (ano com 2 dígitos), e células vazias aparecem nos itens 5.6 e 5.7 (sem informação; significado não documentado).
+- Coletor `coletores/cauc.ts`: grava `data/core/cauc-<ibge>.json` (situação do dia) e `cauc-historico-<ibge>.json` (só mudanças de item, base dos alertas). Teste em 2026-11-09: Goiânia **regular** (25 itens com validade em dia, 1 desabilitado, 2 sem informação); validades mais próximas: 09/11/26 (itens 1.2 a 1.5, 3.4.1, 3.4.2, 3.5 e 4.2) — vencem hoje e exigem atenção na próxima carga.
