@@ -1,3 +1,4 @@
+import { chavesDe, registrarFalha, registrarSucesso, segundosBloqueado } from '../lib/rate-limit.js';
 import { authConfig, constantTimeEqual, COOKIE_NAME, createSession, passwordDigest, platformNext, SESSION_SECONDS } from '../lib/session.js';
 
 export async function POST(request: Request): Promise<Response> {
@@ -10,13 +11,23 @@ export async function POST(request: Request): Promise<Response> {
   const next = platformNext(form.get('next'));
   const email = form.get('email');
   const password = form.get('senha');
+  const chaves = chavesDe(request, email);
+  // Limite de tentativas: bloqueado, nem chega a comparar a senha (e a mensagem não revela se o e-mail existe).
+  if (segundosBloqueado(chaves) > 0) {
+    return new Response(null, { status: 303, headers: {
+      Location: new URL(`/entrar/?erro=2&next=${encodeURIComponent(next)}`, request.url).href,
+      'Cache-Control': 'private, no-store',
+    } });
+  }
   const config = authConfig();
   const digest = await passwordDigest(typeof password === 'string' ? password : '');
   const passwordMatches = constantTimeEqual(digest, config?.passwordHash ?? '');
   if (!config || typeof email !== 'string' || typeof password !== 'string'
     || email.trim().toLowerCase() !== config.email || !passwordMatches) {
+    registrarFalha(chaves);
     return Response.redirect(new URL(`/entrar/?erro=1&next=${encodeURIComponent(next)}`, request.url), 303);
   }
+  registrarSucesso(chaves);
   const session = await createSession(config.email, config.secret);
   return new Response(null, { status: 303, headers: {
     Location: new URL(next, request.url).href,
