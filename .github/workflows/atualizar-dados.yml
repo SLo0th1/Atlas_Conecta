@@ -35,26 +35,22 @@ jobs:
       - name: Trazer os coletores da branch de trabalho (somente no teste inicial)
         if: github.event_name == 'push'
         run: git checkout "$GITHUB_SHA" -- coletores src data/config .github || true
-      - name: IBGE (municípios e população; dado mensal, não bloqueia a rotina)
-        continue-on-error: true
-        run: |
-          for i in 1 2 3; do node coletores/ibge-municipios.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
+      # Cada coletor roda por coletores/rodar.ts: 3 tentativas e registro do resultado e do MOTIVO de qualquer falha
+      # em data/core/status-coletas.json (painel "Qualidade dos dados" e alertas de fonte defasada).
+      - name: IBGE (municípios e população)
+        run: node coletores/rodar.ts ibge coletores/ibge-municipios.ts
       - name: CAUC
-        run: |
-          for i in 1 2 3; do node coletores/cauc.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
+        run: node coletores/rodar.ts cauc coletores/cauc.ts
       - name: SICONFI
-        run: |
-          for i in 1 2 3; do node coletores/siconfi.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
+        run: node coletores/rodar.ts siconfi coletores/siconfi.ts
       - name: FNS (município e capitais)
-        run: |
-          for i in 1 2 3; do node coletores/fns.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
+        run: node coletores/rodar.ts fns coletores/fns.ts
       - name: Programas abertos
-        run: |
-          for i in 1 2 3; do node coletores/programas-abertos.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
-      - name: Transferegov (convênios) e resumo para as telas
-        run: |
-          node coletores/transferegov-convenios.ts --forcar
-          node coletores/derivar-acompanhamento.ts
+        run: node coletores/rodar.ts programas-abertos coletores/programas-abertos.ts
+      - name: Transferegov (convênios)
+        run: node coletores/rodar.ts transferegov coletores/transferegov-convenios.ts --forcar
+      - name: Resumo de acompanhamento para as telas
+        run: node coletores/rodar.ts acompanhamento coletores/derivar-acompanhamento.ts
       - name: Enviar para a branch de dados
         run: |
           git config user.name "atlas-conecta-bot"
@@ -62,7 +58,7 @@ jobs:
           git reset -q
           git checkout -B dados-atualizados
           git add data/core/ibge-municipios.json data/core/cauc-*.json data/core/siconfi-*.json data/core/fns-*.json \
-                  data/core/programas-abertos-*.json data/core/acompanhamento-*.json
+                  data/core/programas-abertos-*.json data/core/acompanhamento-*.json data/core/status-coletas.json
           if git diff --cached --quiet; then echo "Sem mudanças nos dados."; exit 0; fi
           git commit -m "Dados atualizados em $(date -u +%F) (coleta automática)"
           git push --force-with-lease origin dados-atualizados || git push --force origin dados-atualizados
