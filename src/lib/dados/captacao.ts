@@ -8,6 +8,7 @@ import { detalheOportunidade } from './detalhes.ts';
 import { detalheConvenio } from './detalhes-convenio.ts';
 import { DIAS_PRAZO_PROGRAMA, DIAS_SEM_DESEMBOLSO, IBGE, gerarAlertas } from './alertas.ts';
 import { montarPrincipal } from './principal.ts';
+import { montarProjetos } from '../projetos/guia.ts';
 import { montarQualidade } from './qualidade.ts';
 import { montarComparativo } from './comparativo.ts';
 import type { Modulo } from './tipos.ts';
@@ -86,7 +87,7 @@ function alertas(): Modulo | null {
 /** Substitui as guias de exemplo do bloco Captação pelas versões com dados reais (quando a carga existe). */
 export function modulosComDadosReais<T extends { slug: string }>(base: T[]): (T | Modulo)[] {
   const substitutos: Record<string, Modulo | null> = {
-    captacao: montarPrincipal(gerarAlertas()), 'captacao-qualidade': montarQualidade(), 'captacao-comparativo': montarComparativo(), 'captacao-oportunidades': oportunidades(), 'captacao-acompanhamento': acompanhamento(), 'captacao-alertas': alertas(),
+    captacao: montarPrincipal(gerarAlertas()), 'captacao-projetos': montarProjetos(), 'captacao-qualidade': montarQualidade(), 'captacao-comparativo': montarComparativo(), 'captacao-oportunidades': oportunidades(), 'captacao-acompanhamento': acompanhamento(), 'captacao-alertas': alertas(),
   };
   return base.map((m) => substitutos[m.slug] ?? m);
 }
