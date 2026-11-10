@@ -23,3 +23,4 @@
 - 2026-11-10: Guia Principal ganha o indicador de Educação (INEP): escolas, matrículas por rede e etapa, comparação 2023/2024 e série do IDEB.
 - 2026-11-10: Nova guia Comparativo (repasses de saúde do FNS às 27 capitais por habitante; grupos que outras capitais recebem e Goiânia não; detalhe por capital) e agenda iCalendar dos prazos (/plataforma/agenda.ics, 114 eventos com lembretes de 30 e 7 dias, protegida pelo login).
 - 2026-11-10: Motor de parecer determinístico da guia Projetos (src/lib/projetos): 21 regras R01-R21 (CAUC, prazo, elegibilidade, metas e indicadores, cronograma, valores, contrapartida, despesa de pessoal, frescor das fontes, citações, hash de aprovação), 27 testes (node --test tests/projetos/parecer.test.ts). Sem IA e sem gravar projetos.
+- 2026-11-10: Guia Projetos mostra o parecer automático em 2 exemplos fictícios (100% pronto; 19% com 10 bloqueantes), com cada regra no detalhe. Sem IA e sem gravar projetos reais.
