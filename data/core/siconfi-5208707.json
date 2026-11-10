@@ -1,0 +1,40 @@
+{
+ "proveniencia": {
+  "fonte": "Tesouro Nacional — SICONFI (RREO Anexo 01 e RGF Anexo 01, Prefeitura)",
+  "url_origem": "https://apidatalake.tesouro.gov.br/ords/siconfi/tt",
+  "data_referencia": {
+   "rreo": "2026/bimestre 4 (homologado em 2026-09-30T14:59:18Z)",
+   "rgf": "2026/quadrimestre 2 (homologado em 2026-09-30T15:01:07Z)"
+  },
+  "data_coleta": "2026-11-10T00:20:36.357Z",
+  "id_carga": "siconfi-2026-11-10"
+ },
+ "municipio": {
+  "codigo_ibge": 5208707
+ },
+ "rreo": {
+  "exercicio": 2026,
+  "bimestre": 4,
+  "receita_prevista_atualizada": 10328972000,
+  "receita_realizada_ate_bimestre": 7069819837.61,
+  "receitas_correntes_realizadas_ate_bimestre": 6768383534.29
+ },
+ "rgf": {
+  "exercicio": 2026,
+  "quadrimestre": 2,
+  "receita_corrente_liquida": 9370571912.96,
+  "rcl_ajustada": 9248299789.96,
+  "despesa_pessoal_total": 4215406322.33,
+  "despesa_pessoal_pct_rcl": 45.58,
+  "limite_maximo_pct": 54,
+  "limite_prudencial_pct": 51.3,
+  "limite_alerta_pct": 48.6
+ },
+ "derivados": {
+  "situacao_despesa_pessoal": "abaixo do limite de alerta",
+  "margem_ate_limite_maximo_pontos_percentuais": 8.42,
+  "execucao_receita_pct": 68.45
+ },
+ "avisos": [],
+ "nota": "Indicadores de apoio à análise de contrapartida; a regra de capacidade de contrapartida será definida com o dono do produto."
+}
