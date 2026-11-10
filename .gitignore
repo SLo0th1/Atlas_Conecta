@@ -11,3 +11,7 @@ validation/
 # Captação: dados brutos ficam fora do Git (reprocessáveis pelos coletores)
 data/raw/*
 !data/raw/.gitkeep
+
+# Arquivos volumosos regenerados pelos coletores (as telas usam os resumos enxutos)
+data/core/transferegov-*.json
+data/core/portal-transparencia-*.json

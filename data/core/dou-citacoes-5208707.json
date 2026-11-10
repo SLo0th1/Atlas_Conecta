@@ -1,0 +1,110 @@
+{
+ "proveniencia": {
+  "fonte": "Imprensa Nacional — Diário Oficial da União, base de dados abertos (XML)",
+  "url_origem": "https://www.in.gov.br/acesso-a-informacao/dados-abertos/base-de-dados",
+  "data_referencia": [
+   "data\\raw\\dou\\S01102026.zip (7857 publicações)"
+  ],
+  "data_coleta": "2026-11-10T01:46:02.578Z",
+  "id_carga": "dou-2026-11-10"
+ },
+ "municipio": {
+  "codigo_ibge": 5208707,
+  "nome": "Goiânia"
+ },
+ "cnpjs_monitorados": 23,
+ "resumo": {
+  "citacoes": 8,
+  "por_cnpj": 1
+ },
+ "citacoes": [
+  {
+   "data": "06/10/2026",
+   "secao": "DO1",
+   "tipo": "Despacho",
+   "orgao": "Ministério da Saúde/Secretaria de Ciência, Tecnologia e Inovação em Saúde",
+   "titulo": "DESPACHOS de 5 de outubro de 2026",
+   "motivo": "cita o município",
+   "trecho": "ipação da empresa DROGACALIL COMERCIO DE MEDICAMENTOS LTDA, inscrita no CNPJ sob o nº 13.970.275/0001-08, localizada no Município de GOIANIA - GO, no Programa Farmácia Popular do Brasil - Aqui Tem Farmácia Popular. Ref.: Processo nº 25000.097555/2021-20. Interessado: ARPOADOR COMERCIO DE MEDICAMENTOS LTDA. Assunto: Can",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=06/10/2026&jornal=515&pagina=241",
+   "id_materia": "24457894"
+  },
+  {
+   "data": "06/10/2026",
+   "secao": "DO1",
+   "tipo": "Despacho",
+   "orgao": "Ministério da Saúde/Secretaria de Ciência, Tecnologia e Inovação em Saúde",
+   "titulo": "DESPACHOS de 5 de outubro de 2026",
+   "motivo": "cita o município",
+   "trecho": "mento da participação da empresa ELOISA BORGES DE CARVALHO, inscrita no CNPJ sob o nº 26.658.211/0001-00, localizada no Município de GOIÂNIA - GO, do Programa Farmácia Popular do Brasil - Aqui Tem Farmácia Popular. Ref.: Processo nº 25000.098378/2023-61. Interessado: RAIA DROGASIL S/A. Assunto: Cancelamento da particip",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=06/10/2026&jornal=515&pagina=242",
+   "id_materia": "24457895"
+  },
+  {
+   "data": "15/10/2026",
+   "secao": "DO1",
+   "tipo": "Despacho",
+   "orgao": "Ministério da Saúde/Secretaria de Ciência, Tecnologia e Inovação em Saúde",
+   "titulo": "DESPACHOS de 13 de outubro de 2026",
+   "motivo": "cita o município",
+   "trecho": "cancelamento da participação da empresa DANIEL A. DE SOUZA, inscrita no CNPJ sob o nº 13.783.078/0001-71, localizada no Município de GOIÂNIA - GO, no Programa Farmácia Popular do Brasil - Aqui Tem Farmácia Popular. Ref.: Processo nº 25000.163130/2010-63. Interessado: DROGARIA BEM ESTAR MEDICAMENTOS LTDA. Assunto: Cance",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=15/10/2026&jornal=515&pagina=61",
+   "id_materia": "24492442"
+  },
+  {
+   "data": "19/10/2026",
+   "secao": "DO1",
+   "tipo": "Portaria",
+   "orgao": "Ministério da Defesa/Comando da Aeronáutica/Departamento de Controle do Espaço Aéreo/Instituto de Cartografia Aeronáutica",
+   "titulo": "PORTARIA Nº 2.555/SAGA, DE 15 DE SETEMBRO DE 2026",
+   "motivo": "cita o município",
+   "trecho": "Plano Básico de Zona de Proteção de Heliponto (PBZPH) para o Heliponto TJGO - TRIBUNAL DE JUSTIÇA DE GOIÁS, situado no Município de Goiânia, no Estado de Goiás - GO. Processo nº 67612.900684/2020-76. Esta Portaria entra em vigor na data de sua publicação. O inteiro teor das Portarias acima e seus anexos constituem arq",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=19/10/2026&jornal=515&pagina=22",
+   "id_materia": "24513656"
+  },
+  {
+   "data": "19/10/2026",
+   "secao": "DO1",
+   "tipo": "Portaria",
+   "orgao": "Ministério da Defesa/Comando da Aeronáutica/Gabinete do Comandante/Assessoria de Organização, Legislação, Ensino e Operações",
+   "titulo": "PORTARIA GABAER/GC3 Nº 1.767, DE 15 DE OUTUBRO DE 2026",
+   "motivo": "cita o município",
+   "trecho": "go, resolve: Art. 1º Fica autorizado, em grau de recurso por interesse público, declarado e ratificado pelo Prefeito do Município de Goiânia, Estado de Goiás, a implantação de OPEA denominado \"Francisco Vieira Neto\", localizado no Plano Básico de Zona de Proteção - PBZPA do Aeroporto Internacional de Goiânia Santa Geno",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=19/10/2026&jornal=515&pagina=22",
+   "id_materia": "24514242"
+  },
+  {
+   "data": "20/10/2026",
+   "secao": "DO1",
+   "tipo": "Pauta",
+   "orgao": "Ministério Público da União/Ministério Público do Trabalho/Procuradoria-Geral/Câmara de Coordenação e Revisão",
+   "titulo": "PAUTA DA 94ª SESSÃO ORDINÁRIA",
+   "motivo": "cita o município",
+   "trecho": "o de Lacerda Carelli. Processo NF-000867.2026.18.000/8 - Assunto: 4.CONAP, 9.TEMAS GERAIS - Interessados: NOTICIADO(A): MUNICÍPIO DE GOIÂNIA (SECRETARIA MUNICIPAL DE SAÚDE - CAPS NOVO MUNDO) - Relator: Dr. Rodrigo de Lacerda Carelli. Processo NF-001389.2026.23.000/2 - Assunto: 4.CONAP - Interessados: NOTICIADO(A): LIMP",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=20/10/2026&jornal=515&pagina=117",
+   "id_materia": "24524103"
+  },
+  {
+   "data": "21/10/2026",
+   "secao": "DO1",
+   "tipo": "Portaria",
+   "orgao": "Ministério da Defesa/Comando da Aeronáutica/Departamento de Controle do Espaço Aéreo/Instituto de Cartografia Aeronáutica",
+   "titulo": "PORTARIAS DE 15 DE OUTUBRO DE 2026",
+   "motivo": "cita o município",
+   "trecho": "2.693/SAGA - Revogar o Plano Básico de Zona de Proteção de Heliponto (PBZPH) para o Heliponto HIPER MOREIRA, situado no Município de Goiânia, no Estado de Goiás - GO. Processo nº 67612.900101/2016-21. Esta Portaria entra em vigor na data de sua publicação. O inteiro teor das Portarias acima e seus anexos constituem arq",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=21/10/2026&jornal=515&pagina=22",
+   "id_materia": "24527962"
+  },
+  {
+   "data": "29/10/2026",
+   "secao": "DO1",
+   "tipo": "Ata",
+   "orgao": "Tribunal de Contas da União/2ª Câmara",
+   "titulo": "ATA Nº 37, DE 27 DE OUTUBRO DE 2026",
+   "motivo": "cita CNPJ monitorado",
+   "trecho": "-53); Everton Sérgio Schmaltz (***.***.***-**); Fausto Nieri Moraes Sarmento (***.***.***-**); Municipal de Goiânia-GO (01.612.092/0001-23); Rogério Oliveira da Cruz (***.***.***-**). 4. Unidade Jurisdicionada: Município de Goiânia-GO. 5. Relator: Ministro João Augusto Ribeiro Nardes. 6. Representante do Ministério Púb",
+   "url_pdf": "http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=29/10/2026&jornal=515&pagina=187",
+   "id_materia": "24563291"
+  }
+ ]
+}
