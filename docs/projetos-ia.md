@@ -341,3 +341,10 @@ Cada etapa em branch própria, PR para revisão, `npm run check` + build + teste
 6. Qual tipo de pacote de envio deve ser o padrão (PDF e DOCX editável, ou só PDF)? A prefeitura prefere o roteiro em PDF ou na tela?
 7. Anexos (projeto básico, certidões) podem ser enviados ao LLM em alguma etapa futura, ou nunca (apenas metadados e nome)?
 8. Há política de retenção (por quantos anos guardar versões, prompts e auditoria)?
+
+## Decisões do dono (2026-11-10)
+1. **IA: sem IA agora.** Começar pelo MVP sem IA (etapas P1 a P4: editor, versões e parecer determinístico). Objetivo de longo prazo: **LLM própria** treinada/ajustada para este tipo de trabalho (hoje só registrado como direção; não há provedor externo a configurar).
+2. **Armazenamento de projetos reais: manter como está** até novo direcionamento. Ou seja, **nenhum rascunho, anexo ou valor de projeto real é gravado** (o repositório é público). A etapa P5 (persistência) fica suspensa; o motor de parecer e o editor podem ser desenvolvidos e testados com dados de exemplo, sem gravar.
+3. **Aprovação com um só usuário:** a mesma pessoa que elabora aprova, com confirmação digitada e registro de nome e cargo (quando houver persistência).
+4. **Requisitos de cada programa** (valor mínimo, contrapartida mínima, documentos): confirmados pela **equipe da prefeitura**.
+5. **Parecer:** aceita a proposta inicial de gravidades e limites. Regra adicional do dono: **sempre sinalizar dados muito defasados**, entender o motivo e corrigir, evitando ao máximo que aconteça (ver o painel "Qualidade dos dados").
