@@ -12,7 +12,7 @@ if (!nome || !script) {
 }
 const TENTATIVAS = Number(process.env.RODAR_TENTATIVAS ?? 3);
 const ESPERA_S = Number(process.env.RODAR_ESPERA_S ?? 30);
-const caminho = 'data/core/status-coletas.json';
+const caminho = process.env.RODAR_STATUS ?? 'data/core/status-coletas.json';
 
 let erro: string | null = null;
 let tentativas = 0;
