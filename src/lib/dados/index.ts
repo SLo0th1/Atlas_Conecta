@@ -57,6 +57,8 @@ export interface CnpjCandidato {
   status_validacao: 'pendente_validacao' | 'validado';
 }
 
+export type Documento = Record<string, any>;
+
 /** Contrato único de acesso a dados. A versão PostgreSQL implementará esta mesma interface. */
 export interface RepositorioCaptacao {
   obterMunicipio(codigoIbge: number): Municipio | undefined;
@@ -65,11 +67,26 @@ export interface RepositorioCaptacao {
   listarSecretarias(): Secretaria[];
   listarCnpjsCandidatos(codigoIbge: number): CnpjCandidato[];
   proveniencia(conjunto: 'ibge-municipios'): Proveniencia;
+  /** Conjuntos coletados do município (Fase 1). Devolvem undefined se a carga ainda não foi executada. */
+  acompanhamento(codigoIbge: number): Documento | undefined;
+  programasAbertos(codigoIbge: number): Documento | undefined;
+  cauc(codigoIbge: number): Documento | undefined;
+  citacoesDou(codigoIbge: number): Documento | undefined;
+  siconfi(codigoIbge: number): Documento | undefined;
+  fns(codigoIbge: number): Documento | undefined;
+  fnsCapitais(ano: number): Documento | undefined;
 }
 
 const raiz = process.cwd();
 const ler = <T>(caminho: string): T => JSON.parse(readFileSync(join(raiz, caminho), 'utf8')) as T;
 const cache = new Map<string, unknown>();
+const opcional = (caminho: string): Documento | undefined => {
+  try {
+    return unico<Documento>(caminho);
+  } catch {
+    return undefined; // carga ainda não executada
+  }
+};
 const unico = <T>(caminho: string): T => {
   if (!cache.has(caminho)) cache.set(caminho, ler<T>(caminho));
   return cache.get(caminho) as T;
@@ -95,6 +112,13 @@ export const repositorioJson: RepositorioCaptacao = {
       return []; // carga ainda não executada
     }
   },
+  acompanhamento: (i) => opcional(`data/core/acompanhamento-${i}.json`),
+  programasAbertos: (i) => opcional(`data/core/programas-abertos-${i}.json`),
+  cauc: (i) => opcional(`data/core/cauc-${i}.json`),
+  citacoesDou: (i) => opcional(`data/core/dou-citacoes-${i}.json`),
+  siconfi: (i) => opcional(`data/core/siconfi-${i}.json`),
+  fns: (i) => opcional(`data/core/fns-${i}.json`),
+  fnsCapitais: (ano) => opcional(`data/core/fns-capitais-${ano}.json`),
   proveniencia: (conjunto) => unico<{ proveniencia: Proveniencia }>(`data/core/${conjunto}.json`).proveniencia,
 };
 
