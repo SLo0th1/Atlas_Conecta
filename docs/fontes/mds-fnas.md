@@ -37,3 +37,8 @@ Todas as tentativas diretas: 302 e depois 403 (curl com User-Agent de navegador)
 
 ## Atualização 2026-11-09 — captura do dono (navegador)
 A página institucional https://www.gov.br/mds/pt-br/servicos/sistemas abre normalmente no navegador (atualizada em 12/11/2024) e lista os sistemas do MDS (Bolsa Família: SIGPBF, Sibec, CadÚnico V7, Sicon; Cadastro Único e outros). É página de serviços, **não** fonte de dados de repasses. `aplicacoes.mds.gov.br` segue sem teste de dados (curl recebeu 403). Status mantido: **INACESSÍVEL para coleta automática**; próximos passos: localizar no SUASWeb/Painel de Repasses (VIS DATA) uma consulta pública de repasses fundo a fundo e capturar a URL pela aba Rede, como feito no FNS.
+
+## Sondagem 2026-11-09 (alternativas)
+- A API `fundoafundo` do Transferegov (api.transferegov.gestao.gov.br/fundoafundo/programa) foi consultada: 129 programas, de SENASP (22), SPPE (51), DIRPP (42), MinC (12), FNDE (1) e MCID (1). **Nenhum do MDS/FNAS**: os repasses do SUAS não estão nesse módulo.
+- Busca na web: apresentações oficiais indicam que o FNAS repassa por fundo a fundo no sistema **EstruturaSUAS** (ação orçamentária 219G) e que as parcelas pagas são acompanhadas no **SUASWeb ("Parcelas Pagas", consulta pública)**. URL atual da consulta pública **não confirmada**. Portarias da SNAS com a lista de transferências são publicadas no DOU (ex.: Portaria SNAS nº 92, de 10/06/2026), o que torna o DOU (ver `dou-inlabs.md`) uma fonte alternativa para os repasses do SUAS.
+- Próximo passo: o dono localiza a consulta pública no navegador e captura a URL pela aba Rede.
