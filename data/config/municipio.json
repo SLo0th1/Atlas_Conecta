@@ -1,0 +1,12 @@
+{
+  "municipios": [
+    {
+      "codigo_ibge": 5208707,
+      "nome": "Goiânia",
+      "uf": "GO",
+      "piloto": true,
+      "cnpjs": [],
+      "observacao": "CNPJs da prefeitura e dos fundos pendentes de levantamento (T5) e de validação pela prefeitura."
+    }
+  ]
+}

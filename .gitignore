@@ -7,3 +7,7 @@ validation/
 .DS_Store
 .vercel
 .env*
+
+# Captação: dados brutos ficam fora do Git (reprocessáveis pelos coletores)
+data/raw/*
+!data/raw/.gitkeep
