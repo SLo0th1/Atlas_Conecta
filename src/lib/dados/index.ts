@@ -127,7 +127,12 @@ export const repositorioJson: RepositorioCaptacao = {
   educacao: (i) => opcional(`data/core/educacao-${i}.json`),
   cnes: (i) => opcional(`data/core/cnes-${i}.json`),
   saneamento: (i) => opcional(`data/core/saneamento-${i}.json`),
-  statusColetas: () => opcional("data/core/status-coletas.json"),
+  statusColetas: () => {
+    const diario = opcional('data/core/status-coletas.json');
+    const mensal = opcional('data/core/status-coletas-mensais.json');
+    if (!diario && !mensal) return undefined;
+    return { atualizado_em: mensal?.atualizado_em ?? diario?.atualizado_em, coletores: { ...(diario?.coletores ?? {}), ...(mensal?.coletores ?? {}) } };
+  },
   proveniencia: (conjunto) => unico<{ proveniencia: Proveniencia }>(`data/core/${conjunto}.json`).proveniencia,
 };
 
