@@ -1,0 +1,67 @@
+# Atualização MENSAL dos dados de cadência lenta do bloco Captação: educação (INEP), saneamento (SINISA) e saúde (CNES).
+# Roda no dia 5 de cada mês (08:00 em Brasília) e, manualmente, quando necessário. Dados públicos, sem chaves.
+# Grava só em data/core, na branch "dados-mensais-atualizados" (nunca na main) e tenta abrir um Pull Request;
+# o merge (que republica o site) continua sendo decisão do dono. O resultado de cada coletor (e o motivo de falhas)
+# fica em data/core/status-coletas-mensais.json e aparece na guia "Qualidade dos dados".
+# O CNES pagina 20 registros por chamada: leva cerca de 20 minutos.
+name: Atualizar dados mensais do bloco Captação
+on:
+  schedule:
+    - cron: '0 11 5 * *'
+  workflow_dispatch:
+  push:
+    branches: [captacao-mensal]
+    paths: ['.github/workflows/atualizar-dados-mensais.yml']
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: atualizar-dados-mensais
+  cancel-in-progress: false
+env:
+  RODAR_STATUS: data/core/status-coletas-mensais.json
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Instalar bsdtar (leitura de ZIP em fluxo)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libarchive-tools
+      - name: Trazer os coletores da branch de trabalho (somente no teste inicial)
+        if: github.event_name == 'push'
+        run: git checkout "$GITHUB_SHA" -- coletores src data/config .github || true
+      - name: Educação (INEP: Censo Escolar e IDEB)
+        run: node coletores/rodar.ts educacao coletores/inep-educacao.ts
+      - name: Saneamento (SINISA)
+        run: node coletores/rodar.ts saneamento coletores/sinisa.ts
+      - name: Saúde (CNES)
+        env:
+          RODAR_TENTATIVAS: '2'
+        run: node coletores/rodar.ts cnes coletores/cnes.ts
+      - name: Enviar para a branch de dados mensais
+        run: |
+          git config user.name "atlas-conecta-bot"
+          git config user.email "atlas-conecta-bot@users.noreply.github.com"
+          git reset -q
+          git checkout -B dados-mensais-atualizados
+          git add data/core/educacao-*.json data/core/saneamento-*.json data/core/cnes-*.json data/core/status-coletas-mensais.json
+          if git diff --cached --quiet; then echo "Sem mudanças nos dados."; exit 0; fi
+          git commit -m "Dados mensais atualizados em $(date -u +%F) (coleta automática)"
+          git push --force-with-lease origin dados-mensais-atualizados || git push --force origin dados-mensais-atualizados
+      - name: Abrir o Pull Request (se ainda não existir)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(gh pr list --head dados-mensais-atualizados --base main --state open --json number --jq length)" = "0" ]; then
+            gh pr create --base main --head dados-mensais-atualizados \
+              --title "Dados mensais atualizados (INEP, SINISA e CNES)" \
+              --body "Atualização automática mensal dos dados de educação (INEP), saneamento (SINISA) e saúde (CNES) em data/core. Somente dados; nenhum código alterado. Ao mesclar, o site é republicado." \
+              || echo "Não foi possível abrir o PR automaticamente (permissão de Actions); abra manualmente a partir da branch dados-mensais-atualizados."
+          fi
