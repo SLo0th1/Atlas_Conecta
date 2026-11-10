@@ -72,7 +72,7 @@
   },
   {
    "nr_convenio": "753798",
-   "objeto": "Realização de cursos de qualificação profissional, e aquisição de insumos para essas capacitações, nas áreas de corte e modelagem, costura industrial e bordado livre, voltados preferencialmente, para beneficiários do Programa Bolsa Família do município de Goiânia/Goiás, atendendo á finalidade descri",
+   "objeto": "Realização de cursos de qualificação profissional, e aquisição de insumos para essas capacitações, nas áreas de corte e modelagem, costura industrial e bordado livre, voltados preferencialmente, para beneficiários do Programa Bolsa Família do município de Goiânia/Goiás, atendendo á finalidade descrita na Ação 4963 - Promoção da Inclusão Produtiva.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTÉRIO DO DESENVOLVIMENTO E ASSISTÊNCIA SOCIAL, FAMÍLIA E COMBATE FOME",
    "orgao": "MINISTÉRIO DO DESENVOLVIMENTO E ASSISTÊNCIA SOCIAL, FAMÍLIA E COMBATE FOME",
@@ -212,7 +212,36 @@
    "valor_contrapartida": 0,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 3522624.03,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2024NE002241",
+     "data": "23/12/2024",
+     "situacao": "Enviado",
+     "valor": 5228.25
+    },
+    {
+     "numero": "2024NE001899",
+     "data": "07/12/2024",
+     "situacao": "Enviado",
+     "valor": 41061.36
+    },
+    {
+     "numero": "2024NE002210",
+     "data": "23/12/2024",
+     "situacao": "Enviado",
+     "valor": 9722.77
+    },
+    {
+     "numero": "2024NE001503",
+     "data": "14/10/2024",
+     "situacao": "Enviado",
+     "valor": 11500
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "719936",
@@ -338,7 +367,26 @@
    "valor_contrapartida": 40901,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 16759099,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2023NE003363",
+     "data": "28/12/2023",
+     "situacao": "Enviado",
+     "valor": 16759099
+    }
+   ],
+   "aditivos": [],
+   "emendas": [
+    {
+     "numero": "60110003",
+     "parlamentar": "COM. DESENV REGIONAL E TURISMO",
+     "tipo_parlamentar": "COMISSAO",
+     "impositivo": "NÃO",
+     "valor_repasse": 16759099
+    }
+   ]
   },
   {
    "nr_convenio": "776155",
@@ -374,7 +422,160 @@
    "valor_contrapartida": 3391860.92,
    "valor_desembolsado": 2100000,
    "saldo_a_liberar": 8400000,
-   "qtd_aditivos": 2
+   "qtd_aditivos": 2,
+   "desembolsos": [
+    {
+     "data": "19/07/2023",
+     "valor": 1575000
+    },
+    {
+     "data": "09/04/2021",
+     "valor": 525000
+    }
+   ],
+   "empenhos": [
+    {
+     "numero": "2020NE800025",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800024",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800031",
+     "data": "23/11/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800022",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800018",
+     "data": "16/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800023",
+     "data": "20/10/2020",
+     "situacao": "Enviado",
+     "valor": 500000
+    },
+    {
+     "numero": "2020NE800026",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800024",
+     "data": "23/11/2020",
+     "situacao": "Enviado",
+     "valor": 2451209.94
+    },
+    {
+     "numero": "2020NE800027",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800023",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800011",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 161252.06
+    },
+    {
+     "numero": "2020NE800017",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 35944
+    },
+    {
+     "numero": "2020NE800020",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 150000
+    },
+    {
+     "numero": "2020NE800022",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 639888
+    },
+    {
+     "numero": "2020NE800021",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 74501
+    },
+    {
+     "numero": "2020NE800021",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800019",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 4617
+    },
+    {
+     "numero": "2020NE800018",
+     "data": "19/10/2020",
+     "situacao": "Enviado",
+     "valor": 95977
+    },
+    {
+     "numero": "2020NE800029",
+     "data": "20/10/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    },
+    {
+     "numero": "2020NE800016",
+     "data": "16/10/2020",
+     "situacao": "Enviado",
+     "valor": 4286611
+    }
+   ],
+   "aditivos": [
+    {
+     "numero": "2/2025",
+     "tipo": "Alteração da Vigência",
+     "assinatura": "24/11/2025",
+     "inicio": "24/11/2025",
+     "fim": "14/01/2027",
+     "valor_global": null,
+     "valor_repasse": null
+    },
+    {
+     "numero": "1/2023",
+     "tipo": "Acréscimo",
+     "assinatura": "23/02/2023",
+     "inicio": "",
+     "fim": "",
+     "valor_global": 3370860.92,
+     "valor_repasse": 0
+    }
+   ],
+   "emendas": []
   },
   {
    "nr_convenio": "914474",
@@ -522,7 +723,7 @@
   },
   {
    "nr_convenio": "776429",
-   "objeto": "ESTABELECIMENTO DE COOPERACAO TECNICA E FINANCEIRA MUTUA PARA A INTEGRACAO E OPERACIONALIZACAO DAS FUNCOES E ACOES DO SISTEMA PUBLICO DE EMPREGO, TRABALHO E RENDA - SPETR DE INTERMEDIACAO DE MAO DE OBRA, SEGURO DESEMPREGO, QUALIFICACAO SOCIAL E PROFISSIONAL, CERTIFICACAO PROFISSIONAL, FOMENTO AS ATI",
+   "objeto": "ESTABELECIMENTO DE COOPERACAO TECNICA E FINANCEIRA MUTUA PARA A INTEGRACAO E OPERACIONALIZACAO DAS FUNCOES E ACOES DO SISTEMA PUBLICO DE EMPREGO, TRABALHO E RENDA - SPETR DE INTERMEDIACAO DE MAO DE OBRA, SEGURO DESEMPREGO, QUALIFICACAO SOCIAL E PROFISSIONAL, CERTIFICACAO PROFISSIONAL, FOMENTO AS ATIVIDADES EMPREENDEDORAS E INFORMACOES SOBRE MERCADO DE TRABALHO COM A MANUTENCAO DOS CENTROS PUBLICOS DE EMPREGO, TRABALHO E RENDA, ESPACOS DESTINADOS AO ATENDIMENTO DO TRABALHADOR TENDO EM VISTA A SUA INSERCAO NO MERCADO DE TRABALHO.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTERIO DO TRABALHO E EMPREGO",
    "orgao": "MINISTERIO DO TRABALHO E EMPREGO",
@@ -554,7 +755,26 @@
    "valor_contrapartida": 3000,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 292397,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2026NE000346",
+     "data": "25/09/2026",
+     "situacao": "Enviado",
+     "valor": 292397
+    }
+   ],
+   "aditivos": [],
+   "emendas": [
+    {
+     "numero": "43930011",
+     "parlamentar": "ISMAEL ALEXANDRINO",
+     "tipo_parlamentar": "INDIVIDUAL",
+     "impositivo": "SIM",
+     "valor_repasse": 292397
+    }
+   ]
   },
   {
    "nr_convenio": "705793",
@@ -576,7 +796,7 @@
   },
   {
    "nr_convenio": "776037",
-   "objeto": "Viabilizar condições para garantir a formação profissional dos trabalhadores com qualidade, a fim de atender as necessidades reais dos setores da economia local, bem como o aumento das chances de inserção e reinserção no mercado de trabalho, tendo como premissa a integração com a intermediação de mã",
+   "objeto": "Viabilizar condições para garantir a formação profissional dos trabalhadores com qualidade, a fim de atender as necessidades reais dos setores da economia local, bem como o aumento das chances de inserção e reinserção no mercado de trabalho, tendo como premissa a integração com a intermediação de mão de obra operacionalizada no âmbito do SINE.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTERIO DO TRABALHO E EMPREGO",
    "orgao": "MINISTERIO DO TRABALHO E EMPREGO",
@@ -680,7 +900,18 @@
    "valor_contrapartida": 0,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 706500,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2026NE000335",
+     "data": "05/03/2026",
+     "situacao": "Enviado",
+     "valor": 706500
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "970654",
@@ -698,7 +929,24 @@
    "valor_contrapartida": 0,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 29965012,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2026NE001638",
+     "data": "22/06/2026",
+     "situacao": "Enviado",
+     "valor": 299649.72
+    },
+    {
+     "numero": "2024NE001953",
+     "data": "29/10/2024",
+     "situacao": "Enviado",
+     "valor": 1498251
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "882065",
@@ -720,7 +968,7 @@
   },
   {
    "nr_convenio": "725340",
-   "objeto": "Consiste na edificação e implantação de 02 (duas) bibliotecas em regiões de Goiânia carentes de equipamentos culturais. Estas Bibliotecas vão proporcionar a acessibilidade da comunidade a informação, a pesquisa e despertar o habito da leitura, bem como oportunizar a diversidade cultural, sendo um ce",
+   "objeto": "Consiste na edificação e implantação de 02 (duas) bibliotecas em regiões de Goiânia carentes de equipamentos culturais. Estas Bibliotecas vão proporcionar a acessibilidade da comunidade a informação, a pesquisa e despertar o habito da leitura, bem como oportunizar a diversidade cultural, sendo um centro convergente no contexto social para estas regiões.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTERIO DA CULTURA",
    "orgao": "MINISTERIO DA CULTURA",
@@ -882,7 +1130,7 @@
   },
   {
    "nr_convenio": "888348",
-   "objeto": "Em conformidade com o que estabelece o inciso V, do art. 16, da Portaria Interministerial MP/MF/MTF-CGU Nº 424, de 30 de dezembro de 2016, declaro que este Ente dispõe de estrutura física e quadro de profissionais com capacidade técnica, administrativa e gerencial para a execução do objeto proposto,",
+   "objeto": "Em conformidade com o que estabelece o inciso V, do art. 16, da Portaria Interministerial MP/MF/MTF-CGU Nº 424, de 30 de dezembro de 2016, declaro que este Ente dispõe de estrutura física e quadro de profissionais com capacidade técnica, administrativa e gerencial para a execução do objeto proposto, declarando, ainda, ter a experiência no desenvolvimento das atividades propostas pelo convênio a ser celebrado, assumindo inteira responsabilidade pelo cumprimento de todas as fases exigidas legal e juridicamente, inclusive no que tange à formalização, celebração, instrução, execução e a prestação de contas do convênio com a União.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTÉRIO DO DESENVOLVIMENTO E ASSISTÊNCIA SOCIAL, FAMÍLIA E COMBATE FOME",
    "orgao": "MINISTÉRIO DO DESENVOLVIMENTO E ASSISTÊNCIA SOCIAL, FAMÍLIA E COMBATE FOME",
@@ -1026,7 +1274,7 @@
   },
   {
    "nr_convenio": "799654",
-   "objeto": "1. OBJETO Este projeto visa promover a integração dos serviços que compõe as redes de atendimento à mulher em situação de violência. Tem como objeto a manutenção da Casa Abrigo e de locação de um espaço físico para instalação de equipamentos de segurança que abrigará/acolherá mulheres que sofram alg",
+   "objeto": "1. OBJETO Este projeto visa promover a integração dos serviços que compõe as redes de atendimento à mulher em situação de violência. Tem como objeto a manutenção da Casa Abrigo e de locação de um espaço físico para instalação de equipamentos de segurança que abrigará/acolherá mulheres que sofram algum tipo de violência doméstica e familiar ou estejam em situação de risco de morte ou ameaça juntamente com seus filhos.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTERIO DOS DIREITOS HUMANOS E CIDADANIA",
    "orgao": "MINISTERIO DOS DIREITOS HUMANOS E CIDADANIA",
@@ -1062,7 +1310,7 @@
   },
   {
    "nr_convenio": "720568",
-   "objeto": "Reduzir as desigualdades raciais promovendo uma cultura não-discriminatória, de forma a assegurar à população negra plena cidadania no exercício de seus direitos, resgatando sua importância na construção da sociedade brasileira, valorizando suas manifestações culturais e artísticas, para além de opo",
+   "objeto": "Reduzir as desigualdades raciais promovendo uma cultura não-discriminatória, de forma a assegurar à população negra plena cidadania no exercício de seus direitos, resgatando sua importância na construção da sociedade brasileira, valorizando suas manifestações culturais e artísticas, para além de oportunizar melhoria nas condições de vida dessa população, no âmbito da Região Metropolitana de Goiânia.Os Objetivos Específicos a serem buscados com o desenvolvimento de nosso Projeto são:•\t- garantir a difusão da cultura afro-brasileira em toda a região metropolitana de Goiânia, de modo que a “Feira de Amostra da Arte e Cultura Afro-Brasileira” seja inserida no calendário de festejos locais;•\taproximar a gestão municipal de igualdade racial com a sociedade civil organizada, com o movimento negro, e até com o  governo federal, qualificando a ação desenvolvida de modo articulado e descentralizad",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTÉRIO DA IGUALDADE RACIAL",
    "orgao": "MINISTÉRIO DA IGUALDADE RACIAL",
@@ -1152,7 +1400,7 @@
   },
   {
    "nr_convenio": "737343",
-   "objeto": "Oferecer e desenvolver atividades diferenciadas para crianças, adolescentes e jovens, no período de férias escolares, fortalecendo e qualificando as ações do Programa Segundo Tempo junto as comunidades onde o mesmo encontra-se implantado, propiciando o acesso à prática esportiva e de lazer em benefí",
+   "objeto": "Oferecer e desenvolver atividades diferenciadas para crianças, adolescentes e jovens, no período de férias escolares, fortalecendo e qualificando as ações do Programa Segundo Tempo junto as comunidades onde o mesmo encontra-se implantado, propiciando o acesso à prática esportiva e de lazer em benefício a 5.100 crianças, jovens e adolescentes do  município de Goiânia-Go conforme Projeto Básico e Plano de Trabalho elaborados a partir do Manual de Diretrizes do Recreio nas Férias, disponibilizado no Portal do ME e no SICONV\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTERIO DO ESPORTE",
    "orgao": "MINISTERIO DO ESPORTE",
@@ -1310,7 +1558,26 @@
    "valor_contrapartida": 4725.42,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 467817,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2023NE000477",
+     "data": "09/08/2023",
+     "situacao": "Enviado",
+     "valor": 467817
+    }
+   ],
+   "aditivos": [],
+   "emendas": [
+    {
+     "numero": "39890010",
+     "parlamentar": "FRANCISCO JR.",
+     "tipo_parlamentar": "INDIVIDUAL",
+     "impositivo": "SIM",
+     "valor_repasse": 467817
+    }
+   ]
   },
   {
    "nr_convenio": "836193",
@@ -1346,7 +1613,36 @@
    "valor_contrapartida": 9000,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 191000,
-   "qtd_aditivos": 1
+   "qtd_aditivos": 1,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2024NE000013",
+     "data": "04/12/2024",
+     "situacao": "Enviado",
+     "valor": 191000
+    }
+   ],
+   "aditivos": [
+    {
+     "numero": "1/2026",
+     "tipo": "Alteração da Vigência",
+     "assinatura": "18/12/2025",
+     "inicio": "18/12/2025",
+     "fim": "31/12/2026",
+     "valor_global": null,
+     "valor_repasse": null
+    }
+   ],
+   "emendas": [
+    {
+     "numero": "43990007",
+     "parlamentar": "JEFERSON RODRIGUES",
+     "tipo_parlamentar": "INDIVIDUAL",
+     "impositivo": "SIM",
+     "valor_repasse": 191000
+    }
+   ]
   },
   {
    "nr_convenio": "853555",
@@ -1368,7 +1664,7 @@
   },
   {
    "nr_convenio": "723932",
-   "objeto": "Implementação do Centro Público Municipal de Economia Solidária, no intuito de desenvolver, fortalecer e articular as redes de produção e consumo local, com base nos princípios da Economia Solidária, propiciando auto-sustentabilidade das mesmas, respeitando as características sociais, culturais e ec",
+   "objeto": "Implementação do Centro Público Municipal de Economia Solidária, no intuito de desenvolver, fortalecer e articular as redes de produção e consumo local, com base nos princípios da Economia Solidária, propiciando auto-sustentabilidade das mesmas, respeitando as características sociais, culturais e econômicas do município de Goiânia, estabelecendo assim, a equidade entre os pares, como a igualdade de gênero, raça, etnia, idade, garantindo a emancipação dos grupos que ainda são discriminados.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTERIO DO TRABALHO E EMPREGO",
    "orgao": "MINISTERIO DO TRABALHO E EMPREGO",
@@ -1706,7 +2002,85 @@
    "valor_contrapartida": 3000,
    "valor_desembolsado": 1050679.26,
    "saldo_a_liberar": 18392.4,
-   "qtd_aditivos": 5
+   "qtd_aditivos": 5,
+   "desembolsos": [
+    {
+     "data": "01/08/2023",
+     "valor": 642097.5
+    },
+    {
+     "data": "25/03/2024",
+     "valor": 408581.76
+    }
+   ],
+   "empenhos": [
+    {
+     "numero": "2020NE800441",
+     "data": "29/12/2020",
+     "situacao": "Enviado",
+     "valor": 408738.33
+    },
+    {
+     "numero": "2020NE800442",
+     "data": "29/12/2020",
+     "situacao": "Enviado",
+     "valor": 18235.83
+    },
+    {
+     "numero": "2020NE800683",
+     "data": "24/12/2020",
+     "situacao": "Enviado",
+     "valor": 0
+    }
+   ],
+   "aditivos": [
+    {
+     "numero": "2/2023",
+     "tipo": "Alteração da Vigência",
+     "assinatura": "21/12/2023",
+     "inicio": "28/12/2023",
+     "fim": "28/06/2024",
+     "valor_global": null,
+     "valor_repasse": null
+    },
+    {
+     "numero": "3/2024",
+     "tipo": "Alteração da Vigência",
+     "assinatura": "26/06/2024",
+     "inicio": "28/06/2024",
+     "fim": "28/02/2025",
+     "valor_global": null,
+     "valor_repasse": null
+    },
+    {
+     "numero": "5/2025",
+     "tipo": "Alteração da Vigência",
+     "assinatura": "13/02/2026",
+     "inicio": "28/02/2026",
+     "fim": "28/02/2027",
+     "valor_global": null,
+     "valor_repasse": null
+    },
+    {
+     "numero": "4/2025",
+     "tipo": "Alteração da Vigência",
+     "assinatura": "27/02/2025",
+     "inicio": "28/02/2025",
+     "fim": "28/02/2026",
+     "valor_global": null,
+     "valor_repasse": null
+    },
+    {
+     "numero": "1/2022",
+     "tipo": "Alteração da Vigência",
+     "assinatura": "27/12/2022",
+     "inicio": "28/12/2022",
+     "fim": "28/12/2023",
+     "valor_global": null,
+     "valor_repasse": null
+    }
+   ],
+   "emendas": []
   },
   {
    "nr_convenio": "979171",
@@ -1724,7 +2098,18 @@
    "valor_contrapartida": 34505.66,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 3416059.5,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2025NE790672",
+     "data": "02/12/2025",
+     "situacao": "Enviado",
+     "valor": 512408.93
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "949819",
@@ -1742,7 +2127,18 @@
    "valor_contrapartida": 23513.26,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 2327812.5,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2023NE000415",
+     "data": "28/11/2023",
+     "situacao": "Enviado",
+     "valor": 2327812.5
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "703186",
@@ -1832,7 +2228,18 @@
    "valor_contrapartida": 34505.66,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 3416059.5,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2025NE790668",
+     "data": "02/12/2025",
+     "situacao": "Enviado",
+     "valor": 512408.93
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "827032",
@@ -1940,7 +2347,18 @@
    "valor_contrapartida": 34505.66,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 3416059.5,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2025NE790669",
+     "data": "02/12/2025",
+     "situacao": "Enviado",
+     "valor": 512408.93
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "706927",
@@ -2030,7 +2448,18 @@
    "valor_contrapartida": 23513.26,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 2327812.5,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2023NE000413",
+     "data": "28/11/2023",
+     "situacao": "Enviado",
+     "valor": 2327812.5
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "882063",
@@ -2084,7 +2513,18 @@
    "valor_contrapartida": 34505.66,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 3416059.5,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2025NE790667",
+     "data": "02/12/2025",
+     "situacao": "Enviado",
+     "valor": 512408.93
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "964273",
@@ -2102,7 +2542,18 @@
    "valor_contrapartida": 1207144.75,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 10864302.74,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2024NE001438",
+     "data": "28/06/2024",
+     "situacao": "Enviado",
+     "valor": 1629645.41
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "779150",
@@ -2214,7 +2665,7 @@
   },
   {
    "nr_convenio": "702357",
-   "objeto": "Estabelecimento de cooperação técnica e financeira mútua para a integração e operacionalização das funções e ações do Sistema Público de Emprego, trabalho e Renda de intermediação de mão-de-obra, seguro-desemprego, qualificação social e profissional, certificação profissional, fomento às atividades ",
+   "objeto": "Estabelecimento de cooperação técnica e financeira mútua para a integração e operacionalização das funções e ações do Sistema Público de Emprego, trabalho e Renda de intermediação de mão-de-obra, seguro-desemprego, qualificação social e profissional, certificação profissional, fomento às atividades empreendedoras e informações sobre o mercado de trabalho com a manutenção das unidades do SINE, espaços destinados ao atendimento do trabalhador tendo em vista a sua inserção no mercado de trabalho.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTERIO DO TRABALHO E EMPREGO",
    "orgao": "MINISTERIO DO TRABALHO E EMPREGO",
@@ -2462,7 +2913,43 @@
    "valor_contrapartida": 0,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 12163281.71,
-   "qtd_aditivos": 2
+   "qtd_aditivos": 2,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2024NE000002",
+     "data": "06/09/2024",
+     "situacao": "Enviado",
+     "valor": 785000
+    },
+    {
+     "numero": "2025NE000013",
+     "data": "18/09/2025",
+     "situacao": "Enviado",
+     "valor": 3500000
+    }
+   ],
+   "aditivos": [
+    {
+     "numero": "2/2026",
+     "tipo": "Acréscimo",
+     "assinatura": "18/02/2026",
+     "inicio": "",
+     "fim": "",
+     "valor_global": 1084835.5,
+     "valor_repasse": 1084835.5
+    },
+    {
+     "numero": "1/2025",
+     "tipo": "Supressão",
+     "assinatura": "12/06/2025",
+     "inicio": "",
+     "fim": "",
+     "valor_global": -4621553.79,
+     "valor_repasse": -4621553.79
+    }
+   ],
+   "emendas": []
   },
   {
    "nr_convenio": "904268",
@@ -2534,7 +3021,18 @@
    "valor_contrapartida": 23513.26,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 2327812.5,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2023NE000412",
+     "data": "28/11/2023",
+     "situacao": "Enviado",
+     "valor": 2327812.5
+    }
+   ],
+   "aditivos": [],
+   "emendas": []
   },
   {
    "nr_convenio": "927324",
@@ -2642,11 +3140,30 @@
    "valor_contrapartida": 4733.33,
    "valor_desembolsado": 0,
    "saldo_a_liberar": 461338,
-   "qtd_aditivos": null
+   "qtd_aditivos": null,
+   "desembolsos": [],
+   "empenhos": [
+    {
+     "numero": "2026NE000312",
+     "data": "23/07/2026",
+     "situacao": "Enviado",
+     "valor": 461338
+    }
+   ],
+   "aditivos": [],
+   "emendas": [
+    {
+     "numero": "50040001",
+     "parlamentar": "COM. CULTURA",
+     "tipo_parlamentar": "COMISSAO",
+     "impositivo": "NÃO",
+     "valor_repasse": 461338
+    }
+   ]
   },
   {
    "nr_convenio": "704773",
-   "objeto": "Execução de obras de reurbanização do vale do Córrego Botafogo compreendendo, nesta etapa, a implantação de pista lateral na margem direita do córrego, com respectivo sistema de drenagem e recomposição do leito do córrego, execução de ponte na Rua 1018 sobre o córrego, canalização do córrego sob a A",
+   "objeto": "Execução de obras de reurbanização do vale do Córrego Botafogo compreendendo, nesta etapa, a implantação de pista lateral na margem direita do córrego, com respectivo sistema de drenagem e recomposição do leito do córrego, execução de ponte na Rua 1018 sobre o córrego, canalização do córrego sob a Avenida 2ª Radial, pontes de travessia na Avenida 2ª Radial com alças de acesso a esta avenida. Tudo no trecho compreendido entre as Avenidas Jamel Cecílio (Av. 136) e 2ª Radial.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "MINISTÉRIO DA INTEGRAÇÃO E DO DESENVOLVIMENTO REGIONAL",
    "orgao": "MINISTÉRIO DA INTEGRAÇÃO E DO DESENVOLVIMENTO REGIONAL",
@@ -2682,7 +3199,7 @@
   },
   {
    "nr_convenio": "802384",
-   "objeto": "Implementação do Conselho Municipal dos Direitos das Pessoas com Deficiência, no município de Goiânia por meio de sua estruturação física e do processo de Capacitação de seus conselheiros e servidores da  Secretária Municipal de Políticas para Pessoas com Deficiência ou Mobilidade Reduzida, criando ",
+   "objeto": "Implementação do Conselho Municipal dos Direitos das Pessoas com Deficiência, no município de Goiânia por meio de sua estruturação física e do processo de Capacitação de seus conselheiros e servidores da  Secretária Municipal de Políticas para Pessoas com Deficiência ou Mobilidade Reduzida, criando infraestrutura adequada para o exercício do controle social.",
    "proponente": "MUNICIPIO DE GOIANIA",
    "orgao_superior": "PRESIDENCIA DA REPÚBLICA",
    "orgao": "SECRETARIA DE DIREITOS HUMANOS DA PRESIDÊNCIA DA REPÚBLICA",

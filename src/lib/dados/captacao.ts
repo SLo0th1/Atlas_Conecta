@@ -5,6 +5,7 @@
 import { dados, type Documento } from './index.ts';
 import { br, curto, diasAte, hoje, nomeTema, reais } from './formato.ts';
 import { detalheOportunidade } from './detalhes.ts';
+import { detalheConvenio } from './detalhes-convenio.ts';
 
 const IBGE = 5208707; // município piloto (data/config/municipio.json); multimunicípio entra com a seleção de município
 
@@ -47,9 +48,8 @@ function oportunidades(): Modulo | null {
 function acompanhamento(): Modulo | null {
   const d = dados.acompanhamento(IBGE);
   if (!d) return null;
-  const ativos = (d.convenios as Documento[]).filter((c) => /^Em execu/i.test(c.situacao ?? ''));
+  const ativos = (d.convenios as Documento[]).filter((c) => /^Em execu/i.test(c.situacao ?? '')).sort((a, b) => (b.saldo_a_liberar ?? 0) - (a.saldo_a_liberar ?? 0));
   const rows = ativos
-    .sort((a, b) => (b.saldo_a_liberar ?? 0) - (a.saldo_a_liberar ?? 0))
     .map((c) => {
       const dias = diasAte(c.vigencia_fim);
       return [
@@ -66,7 +66,7 @@ function acompanhamento(): Modulo | null {
   const r = d.resumo;
   return {
     slug: 'captacao-acompanhamento', title: 'Acompanhamento', group: 'Captação',
-    columns: ['Convênio', 'Objeto', 'Concedente', 'Valor pactuado', 'Valor liberado', 'Valor a liberar', 'Vigência', 'Situação'], rows, fields: [], source: 'captacao-acompanhamento',
+    columns: ['Convênio', 'Objeto', 'Concedente', 'Valor pactuado', 'Valor liberado', 'Valor a liberar', 'Vigência', 'Situação'], rows, detalhes: ativos.map(detalheConvenio), fields: [], source: 'captacao-acompanhamento',
     fonte: `Convênios municipais em execução: ${r.em_execucao}; pactuado ${reais(r.valor_repasse_pactuado_em_execucao)}, liberado ${reais(r.valor_desembolsado_em_execucao)}, saldo a liberar ${reais(r.saldo_a_liberar_em_execucao)}; ${r.assinados_sem_nenhum_desembolso} sem nenhum desembolso. Fonte: Transferegov (arquivos abertos); coleta em ${dataColeta(d)}. Saldo = repasse pactuado − desembolsado.`,
   };
 }
