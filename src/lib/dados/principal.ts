@@ -245,6 +245,59 @@ export function montarPrincipal(alertas: Alerta[]): Modulo | null {
     });
   }
 
+  // 10c) Rede de saúde (CNES)
+  const cnes = dados.cnes(IBGE);
+  if (cnes) {
+    const rs = cnes.resumo as Documento;
+    const lt = (cnes.leitos ?? {}) as Documento;
+    const f = (n: number) => Number(n ?? 0).toLocaleString('pt-BR');
+    const comp = String(lt.competencia ?? '');
+    const compBr = /^\d{6}$/.test(comp) ? `${comp.slice(4)}/${comp.slice(0, 4)}` : dataColeta(cnes);
+    const ativos = (rs.total_estabelecimentos ?? 0) - (rs.desabilitados ?? 0);
+    linhas.push({
+      linha: ['Rede de saúde (CNES)', `${f(ativos)} estabelecimentos ativos; ${f(lt.leitos_existentes)} leitos (${f(lt.leitos_sus)} pelo SUS)`, 'DATASUS (CNES)', compBr, 'Informativo'],
+      det: {
+        titulo: `Rede de saúde de Goiânia (CNES): ${f(ativos)} estabelecimentos ativos`,
+        secoes: [
+          { titulo: 'O que é', texto: 'Cadastro Nacional de Estabelecimentos de Saúde: unidades de saúde do município, públicas e privadas. Serve para fundamentar projetos de saúde (por exemplo, ampliação de atenção primária ou urgência). A lista nominal traz apenas unidades públicas e hospitais; consultórios individuais e estabelecimentos de pessoa física entram somente nas contagens.' },
+          { titulo: 'Unidades principais', itens: [`Unidades básicas de saúde: ${f(rs.unidades_basicas_saude)}`, `Pronto atendimento / UPA: ${f(rs.upas)}`, `Hospitais: ${f(rs.hospitais)}`, `CAPS e atenção psicossocial: ${f(rs.caps_e_psicossocial)}`, `Policlínicas e especialidades: ${f(rs.policlinicas_e_especialidades)}`, `Laboratórios e diagnose: ${f(rs.laboratorios_e_diagnose)}`, `SAMU e urgência móvel: ${f(rs.samu_e_urgencia_movel)}`, `Atendimento ambulatorial pelo SUS: ${f(rs.atendimento_ambulatorial_sus)}`] },
+          { titulo: 'Leitos (competência ' + compBr + ')', itens: [`Leitos existentes: ${f(lt.leitos_existentes)}; pelo SUS: ${f(lt.leitos_sus)}`, `Leitos de UTI: ${f(lt.leitos_uti_existentes)}; pelo SUS: ${f(lt.leitos_uti_sus)}`, `Estabelecimentos com leitos: ${f(lt.estabelecimentos_com_leitos)}`] },
+          { titulo: 'Por natureza jurídica', itens: Object.entries((rs.por_natureza_juridica ?? {}) as Record<string, number>).map(([k, v]) => `${k}: ${f(v)}`) },
+          { titulo: 'Atenção ao interpretar', texto: String(rs.observacao_esfera ?? 'Esfera e gestão no CNES indicam quem gere a unidade, não quem é dono: privados contratados aparecem como municipais. A propriedade pública se mede pela natureza jurídica (administração pública).') },
+          { titulo: 'Fonte', texto: `Ministério da Saúde, API de dados abertos do CNES; coleta em ${dataColeta(cnes)}. Equipamentos ainda não coletados.` },
+        ],
+      },
+    });
+  }
+
+  // 10d) Saneamento (SINISA)
+  const san = dados.saneamento(IBGE);
+  if (san) {
+    const ind = (c: string, n: string) => (san[c]?.indicadores?.[n] ?? null) as Documento | null;
+    const v = (c: string, n: string) => { const i = ind(c, n); return i ? `${String(i.valor).replace('.', ',')}${i.unidade === '%' ? '%' : ` ${i.unidade}`}` : '—'; };
+    const ano = san.agua?.ano_referencia ?? '—';
+    const secaoComponente = (c: string, titulo: string): Secao => ({
+      titulo: `${titulo}${san[c]?.prestador ? ` (prestador: ${san[c].prestador})` : ''}`,
+      itens: Object.entries((san[c]?.indicadores ?? {}) as Record<string, Documento>).map(([nome, i]) => `${nome.replace(/_/g, ' ')} (${i.codigo}): ${String(i.valor).replace('.', ',')}${i.unidade === '%' ? '%' : ` ${i.unidade}`}${i.ressalva ? ' — ATENÇÃO, RESSALVA: ' + i.ressalva : ''}`),
+    });
+    const comRessalva = ['agua', 'esgoto', 'residuos', 'drenagem'].flatMap((c) => Object.entries((san[c]?.indicadores ?? {}) as Record<string, Documento>).filter(([, i]) => i.ressalva).map(([n]) => n.replace(/_/g, ' ')));
+    linhas.push({
+      linha: [`Saneamento (SINISA ${ano})`, `Água na rede: ${v('agua', 'atendimento_populacao_total_rede_agua')} da população; esgoto coletado: ${v('esgoto', 'atendimento_domicilios_totais_rede_coletora')} dos domicílios`, 'Ministério das Cidades (SINISA)', String(ano), comRessalva.length ? 'Atenção' : 'Informativo'],
+      det: {
+        titulo: `Saneamento em Goiânia (SINISA, ano de referência ${ano})`,
+        secoes: [
+          { titulo: 'O que é', texto: 'Indicadores municipais de água, esgoto, resíduos e drenagem declarados ao SINISA (sucessor do SNIS), como publicados pelo Ministério das Cidades. Fundamentam projetos de saneamento e drenagem.' },
+          secaoComponente('agua', 'Abastecimento de água'),
+          secaoComponente('esgoto', 'Esgotamento sanitário'),
+          secaoComponente('residuos', 'Resíduos sólidos'),
+          secaoComponente('drenagem', 'Drenagem e manejo de águas pluviais'),
+          { titulo: 'Atenção: indicadores com ressalva', texto: comRessalva.length ? `Os indicadores a seguir parecem inconsistentes e NÃO devem ser tratados como fato antes de conferir com a prefeitura ou com o glossário do SINISA: ${comRessalva.join('; ')}.` : 'Nenhuma ressalva registrada.' },
+          { titulo: 'Fonte', texto: `Ministério das Cidades, SINISA (planilhas por município, ano ${ano}); coleta em ${dataColeta(san)}.` },
+        ],
+      },
+    });
+  }
+
   // 11) Alertas
   const porGrav = (g: string) => alertas.filter((a) => a.gravidade === g).length;
   const porTipo = new Map<string, number>();
