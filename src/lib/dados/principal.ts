@@ -213,6 +213,38 @@ export function montarPrincipal(alertas: Alerta[]): Modulo | null {
     });
   }
 
+  // 10b) Educação (INEP)
+  const edu = dados.educacao(IBGE);
+  if (edu) {
+    const censo = (edu.censo_escolar as Documento[]).slice().sort((a, b) => b.ano - a.ano);
+    const c0 = censo[0];
+    const dep = c0.por_dependencia as Record<string, Documento>;
+    const nomes: Record<string, string> = { municipal: 'Municipal', estadual: 'Estadual', federal: 'Federal', privada: 'Privada' };
+    const idebMun = (edu.ideb as Documento[]).map((e) => ({ etapa: e.etapa as string, serie: e.redes?.municipal?.ideb_observado as Record<string, number | null> }));
+    const ultimo = (serie: Record<string, number | null>) => { const anos = Object.keys(serie).filter((a) => serie[a] !== null).sort(); return anos.length ? { ano: anos[anos.length - 1], valor: serie[anos[anos.length - 1]] as number } : null; };
+    const iniciais = idebMun.find((e) => e.etapa.startsWith('anos_iniciais'));
+    const finais = idebMun.find((e) => e.etapa.startsWith('anos_finais'));
+    const uI = iniciais ? ultimo(iniciais.serie) : null;
+    const uF = finais ? ultimo(finais.serie) : null;
+    const totalEscolas = Object.values(dep).reduce((s, d) => s + (d.escolas_em_atividade ?? 0), 0);
+    const totalMat = Object.values(dep).reduce((s, d) => s + (d.matriculas?.total_educacao_basica ?? 0), 0);
+    const fmt = (n: number) => n.toLocaleString('pt-BR');
+    linhas.push({
+      linha: [`Educação básica (Censo ${c0.ano})`, `${fmt(totalEscolas)} escolas; ${fmt(totalMat)} matrículas${uI ? `; IDEB municipal ${uI.valor.toString().replace('.', ',')} (anos iniciais, ${uI.ano})` : ''}`, 'INEP (Censo Escolar e IDEB)', String(c0.ano), 'Informativo'],
+      det: {
+        titulo: `Educação básica em Goiânia (Censo Escolar ${c0.ano})`,
+        secoes: [
+          { titulo: 'O que é', texto: 'Indicadores oficiais do INEP para fundamentar projetos de educação (por exemplo, propostas ao FNDE): número de escolas e matrículas por rede e o IDEB. Dados agregados, sem nome de escola nem dados pessoais.' },
+          { titulo: `Escolas em atividade e matrículas por rede (${c0.ano})`, itens: Object.keys(dep).map((k) => `${nomes[k] ?? k}: ${fmt(dep[k].escolas_em_atividade)} escolas; ${fmt(dep[k].matriculas?.total_educacao_basica ?? 0)} matrículas; ${fmt(dep[k].docentes ?? 0)} docentes; ${fmt(dep[k].turmas ?? 0)} turmas`) },
+          { titulo: 'Rede municipal por etapa (matrículas)', itens: Object.entries((dep.municipal?.matriculas ?? {}) as Record<string, number>).filter(([k]) => k !== 'total_educacao_basica').map(([k, v]) => `${k.replace(/_/g, ' ')}: ${fmt(v)}`) },
+          ...(censo[1] ? [{ titulo: `Comparação com ${censo[1].ano}`, itens: [`Escolas em atividade: ${fmt(Object.values(censo[1].por_dependencia as Record<string, Documento>).reduce((s, d) => s + (d.escolas_em_atividade ?? 0), 0))} em ${censo[1].ano} e ${fmt(totalEscolas)} em ${c0.ano}`, `Matrículas: ${fmt(Object.values(censo[1].por_dependencia as Record<string, Documento>).reduce((s, d) => s + (d.matriculas?.total_educacao_basica ?? 0), 0))} em ${censo[1].ano} e ${fmt(totalMat)} em ${c0.ano}`] }] : []),
+          { titulo: 'IDEB da rede municipal', itens: [...(iniciais ? [`Anos iniciais: ${Object.entries(iniciais.serie).filter(([, v]) => v !== null).map(([a, v]) => `${a}: ${v}`).join(' | ')}`] : []), ...(finais ? [`Anos finais: ${Object.entries(finais.serie).filter(([, v]) => v !== null).map(([a, v]) => `${a}: ${v}`).join(' | ')}`] : [])] },
+          { titulo: 'Fonte', texto: `INEP, Censo Escolar (microdados ${censo.map((x) => x.ano).join(' e ')}) e IDEB (resultados por município); coleta em ${dataColeta(edu)}. Ficaram de fora: IDEB do ensino médio e população em idade escolar.` },
+        ],
+      },
+    });
+  }
+
   // 11) Alertas
   const porGrav = (g: string) => alertas.filter((a) => a.gravidade === g).length;
   const porTipo = new Map<string, number>();
