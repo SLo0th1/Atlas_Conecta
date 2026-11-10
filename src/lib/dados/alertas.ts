@@ -4,7 +4,9 @@ import { dados, type Documento } from './index.ts';
 import { br, curto, diasAte, reais } from './formato.ts';
 import type { Secao } from './detalhes.ts';
 
-export const IBGE = 5208707; // município piloto (data/config/municipio.json)
+export { IBGE } from './municipio.ts';
+import { IBGE } from './municipio.ts';
+import { avaliarFontes } from './qualidade.ts';
 
 // Parâmetros das regras (docs/regras-alertas.md). Valores provisórios, exceto o de 180 dias, mantido pelo dono em 2026-11-10.
 export const DIAS_VIGENCIA = [90, 60, 30, 15];
@@ -117,16 +119,18 @@ export function gerarAlertas(): Alerta[] {
       ],
     });
 
-  for (const [nome, doc] of [['Transferegov', ac], ['CAUC', cauc], ['SICONFI', dados.siconfi(IBGE)], ['FNS', dados.fns(IBGE)]] as const) {
-    const idade = doc?.proveniencia?.data_coleta ? -(diasAte(String(doc.proveniencia.data_coleta)) ?? 0) : null;
-    if (idade === null || idade > DIAS_DEFASAGEM)
-      lista.push({
-        tipo: 'Fonte', alerta: `Fonte ${nome} defasada${idade === null ? ' (sem carga)' : ` há ${idade} dias`}`, referencia: nome, gravidade: 'Média', acao: 'Informar a TI e exibir o aviso na tela', responsavel: 'TI',
-        detalhe: [
-          { titulo: 'Por que este alerta', texto: `A última coleta da fonte ${nome} ${idade === null ? 'não existe' : `foi há ${idade} dias`}. Regra: avisar quando a coleta tiver mais de ${DIAS_DEFASAGEM} dias. Os números dessa fonte podem estar desatualizados.` },
-          { titulo: 'O que fazer', itens: ['Conferir a execução diária no GitHub Actions (Atualizar dados do bloco Captação).', 'Se a fonte oficial estiver fora do ar, aguardar a próxima atualização.'] },
-        ],
-      });
+  // Fontes defasadas, com falha ou sem carga: regra do dono, sempre sinalizar, dizer o motivo e a ação.
+  for (const a of avaliarFontes().filter((x) => x.situacao !== 'Em dia')) {
+    const critico = a.situacao === 'Vencido: muito defasada' || a.situacao === 'Sem carga';
+    lista.push({
+      tipo: 'Fonte', alerta: `Fonte ${a.nome}: ${a.situacao.replace(/^[^:]+: /, '')}${a.idade !== null ? ` (coleta há ${a.idade} dias)` : ''}`, referencia: `${a.nome} — ${a.motivo}`.slice(0, 160),
+      gravidade: critico ? 'Alta' : 'Média', acao: a.acao.slice(0, 120), responsavel: 'TI',
+      detalhe: [
+        { titulo: 'Por que este alerta', texto: `${a.motivo} Limite desta fonte: ${a.limite} dia(s); considerada muito defasada acima de ${a.limite * 2}. Os números dessa fonte podem estar desatualizados.` },
+        { titulo: 'O que fazer', itens: [a.acao, 'Ver o painel Qualidade dos dados para a última tentativa de coleta e o erro registrado.'] },
+        ...(a.erro ? [{ titulo: 'Erro registrado na última coleta', texto: a.erro }] : []),
+      ],
+    });
   }
 
   const ordem = { Alta: 0, Média: 1, Baixa: 2 } as const;
