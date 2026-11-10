@@ -37,3 +37,8 @@ id_programa, ano_programa, modalidade_programa, codigo_programa, nome_programa, 
 
 **Data da última validação: 2026-11-09**
 **Status: PARCIAL**
+
+## Atualização 2026-11-09 — programas discricionários abertos (coletor `coletores/programas-abertos.ts`)
+Fonte real dos programas de convênios/contratos de repasse: arquivo aberto `siconv_programa.zip` (Discricionárias e Legais; 1,26 milhão de linhas, 1 por programa × natureza jurídica × UF). Situações: DISPONIBILIZADO (1.008.003), CADASTRADO, INATIVO. Campos: `COD_PROGRAMA`, `NOME_PROGRAMA`, `DESC_ORGAO_SUP_PROGRAMA`, `SIT_PROGRAMA`, `DT_PROG_INI/FIM_RECEB_PROP` (proposta), `DT_PROG_INI/FIM_EMENDA_PAR` (emendas), `DT_PROG_INI/FIM_BENEF_ESP` (beneficiário específico), `MODALIDADE_PROGRAMA`, `NATUREZA_JURIDICA_PROGRAMA` (quem pode propor), `UF_PROGRAMA`, `ACAO_ORCAMENTARIA`. O coletor agrega por programa e filtra: DISPONIBILIZADO + algum prazo ≥ hoje + aberto à "Administração Pública Municipal" na UF do município.
+Resultado em 2026-11-09: **174 programas com prazo aberto no país; 59 elegíveis a Goiânia/GO** (44 com tema identificado por palavras-chave: saúde 5, educação 6, drenagem 2, mobilidade urbana 3, saneamento 3, assistência social 1, cultura 9, esporte 7 e outros). Os prazos mais próximos vencem entre 11 e 30/11/2026. A classificação por tema é rascunho (palavras-chave de `data/config/temas.json`) e precisa de revisão. O "Novo PAC Seleções" continua sem feed; para chamamentos de ministérios segue valendo o monitoramento do DOU.
+**Status: OK para programas do Transferegov; PARCIAL para Novo PAC e editais de ministérios.**

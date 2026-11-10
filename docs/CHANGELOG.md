@@ -14,3 +14,4 @@
 - 2026-11-09: workflow `testar-portal-transparencia.yml` para validar a chave do Portal sem expô-la.
 - 2026-11-09: PR #1 mesclado na main; site publicado confirmado pelo dono. Chave do Portal da Transparência testada (HTTP 200) e estrutura real de convênios registrada na ficha.
 - 2026-11-09: Fase 1: coletores CAUC, SICONFI e Transferegov (arquivos) implementados e testados para Goiânia; ver docs/fontes. O arquivo data/core/transferegov-5208707.json (5,6 MB) NÃO foi commitado: decidir com o dono onde guardar dados volumosos (Git x banco).
+- 2026-11-09: PRs #1 e #2 mesclados na main. Fase 1: coletores CAUC, SICONFI, Transferegov, FNS, Portal da Transparência (Actions) e programas abertos (59 elegíveis a Goiânia). T5: 89 CNPJs candidatos; planilha em docs/validacao-cnpjs-prefeitura.md. Conferência manual do aceite: 5 de 10 convênios batem com o site oficial.
