@@ -12,4 +12,6 @@ export type Modulo = {
   source: string;
   fonte?: string;
   detalhes?: Detalhe[];
+  /** Texto de busca oculto por linha (a busca da tabela também olha este texto). */
+  busca?: string[];
 };

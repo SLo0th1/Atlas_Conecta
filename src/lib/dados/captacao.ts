@@ -14,6 +14,13 @@ import type { Modulo } from './tipos.ts';
 
 const dataColeta = (d?: Documento) => (d?.proveniencia?.data_coleta ? br(String(d.proveniencia.data_coleta)) : 'sem carga');
 
+/** Texto oculto usado pela busca por necessidade: temas e seus sinônimos, órgão, e trechos do texto oficial do programa. */
+function textoDeBusca(p: Documento): string {
+  const temas = dados.listarTemas().filter((t) => (p.temas as string[]).includes(t.id));
+  const t = (p.texto_oficial ?? {}) as Documento;
+  return [p.nome, p.orgao_superior, p.codigo, ...temas.flatMap((x) => [x.nome, ...x.palavras_chave]), String(t.descricao ?? '').slice(0, 1200), String(t.criterios ?? '').slice(0, 600)].join(' ');
+}
+
 function oportunidades(): Modulo | null {
   const d = dados.programasAbertos(IBGE);
   if (!d) return null;
@@ -33,8 +40,8 @@ function oportunidades(): Modulo | null {
   });
   return {
     slug: 'captacao-oportunidades', title: 'Oportunidades', group: 'Captação',
-    columns: ['Código', 'Programa', 'Concedente', 'Modalidade', 'Prazo', 'Tema', 'Status'], rows, detalhes: (d.programas as Documento[]).map(detalheOportunidade), fields: [], source: 'captacao-oportunidades',
-    fonte: `Programas do Transferegov abertos e elegíveis a prefeituras de GO (${rows.length}). Fonte: Transferegov, arquivo siconv_programa; coleta em ${dataColeta(d)}. Temas por palavras-chave (rascunho).`,
+    columns: ['Código', 'Programa', 'Concedente', 'Modalidade', 'Prazo', 'Tema', 'Status'], rows, detalhes: (d.programas as Documento[]).map(detalheOportunidade), busca: (d.programas as Documento[]).map(textoDeBusca), fields: [], source: 'captacao-oportunidades',
+    fonte: `Programas do Transferegov abertos e elegíveis a prefeituras de GO (${rows.length}). Fonte: Transferegov, arquivo siconv_programa; coleta em ${dataColeta(d)}. Temas por palavras-chave (rascunho). Dica: digite a necessidade (ex.: drenagem, creche, quadra, ônibus); a busca olha também os temas e o texto oficial do programa.`,
   };
 }
 
