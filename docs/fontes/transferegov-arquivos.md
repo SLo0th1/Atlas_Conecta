@@ -74,3 +74,12 @@ Chaves de ligação: ID_PROPOSTA (proposta, emenda, plano de aplicação) e NR_C
 **Data da última validação: 2026-11-09**
 
 **Status: OK**
+
+## Atualização 2026-11-09 — coletor `coletores/transferegov-convenios.ts` (Goiânia, IBGE 5208707)
+- Recorta `siconv_proposta` por `COD_MUNIC_IBGE`, e liga convênio, desembolso, empenho, termo aditivo e emenda. **Não coleta** banco, agência e conta (presentes em `proposta`). Só reprocessa se tamanho, data ou MD5 da listagem mudarem.
+- Resultado da carga (data da fonte: 2026-11-09): 4.045 propostas e **1.425 convênios** vinculados a Goiânia; 1.768 desembolsos, 2.657 empenhos, 2.318 termos aditivos e 889 emendas. **Conferência interna: 0 divergências** entre o desembolso informado no convênio e a soma dos desembolsos.
+- **Esfera:** só **149 convênios são da esfera municipal** (natureza "Administração Pública Municipal"); 695 são estaduais, 566 de organizações da sociedade civil e 15 de empresas públicas. O recorte por município inclui entes que apenas estão em Goiânia, por isso o coletor classifica a esfera.
+- **Saldo a liberar** = repasse pactuado − desembolsado, calculado como pendência real **somente para convênios "Em execução"** (convênios concluídos ou anulados com repasse não desembolsado não contam). Quando o convênio não informa o desembolsado (campo em branco), usa-se a soma dos desembolsos.
+- Esfera municipal, em execução: **19 convênios, R$ 107,6 mi pactuados, R$ 3,15 mi desembolsados, saldo a liberar R$ 104,5 mi; 17 assinados sem nenhum desembolso.** Maiores saldos: reurbanização de córrego (R$ 30,0 mi), sinalização viária (R$ 16,8 mi), centro comunitário (R$ 12,2 mi), escola de tempo integral (R$ 10,9 mi), Casa da Mulher Brasileira (R$ 8,4 mi).
+- **Pendente (aceite da Fase 1):** conferência manual de uma amostra de 10 convênios contra o site oficial do Transferegov.
+- **Conferência manual (2026-11-09, dono, "Acesso Livre" do Transferegov):** convênio **970654** — Valor Global R$ 29.965.012,00, Valor de Repasse R$ 29.965.012,00, Contrapartida R$ 0,00: **bate** com o coletor. Faltam 954682, 967834, 964273 e 904196 para completar a amostra de 10.

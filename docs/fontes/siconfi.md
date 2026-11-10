@@ -49,3 +49,6 @@ Formato "longo": uma linha por conta e coluna; o coletor precisa agregar/pivotar
 **Data da última validação: 2026-11-09**
 
 **Status: OK**
+
+## Atualização 2026-11-09 — coletor `coletores/siconfi.ts`
+Detecta o último RREO (bimestre) e RGF (quadrimestre) **homologados** (`status_relatorio = HO`) da Prefeitura em `/extrato_entregas` e lê o Anexo 01 de cada um (RREO: `ReceitasExcetoIntraOrcamentarias`, `ReceitasCorrentes`; RGF: `ReceitaCorrenteLiquidaLimiteLegal`, `ReceitaCorrenteLiquidaAjustada`, `DespesaComPessoalTotal`, limites máximo, prudencial e de alerta). Teste em 2026-11-09 (Goiânia): RREO 2026/B4 e RGF 2026/Q2; despesa com pessoal **45,58% da RCL ajustada** (limite máximo 54%, alerta 48,6%) — "abaixo do limite de alerta"; receita realizada até o bimestre R$ 7,07 bi (68,45% da previsão). Os links `next` das respostas são ignorados; a paginação usa `offset`. A regra de **capacidade de contrapartida** ainda será definida com o dono; hoje o arquivo só guarda os indicadores de apoio.

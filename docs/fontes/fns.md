@@ -65,3 +65,8 @@ Prefixo: `https://consultafns.saude.gov.br/recursos/consulta-consolidada/` (sem 
 - `entidades?ano=2026&coMunicipioIbge=520870&count=10&page=1&sgUf=GO` → 200. Lista as entidades (fundos) que recebem, com `cpfCnpj`, `razaoSocial`, `esferaAdministrativa` (ESTADUAL/MUNICIPAL) e `valorTotal`. **Útil para a T5 (CNPJs dos fundos de saúde):** FUNDO MUNICIPAL DE SAUDE de Goiânia aparece com CNPJ próprio; o FUNDO ESTADUAL DE SAUDE também aparece (esfera estadual, a não confundir com o municipal).
 - Município pelo código IBGE de **6 dígitos** (520870). Paginação por `count` e `page`.
 - Não enviar cookies; as chamadas funcionaram sem eles.
+
+### Coletor `coletores/fns.ts` (2026-11-09)
+- Usa `repasse-bloco` com **`coTipoRepasse=M`** (repasses ao Fundo MUNICIPAL; `E` = estadual). Sem esse filtro o total do município soma o Fundo Estadual de Saúde que atua no território e distorce a comparação entre capitais (Goiânia 2026: R$ 1,57 bi sem filtro × R$ 888 mi com `M`).
+- Saída: `data/core/fns-5208707.json` (blocos, grupos e entidades por ano) e `data/core/fns-capitais-<ano>.json` (27 capitais, total e per capita). Pausa de 400 ms entre chamadas; retentativas com espera progressiva.
+- Resultado (repasse municipal): Goiânia R$ 888,2 mi (2026), R$ 973,5 mi (2025), R$ 913,3 mi (2024); posição por habitante entre as 27 capitais: 13º (2026) e 14º (2025). O per capita usa a população estimada do IBGE (SIDRA 6579), que difere da população exibida na tela do FNS (Censo 2025); cada número guarda a própria fonte.

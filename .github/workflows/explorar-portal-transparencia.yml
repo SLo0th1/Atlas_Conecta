@@ -1,0 +1,35 @@
+# Mapeia a resposta real da API do Portal da Transparência (campos de convênios e CEIS) para completar a ficha da fonte.
+# Imprime só NOMES de campos e contagens (dados públicos de convênios; nada de chave). Execução manual ou ao alterar este arquivo na branch captacao-fase0-fechamento.
+name: Explorar API do Portal da Transparência
+on:
+  workflow_dispatch:
+  push:
+    branches: [captacao-fase0-fechamento]
+    paths: ['.github/workflows/explorar-portal-transparencia.yml']
+permissions:
+  contents: read
+jobs:
+  explorar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Convênios de Goiânia (estrutura)
+        env:
+          CHAVE: ${{ secrets.PORTAL_TRANSPARENCIA_CHAVE }}
+        run: |
+          get() { curl -s -H "chave-api-dados: $CHAVE" -H 'Accept: application/json' -w '\n%{http_code}' "$1"; }
+          out=$(get 'https://api.portaldatransparencia.gov.br/api-de-dados/convenios?codigoIBGE=5208707&pagina=1')
+          code=${out##*$'\n'}; body=${out%$'\n'*}
+          echo "convenios HTTP $code"
+          echo "$body" | python3 -c "
+          import json,sys
+          d=json.load(sys.stdin)
+          print('itens na pagina 1:',len(d))
+          def chaves(o,p=''):
+              for k,v in o.items():
+                  if isinstance(v,dict): chaves(v,p+k+'.')
+                  else: print(' ',p+k,'=',type(v).__name__)
+          chaves(d[0])
+          "
+          sleep 2
+          out=$(get 'https://api.portaldatransparencia.gov.br/api-de-dados/ceis?codigoSancionado=01612092000123&pagina=1')
+          echo "ceis HTTP ${out##*$'\n'} (consulta pelo CNPJ da prefeitura)"

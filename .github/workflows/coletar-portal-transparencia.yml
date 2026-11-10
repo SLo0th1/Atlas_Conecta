@@ -1,0 +1,30 @@
+# Coleta os convênios do município no Portal da Transparência (segredo PORTAL_TRANSPARENCIA_CHAVE) e publica o resultado como artefato.
+# Execução manual ou ao alterar este arquivo/o coletor na branch captacao-fase0-fechamento. A chave nunca é impressa.
+name: Coletar Portal da Transparência (convênios)
+on:
+  workflow_dispatch:
+  push:
+    branches: [captacao-fase0-fechamento]
+    paths:
+      - '.github/workflows/coletar-portal-transparencia.yml'
+      - 'coletores/portal-transparencia.ts'
+permissions:
+  contents: read
+jobs:
+  coletar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Coletar convênios
+        env:
+          PORTAL_TRANSPARENCIA_CHAVE: ${{ secrets.PORTAL_TRANSPARENCIA_CHAVE }}
+        run: node coletores/portal-transparencia.ts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: portal-transparencia-convenios
+          path: data/core/portal-transparencia-convenios-*.json
+          retention-days: 7

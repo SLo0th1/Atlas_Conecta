@@ -1,0 +1,1185 @@
+{
+ "proveniencia": {
+  "fonte": "Ministério da Saúde — Fundo Nacional de Saúde, Consulta Consolidada Fundo a Fundo",
+  "url_origem": "https://consultafns.saude.gov.br/recursos/consulta-consolidada",
+  "data_referencia": "exercício 2024",
+  "data_coleta": "2026-11-10T00:33:57.984Z",
+  "id_carga": "fns-2026-11-10"
+ },
+ "capitais": [
+  {
+   "codigo_ibge": 4314902,
+   "nome": "Porto Alegre",
+   "uf": "RS",
+   "populacao": 1388791,
+   "total_bruto": 1551282046.13,
+   "per_capita": 1117,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 15228220.22
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 1273323036.46
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 1523000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 185532922.92
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 24448955.08
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 28694864.45
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 933502
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 17295311
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 4302234
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 3106200,
+   "nome": "Belo Horizonte",
+   "uf": "MG",
+   "populacao": 2415451,
+   "total_bruto": 2669786825.4,
+   "per_capita": 1105.3,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 20063327
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 2094887561.13
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 364964524.63
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 119957332.99
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 68407706.65
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 1506373
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2211001,
+   "nome": "Teresina",
+   "uf": "PI",
+   "populacao": 908012,
+   "total_bruto": 890916593.61,
+   "per_capita": 981.17,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 7534773.04
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 636955722.38
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 36000000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 164459055.65
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 25787083.99
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 20179958.55
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 5103403,
+   "nome": "Cuiabá",
+   "uf": "MT",
+   "populacao": 698917,
+   "total_bruto": 648822073.11,
+   "per_capita": 928.32,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 6194974.43
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 497676546.87
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 90761809.06
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 31604116.24
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 15404340.23
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 3074831
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 4105455.28
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 4106902,
+   "nome": "Curitiba",
+   "uf": "PR",
+   "populacao": 1832183,
+   "total_bruto": 1482475467.41,
+   "per_capita": 809.13,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 15380461.6
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 1261245293.22
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 1500000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 168570076.36
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 20468119.28
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 14285389.95
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 1026127
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2408102,
+   "nome": "Natal",
+   "uf": "RN",
+   "populacao": 783196,
+   "total_bruto": 609463120.01,
+   "per_capita": 778.17,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 6734441.59
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 445460154.51
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 81607521.37
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 47042284.35
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 24600048.19
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 1000018
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 2921429
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 97223
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 5002704,
+   "nome": "Campo Grande",
+   "uf": "MS",
+   "populacao": 970843,
+   "total_bruto": 735150166.73,
+   "per_capita": 757.23,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 7958851.95
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 482122619.64
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 5150000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 151400775.27
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 59181692.8
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 26991247.07
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 1804238
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 540742
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2111300,
+   "nome": "São Luís",
+   "uf": "MA",
+   "populacao": 1090229,
+   "total_bruto": 777582506.39,
+   "per_capita": 713.23,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 9118395.56
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 579807139.02
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 95678109.64
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 58177559.59
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 31396611.58
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 14691
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 3390000
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2507507,
+   "nome": "João Pessoa",
+   "uf": "PB",
+   "populacao": 906093,
+   "total_bruto": 637496230.2,
+   "per_capita": 703.57,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 7220324.68
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 395061508.5
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 2300000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 145131249.99
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 59669905.11
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 16994514.92
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 6366000
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 4752727
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2704302,
+   "nome": "Maceió",
+   "uf": "AL",
+   "populacao": 995134,
+   "total_bruto": 683534215.07,
+   "per_capita": 686.88,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 8419313.88
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 505046044.49
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 11000000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 91464711.58
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 39551978.47
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 26902875.65
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 844491
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 304800
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 1400100,
+   "nome": "Boa Vista",
+   "uf": "RR",
+   "populacao": 500965,
+   "total_bruto": 327484764.08,
+   "per_capita": 653.71,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 3577345.84
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 141952305.98
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 120886390.97
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 1386209.84
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 10762931.45
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 21285908
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 24507038
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 3126634
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2304400,
+   "nome": "Fortaleza",
+   "uf": "CE",
+   "populacao": 2582360,
+   "total_bruto": 1599757848.84,
+   "per_capita": 619.49,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 21466647.48
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 1103968796.87
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 305956514.86
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 100352753.71
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 67162240.92
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 850895
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 5208707,
+   "nome": "Goiânia",
+   "uf": "GO",
+   "populacao": 1511709,
+   "total_bruto": 913340799.8,
+   "per_capita": 604.18,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 12615329.8
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 689443272.95
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 126428290.3
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 41863627.8
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 41774329.95
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 1215949
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 1501402,
+   "nome": "Belém",
+   "uf": "PA",
+   "populacao": 1396157,
+   "total_bruto": 731002587.33,
+   "per_capita": 523.58,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 12797011.44
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 520080007.71
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 105621008.95
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 48194473.16
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 41341055.07
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 2969031
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2927408,
+   "nome": "Salvador",
+   "uf": "BA",
+   "populacao": 2559945,
+   "total_bruto": 1258927988.8,
+   "per_capita": 491.78,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 21670335.44
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 872271503.61
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 239649881.35
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 52069058.96
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 73237827.44
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 29382
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2800308,
+   "nome": "Aracaju",
+   "uf": "SE",
+   "populacao": 623328,
+   "total_bruto": 297922014.6,
+   "per_capita": 477.95,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 5319944.16
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 164161769.25
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 5000000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 87735924.54
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 23025084.94
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 12626383.71
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 52908
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 2611606,
+   "nome": "Recife",
+   "uf": "PE",
+   "populacao": 1588983,
+   "total_bruto": 757095763.45,
+   "per_capita": 476.47,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 13173134.04
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 479694273.46
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 182075731.14
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 31478532.45
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 35498081.36
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 13841436
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 1334575
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 3304557,
+   "nome": "Rio de Janeiro",
+   "uf": "RJ",
+   "populacao": 6731133,
+   "total_bruto": 3153348565.9,
+   "per_capita": 468.47,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 55312206
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 1982987278.64
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 140000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 868319417.47
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 92657245.66
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 142848213.13
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 1214797
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 9869408
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 1600303,
+   "nome": "Macapá",
+   "uf": "AP",
+   "populacao": 491987,
+   "total_bruto": 223180468.89,
+   "per_capita": 453.63,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 3938068.92
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 49995330.9
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 124128604.98
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 28348564.14
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 11669754.95
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 1295248
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 3804897
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 1100205,
+   "nome": "Porto Velho",
+   "uf": "RO",
+   "populacao": 520379,
+   "total_bruto": 191750433.72,
+   "per_capita": 368.48,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 4569182.75
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 97177564.42
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 63526048.83
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 14518484.42
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 10125069.3
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 1258287
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 575797
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 1721000,
+   "nome": "Palmas",
+   "uf": "TO",
+   "populacao": 333154,
+   "total_bruto": 121567990.13,
+   "per_capita": 364.9,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 2628429.68
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 53133988.44
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 55156959.29
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 1784941.15
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 8593291.57
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 270380
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 3550308,
+   "nome": "São Paulo",
+   "uf": "SP",
+   "populacao": 11911337,
+   "total_bruto": 3360860318.89,
+   "per_capita": 282.16,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 98994623.8
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 2017467639.28
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 10800000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 1047437323.58
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 9591185.39
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 162539743.84
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 8106963
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 5922840
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 4205407,
+   "nome": "Florianópolis",
+   "uf": "SC",
+   "populacao": 598370,
+   "total_bruto": 165905410.79,
+   "per_capita": 277.26,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 4578859.89
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 73689708.94
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 79871698.43
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 988942.3
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 6153532.23
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 622669
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 3205309,
+   "nome": "Vitória",
+   "uf": "ES",
+   "populacao": 343935,
+   "total_bruto": 86088278.12,
+   "per_capita": 250.3,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 2813487.8
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 24376406.75
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 48670438.86
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 2741786.4
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 6716544.31
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 769614
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 1302603,
+   "nome": "Manaus",
+   "uf": "AM",
+   "populacao": 2327101,
+   "total_bruto": 568147299.32,
+   "per_capita": 244.14,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 19978805.72
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 96273631.46
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO ESPECIALIZADA",
+     "valor_bruto": 32750000
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 371107990.28
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 1269446.66
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 36153232.2
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 10614193
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 1200401,
+   "nome": "Rio Branco",
+   "uf": "AC",
+   "populacao": 390058,
+   "total_bruto": 87291867.32,
+   "per_capita": 223.79,
+   "grupos": [
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ASSISTÊNCIA FARMACÊUTICA",
+     "valor_bruto": 3585367.88
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+     "valor_bruto": 7625397.04
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 58817001.14
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "GESTÃO DO SUS",
+     "valor_bruto": 1799594.79
+    },
+    {
+     "bloco": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "grupo": "VIGILÂNCIA EM SAÚDE",
+     "valor_bruto": 12348929.47
+    },
+    {
+     "bloco": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "grupo": "ATENÇÃO PRIMÁRIA",
+     "valor_bruto": 3115577
+    }
+   ]
+  },
+  {
+   "codigo_ibge": 5300108,
+   "nome": "Brasília",
+   "uf": "DF",
+   "populacao": 3009996,
+   "total_bruto": 0,
+   "per_capita": 0,
+   "grupos": []
+  }
+ ]
+}

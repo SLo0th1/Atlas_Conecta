@@ -42,4 +42,13 @@ Convênios (filtro codigoIBGE=5208707: situação, valores liberado/total, vigê
 
 **Data da última validação: 2026-11-09**
 
-**Status: EXIGE CHAVE**
+**Status: OK** (chave válida testada em 2026-11-09 via GitHub Actions; ver atualização no fim)
+
+## Atualização 2026-11-09 — chave testada e estrutura real (GitHub Actions)
+Teste executado no GitHub Actions (workflows `testar-portal-transparencia` e `explorar-portal-transparencia`; execuções 42723587297 e 42726029862), com o segredo `PORTAL_TRANSPARENCIA_CHAVE`. A chave nunca é impressa nem gravada.
+
+- `GET /api-de-dados/convenios?codigoIBGE=5208707&pagina=1` → **HTTP 200**, **15 itens por página** (paginar com `pagina`).
+- `GET /api-de-dados/ceis?codigoSancionado=<CNPJ>&pagina=1` → **HTTP 200**.
+- **Campos reais de cada convênio (resposta):** `id`; datas `dataReferencia`, `dataInicioVigencia`, `dataFinalVigencia`, `dataPublicacao`, `dataUltimaLiberacao`, `dataConclusao`; `dimConvenio.{codigo,objeto,numero}`; `situacao`; `convenente.{id,cnpjFormatado,nome,razaoSocialReceita,nomeFantasiaReceita,tipo,numeroInscricaoSocial}`; `municipioConvenente.{codigoIBGE,nomeIBGE,uf.sigla,...}`; `orgao.{nome,sigla,codigoSIAFI,cnpj,orgaoMaximo.*}`; `unidadeGestora.*`; `subfuncao.{codigoSubfuncao,funcao.codigoFuncao,funcao.descricaoFuncao}`; `tipoInstrumento.{id,codigo,descricao}`; valores `valor`, `valorLiberado`, `valorContrapartida`, `valorDaUltimaLiberacao` (números); `numeroProcesso`.
+- Uso no projeto: **cruzar e validar** o Transferegov (valor pactuado × liberado) e identificar o órgão concedente. `convenente.numeroInscricaoSocial` traz CPF/CNPJ: **não gravar nem exibir CPF** (LGPD); guardar só CNPJ de pessoa jurídica.
+- Ainda não verificado: limites de requisição por minuto (valores da ficha vieram de fonte de terceiros) e a rota de emendas por município (não existe filtro de município em `/emendas`).
