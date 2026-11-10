@@ -1,0 +1,273 @@
+{
+ "proveniencia": {
+  "fonte": "Ministério da Saúde — Fundo Nacional de Saúde, Consulta Consolidada Fundo a Fundo",
+  "url_origem": "https://consultafns.saude.gov.br/recursos/consulta-consolidada",
+  "data_referencia": "exercícios 2026, 2025, 2024 (valores até a data da coleta)",
+  "data_coleta": "2026-11-10T00:33:57.984Z",
+  "id_carga": "fns-2026-11-10"
+ },
+ "municipio": {
+  "codigo_ibge": 5208707,
+  "nome": "Goiânia",
+  "uf": "GO"
+ },
+ "anos": [
+  {
+   "ano": 2026,
+   "blocos": [
+    {
+     "codigo": 10,
+     "nome": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "valor_bruto": 881765598.98,
+     "desconto": 83967230.46,
+     "valor_liquido": 797798368.52,
+     "grupos": [
+      {
+       "codigo": 35,
+       "nome": "ASSISTÊNCIA FARMACÊUTICA",
+       "valor_bruto": 10337644,
+       "desconto": 0,
+       "valor_liquido": 10337644
+      },
+      {
+       "codigo": 14,
+       "nome": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+       "valor_bruto": 697115204.69,
+       "desconto": 83967230.46,
+       "valor_liquido": 613147974.23
+      },
+      {
+       "codigo": 12,
+       "nome": "ATENÇÃO PRIMÁRIA",
+       "valor_bruto": 108083581.99,
+       "desconto": 0,
+       "valor_liquido": 108083581.99
+      },
+      {
+       "codigo": 17,
+       "nome": "GESTÃO DO SUS",
+       "valor_bruto": 28323988.55,
+       "desconto": 0,
+       "valor_liquido": 28323988.55
+      },
+      {
+       "codigo": 34,
+       "nome": "VIGILÂNCIA EM SAÚDE",
+       "valor_bruto": 37905179.75,
+       "desconto": 0,
+       "valor_liquido": 37905179.75
+      }
+     ]
+    },
+    {
+     "codigo": 11,
+     "nome": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "valor_bruto": 6483899,
+     "desconto": 0,
+     "valor_liquido": 6483899,
+     "grupos": [
+      {
+       "codigo": 19,
+       "nome": "ATENÇÃO ESPECIALIZADA",
+       "valor_bruto": 1164379,
+       "desconto": 0,
+       "valor_liquido": 1164379
+      },
+      {
+       "codigo": 18,
+       "nome": "ATENÇÃO PRIMÁRIA",
+       "valor_bruto": 5319520,
+       "desconto": 0,
+       "valor_liquido": 5319520
+      }
+     ]
+    }
+   ],
+   "total_bruto": 888249497.98,
+   "total_liquido": 804282267.52,
+   "entidades": [
+    {
+     "cnpj": "00544963000156",
+     "razao_social": "FUNDO ESTADUAL DE SAUDE",
+     "esfera": "ESTADUAL",
+     "valor_total": 0
+    },
+    {
+     "cnpj": "37623352000103",
+     "razao_social": "FUNDO MUNICIPAL DE SAUDE",
+     "esfera": "MUNICIPAL",
+     "valor_total": 0
+    }
+   ]
+  },
+  {
+   "ano": 2025,
+   "blocos": [
+    {
+     "codigo": 10,
+     "nome": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "valor_bruto": 972159756.79,
+     "desconto": 69478347.99,
+     "valor_liquido": 902681408.8,
+     "grupos": [
+      {
+       "codigo": 35,
+       "nome": "ASSISTÊNCIA FARMACÊUTICA",
+       "valor_bruto": 11930138.4,
+       "desconto": 0,
+       "valor_liquido": 11930138.4
+      },
+      {
+       "codigo": 14,
+       "nome": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+       "valor_bruto": 760237508.54,
+       "desconto": 69478347.99,
+       "valor_liquido": 690759160.55
+      },
+      {
+       "codigo": 12,
+       "nome": "ATENÇÃO PRIMÁRIA",
+       "valor_bruto": 115618969.25,
+       "desconto": 0,
+       "valor_liquido": 115618969.25
+      },
+      {
+       "codigo": 17,
+       "nome": "GESTÃO DO SUS",
+       "valor_bruto": 42359368.31,
+       "desconto": 0,
+       "valor_liquido": 42359368.31
+      },
+      {
+       "codigo": 34,
+       "nome": "VIGILÂNCIA EM SAÚDE",
+       "valor_bruto": 42013772.29,
+       "desconto": 0,
+       "valor_liquido": 42013772.29
+      }
+     ]
+    },
+    {
+     "codigo": 11,
+     "nome": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "valor_bruto": 1367656,
+     "desconto": 0,
+     "valor_liquido": 1367656,
+     "grupos": [
+      {
+       "codigo": 19,
+       "nome": "ATENÇÃO ESPECIALIZADA",
+       "valor_bruto": 1141400,
+       "desconto": 0,
+       "valor_liquido": 1141400
+      },
+      {
+       "codigo": 18,
+       "nome": "ATENÇÃO PRIMÁRIA",
+       "valor_bruto": 226256,
+       "desconto": 0,
+       "valor_liquido": 226256
+      }
+     ]
+    }
+   ],
+   "total_bruto": 973527412.79,
+   "total_liquido": 904049064.8,
+   "entidades": [
+    {
+     "cnpj": "00544963000156",
+     "razao_social": "FUNDO ESTADUAL DE SAUDE",
+     "esfera": "ESTADUAL",
+     "valor_total": 0
+    },
+    {
+     "cnpj": "37623352000103",
+     "razao_social": "FUNDO MUNICIPAL DE SAUDE",
+     "esfera": "MUNICIPAL",
+     "valor_total": 0
+    }
+   ]
+  },
+  {
+   "ano": 2024,
+   "blocos": [
+    {
+     "codigo": 10,
+     "nome": "Manutenção das Ações e Serviços Públicos de Saúde",
+     "valor_bruto": 912124850.8,
+     "desconto": 76060363.3,
+     "valor_liquido": 836064487.5,
+     "grupos": [
+      {
+       "codigo": 35,
+       "nome": "ASSISTÊNCIA FARMACÊUTICA",
+       "valor_bruto": 12615329.8,
+       "desconto": 0,
+       "valor_liquido": 12615329.8
+      },
+      {
+       "codigo": 14,
+       "nome": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
+       "valor_bruto": 689443272.95,
+       "desconto": 76060363.3,
+       "valor_liquido": 613382909.65
+      },
+      {
+       "codigo": 12,
+       "nome": "ATENÇÃO PRIMÁRIA",
+       "valor_bruto": 126428290.3,
+       "desconto": 0,
+       "valor_liquido": 126428290.3
+      },
+      {
+       "codigo": 17,
+       "nome": "GESTÃO DO SUS",
+       "valor_bruto": 41863627.8,
+       "desconto": 0,
+       "valor_liquido": 41863627.8
+      },
+      {
+       "codigo": 34,
+       "nome": "VIGILÂNCIA EM SAÚDE",
+       "valor_bruto": 41774329.95,
+       "desconto": 0,
+       "valor_liquido": 41774329.95
+      }
+     ]
+    },
+    {
+     "codigo": 11,
+     "nome": "Estruturação da Rede de Serviços Públicos de Saúde",
+     "valor_bruto": 1215949,
+     "desconto": 0,
+     "valor_liquido": 1215949,
+     "grupos": [
+      {
+       "codigo": 18,
+       "nome": "ATENÇÃO PRIMÁRIA",
+       "valor_bruto": 1215949,
+       "desconto": 0,
+       "valor_liquido": 1215949
+      }
+     ]
+    }
+   ],
+   "total_bruto": 913340799.8,
+   "total_liquido": 837280436.5,
+   "entidades": [
+    {
+     "cnpj": "00544963000156",
+     "razao_social": "FUNDO ESTADUAL DE SAUDE",
+     "esfera": "ESTADUAL",
+     "valor_total": 0
+    },
+    {
+     "cnpj": "37623352000103",
+     "razao_social": "FUNDO MUNICIPAL DE SAUDE",
+     "esfera": "MUNICIPAL",
+     "valor_total": 0
+    }
+   ]
+  }
+ ]
+}
