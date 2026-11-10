@@ -47,3 +47,6 @@ Executado com curl, um pedido por vez, pausa de 1 s.
 
 **Data da última validação: 2026-11-09**
 **Status: OK**
+
+## Observação 2026-11-10 — acesso a partir do GitHub Actions
+Nas execuções de teste do workflow `atualizar-dados` (servidores do GitHub, Azure), `servicodados.ibge.gov.br` deu **timeout de conexão** em todas as tentativas (3 por execução), enquanto o acesso a partir do computador do dono funciona. Provável bloqueio ou instabilidade para esses IPs. Como a tabela do IBGE é **mensal**, o passo está marcado como não bloqueante e usa o último arquivo versionado. Alternativa se virar problema: rodar esse coletor em servidor próprio ou na hospedagem da Hostinger.
