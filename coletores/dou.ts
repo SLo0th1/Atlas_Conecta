@@ -55,7 +55,8 @@ for (const zip of zips) {
       orgao: decodifica(atributo(x, 'artCategory')),
       titulo: decodifica(x.match(/<Identifica><!\[CDATA\[([^\]]*)/)?.[1]?.trim() ?? ''),
       motivo: porCnpj ? 'cita CNPJ monitorado' : 'cita o município',
-      trecho: texto.slice(Math.max(0, idx - 120), idx + 200).trim(),
+      // LGPD: o DOU cita CPFs de terceiros (pessoas físicas); só o trecho é guardado e os CPFs são mascarados.
+      trecho: texto.slice(Math.max(0, idx - 120), idx + 200).trim().replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, '***.***.***-**'),
       url_pdf: decodifica(atributo(x, 'pdfPage')),
       id_materia: atributo(x, 'idMateria'),
     });
