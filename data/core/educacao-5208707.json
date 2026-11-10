@@ -1,0 +1,731 @@
+{
+  "municipio": {
+    "codigo_ibge": "5208707",
+    "nome": "Goiânia",
+    "uf": "GO"
+  },
+  "observacao": "Contagens agregadas por dependência administrativa (escolas em atividade; matrículas = QT_MAT_* do Censo Escolar). Sem nomes de escolas, CNPJs ou dados pessoais. IDEB: 1 linha por rede (municipal, estadual, federal, pública = estadual+municipal).",
+  "censo_escolar": [
+    {
+      "ano": 2023,
+      "arquivo_membro": "microdados_censo_escolar_2023/dados/microdados_ed_basica_2023.csv",
+      "linhas_lidas": 217625,
+      "linhas_do_municipio": 862,
+      "linhas_descartadas_por_formato": 0,
+      "por_dependencia": {
+        "privada": {
+          "escolas_em_atividade": 386,
+          "matriculas": {
+            "total_educacao_basica": 109163,
+            "creche": 7988,
+            "pre_escola": 14433,
+            "fundamental_anos_iniciais": 37256,
+            "fundamental_anos_finais": 24713,
+            "ensino_medio": 14943,
+            "educacao_profissional": 7678,
+            "eja": 2152,
+            "educacao_especial": 2210
+          },
+          "docentes": 6951,
+          "turmas": 5562,
+          "escolas_por_etapa": {
+            "educacao_infantil": 270,
+            "fundamental_anos_iniciais": 247,
+            "fundamental_anos_finais": 150,
+            "ensino_medio": 87,
+            "educacao_especial": 272,
+            "eja": 13,
+            "educacao_profissional": 17
+          },
+          "escolas_por_localizacao": {
+            "urbana": 386
+          }
+        },
+        "municipal": {
+          "escolas_em_atividade": 323,
+          "matriculas": {
+            "total_educacao_basica": 103637,
+            "creche": 14666,
+            "pre_escola": 15744,
+            "fundamental_anos_iniciais": 49848,
+            "fundamental_anos_finais": 19469,
+            "ensino_medio": 0,
+            "educacao_profissional": 0,
+            "eja": 3910,
+            "educacao_especial": 4149
+          },
+          "docentes": 6182,
+          "turmas": 4525,
+          "escolas_por_etapa": {
+            "educacao_infantil": 269,
+            "fundamental_anos_iniciais": 170,
+            "educacao_especial": 303,
+            "fundamental_anos_finais": 71,
+            "eja": 55
+          },
+          "escolas_por_localizacao": {
+            "urbana": 320,
+            "rural": 3
+          }
+        },
+        "estadual": {
+          "escolas_em_atividade": 105,
+          "matriculas": {
+            "total_educacao_basica": 60257,
+            "creche": 39,
+            "pre_escola": 0,
+            "fundamental_anos_iniciais": 171,
+            "fundamental_anos_finais": 24834,
+            "ensino_medio": 26559,
+            "educacao_profissional": 1100,
+            "eja": 8013,
+            "educacao_especial": 2545
+          },
+          "docentes": 2453,
+          "turmas": 1934,
+          "escolas_por_etapa": {
+            "eja": 38,
+            "educacao_especial": 101,
+            "fundamental_anos_finais": 92,
+            "ensino_medio": 72,
+            "educacao_profissional": 8,
+            "fundamental_anos_iniciais": 5,
+            "educacao_infantil": 1
+          },
+          "escolas_por_localizacao": {
+            "urbana": 105
+          }
+        },
+        "federal": {
+          "escolas_em_atividade": 3,
+          "matriculas": {
+            "total_educacao_basica": 2194,
+            "creche": 45,
+            "pre_escola": 48,
+            "fundamental_anos_iniciais": 260,
+            "fundamental_anos_finais": 245,
+            "ensino_medio": 1094,
+            "educacao_profissional": 1339,
+            "eja": 256,
+            "educacao_especial": 38
+          },
+          "docentes": 340,
+          "turmas": 104,
+          "escolas_por_etapa": {
+            "educacao_infantil": 1,
+            "fundamental_anos_iniciais": 1,
+            "fundamental_anos_finais": 1,
+            "ensino_medio": 3,
+            "educacao_especial": 3,
+            "educacao_profissional": 2,
+            "eja": 2
+          },
+          "escolas_por_localizacao": {
+            "urbana": 3
+          }
+        }
+      },
+      "total": {
+        "escolas_em_atividade": 817,
+        "matriculas": {
+          "total_educacao_basica": 275251,
+          "creche": 22738,
+          "pre_escola": 30225,
+          "fundamental_anos_iniciais": 87535,
+          "fundamental_anos_finais": 69261,
+          "ensino_medio": 42596,
+          "educacao_profissional": 10117,
+          "eja": 14331,
+          "educacao_especial": 8942
+        },
+        "docentes": 15926,
+        "turmas": 12125,
+        "escolas_por_etapa": {
+          "educacao_infantil": 541,
+          "fundamental_anos_iniciais": 423,
+          "fundamental_anos_finais": 314,
+          "ensino_medio": 162,
+          "educacao_especial": 679,
+          "eja": 108,
+          "educacao_profissional": 27
+        }
+      },
+      "proveniencia": {
+        "fonte": "INEP — Censo Escolar 2023, microdados (matrícula inicial, escolas em atividade)",
+        "url_origem": "https://download.inep.gov.br/dados_abertos/microdados_censo_escolar_2023.zip",
+        "data_referencia": "Censo Escolar 2023 (arquivo modificado em 2024-02-19)",
+        "data_coleta": "2026-11-10T01:35:27.197Z",
+        "id_carga": "inep-censo-2023-2026-11-10"
+      }
+    },
+    {
+      "ano": 2024,
+      "arquivo_membro": "microdados_censo_escolar_2024_defeso/dados/microdados_ed_basica_2024.csv",
+      "linhas_lidas": 215545,
+      "linhas_do_municipio": 873,
+      "linhas_descartadas_por_formato": 0,
+      "por_dependencia": {
+        "privada": {
+          "escolas_em_atividade": 412,
+          "matriculas": {
+            "total_educacao_basica": 111390,
+            "creche": 9090,
+            "pre_escola": 14892,
+            "fundamental_anos_iniciais": 39147,
+            "fundamental_anos_finais": 24686,
+            "ensino_medio": 15299,
+            "educacao_profissional": 6699,
+            "eja": 2022,
+            "educacao_especial": 2622
+          },
+          "docentes": 7336,
+          "turmas": 5856,
+          "escolas_por_etapa": {
+            "educacao_infantil": 305,
+            "fundamental_anos_iniciais": 263,
+            "educacao_especial": 309,
+            "fundamental_anos_finais": 161,
+            "ensino_medio": 91,
+            "eja": 14,
+            "educacao_profissional": 15
+          },
+          "escolas_por_localizacao": {
+            "urbana": 412
+          }
+        },
+        "estadual": {
+          "escolas_em_atividade": 107,
+          "matriculas": {
+            "total_educacao_basica": 62277,
+            "creche": 24,
+            "pre_escola": 0,
+            "fundamental_anos_iniciais": 14,
+            "fundamental_anos_finais": 26432,
+            "ensino_medio": 28468,
+            "educacao_profissional": 3433,
+            "eja": 5526,
+            "educacao_especial": 2881
+          },
+          "docentes": 2415,
+          "turmas": 1921,
+          "escolas_por_etapa": {
+            "eja": 33,
+            "educacao_especial": 102,
+            "fundamental_anos_finais": 94,
+            "ensino_medio": 73,
+            "educacao_profissional": 26,
+            "fundamental_anos_iniciais": 1,
+            "educacao_infantil": 1
+          },
+          "escolas_por_localizacao": {
+            "urbana": 107
+          }
+        },
+        "federal": {
+          "escolas_em_atividade": 3,
+          "matriculas": {
+            "total_educacao_basica": 2205,
+            "creche": 35,
+            "pre_escola": 44,
+            "fundamental_anos_iniciais": 241,
+            "fundamental_anos_finais": 235,
+            "ensino_medio": 1079,
+            "educacao_profissional": 1419,
+            "eja": 282,
+            "educacao_especial": 38
+          },
+          "docentes": 308,
+          "turmas": 101,
+          "escolas_por_etapa": {
+            "educacao_infantil": 1,
+            "fundamental_anos_iniciais": 1,
+            "fundamental_anos_finais": 1,
+            "ensino_medio": 3,
+            "educacao_especial": 3,
+            "educacao_profissional": 2,
+            "eja": 2
+          },
+          "escolas_por_localizacao": {
+            "urbana": 3
+          }
+        },
+        "municipal": {
+          "escolas_em_atividade": 308,
+          "matriculas": {
+            "total_educacao_basica": 102505,
+            "creche": 14110,
+            "pre_escola": 16398,
+            "fundamental_anos_iniciais": 49983,
+            "fundamental_anos_finais": 18636,
+            "ensino_medio": 0,
+            "educacao_profissional": 0,
+            "eja": 3378,
+            "educacao_especial": 5002
+          },
+          "docentes": 5948,
+          "turmas": 4424,
+          "escolas_por_etapa": {
+            "fundamental_anos_iniciais": 166,
+            "educacao_especial": 297,
+            "educacao_infantil": 263,
+            "fundamental_anos_finais": 70,
+            "eja": 54
+          },
+          "escolas_por_localizacao": {
+            "urbana": 305,
+            "rural": 3
+          }
+        }
+      },
+      "total": {
+        "escolas_em_atividade": 830,
+        "matriculas": {
+          "total_educacao_basica": 278377,
+          "creche": 23259,
+          "pre_escola": 31334,
+          "fundamental_anos_iniciais": 89385,
+          "fundamental_anos_finais": 69989,
+          "ensino_medio": 44846,
+          "educacao_profissional": 11551,
+          "eja": 11208,
+          "educacao_especial": 10543
+        },
+        "docentes": 16007,
+        "turmas": 12302,
+        "escolas_por_etapa": {
+          "educacao_infantil": 570,
+          "fundamental_anos_iniciais": 431,
+          "educacao_especial": 711,
+          "fundamental_anos_finais": 326,
+          "ensino_medio": 167,
+          "eja": 103,
+          "educacao_profissional": 43
+        }
+      },
+      "proveniencia": {
+        "fonte": "INEP — Censo Escolar 2024, microdados (matrícula inicial, escolas em atividade)",
+        "url_origem": "https://download.inep.gov.br/dados_abertos/microdados_censo_escolar_2024.zip",
+        "data_referencia": "Censo Escolar 2024 (arquivo modificado em 2026-07-08)",
+        "data_coleta": "2026-11-10T01:35:27.197Z",
+        "id_carga": "inep-censo-2024-2026-11-10"
+      }
+    }
+  ],
+  "ideb": [
+    {
+      "etapa": "anos_iniciais_1_ao_5_ano",
+      "redes": {
+        "federal": {
+          "ideb_observado": {
+            "2005": null,
+            "2007": 5.1,
+            "2009": 5.5,
+            "2011": null,
+            "2013": 6.8,
+            "2015": 6.5,
+            "2017": 6.5,
+            "2019": 6.6,
+            "2021": 6.1,
+            "2023": null
+          },
+          "meta_ideb": {
+            "2007": null,
+            "2009": 5.3,
+            "2011": 5.6,
+            "2013": 5.9,
+            "2015": 6.1,
+            "2017": 6.4,
+            "2019": 6.6,
+            "2021": 6.8
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": null,
+            "2007": 0.923596,
+            "2009": 0.871431,
+            "2011": null,
+            "2013": 0.913725,
+            "2015": 0.919302,
+            "2017": 0.953216,
+            "2019": 0.971736,
+            "2021": 0.953336,
+            "2023": null
+          },
+          "nota_saeb_padronizada": {
+            "2005": null,
+            "2007": 5.572916,
+            "2009": 6.352181,
+            "2011": null,
+            "2013": 7.404747,
+            "2015": 7.064619,
+            "2017": 6.818605,
+            "2019": 6.769051,
+            "2021": 6.368352,
+            "2023": 6.857445
+          }
+        },
+        "estadual": {
+          "ideb_observado": {
+            "2005": 4,
+            "2007": 4.1,
+            "2009": 4.9,
+            "2011": 5.4,
+            "2013": 6.1,
+            "2015": 6.3,
+            "2017": 7,
+            "2019": 6.7,
+            "2021": 6.7,
+            "2023": 6.5
+          },
+          "meta_ideb": {
+            "2007": 4.1,
+            "2009": 4.4,
+            "2011": 4.8,
+            "2013": 5.1,
+            "2015": 5.4,
+            "2017": 5.7,
+            "2019": 5.9,
+            "2021": 6.2
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": 0.862369,
+            "2007": 0.866664,
+            "2009": 0.906339,
+            "2011": 0.940764,
+            "2013": 0.975754,
+            "2015": 0.986691,
+            "2017": 0.998195,
+            "2019": 0.993938,
+            "2021": 0.995991,
+            "2023": 1
+          },
+          "nota_saeb_padronizada": {
+            "2005": 4.676571,
+            "2007": 4.694101,
+            "2009": 5.430133,
+            "2011": 5.724334,
+            "2013": 6.296663,
+            "2015": 6.400949,
+            "2017": 7.052567,
+            "2019": 6.694782,
+            "2021": 6.715316,
+            "2023": 6.527867
+          }
+        },
+        "municipal": {
+          "ideb_observado": {
+            "2005": 3.9,
+            "2007": 4.2,
+            "2009": 5.1,
+            "2011": 5.3,
+            "2013": 5.4,
+            "2015": 5.6,
+            "2017": 5.8,
+            "2019": 5.9,
+            "2021": 5.9,
+            "2023": 6.5
+          },
+          "meta_ideb": {
+            "2007": 3.9,
+            "2009": 4.3,
+            "2011": 4.7,
+            "2013": 5,
+            "2015": 5.3,
+            "2017": 5.5,
+            "2019": 5.8,
+            "2021": 6.1
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": 0.851327,
+            "2007": 0.928418,
+            "2009": 0.931445,
+            "2011": 0.970538,
+            "2013": 0.977579,
+            "2015": 0.975225,
+            "2017": 0.975125,
+            "2019": 0.990709,
+            "2021": 0.997599,
+            "2023": 0.9978
+          },
+          "nota_saeb_padronizada": {
+            "2005": 4.551117,
+            "2007": 4.525262,
+            "2009": 5.439682,
+            "2011": 5.456056,
+            "2013": 5.549646,
+            "2015": 5.700745,
+            "2017": 5.915503,
+            "2019": 6.003111,
+            "2021": 5.908026,
+            "2023": 6.536397
+          }
+        },
+        "pública": {
+          "ideb_observado": {
+            "2005": 3.9,
+            "2007": 4.2,
+            "2009": 5,
+            "2011": 5.3,
+            "2013": 5.5,
+            "2015": 5.7,
+            "2017": 5.9,
+            "2019": 6,
+            "2021": 5.9,
+            "2023": 6.5
+          },
+          "meta_ideb": {
+            "2007": 4,
+            "2009": 4.3,
+            "2011": 4.7,
+            "2013": 5,
+            "2015": 5.3,
+            "2017": 5.6,
+            "2019": 5.8,
+            "2021": 6.1
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": 0.854368,
+            "2007": 0.9183,
+            "2009": 0.927367,
+            "2011": 0.966254,
+            "2013": 0.976998,
+            "2015": 0.975609,
+            "2017": 0.976712,
+            "2019": 0.99052,
+            "2021": 0.997,
+            "2023": 0.9978
+          },
+          "nota_saeb_padronizada": {
+            "2005": 4.594372,
+            "2007": 4.566899,
+            "2009": 5.444099,
+            "2011": 5.500017,
+            "2013": 5.637637,
+            "2015": 5.793154,
+            "2017": 6.028787,
+            "2019": 6.050819,
+            "2021": 5.928767,
+            "2023": 6.538197
+          }
+        }
+      },
+      "proveniencia": {
+        "fonte": "INEP — IDEB 2023, anos iniciais do ensino fundamental, resultados por município e rede",
+        "url_origem": "https://download.inep.gov.br/ideb/resultados/divulgacao_anos_iniciais_municipios_2023.zip",
+        "data_referencia": "IDEB 2023 (arquivo modificado em 2024-08-13)",
+        "data_coleta": "2026-11-10T01:35:27.197Z",
+        "id_carga": "inep-ideb-iniciais-2023-2026-11-10"
+      }
+    },
+    {
+      "etapa": "anos_finais_6_ao_9_ano",
+      "redes": {
+        "federal": {
+          "ideb_observado": {
+            "2005": null,
+            "2007": 5.5,
+            "2009": 5.3,
+            "2011": null,
+            "2013": 4.9,
+            "2015": 6,
+            "2017": 6.1,
+            "2019": null,
+            "2021": null,
+            "2023": null
+          },
+          "meta_ideb": {
+            "2007": null,
+            "2009": 5.6,
+            "2011": 5.8,
+            "2013": 6.1,
+            "2015": 6.3,
+            "2017": 6.5,
+            "2019": 6.7,
+            "2021": 6.9
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": null,
+            "2007": 0.87868,
+            "2009": 0.85408,
+            "2011": null,
+            "2013": 0.890413,
+            "2015": 0.933868,
+            "2017": 0.944572,
+            "2019": 0.96515,
+            "2021": 0.878364,
+            "2023": null
+          },
+          "nota_saeb_padronizada": {
+            "2005": null,
+            "2007": 6.261,
+            "2009": 6.2115,
+            "2011": null,
+            "2013": 5.542667,
+            "2015": 6.382833,
+            "2017": 6.443333,
+            "2019": null,
+            "2021": null,
+            "2023": 6.435333
+          }
+        },
+        "estadual": {
+          "ideb_observado": {
+            "2005": 3.4,
+            "2007": 3.5,
+            "2009": 3.7,
+            "2011": 4.1,
+            "2013": 4.7,
+            "2015": 5.2,
+            "2017": 5.7,
+            "2019": 5.5,
+            "2021": 5.3,
+            "2023": 5.6
+          },
+          "meta_ideb": {
+            "2007": 3.4,
+            "2009": 3.5,
+            "2011": 3.8,
+            "2013": 4.2,
+            "2015": 4.6,
+            "2017": 4.9,
+            "2019": 5.1,
+            "2021": 5.4
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": 0.749849,
+            "2007": 0.766629,
+            "2009": 0.783441,
+            "2011": 0.826019,
+            "2013": 0.911772,
+            "2015": 0.935703,
+            "2017": 0.981977,
+            "2019": 0.973453,
+            "2021": 0.985474,
+            "2023": 0.993246
+          },
+          "nota_saeb_padronizada": {
+            "2005": 4.480998,
+            "2007": 4.522667,
+            "2009": 4.704833,
+            "2011": 4.982,
+            "2013": 5.192,
+            "2015": 5.506167,
+            "2017": 5.786,
+            "2019": 5.659,
+            "2021": 5.422167,
+            "2023": 5.642667
+          }
+        },
+        "municipal": {
+          "ideb_observado": {
+            "2005": 2.9,
+            "2007": 3.3,
+            "2009": 3.8,
+            "2011": 3.7,
+            "2013": 4.5,
+            "2015": 4.6,
+            "2017": 4.7,
+            "2019": 5,
+            "2021": 5.1,
+            "2023": 5.4
+          },
+          "meta_ideb": {
+            "2007": 2.9,
+            "2009": 3.1,
+            "2011": 3.3,
+            "2013": 3.7,
+            "2015": 4.1,
+            "2017": 4.4,
+            "2019": 4.7,
+            "2021": 4.9
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": 0.676503,
+            "2007": 0.7786690000000001,
+            "2009": 0.808558,
+            "2011": 0.825963,
+            "2013": 0.951188,
+            "2015": 0.939514,
+            "2017": 0.949196,
+            "2019": 0.977089,
+            "2021": 0.997998,
+            "2023": 0.988499
+          },
+          "nota_saeb_padronizada": {
+            "2005": 4.2905,
+            "2007": 4.192167,
+            "2009": 4.6545,
+            "2011": 4.453667,
+            "2013": 4.695667,
+            "2015": 4.9185,
+            "2017": 4.971167,
+            "2019": 5.146667,
+            "2021": 5.071667,
+            "2023": 5.492167
+          }
+        },
+        "pública": {
+          "ideb_observado": {
+            "2005": 3.2,
+            "2007": 3.4,
+            "2009": 3.8,
+            "2011": 3.9,
+            "2013": 4.6,
+            "2015": 4.9,
+            "2017": 5.3,
+            "2019": 5.4,
+            "2021": 5.3,
+            "2023": 5.6
+          },
+          "meta_ideb": {
+            "2007": 3.2,
+            "2009": 3.4,
+            "2011": 3.6,
+            "2013": 4,
+            "2015": 4.4,
+            "2017": 4.7,
+            "2019": 5,
+            "2021": 5.2
+          },
+          "indicador_rendimento_aprovacao": {
+            "2005": 0.719507,
+            "2007": 0.776582,
+            "2009": 0.800579,
+            "2011": 0.828883,
+            "2013": 0.932207,
+            "2015": 0.938422,
+            "2017": 0.965568,
+            "2019": 0.974959,
+            "2021": 0.989976,
+            "2023": 0.991498
+          },
+          "nota_saeb_padronizada": {
+            "2005": 4.436667,
+            "2007": 4.416167,
+            "2009": 4.691167,
+            "2011": 4.738,
+            "2013": 4.986667,
+            "2015": 5.26,
+            "2017": 5.476333,
+            "2019": 5.52,
+            "2021": 5.330833,
+            "2023": 5.607333
+          }
+        }
+      },
+      "proveniencia": {
+        "fonte": "INEP — IDEB 2023, anos finais do ensino fundamental, resultados por município e rede",
+        "url_origem": "https://download.inep.gov.br/ideb/resultados/divulgacao_anos_finais_municipios_2023.zip",
+        "data_referencia": "IDEB 2023 (arquivo modificado em 2025-01-07)",
+        "data_coleta": "2026-11-10T01:35:27.197Z",
+        "id_carga": "inep-ideb-finais-2023-2026-11-10"
+      }
+    }
+  ],
+  "proveniencia": {
+    "fonte": "INEP — Censo Escolar (microdados) e IDEB (resultados por município)",
+    "url_origem": "https://download.inep.gov.br/dados_abertos/ e https://download.inep.gov.br/ideb/resultados/",
+    "data_referencia": "Censo Escolar 2023/2024; IDEB 2023",
+    "data_coleta": "2026-11-10T01:35:27.197Z",
+    "id_carga": "inep-educacao-2026-11-10"
+  }
+}

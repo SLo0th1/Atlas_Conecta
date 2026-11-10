@@ -10,7 +10,7 @@ const BASE = 'https://api-publica.transferegov.gestao.gov.br/downloads/dadosgov'
 const config = JSON.parse(await readFile('data/config/municipio.json', 'utf8')).municipios[0];
 const ibgeMun = JSON.parse(await readFile('data/core/ibge-municipios.json', 'utf8')).municipios.find((m: any) => m.codigo_ibge === config.codigo_ibge);
 if (!ibgeMun) throw new Error('Município não está na tabela do IBGE (rode coletores/ibge-municipios.ts)');
-const temas: { id: string; nome: string; palavras_chave: string[]; orgaos_concedentes: string[] }[] = JSON.parse(await readFile('data/config/temas.json', 'utf8')).temas;
+const temas: { id: string; nome: string; palavras_chave: string[]; orgaos_concedentes: string[]; funcoes?: { codigo: string; subfuncoes: { codigo: string }[] }[] }[] = JSON.parse(await readFile('data/config/temas.json', 'utf8')).temas;
 
 const hoje = new Date();
 const hojeIso = hoje.toISOString().slice(0, 10);
@@ -57,7 +57,12 @@ const abertos = [...porPrograma.values()];
 const elegiveis = abertos.filter((p) => p.naturezas.has('Administração Pública Municipal') && (p.ufs.has(ibgeMun.uf) || p.ufs.has('')));
 const classificar = (p: Programa) => {
   const texto = norm(`${p.nome} ${p.orgao_superior} ${p.acao_orcamentaria}`);
-  return temas.filter((t) => t.palavras_chave.some((k) => texto.includes(norm(k)))).map((t) => t.id);
+  const porPalavra = temas.filter((t) => t.palavras_chave.some((k) => texto.includes(norm(k)))).map((t) => t.id);
+  if (porPalavra.length) return porPalavra;
+  // Sem palavra-chave: usa a classificação funcional do nome (ex.: "PT - 15.244.2317..." = função 15, subfunção 244).
+  const pt = p.nome.match(/(\d{2})\.(\d{3})\.\d{4}/);
+  if (!pt) return [];
+  return temas.filter((t) => (t.funcoes ?? []).some((f) => f.codigo === pt[1] && f.subfuncoes.some((s) => s.codigo === pt[2]))).map((t) => t.id);
 };
 
 // "Quem já propôs": propostas apresentadas a cada programa elegível (arquivos siconv_programa_proposta + siconv_proposta).
@@ -79,7 +84,7 @@ const capitaisIbge = new Set<string>(
   (JSON.parse(await readFile('data/core/ibge-municipios.json', 'utf8')).municipios as any[]).filter((m) => m.capital).flatMap((m) => [String(m.codigo_ibge), String(m.codigo_ibge).slice(0, 6)]),
 );
 const num = (v: string) => (v === '' ? null : Number(v.replace(/\./g, '').replace(',', '.')));
-type Prop = { municipio: string; uf: string; ibge: string; natureza: string; proponente: string; valor: number | null; situacao: string };
+type Prop = { municipio: string; uf: string; ibge: string; natureza: string; proponente: string; valor: number | null; global: number | null; contrapartida: number | null; situacao: string };
 const propostasDe = new Map<string, Prop[]>();
 {
   const zipProp = await baixarArquivo(`${BASE}/siconv_proposta.zip`, 'data/raw/transferegov/siconv_proposta.zip');
@@ -87,7 +92,7 @@ const propostasDe = new Map<string, Prop[]>();
     const cod = codigoPorProposta.get(r.ID_PROPOSTA);
     if (!cod) continue;
     (propostasDe.get(cod) ?? propostasDe.set(cod, []).get(cod)!).push({
-      municipio: r.MUNIC_PROPONENTE, uf: r.UF_PROPONENTE, ibge: r.COD_MUNIC_IBGE, natureza: r.NATUREZA_JURIDICA, proponente: r.NM_PROPONENTE, valor: num(r.VL_REPASSE_PROP), situacao: r.SIT_PROPOSTA,
+      municipio: r.MUNIC_PROPONENTE, uf: r.UF_PROPONENTE, ibge: r.COD_MUNIC_IBGE, natureza: r.NATUREZA_JURIDICA, proponente: r.NM_PROPONENTE, valor: num(r.VL_REPASSE_PROP), global: num(r.VL_GLOBAL_PROP), contrapartida: num(r.VL_CONTRAPARTIDA_PROP), situacao: r.SIT_PROPOSTA,
     });
   }
   await rm(zipProp);
@@ -101,6 +106,16 @@ const historico = (cod: string) => {
   return {
     propostas_total: todas.length,
     propostas_municipais: municipais.length,
+    // Valores OBSERVADOS nas propostas de prefeituras (referência; não é regra oficial do programa)
+    valor_global_municipal: (() => {
+      const g = municipais.map((x) => x.global ?? 0).filter((v) => v > 0);
+      return { minimo: g.length ? Math.min(...g) : null, mediana: mediana(g), maximo: g.length ? Math.max(...g) : null };
+    })(),
+    contrapartida_pct_mediana: (() => {
+      const pcts = municipais.filter((x) => (x.global ?? 0) > 0 && x.contrapartida !== null).map((x) => ((x.contrapartida ?? 0) / (x.global as number)) * 100);
+      const m = mediana(pcts);
+      return m === null ? null : Math.round(m * 10) / 10;
+    })(),
     valor_repasse_municipal: { minimo: valores.length ? Math.min(...valores) : null, mediana: mediana(valores), maximo: valores.length ? Math.max(...valores) : null },
     municipios_do_estado: doEstado.slice(0, 10).map((x) => ({ municipio: x.municipio, valor: x.valor, situacao: x.situacao })),
     municipios_do_estado_total: doEstado.length,
@@ -109,11 +124,40 @@ const historico = (cod: string) => {
 };
 console.log(`propostas históricas ligadas aos programas: ${[...propostasDe.values()].reduce((s, l) => s + l.length, 0)}`);
 
+// Texto oficial do programa (API aberta de Discricionárias): descrição, observação, critérios de seleção e links do edital.
+const API_PROGRAMAS = 'https://api-publica.transferegov.gestao.gov.br/discricionarias/todos-programas';
+const limpar = (t: unknown): string => String(t ?? '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+type TextoOficial = { descricao: string; observacao: string; criterios: string; chamamento: string; qualificacao: string; links: string[]; mencoes: string[] };
+const textoOficial = new Map<string, TextoOficial>();
+for (const p of elegiveis) {
+  for (let tentativa = 1; tentativa <= 3; tentativa++) {
+    try {
+      const r = await fetch(`${API_PROGRAMAS}?cod_programa=${p.codigo}&tamanho_da_pagina=50`, { headers: { accept: 'application/json' } });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const linhas: any[] = (await r.json()).data ?? [];
+      const l = linhas.find((x) => limpar(x.descricao)) ?? linhas[0];
+      if (l) {
+        const descricao = limpar(l.descricao), observacao = limpar(l.observacao), criterios = limpar(l.criterios_de_selecao);
+        const todo = `${descricao} ${observacao} ${criterios}`;
+        const links = [...new Set((todo.match(/https?:\/\/[^\s)\]>"']+/g) ?? []).map((u) => u.replace(/[.,;]+$/, '')))].filter((u) => u.startsWith('https://')).slice(0, 5);
+        const mencoes = todo.split(/(?<=[.!?])\s+/).filter((fr) => /contrapartida|valor m[ií]nimo|valor m[aá]ximo|limite m[ií]nimo/i.test(fr)).map((fr) => fr.slice(0, 400)).slice(0, 5);
+        textoOficial.set(p.codigo, { descricao: descricao.slice(0, 4000), observacao: observacao.slice(0, 2500), criterios: criterios.slice(0, 3000), chamamento: limpar(l.chamamento_projeto), qualificacao: limpar(l.qualificacao_proposta), links, mencoes });
+      }
+      break;
+    } catch (e) {
+      if (tentativa === 3) console.warn(`texto oficial de ${p.codigo} indisponível: ${(e as Error).message}`);
+      else await new Promise((ok) => setTimeout(ok, 4000 * tentativa));
+    }
+  }
+  await new Promise((ok) => setTimeout(ok, 300)); // educado com a API
+}
+console.log(`texto oficial obtido para ${textoOficial.size} de ${elegiveis.length} programas`);
+
 const saida = elegiveis
   .map((p) => ({
     codigo: p.codigo, nome: p.nome, orgao_superior: p.orgao_superior, modalidade: p.modalidade, acao_orcamentaria: p.acao_orcamentaria,
     disponibilizado_em: p.disponibilizado_em, prazos: p.prazos, publico: [...p.naturezas], ufs: [...p.ufs].sort(), temas: classificar(p),
-    subtipo: p.subtipo || null, subtipo_descricao: p.subtipoDescricao || null, historico: historico(p.codigo),
+    texto_oficial: textoOficial.get(p.codigo) ?? null, subtipo: p.subtipo || null, subtipo_descricao: p.subtipoDescricao || null, historico: historico(p.codigo),
   }))
   .sort((a, b) => (a.prazos.proposta_ate ?? a.prazos.emendas_ate ?? '9999').localeCompare(b.prazos.proposta_ate ?? b.prazos.emendas_ate ?? '9999'));
 

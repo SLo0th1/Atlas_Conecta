@@ -6,7 +6,19 @@ import { br, diasAte, nomeTema, reais } from './formato.ts';
 const IBGE = 5208707; // município piloto; a seleção de município entra com o multimunicípio
 
 export type Secao = { titulo: string; texto?: string; itens?: string[] };
-export type Detalhe = { titulo: string; secoes: Secao[]; link?: { rotulo: string; url: string } };
+export type Link = { rotulo: string; url: string };
+export type Detalhe = { titulo: string; secoes: Secao[]; link?: Link; links?: Link[] };
+
+/** Resumo extrativo (sem reescrever): primeiras frases do texto oficial até o limite de caracteres. */
+function resumir(texto: string, max = 420): string {
+  const frases = texto.split(/(?<=[.!?])\s+/);
+  let saida = '';
+  for (const f of frases) {
+    if (saida && (saida + ' ' + f).length > max) break;
+    saida = saida ? `${saida} ${f}` : f;
+  }
+  return saida.length > max + 80 ? `${saida.slice(0, max)}…` : saida;
+}
 
 const EXPLICA_MODALIDADE: Record<string, string> = {
   CONVENIO:
@@ -41,10 +53,32 @@ export function detalheOportunidade(p: Documento): Detalhe {
   const cauc = dados.cauc(IBGE);
   const ufs = (p.ufs as string[]) ?? [];
 
+  const t = (p.texto_oficial ?? null) as Documento | null;
   const secoes: Secao[] = [
     {
       titulo: 'Do que se trata',
-      texto: `${p.nome}. Programa do ${p.orgao_superior}, código ${p.codigo}, disponibilizado no Transferegov em ${br(p.disponibilizado_em)}${p.acao_orcamentaria ? `, vinculado à ação orçamentária ${p.acao_orcamentaria}` : ''}.${p.subtipo_descricao ? ` ${p.subtipo_descricao}` : ''} O arquivo aberto do Transferegov não traz o objetivo detalhado do programa: leia o texto oficial completo no link abaixo.`,
+      texto: `${p.nome}. Programa do ${p.orgao_superior}, código ${p.codigo}, disponibilizado no Transferegov em ${br(p.disponibilizado_em)}${p.acao_orcamentaria ? `, vinculado à ação orçamentária ${p.acao_orcamentaria}` : ''}.${p.subtipo_descricao ? ` ${p.subtipo_descricao}` : ''}${t?.descricao ? '' : ' A fonte aberta não trouxe o texto oficial deste programa: leia-o nos links abaixo.'}`,
+    },
+    ...(t?.descricao
+      ? [
+          { titulo: 'Principal objetivo (resumo do texto oficial)', texto: resumir(t.descricao) },
+          ...(String(t.descricao).length > 480 ? [{ titulo: 'Descrição oficial do programa', texto: String(t.descricao).slice(0, 1600) + (String(t.descricao).length > 1600 ? '…' : '') }] : []),
+          ...(t.criterios ? [{ titulo: 'Critérios de seleção (texto oficial)', texto: String(t.criterios).slice(0, 1000) + (String(t.criterios).length > 1000 ? '…' : '') }] : []),
+          ...(t.observacao ? [{ titulo: 'Observações do órgão', texto: String(t.observacao).slice(0, 700) + (String(t.observacao).length > 700 ? '…' : '') }] : []),
+        ]
+      : []),
+    {
+      titulo: 'Valor mínimo e contrapartida',
+      itens: [
+        ((t?.mencoes as string[]) ?? []).length
+          ? 'A fonte aberta não traz os campos estruturados de valor mínimo/máximo e de contrapartida; o texto oficial do programa menciona o seguinte (confirmar no programa pelos links abaixo):'
+          : 'A fonte aberta não traz a regra de valor mínimo/máximo por proposta nem o percentual de contrapartida; confirmar no programa pelos links abaixo.',
+        ...(((t?.mencoes as string[]) ?? []).length ? [`Do texto oficial: ${(t!.mencoes as string[]).join(' | ')}`] : []),
+        ...(h.valor_global_municipal?.minimo
+          ? [`Observado nas propostas de prefeituras já apresentadas (referência, não é regra): valor global mínimo ${reais(h.valor_global_municipal.minimo)}, mediana ${reais(h.valor_global_municipal.mediana)}, máximo ${reais(h.valor_global_municipal.maximo)}.`]
+          : []),
+        ...(h.contrapartida_pct_mediana !== null && h.contrapartida_pct_mediana !== undefined ? [`Contrapartida mediana nessas propostas: ${h.contrapartida_pct_mediana}% do valor global.`] : []),
+      ],
     },
     soEmenda
       ? {
@@ -104,9 +138,10 @@ export function detalheOportunidade(p: Documento): Detalhe {
       ],
     },
   ];
-  return {
-    titulo: p.nome,
-    secoes,
-    link: { rotulo: 'Abrir o portal de transferências da União (Acesso livre > Consultar Programas)', url: 'https://www.gov.br/transferegov/pt-br' },
-  };
+  const links: Link[] = [
+    ...(((t?.links as string[]) ?? []).map((u, i) => ({ rotulo: `Documento citado no texto do programa (edital ou orientações) ${i + 1}`, url: u })) as Link[]),
+    { rotulo: `Consultar o programa e o edital no Transferegov Discricionárias (buscar pelo código ${p.codigo})`, url: 'https://discricionarias.transferegov.sistema.gov.br/' },
+    { rotulo: 'Portal de transferências da União (Acesso livre > Consultar Programas)', url: 'https://www.gov.br/transferegov/pt-br' },
+  ];
+  return { titulo: p.nome, secoes, links };
 }

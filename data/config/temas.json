@@ -147,7 +147,10 @@
         "estação de tratamento",
         "ETE",
         "ETA",
-        "lixão"
+        "lixão",
+        "acesso a agua",
+        "tecnologias de acesso a agua",
+        "cisterna"
       ],
       "tipos_transferencia": [
         "contrato_de_repasse",
@@ -211,7 +214,9 @@
         "terminal de ônibus",
         "VLT",
         "metrô",
-        "trânsito"
+        "trânsito",
+        "ministerio dos transportes",
+        "transporte"
       ],
       "tipos_transferencia": [
         "contrato_de_repasse",
@@ -854,7 +859,11 @@
         "cidade inteligente",
         "agricultura familiar",
         "distrito empresarial",
-        "arranjo produtivo local"
+        "arranjo produtivo local",
+        "rotas de integracao",
+        "desenvolvimento regional",
+        "desenvolvimento sustentavel local",
+        "desenvolvimento produtivo"
       ],
       "tipos_transferencia": [
         "convenio",
