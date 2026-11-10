@@ -35,16 +35,22 @@ jobs:
       - name: Trazer os coletores da branch de trabalho (somente no teste inicial)
         if: github.event_name == 'push'
         run: git checkout "$GITHUB_SHA" -- coletores src data/config .github || true
-      - name: IBGE (municípios e população)
-        run: node coletores/ibge-municipios.ts
+      - name: IBGE (municípios e população; dado mensal, não bloqueia a rotina)
+        continue-on-error: true
+        run: |
+          for i in 1 2 3; do node coletores/ibge-municipios.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
       - name: CAUC
-        run: node coletores/cauc.ts
+        run: |
+          for i in 1 2 3; do node coletores/cauc.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
       - name: SICONFI
-        run: node coletores/siconfi.ts
+        run: |
+          for i in 1 2 3; do node coletores/siconfi.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
       - name: FNS (município e capitais)
-        run: node coletores/fns.ts
+        run: |
+          for i in 1 2 3; do node coletores/fns.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
       - name: Programas abertos
-        run: node coletores/programas-abertos.ts
+        run: |
+          for i in 1 2 3; do node coletores/programas-abertos.ts && break; echo "tentativa $i falhou"; [ $i = 3 ] && exit 1; sleep 30; done
       - name: Transferegov (convênios) e resumo para as telas
         run: |
           node coletores/transferegov-convenios.ts --forcar
