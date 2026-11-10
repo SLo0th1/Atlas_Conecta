@@ -1169,6 +1169,33 @@
     "source": "captacao-alertas"
   },
   {
+    "slug": "captacao-comparativo",
+    "title": "Comparativo",
+    "group": "Captação",
+    "columns": [
+      "Posição",
+      "Capital",
+      "UF",
+      "População",
+      "Valor repasse FNS",
+      "Valor por habitante",
+      "Comparação com Goiânia"
+    ],
+    "rows": [
+      [
+        1,
+        "Capital de exemplo",
+        "XX",
+        1000000,
+        100000000,
+        100,
+        "Recebe mais por habitante"
+      ]
+    ],
+    "fields": [],
+    "source": "captacao-comparativo"
+  },
+  {
     "slug": "captacao-projetos",
     "title": "Projetos",
     "group": "Captação",
