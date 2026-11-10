@@ -37,7 +37,7 @@ jobs:
       - name: Trazer os coletores da branch de trabalho (somente no teste inicial)
         if: github.event_name == 'push'
         run: git checkout "$GITHUB_SHA" -- coletores src data/config .github || true
-      - name: Educação (INEP: Censo Escolar e IDEB)
+      - name: "Educação (INEP - Censo Escolar e IDEB)"
         run: node coletores/rodar.ts educacao coletores/inep-educacao.ts
       - name: Saneamento (SINISA)
         run: node coletores/rodar.ts saneamento coletores/sinisa.ts
