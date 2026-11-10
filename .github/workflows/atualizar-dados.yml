@@ -1,0 +1,72 @@
+# Atualização diária dos dados do bloco Captação (coletores públicos, sem chaves).
+# Roda todo dia depois das publicações das fontes (CAUC e Transferegov atualizam ~11h UTC) e, manualmente, quando necessário.
+# SEGURANÇA/FLUXO: grava só em data/core, na branch "dados-atualizados" (nunca na main) e tenta abrir/atualizar um Pull Request.
+# O merge na main (que republica o site na Vercel) continua sendo decisão do dono. Para publicar sem revisão,
+# o dono pode trocar a branch de destino por "main" (ver o passo "Enviar para a branch de dados").
+# Fora deste fluxo (não automatizáveis): DOU (ZIP baixado no navegador) e MDS (captcha); Portal da Transparência (histórico, workflow próprio).
+name: Atualizar dados do bloco Captação
+on:
+  schedule:
+    - cron: '30 12 * * *'
+  workflow_dispatch:
+  push:
+    branches: [captacao-fase1-oportunidades]
+    paths: ['.github/workflows/atualizar-dados.yml']
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: atualizar-dados
+  cancel-in-progress: false
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Instalar bsdtar (leitura de ZIP em fluxo)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libarchive-tools
+      - name: Trazer os coletores da branch de trabalho (somente no teste inicial)
+        if: github.event_name == 'push'
+        run: git checkout "$GITHUB_SHA" -- coletores src data/config .github || true
+      - name: IBGE (municípios e população)
+        run: node coletores/ibge-municipios.ts
+      - name: CAUC
+        run: node coletores/cauc.ts
+      - name: SICONFI
+        run: node coletores/siconfi.ts
+      - name: FNS (município e capitais)
+        run: node coletores/fns.ts
+      - name: Programas abertos
+        run: node coletores/programas-abertos.ts
+      - name: Transferegov (convênios) e resumo para as telas
+        run: |
+          node coletores/transferegov-convenios.ts --forcar
+          node coletores/derivar-acompanhamento.ts
+      - name: Enviar para a branch de dados
+        run: |
+          git config user.name "atlas-conecta-bot"
+          git config user.email "atlas-conecta-bot@users.noreply.github.com"
+          git reset -q
+          git checkout -B dados-atualizados
+          git add data/core/ibge-municipios.json data/core/cauc-*.json data/core/siconfi-*.json data/core/fns-*.json \
+                  data/core/programas-abertos-*.json data/core/acompanhamento-*.json
+          if git diff --cached --quiet; then echo "Sem mudanças nos dados."; exit 0; fi
+          git commit -m "Dados atualizados em $(date -u +%F) (coleta automática)"
+          git push --force-with-lease origin dados-atualizados || git push --force origin dados-atualizados
+      - name: Abrir o Pull Request (se ainda não existir)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(gh pr list --head dados-atualizados --base main --state open --json number --jq length)" = "0" ]; then
+            gh pr create --base main --head dados-atualizados \
+              --title "Dados atualizados (coleta automática)" \
+              --body "Atualização automática dos dados públicos de data/core (IBGE, CAUC, SICONFI, FNS, programas abertos e acompanhamento de convênios). Somente dados; nenhum código alterado. Ao mesclar, o site é republicado." \
+              || echo "Não foi possível abrir o PR automaticamente (permissão de Actions); abra manualmente a partir da branch dados-atualizados."
+          fi
