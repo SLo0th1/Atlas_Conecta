@@ -1169,6 +1169,60 @@
     "source": "captacao-alertas"
   },
   {
+    "slug": "captacao-comparativo",
+    "title": "Comparativo",
+    "group": "Captação",
+    "columns": [
+      "Posição",
+      "Capital",
+      "UF",
+      "População",
+      "Valor repasse FNS",
+      "Valor por habitante",
+      "Comparação com Goiânia"
+    ],
+    "rows": [
+      [
+        1,
+        "Capital de exemplo",
+        "XX",
+        1000000,
+        100000000,
+        100,
+        "Recebe mais por habitante"
+      ]
+    ],
+    "fields": [],
+    "source": "captacao-comparativo"
+  },
+  {
+    "slug": "captacao-qualidade",
+    "title": "Qualidade dos dados",
+    "group": "Captação",
+    "columns": [
+      "Fonte",
+      "Última coleta",
+      "Referência dos dados",
+      "Idade (dias)",
+      "Limite (dias)",
+      "Situação",
+      "Motivo"
+    ],
+    "rows": [
+      [
+        "Fonte de exemplo",
+        "01/01/2026",
+        "2026",
+        0,
+        3,
+        "Em dia",
+        "Dentro do prazo."
+      ]
+    ],
+    "fields": [],
+    "source": "captacao-qualidade"
+  },
+  {
     "slug": "captacao-projetos",
     "title": "Projetos",
     "group": "Captação",
