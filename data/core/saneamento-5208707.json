@@ -1,0 +1,166 @@
+{
+  "municipio": {
+    "codigo_ibge": "5208707",
+    "nome": "Goiânia",
+    "uf": "GO"
+  },
+  "observacao": "Indicadores municipais declarados ao SINISA (sucessor do SNIS) para o ano de referência 2024; valores como publicados pelo Ministério das Cidades, sem correção. Água e esgoto: base municipal (prestador regional). Ver ressalvas em cada indicador.",
+  "agua": {
+    "componente": "Abastecimento de água",
+    "ano_referencia": 2024,
+    "linhas_do_municipio": 1,
+    "prestador": "SANEAGO",
+    "indicadores": {
+      "atendimento_populacao_total_rede_agua": {
+        "codigo": "IAG0001",
+        "unidade": "%",
+        "valor": 99.85
+      },
+      "atendimento_populacao_urbana_rede_agua": {
+        "codigo": "IAG0002",
+        "unidade": "%",
+        "valor": 100
+      },
+      "atendimento_domicilios_totais_rede_agua": {
+        "codigo": "IAG0004",
+        "unidade": "%",
+        "valor": 99.16
+      },
+      "perdas_de_faturamento": {
+        "codigo": "IAG2012",
+        "unidade": "%",
+        "valor": 28.21
+      },
+      "perdas_totais_na_distribuicao": {
+        "codigo": "IAG2013",
+        "unidade": "%",
+        "valor": 11.45,
+        "ressalva": "Valor como declarado na planilha SINISA; é menor que as perdas de faturamento (28,21%), então os dois indicadores usam definições diferentes. Conferir no glossário SINISA antes de comparar ou somar."
+      },
+      "consumo_total_medio_per_capita": {
+        "codigo": "IAG2006",
+        "unidade": "l/hab/dia",
+        "valor": 176.01
+      }
+    },
+    "proveniencia": {
+      "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Abastecimento de água, ano de referência 2024",
+      "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_Resultados_Ref2024.zip",
+      "data_referencia": "ano de referência 2024",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
+      "id_carga": "sinisa-agua-2024-2026-11-10"
+    }
+  },
+  "esgoto": {
+    "componente": "Esgotamento sanitário",
+    "ano_referencia": 2024,
+    "linhas_do_municipio": 1,
+    "prestador": "SANEAGO",
+    "indicadores": {
+      "atendimento_populacao_total_rede_coletora": {
+        "codigo": "IES0001",
+        "unidade": "%",
+        "valor": 99.85
+      },
+      "atendimento_domicilios_totais_rede_coletora": {
+        "codigo": "IES0004",
+        "unidade": "%",
+        "valor": 80.16
+      },
+      "atendimento_domicilios_totais_coleta_e_tratamento": {
+        "codigo": "IES0007",
+        "unidade": "%",
+        "valor": 75.86
+      },
+      "esgoto_tratado_referido_ao_coletado": {
+        "codigo": "IES2004",
+        "unidade": "%",
+        "valor": 86.97
+      }
+    },
+    "proveniencia": {
+      "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Esgotamento sanitário, ano de referência 2024",
+      "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_ESGOTO_Planilhas_2024.zip",
+      "data_referencia": "ano de referência 2024",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
+      "id_carga": "sinisa-esgoto-2024-2026-11-10"
+    }
+  },
+  "residuos": {
+    "componente": "Manejo de resíduos sólidos urbanos",
+    "ano_referencia": 2024,
+    "linhas_do_municipio": 1,
+    "indicadores": {
+      "cobertura_populacao_total_coleta_domiciliar": {
+        "codigo": "IRS0001",
+        "unidade": "%",
+        "valor": 99.85
+      },
+      "cobertura_populacao_urbana_coleta_domiciliar": {
+        "codigo": "IRS0002",
+        "unidade": "%",
+        "valor": 100
+      },
+      "cobertura_populacao_total_coleta_seletiva": {
+        "codigo": "IRS0005",
+        "unidade": "%",
+        "valor": 99.85,
+        "ressalva": "Cobertura declarada pelo município; não mede a quantidade efetivamente reciclada (ver desempenho da coleta seletiva, IRS3001)."
+      },
+      "disposicao_final_inadequada": {
+        "codigo": "IRS3002",
+        "unidade": "%",
+        "valor": 100,
+        "ressalva": "A planilha traz 100% para Goiânia, o que contradiz o fato de a capital ter aterro sanitário; tratar como inconsistência de preenchimento até conferir com a prefeitura. Não exibir como fato."
+      }
+    },
+    "proveniencia": {
+      "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Manejo de resíduos sólidos urbanos, ano de referência 2024",
+      "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_RESIDUOS_planilhas_2024.zip",
+      "data_referencia": "ano de referência 2024",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
+      "id_carga": "sinisa-residuos-2024-2026-11-10"
+    }
+  },
+  "drenagem": {
+    "componente": "Drenagem e manejo de águas pluviais urbanas",
+    "ano_referencia": 2024,
+    "linhas_do_municipio": 1,
+    "indicadores": {
+      "parcela_area_urbanizada": {
+        "codigo": "IGE0001",
+        "unidade": "%",
+        "valor": 41.35
+      },
+      "vias_pavimentadas_na_area_urbana": {
+        "codigo": "IAP0001",
+        "unidade": "%",
+        "valor": 97.5
+      },
+      "vias_com_rede_pluvial_subterranea": {
+        "codigo": "IAP0002",
+        "unidade": "%",
+        "valor": 13.49
+      },
+      "domicilios_sujeitos_a_risco_de_inundacao": {
+        "codigo": "IGR0001",
+        "unidade": "%",
+        "valor": 0.15
+      }
+    },
+    "proveniencia": {
+      "fonte": "Ministério das Cidades — SINISA, planilha de indicadores por município, Drenagem e manejo de águas pluviais urbanas, ano de referência 2024",
+      "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/SINISA_AGUASPLUVIAIS_Informacoes_Indicadores_2025.zip",
+      "data_referencia": "ano de referência 2024",
+      "data_coleta": "2026-11-10T03:15:07.349Z",
+      "id_carga": "sinisa-drenagem-2024-2026-11-10"
+    }
+  },
+  "proveniencia": {
+    "fonte": "Ministério das Cidades — SINISA (planilhas de resultados 2024)",
+    "url_origem": "https://www.gov.br/cidades/pt-br/acesso-a-informacao/acoes-e-programas/saneamento/sinisa/resultados-sinisa/",
+    "data_referencia": "ano de referência 2024",
+    "data_coleta": "2026-11-10T03:15:07.349Z",
+    "id_carga": "sinisa-2026-11-10"
+  }
+}
