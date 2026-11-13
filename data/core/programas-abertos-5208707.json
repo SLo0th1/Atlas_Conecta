@@ -2,9 +2,9 @@
  "proveniencia": {
   "fonte": "Transferegov — arquivo aberto siconv_programa.zip (Discricionárias e Legais)",
   "url_origem": "https://api-publica.transferegov.gestao.gov.br/downloads/dadosgov/siconv_programa.zip",
-  "data_referencia": "Mon, 09 Nov 2026 11:13:02 GMT",
-  "data_coleta": "2026-11-10T01:37:49.655Z",
-  "id_carga": "programas-abertos-2026-11-10"
+  "data_referencia": "Fri, 13 Nov 2026 11:14:47 GMT",
+  "data_coleta": "2026-11-13T20:06:10.819Z",
+  "id_carga": "programas-abertos-2026-11-13"
  },
  "criterio": "situação DISPONIBILIZADO, com algum prazo (proposta, emendas ou beneficiário específico) igual ou posterior à data da coleta, aberto a \"Administração Pública Municipal\" na UF do município (ou sem UF). Classificação por tema = correspondência de palavras-chave de data/config/temas.json (rascunho, a validar).",
  "municipio": {
@@ -13,100 +13,11 @@
  },
  "resumo": {
   "linhas_lidas": 1258625,
-  "programas_abertos_no_pais": 174,
-  "programas_elegiveis_ao_municipio": 59,
+  "programas_abertos_no_pais": 169,
+  "programas_elegiveis_ao_municipio": 58,
   "sem_tema_classificado": 1
  },
  "programas": [
-  {
-   "codigo": "3000020260003",
-   "nome": "SENASP - Emendas Individuais (RP6) - ACAO 21BM",
-   "orgao_superior": "MINISTERIO DA JUSTICA E SEGURANCA PUBLICA",
-   "modalidade": "CONTRATO DE REPASSE",
-   "acao_orcamentaria": "511621BM",
-   "disponibilizado_em": "2026-02-16",
-   "prazos": {
-    "proposta_ate": null,
-    "emendas_ate": "2026-11-11",
-    "beneficiario_especifico_ate": null
-   },
-   "publico": [
-    "Administração Pública Municipal",
-    "Administração Pública Estadual ou do Distrito Federal"
-   ],
-   "ufs": [
-    "AC",
-    "AL",
-    "AM",
-    "AP",
-    "BA",
-    "CE",
-    "DF",
-    "ES",
-    "GO",
-    "MA",
-    "MG",
-    "MS",
-    "MT",
-    "PA",
-    "PB",
-    "PE",
-    "PI",
-    "PR",
-    "RJ",
-    "RN",
-    "RO",
-    "RR",
-    "RS",
-    "SC",
-    "SE",
-    "SP",
-    "TO"
-   ],
-   "temas": [
-    "seguranca_publica"
-   ],
-   "texto_oficial": {
-    "descricao": "O programa visa atender as emendas individuais. INSTRUCOES E MODELOS: https://drive.google.com/drive/u/1/folders/1MMjeMCjK7DMznyFT2KoANlPV713uaHll",
-    "observacao": "O programa visa atender as emendas individuais. INSTRUCOES E MODELOS: https://drive.google.com/drive/u/1/folders/1MMjeMCjK7DMznyFT2KoANlPV713uaHll",
-    "criterios": "O programa visa atender as emendas individuais. INSTRUCOES E MODELOS: https://drive.google.com/drive/u/1/folders/1MMjeMCjK7DMznyFT2KoANlPV713uaHll",
-    "chamamento": "NÃO",
-    "qualificacao": "Proposta de Proponente de Emenda Parlamentar",
-    "links": [
-     "https://drive.google.com/drive/u/1/folders/1MMjeMCjK7DMznyFT2KoANlPV713uaHll"
-    ],
-    "mencoes": []
-   },
-   "subtipo": null,
-   "subtipo_descricao": null,
-   "historico": {
-    "propostas_total": 65,
-    "propostas_municipais": 48,
-    "valor_global_municipal": {
-     "minimo": 200000,
-     "mediana": 260000,
-     "maximo": 2002267.44
-    },
-    "contrapartida_pct_mediana": 3.2,
-    "valor_repasse_municipal": {
-     "minimo": 198000,
-     "mediana": 250000,
-     "maximo": 2000000
-    },
-    "municipios_do_estado": [
-     {
-      "municipio": "GOIÂNIA",
-      "valor": 2000000,
-      "situacao": "Proposta/Plano de Trabalho Complementado em Análise"
-     }
-    ],
-    "municipios_do_estado_total": 1,
-    "capitais_que_propuseram": [
-     "SÃO PAULO/SP",
-     "GOIÂNIA/GO"
-    ]
-   }
-  },
   {
    "codigo": "3000020260004",
    "nome": "SENASP - Emendas de Bancada (RP7) - ACAO 21BM",
@@ -1820,7 +1731,15 @@
    "temas": [
     "cultura"
    ],
-   "texto_oficial": null,
+   "texto_oficial": {
+    "descricao": "O programa tem como objetivo principal o apoio e incentivo ao desenvolvimento do setor agropecuário, por meio de ações de custeio e investimentos em infraestrutura, capacitação, insumos, máquinas e equipamentos. As ações contempladas incluem: Custeio de atividades agropecuárias, por meio do financiamento de: Realização de eventos técnicos e promocionais; Programas de capacitação para produtores; Aquisição de insumos agropecuários. Aquisição de máquinas e equipamentos agrícolas e agroindustriais, com foco no fortalecimento da produção, transformação, comercialização e distribuição de produtos, beneficiando principalmente os pequenos e médios produtores rurais e a população local. As propostas submetidas ao programa deverão estar conforme suas diretrizes, alinhadas à ação orçamentária 20ZV – Fomento ao Setor Agropecuário, e seguir as normas estabelecidas pela Instrução Normativa MAPA nº 25, de 12 de julho de 2023.",
+    "observacao": "A análise das propostas e do Plano de trabalho se dará mediante a disponibilidade orçamentária da pasta, concomitante com o atendimento ao instrumento de convênio a favor do ente contemplado, bem como serão observados os requisitos de celebração nos termos do Decreto nº 11.531, de 16 de maio de 2023, bem como as normas complementares para as transferências de recursos oriundos dos Orçamentos Fiscal e da Seguridade Social da União – OFSS, operacionalizadas por meio da celebração de convênios e contratos de repasse entre órgãos e entidades da administração pública federal, de um lado, e órgãos e entidades dos estados, Distrito Federal e municípios, bem como consórcios públicos, para a execução de programas, projetos e atividades de interesse recíproco e em regime de mútua colaboração.",
+    "criterios": "A seleção da proposta de trabalho será feita mediante a verificação da concordância do objeto pretendido com o enquadramento do programa, juntamente com a existência de dotação e disponibilidade orçamentária do setor responsável desta pasta, e por fim, o atendimento dos requisitos para celebração estabelecidos Portaria Conjunta MGI/MF/CGU n. 33, de 30 de Agosto de 2023 e Decreto nº 11.531, de 16 de maio de 2023 e suas alterações.",
+    "chamamento": "NÃO",
+    "qualificacao": "Proposta Voluntária",
+    "links": [],
+    "mencoes": []
+   },
    "subtipo": null,
    "subtipo_descricao": null,
    "historico": {
