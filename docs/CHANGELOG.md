@@ -31,3 +31,4 @@
 - 2026-11-10: Testes de interface (Playwright, Chromium) executados pela primeira vez: 28 de 28 passaram, incluindo todas as guias do bloco Captação em 1280 e 375 px. playwright.config.ts passa a carregar só *.spec.ts (os testes de dados usam node:test).
 - 2026-11-10: Atualização mensal automática (INEP, SINISA e CNES) no GitHub Actions (dia 5 de cada mês, branch dados-mensais-atualizados); status das coletas mensais em data/core/status-coletas-mensais.json, lido pela guia Qualidade dos dados.
 - 2026-11-10: Manual do usuário atualizado (Comparativo, Qualidade dos dados, Principal com educação, saúde e saneamento, agenda iCalendar, Projetos com parecer, rotinas diária e mensal).
+- 2026-11-10: Revisão de segurança (9 vetores, docs/seguranca.md): limitador de tentativas de login (lib/rate-limit.ts), escape do JSON-LD (XSS), cabeçalhos de segurança e CSP no vercel.json, testes (npm run test:dados: 13 testes).

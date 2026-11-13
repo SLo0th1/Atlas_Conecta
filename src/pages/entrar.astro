@@ -7,6 +7,7 @@ import Base from '../layouts/Base.astro';import Icon from '../components/Icon.as
     <h1>Entrar na plataforma</h1>
     <p>Acesso restrito à equipe. Ambiente demonstrativo.</p>
     <p id="login-error" class="notice" role="alert" hidden>E-mail ou senha inválidos. Tente novamente.</p>
+    <p id="login-locked" class="notice" role="alert" hidden>Muitas tentativas. Aguarde alguns minutos e tente novamente.</p>
     <form method="post" data-astro-reload action="/api/login/" class="form-grid">
       <div class="full"><label for="login-email">E-mail</label><div class="input-icon"><Icon name="mail"/><input id="login-email" name="email" type="email" autocomplete="username" required /></div></div>
       <div class="full"><label for="login-password">Senha</label><div class="input-icon"><Icon name="lock"/><input id="login-password" name="senha" type="password" autocomplete="current-password" required /><button type="button" id="password-toggle" aria-label="Mostrar senha" aria-pressed="false"><span class="password-eye"><Icon name="eye"/></span><span class="password-eye-off"><Icon name="eye-off"/></span></button></div></div>
@@ -24,6 +25,8 @@ document.addEventListener('astro:page-load',()=>{
   if (next) next.value = params.get('next') || '/plataforma/';
   const error = document.querySelector<HTMLElement>('#login-error');
   if (error && params.get('erro') === '1') error.hidden = false;
+  const locked = document.querySelector<HTMLElement>('#login-locked');
+  if (locked && params.get('erro') === '2') locked.hidden = false;
 
 });
 </script>
