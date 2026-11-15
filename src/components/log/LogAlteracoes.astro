@@ -41,6 +41,10 @@ const autores = [...new Set(lista.map((r) => r.autor))].sort((a, b) => a.localeC
         {Object.entries(ROTULO_ORIGEM).map(([v, r]) => <option value={v}>{r}</option>)}
       </select>
     </label>
+    <label class="lg-exc">
+      <input type="checkbox" data-lg-excecoes />
+      Somente exceções
+    </label>
     <label class="lg-texto">Texto
       <input type="search" data-lg-texto placeholder="Buscar no que mudou, motivo ou nome" autocomplete="off" />
     </label>
@@ -77,7 +81,7 @@ const autores = [...new Set(lista.map((r) => r.autor))].sort((a, b) => a.localeC
 <script>
 import { avisar, CHAVE_LOG_SIMULACAO } from '../../lib/carteira/simulacao.ts';
 import type { RegistroLog } from '../../lib/log/tipos.ts';
-import { dataHoraBr, filtrarLog, maisRecentes, paraCsv, resumoRegistro, rotuloAcao, rotuloCampo, rotuloOrigem, valorLegivel } from '../../lib/log/visoes.ts';
+import { dadosExcecao, dataHoraBr, ehExcecao, filtrarLog, maisRecentes, paraCsv, resumoRegistro, rotuloAcao, rotuloCampo, rotuloOrigem, valorLegivel } from '../../lib/log/visoes.ts';
 
 const POR_PAGINA = 25;
 
@@ -126,6 +130,7 @@ document.addEventListener('astro:page-load', () => {
   const campoAcao = q<HTMLSelectElement>('[data-lg-acao]');
   const campoOrigem = q<HTMLSelectElement>('[data-lg-origem]');
   const campoTexto = q<HTMLInputElement>('[data-lg-texto]');
+  const campoExcecoes = q<HTMLInputElement>('[data-lg-excecoes]');
   const corpo = q<HTMLElement>('[data-lg-corpo]');
   const contador = q<HTMLElement>('[data-lg-contador]');
   const vazio = q<HTMLElement>('[data-lg-vazio]');
@@ -144,6 +149,7 @@ document.addEventListener('astro:page-load', () => {
 
   const pre = new URLSearchParams(location.search).get('projeto');
   if (pre) campoProjeto.value = pre.slice(0, 80);
+  if (new URLSearchParams(location.search).get('excecoes') === '1') campoExcecoes.checked = true;
 
   let pagina = 1;
   let filtrados: RegistroLog[] = todos;
@@ -156,6 +162,7 @@ document.addEventListener('astro:page-load', () => {
     acao: campoAcao.value,
     origem: campoOrigem.value,
     texto: campoTexto.value,
+    excecoes: campoExcecoes.checked,
   });
 
   function linhaDetalhe(r: RegistroLog, id: string): HTMLTableRowElement {
@@ -175,6 +182,11 @@ document.addEventListener('astro:page-load', () => {
     }
     par('Motivo', r.motivo && r.motivo.trim() ? r.motivo : 'Não informado');
     par('Forçado', r.forcado ? 'Sim (a regra foi contornada com motivo)' : 'Não');
+    const exc = dadosExcecao(r);
+    if (exc) {
+      par('Exceção — tipo', exc.tipo);
+      par('Exceção — motivo', exc.motivo);
+    }
     par('Registrado por', `${r.autor} · ${rotuloOrigem(r.origem)} · ${dataHoraBr(r.em)}`);
     if (r.simulado) par('Situação', 'Simulação: nada foi gravado.');
     td.append(dl);
@@ -207,6 +219,7 @@ document.addEventListener('astro:page-load', () => {
     tr.append(tdProj);
     const tdAcao = el('td', rotuloAcao(r.tipo));
     if (r.forcado) tdAcao.append(el('span', 'Forçado', 'cr-selo'));
+    if (ehExcecao(r)) tdAcao.append(el('span', 'Exceção', 'cr-selo lg-selo-exc'));
     if (r.simulado) tdAcao.append(el('span', 'Simulação (não gravado)', 'cr-selo'));
     tr.append(tdAcao, el('td', resumoRegistro(r)), el('td', r.autor), el('td', rotuloOrigem(r.origem)));
     const tdBtn = el('td', undefined, 'lg-acoes');
@@ -248,7 +261,7 @@ document.addEventListener('astro:page-load', () => {
     desenhar();
   };
   for (const c of [campoDe, campoAte, campoProjeto, campoTexto]) c.addEventListener('input', refiltrar);
-  for (const c of [campoDe, campoAte, campoAutor, campoAcao, campoOrigem]) c.addEventListener('change', refiltrar);
+  for (const c of [campoDe, campoAte, campoAutor, campoAcao, campoOrigem, campoExcecoes]) c.addEventListener('change', refiltrar);
   q<HTMLFormElement>('[data-lg-form]').addEventListener('submit', (e) => e.preventDefault());
   btnAnterior.addEventListener('click', () => {
     pagina--;
@@ -261,6 +274,7 @@ document.addEventListener('astro:page-load', () => {
   q<HTMLButtonElement>('[data-lg-limpar]').addEventListener('click', () => {
     for (const c of [campoDe, campoAte, campoProjeto, campoTexto]) c.value = '';
     for (const c of [campoAutor, campoAcao, campoOrigem]) c.value = '';
+    campoExcecoes.checked = false;
     refiltrar();
   });
   q<HTMLButtonElement>('[data-lg-csv]').addEventListener('click', () => {

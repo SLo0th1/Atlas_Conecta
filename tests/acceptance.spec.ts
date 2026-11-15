@@ -188,7 +188,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
  const resposta=await page.goto('/plataforma/projetos-fluxo/');
  expect(resposta?.status()).toBe(200);
  await expect(page.locator('h1')).toHaveCount(1);
- await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(29);
+ await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(30);
  // clique no portão: validações e link para as pendências
  await page.locator('svg.fx-svg [data-no="portao"]').click();
  const dlg=page.locator('#fluxo-detalhe');
@@ -218,7 +218,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
 
 test('govnexa: fluxo exporta em PDF',async({page})=>{
  await page.goto('/plataforma/projetos-fluxo/');await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeVisible();
- await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(29);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
+ await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(30);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
 });
 
 test('govnexa: sala de guerra',async({page})=>{
@@ -274,6 +274,58 @@ test('govnexa: sala de guerra',async({page})=>{
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`sala ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
 
+test('govnexa: sala de guerra incluir e retirar',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ // candidatos explicam o porquê
+ await page.goto('/plataforma/projetos-sala/');
+ const cand=page.locator('[data-sl-candidato]');
+ if(await cand.count())await expect(cand.first()).toContainText('Sugerido porque');
+ // página da sala S-1 (1 projeto): retirar desabilitado
+ await page.goto('/plataforma/sala-de-guerra/S-1/');
+ const lista=page.locator('[data-sl-proj-lista]');
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(1);
+ await expect(lista.getByRole('button',{name:/Retirar da sala/})).toBeDisabled();
+ await expect(page.getByText('A sala precisa de ao menos um projeto.')).toBeVisible();
+ // incluir projeto buscando "Exemplo"
+ await page.getByRole('button',{name:'Incluir projeto'}).click();
+ const dInc=page.locator('#sl-incluir-dialog');
+ await expect(dInc).toContainText('Modo simulação');
+ await dInc.getByLabel(/Buscar projeto/).fill('Exemplo');
+ const botoes=dInc.locator('[data-sl-busca-lista] button:not([disabled])');
+ expect(await botoes.count()).toBeGreaterThan(0);
+ await dInc.locator('[data-sl-inc-motivo]').fill('Mesmo tema');
+ await botoes.first().click();
+ await expect(page.locator('#toast')).toContainText('Simulação');
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(2);
+ // retirar sem motivo não retira; com motivo retira
+ await lista.getByRole('button',{name:/Retirar da sala/}).first().click();
+ const dRet=page.locator('#sl-retirar-dialog');
+ await expect(dRet).toContainText('Modo simulação');
+ await dRet.getByRole('button',{name:'Retirar (simulação)'}).click();
+ await expect(dRet.locator('[data-sl-ret-erro]')).toContainText('Informe o motivo');
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(2);
+ await dRet.getByLabel(/Motivo/).fill('Saiu do escopo');
+ await dRet.getByRole('button',{name:'Retirar (simulação)'}).click();
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(1);
+ // registros no histórico
+ await page.goto('/plataforma/projetos-log/');
+ await expect(page.locator('[data-lg-corpo]')).toContainText('Projeto retirado da sala de guerra');
+ await expect(page.locator('[data-lg-corpo]')).toContainText('Projeto incluído na sala de guerra');
+ // sem rolagem horizontal (1280 e 390)
+ for(const largura of [1280,390]){
+  await page.setViewportSize({width:largura,height:900});
+  await page.goto('/plataforma/sala-de-guerra/S-1/');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`rolagem ${largura}`).toBeTruthy();
+  await page.getByRole('button',{name:'Incluir projeto'}).click();
+  await page.getByLabel(/Buscar projeto/).fill('Exemplo');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`rolagem diálogo ${largura}`).toBeTruthy();
+  await page.getByRole('button',{name:'Fechar'}).click();
+ }
+ await page.setViewportSize({width:1280,height:900});
+ // axe na página da sala, claro e escuro
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`sala incluir ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
 test('govnexa: tema escolhido se mantém ao trocar de guia',async({page})=>{
  for(const [esquema,escolhido] of [['light','dark'],['dark','light']] as const){
   await page.emulateMedia({colorScheme:esquema});await page.goto('/plataforma/projetos/');
@@ -283,4 +335,126 @@ test('govnexa: tema escolhido se mantém ao trocar de guia',async({page})=>{
    await expect(page.locator('html'),nome).toHaveAttribute('data-theme',escolhido);
   }
  }
+});
+
+test('govnexa: novo projeto',async({page})=>{
+ await page.goto('/plataforma/projetos/');
+ await expect(page.locator('.workspace').getByRole('link',{name:'Novo projeto',exact:true})).toBeVisible();
+ await page.goto('/plataforma/projetos-carteira/');
+ await page.locator('.workspace').getByRole('link',{name:'Novo projeto',exact:true}).click();
+ await page.waitForURL(/projetos-novo/);
+ await expect(page.getByRole('heading',{name:'Novo projeto',level:1})).toBeVisible();
+ await expect(page.getByText('Modo simulação').first()).toBeVisible();
+ // enviar vazio mostra erros de Nome e Órgão
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ await expect(page.locator('[data-np-resumo]')).toContainText('Informe o nome do projeto');
+ await expect(page.locator('[data-np-resumo]')).toContainText('Escolha o órgão');
+ await expect(page.locator('#np-nome')).toHaveAttribute('aria-invalid','true');
+ await expect(page.locator('#np-orgao')).toHaveAttribute('aria-invalid','true');
+ // preencher nome e órgão
+ await page.locator('#np-nome').fill('Nova UBS do teste');
+ await page.locator('#np-orgao').selectOption({index:1});
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ const ok=page.locator('[data-np-ok]');
+ await expect(ok).toContainText('Simulação');
+ await expect(ok).toContainText('00 – Em estruturação');
+ await expect(ok).toContainText('Nada foi gravado');
+ // sem rolagem horizontal em 1280 e 390px
+ for(const width of [1280,390]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${width}px`).toBeTruthy();}
+ // axe claro/escuro
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),theme).toEqual([]);}
+ await page.setViewportSize({width:1280,height:900});
+ // o histórico mostra o registro simulado
+ await ok.getByRole('link',{name:'Ver no Histórico de alterações'}).click();
+ await page.waitForURL(/projetos-log/);
+ await expect(page.getByText('Simulação (não gravado)').first()).toBeVisible();
+ await expect(page.locator('td').getByText('Projeto incluído').first()).toBeVisible();
+});
+
+test('govnexa: fluxos detalhados',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const ids=['cadastro','oportunidade','movimentacao','clausula','licitacao','sala'];
+ const urls=new Set<string>();
+ const coletar=async()=>{const lista:{telas:{url:string}[];subfluxo:string|null}[]=JSON.parse((await page.locator('[data-fx-dados]').textContent())||'[]');for(const n of lista){for(const t of n.telas)urls.add(t.url);if(n.subfluxo)urls.add(`/plataforma/fluxo/${n.subfluxo}/`);}};
+ // mapa geral: 6 fluxos detalhados listados, selo nas caixas e botão no diálogo
+ await page.goto('/plataforma/projetos-fluxo/');
+ await expect(page.getByRole('heading',{name:'Fluxos detalhados',level:2})).toBeVisible();
+ await expect(page.locator('.fx-subs li')).toHaveCount(6);
+ await expect(page.locator('svg.fx-svg .fx-selo-sub')).toHaveCount(6);
+ await coletar();
+ await page.locator('svg.fx-svg [data-no="cadastro"]').click();
+ const dlg=page.locator('#fluxo-detalhe');
+ const ver=dlg.getByRole('link',{name:'Ver fluxo detalhado'});
+ await expect(ver).toHaveAttribute('href','/plataforma/fluxo/cadastro/');
+ await ver.click();
+ await expect(page).toHaveURL(/\/plataforma\/fluxo\/cadastro\/$/);
+ // cada fluxo detalhado: 200, um h1, link de volta, PDF e hexágonos de exceção
+ for(const id of ids){
+  const r=await page.goto(`/plataforma/fluxo/${id}/`);
+  expect(r?.status(),id).toBe(200);
+  await expect(page.locator('h1'),id).toHaveCount(1);
+  await expect(page.locator('h1'),id).toContainText('Fluxo detalhado:');
+  await expect(page.getByRole('link',{name:/Voltar ao fluxo do sistema/}),id).toHaveAttribute('href','/plataforma/projetos-fluxo/');
+  await expect(page.getByRole('button',{name:'Exportar em PDF'}),id).toBeVisible();
+  expect(await page.locator('svg.fx-svg path.fx-exc').count(),`${id}: hexágonos de exceção`).toBeGreaterThan(0);
+  expect(await page.locator('svg.fx-svg [data-no] .fx-exc-rot').count(),id).toBe(await page.locator('svg.fx-svg path.fx-exc').count());
+  await coletar();
+ }
+ // clicar numa exceção mostra "Aceita quando" e o que fica registrado
+ await page.goto('/plataforma/fluxo/cadastro/');
+ await page.locator('svg.fx-svg [data-no="c-pend-exc"]').click();
+ const d=page.locator('dialog[open]');
+ await expect(d).toContainText('Aceita quando');
+ await expect(d).toContainText('O que fica registrado');
+ await expect(d.locator('[data-fx-exc]')).toBeVisible();
+ await page.keyboard.press('Escape');
+ // PDF: o anexo traz as exceções
+ await page.emulateMedia({media:'print'});
+ await expect(page.locator('.fx-anexo-no')).toHaveCount(11);
+ await expect(page.locator('.fx-anexo')).toContainText('Exceção aceita quando');
+ await page.emulateMedia({media:'screen'});
+ // todos os links de tela dos diálogos (mapa geral e fluxos detalhados) respondem 200
+ expect(urls.size).toBeGreaterThan(10);
+ for(const u of urls){const resp=await page.request.get(u);expect(resp.status(),u).toBe(200);}
+ // histórico: ?excecoes=1 mostra só exceções
+ await page.goto('/plataforma/projetos-log/');
+ await expect(page.locator('[data-lg-contador]')).toContainText('registros');
+ const total=Number(((await page.locator('[data-lg-contador]').textContent())||'').split(' de ')[0]);
+ await page.goto('/plataforma/projetos-log/?excecoes=1');
+ await expect(page.locator('[data-lg-excecoes]')).toBeChecked();
+ await expect.poll(async()=>page.locator('[data-lg-corpo] tr:not(.lg-detalhe)').count()).toBeGreaterThan(0);
+ expect(Number(((await page.locator('[data-lg-contador]').textContent())||'').split(' de ')[0])).toBeLessThan(total);
+ for(const linha of await page.locator('[data-lg-corpo] tr:not(.lg-detalhe)').all())await expect(linha).toContainText('Exceção');
+ await page.locator('[data-lg-corpo] .lg-ver').first().click();
+ await expect(page.locator('.lg-detalhe:not([hidden])').first()).toContainText('Exceção — motivo');
+ // sem rolagem horizontal em 1280 e 390px
+ for(const width of [1280,390])for(const u of ['/plataforma/fluxo/cadastro/','/plataforma/fluxo/licitacao/','/plataforma/projetos-fluxo/'])
+  {await page.setViewportSize({width,height:900});await page.goto(u);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${u} ${width}px`).toBeTruthy();}
+ // axe claro e escuro em um fluxo detalhado
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/fluxo/cadastro/');
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`subfluxo ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
+test('govnexa: novo projeto em colunas e foco no resultado',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/projetos-novo/');
+ const colunas=async()=>page.locator('.np-grade').first().evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length);
+ expect(await colunas()).toBe(3);
+ await page.setViewportSize({width:800,height:900});expect(await colunas()).toBe(2);
+ await page.setViewportSize({width:390,height:900});expect(await colunas()).toBe(1);
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ await expect(page.locator('[data-np-resumo]')).toBeFocused();
+ await page.locator('#np-nome').fill('Projeto do teste de foco');
+ await page.locator('#np-orgao').selectOption({index:1});
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ await expect(page.locator('[data-np-ok]')).toBeFocused();
+ await expect(page.locator('[data-np-ok]')).toBeInViewport();
+});
+
+test('govnexa: paginação compacta com reticências',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});await page.goto('/plataforma/captacao-acompanhamento/');
+ const n=page.locator('[data-page-numbers]').first();const total=await n.locator('button').count();
+ if(total<=7){await expect(n.locator('.pag-reticencias')).toHaveCount(0);return;}
+ await expect(n.locator('button').first()).toHaveText('1');await expect(n.locator('.pag-reticencias')).toHaveCount(1);expect(total).toBeLessThanOrEqual(7);
 });

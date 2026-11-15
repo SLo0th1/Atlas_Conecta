@@ -2,7 +2,7 @@
 import type { OrigemEvento, RegistroHistorico } from '../carteira/movimentacao.ts';
 
 /** Tipos do motor ('passo', 'pendencia'...) mais os que só o log conhece ('criado', 'removido', 'carga'). */
-export type TipoAcaoLog = RegistroHistorico['tipo'] | 'registrar_passo' | 'resolver_pendencia' | 'criado' | 'removido' | 'carga' | 'sala_aberta' | 'sala_reuniao' | 'sala_item' | 'sala_encerrada';
+export type TipoAcaoLog = RegistroHistorico['tipo'] | 'registrar_passo' | 'resolver_pendencia' | 'criado' | 'removido' | 'carga' | 'sala_aberta' | 'sala_reuniao' | 'sala_item' | 'sala_encerrada' | 'sala_projeto_incluido' | 'sala_projeto_retirado';
 
 /** Registro do log: o histórico do motor, com tipos extras, nome do projeto e marca de simulação (não gravado). */
 export type RegistroLog = Omit<RegistroHistorico, 'tipo'> & {
@@ -25,6 +25,8 @@ export const ROTULO_ACAO: Record<TipoAcaoLog, string> = {
   sala_reuniao: 'Reunião da sala de guerra',
   sala_item: 'Item da sala de guerra',
   sala_encerrada: 'Sala de guerra encerrada',
+  sala_projeto_incluido: 'Projeto incluído na sala de guerra',
+  sala_projeto_retirado: 'Projeto retirado da sala de guerra',
 };
 
 export const ROTULO_ORIGEM: Record<OrigemEvento, string> = {
@@ -33,6 +35,8 @@ export const ROTULO_ORIGEM: Record<OrigemEvento, string> = {
   pendencia: 'Pendências de etapa',
   sei: 'SEI',
   importacao: 'Importação da planilha',
+  cadastro: 'Cadastro de projeto',
+  sala: 'Sala de guerra',
 };
 
 /** Tipos de ação que aparecem no filtro (cada rótulo uma vez). */

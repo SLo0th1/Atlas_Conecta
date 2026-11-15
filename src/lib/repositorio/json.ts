@@ -1,5 +1,5 @@
 // Repositório somente leitura sobre os JSON (MVP). Valida os eventos com o motor, mas não grava.
-import { aplicarEvento } from '../carteira/movimentacao.ts';
+import { aplicarEvento, criarProjeto } from '../carteira/movimentacao.ts';
 import { carregarCarteira } from '../carteira/carga.ts';
 import { carregarCronogramas } from '../cronograma/carga.ts';
 import { carregarHistorico } from '../log/carga.ts';
@@ -26,6 +26,12 @@ export function criarRepositorioJson(): RepositorioProjetos {
       if (!p) return { ok: false, erro: 'Projeto não encontrado.' };
       const r = aplicarEvento(p, e);
       if (!r.ok) return r.faltando ? { ok: false, erro: r.erro, faltando: r.faltando } : { ok: false, erro: r.erro };
+      return { ok: false, erro: 'Gravação indisponível: o banco de dados ainda não foi configurado.' };
+    },
+    async criarProjeto(dados, autor) {
+      const codigos = carregarCarteira().projetos.map((x) => x.codigo_legado);
+      const r = criarProjeto(dados, { autor, em: new Date().toISOString(), proximoCodigo: Math.max(0, ...codigos) + 1, origem: 'cadastro' });
+      if (!r.ok) return r;
       return { ok: false, erro: 'Gravação indisponível: o banco de dados ainda não foi configurado.' };
     },
     async listarCronogramas() {

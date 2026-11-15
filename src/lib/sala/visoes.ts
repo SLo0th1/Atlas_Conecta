@@ -65,6 +65,22 @@ export function candidatosSala(carteira: Carteira, cronogramas: Cronograma[], ho
   return lista.sort((a, b) => b.peso - a.peso || (entregaDe(a) < entregaDe(b) ? -1 : entregaDe(a) > entregaDe(b) ? 1 : 0));
 }
 
+/** Frase simples do porquê da sugestão: "Sugerido porque a, b e c." */
+export function porqueSugerido(motivos: string[]): string {
+  const frases = motivos.map((m) => {
+    if (m === 'Prioridade alta com prazo de etapa vencido') return 'a prioridade é alta e o prazo da etapa já venceu';
+    if (m === 'Cronograma em ritmo vermelho (realizado abaixo do previsto)') return 'o cronograma está andando abaixo do previsto';
+    const parada = /^Etapa parada há mais de 30 dias: (.*) \(([^()]*)\)$/.exec(m);
+    if (parada) return `a etapa ${parada[1]} está parada há mais de 30 dias com ${parada[2]}`;
+    if (m === 'Em contratação com saldo sem fonte') return 'está em contratação sem fonte para todo o valor';
+    if (m === 'Entrega próxima e em risco') return 'a entrega está próxima e em risco';
+    return m.toLowerCase();
+  });
+  if (!frases.length) return '';
+  const junto = frases.length === 1 ? frases[0] : `${frases.slice(0, -1).join(', ')} e ${frases[frases.length - 1]}`;
+  return `Sugerido porque ${junto}.`;
+}
+
 const aberto = (i: ItemRaid): boolean => i.situacao === 'aberto' || i.situacao === 'em_andamento';
 const acoesAbertas = (s: Sala): ItemRaid[] => s.raid.filter((i) => i.tipo === 'acao' && aberto(i));
 const vencida = (i: ItemRaid, hoje: string): boolean => aberto(i) && !!i.prazo && i.prazo < hoje;
