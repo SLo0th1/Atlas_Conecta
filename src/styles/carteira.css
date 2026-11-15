@@ -245,3 +245,30 @@
  .fx-no{cursor:default}
  .fx-lista-raia a[role=button]{text-decoration:none}
 }
+/* Fluxo: exportar em PDF (impressão do navegador). Na tela, o anexo e o cabeçalho de impressão ficam ocultos. */
+.fx-exportar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin:0 0 1rem}
+.fx-so-impressao{display:none}
+@media print{
+ .fx-so-impressao{display:block!important}
+ .fx-cab-impressao{margin:0 0 4mm;font-size:10pt}
+ .fx-lista{display:none!important}
+ .fx-anexo{break-before:page;font-size:9.5pt}
+ .fx-anexo h2{font-size:14pt;margin:0 0 3mm}
+ .fx-anexo h3{font-size:12pt;margin:5mm 0 1mm;break-after:avoid}
+ .fx-anexo-no{break-inside:avoid;border-top:1px solid #999;padding:2mm 0}
+ .fx-anexo-no h4{font-size:10.5pt;margin:0 0 1mm}
+ .fx-anexo-no p{margin:0 0 1mm}
+}
+@media print{
+ .fx-legenda{font-size:8pt;padding:2mm 3mm;margin:0 0 2mm}
+ .fx-legenda h2{font-size:10pt;margin:0 0 1mm}
+ .fx-legenda h3{font-size:8.5pt;margin:0 0 .5mm}
+ .fx-legenda li{margin:0}
+ .fx-legenda svg{width:18px;height:14px}
+ .fx-legenda>p{display:none}
+ .fx-leg-grupos{display:grid!important;grid-template-columns:repeat(3,1fr);gap:2mm}
+ .fx-svg{max-height:172mm!important}
+ .fx-quadro{margin:0!important;padding:0!important}
+ h1{margin:0 0 1mm!important;font-size:16pt!important}
+ .section-head p{display:none}
+}
