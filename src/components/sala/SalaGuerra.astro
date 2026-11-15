@@ -4,7 +4,7 @@ import { carregarCarteira } from '../../lib/carteira/carga.ts';
 import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
 import { carregarSalas } from '../../lib/sala/carga.ts';
 import { ROTULO_CADENCIA, ROTULO_ESCALONAMENTO, ROTULO_TIPO_SALA, type Sala } from '../../lib/sala/tipos.ts';
-import { candidatosSala, dataBr, indicadoresSala, textoPrazo } from '../../lib/sala/visoes.ts';
+import { candidatosSala, dataBr, indicadoresSala, porqueSugerido, textoPrazo } from '../../lib/sala/visoes.ts';
 import { AVISO_SIMULACAO_SALA } from '../../lib/sala/simulacao.ts';
 
 const hoje = new Date().toISOString().slice(0, 10);
@@ -16,6 +16,7 @@ const ativas = salas.filter((s) => s.situacao === 'aberta' || s.situacao === 'em
 const encerradas = salas.filter((s) => s.situacao === 'resolvida' || s.situacao === 'encerrada');
 const candidatos = candidatosSala(carteira, cronogramas, hoje, salas);
 const prazoPadrao = new Date(Date.parse(`${hoje}T00:00:00Z`) + 30 * 86400000).toISOString().slice(0, 10);
+const abertas = ativas.map((s) => ({ id: s.id, titulo: s.titulo, projetos: s.projetos.join(' ') }));
 const contagem = (s: Sala, tipo: string) => s.raid.filter((i) => i.tipo === tipo && (i.situacao === 'aberto' || i.situacao === 'em_andamento')).length;
 const rotuloFarol = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' } as const;
 ---
@@ -55,10 +56,14 @@ const rotuloFarol = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' }
           <li class="sl-candidato" data-sl-candidato data-projeto-id={c.projeto.id} data-projeto-nome={c.projeto.nome}>
             <div>
               <strong>{c.projeto.nome}</strong> <span class="muted">({c.projeto.id})</span>
+              <p class="sl-porque">{porqueSugerido(c.motivos)}</p>
               <ul class="sl-motivos">{c.motivos.map((m) => <li>{m}</li>)}</ul>
               <p class="sl-resultado" data-sl-resultado role="status" hidden></p>
             </div>
-            <div><button type="button" class="primary" data-sl-abrir aria-label={`Abrir sala para ${c.projeto.nome}`}>Abrir sala</button></div>
+            <div class="sl-candidato-acoes">
+              <button type="button" class="primary" data-sl-abrir aria-label={`Abrir sala para ${c.projeto.nome}`}>Abrir sala</button>
+              {abertas.length > 0 && <button type="button" class="secondary" data-sl-incluir-aberta aria-label={`Incluir ${c.projeto.nome} em sala aberta`}>Incluir em sala aberta</button>}
+            </div>
           </li>
         ))}
       </ul>
@@ -123,10 +128,31 @@ const rotuloFarol = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' }
       </div>
     </form>
   </dialog>
+
+  <dialog id="sl-incluir-dialog" class="cart-dialogo" aria-labelledby="sl-incluir-titulo">
+    <form data-sl-incluir-form>
+      <h2 id="sl-incluir-titulo">Incluir em sala aberta</h2>
+      <p data-sl-inc-projeto></p>
+      <p class="cart-aviso">{AVISO_SIMULACAO_SALA}</p>
+      <label>Sala
+        <select data-sl-inc-sala>
+          {abertas.map((s) => <option value={s.id} data-titulo={s.titulo} data-projetos={s.projetos}>{s.titulo}</option>)}
+        </select>
+      </label>
+      <label>Motivo (opcional)
+        <input type="text" data-sl-inc-motivo />
+      </label>
+      <div class="cart-erro" role="alert" data-sl-inc-erro hidden></div>
+      <div class="actions">
+        <button type="submit" class="primary">Incluir (simulação)</button>
+        <button type="button" class="secondary" data-sl-inc-cancelar>Cancelar</button>
+      </div>
+    </form>
+  </dialog>
 </div>
 <script>
 import { avisar, mostrarErro } from '../../lib/carteira/simulacao.ts';
-import { registrarSimulacaoSala } from '../../lib/sala/simulacao.ts';
+import { incluirProjetoNaSala, registrarSimulacaoSala } from '../../lib/sala/simulacao.ts';
 
 document.addEventListener('astro:page-load', () => {
   const raiz = document.querySelector<HTMLElement>('[data-sala-guerra]');
@@ -178,5 +204,47 @@ document.addEventListener('astro:page-load', () => {
     form.reset();
   });
   dlg.querySelector('[data-sl-cancelar]')!.addEventListener('click', () => dlg.close());
+
+  // Incluir o candidato numa sala já aberta (simulação)
+  const dInc = raiz.querySelector<HTMLDialogElement>('#sl-incluir-dialog')!;
+  const fInc = dInc.querySelector<HTMLFormElement>('[data-sl-incluir-form]')!;
+  const eInc = dInc.querySelector<HTMLElement>('[data-sl-inc-erro]')!;
+  const selSala = dInc.querySelector<HTMLSelectElement>('[data-sl-inc-sala]')!;
+  const motivoInc = dInc.querySelector<HTMLInputElement>('[data-sl-inc-motivo]')!;
+  let alvoInc: HTMLElement | null = null;
+  raiz.addEventListener('click', (e) => {
+    const botao = (e.target as HTMLElement).closest<HTMLElement>('[data-sl-incluir-aberta]');
+    if (!botao) return;
+    alvoInc = botao.closest<HTMLElement>('[data-sl-candidato]');
+    if (!alvoInc) return;
+    dInc.querySelector('[data-sl-inc-projeto]')!.textContent = `Projeto: ${alvoInc.dataset.projetoNome} (${alvoInc.dataset.projetoId})`;
+    eInc.hidden = true;
+    dInc.showModal();
+    selSala.focus();
+  });
+  fInc.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!alvoInc) return;
+    const opcao = selSala.selectedOptions[0];
+    const id = alvoInc.dataset.projetoId ?? '';
+    const nome = alvoInc.dataset.projetoNome ?? '';
+    const sala = { id: opcao.value, titulo: opcao.dataset.titulo ?? '', projetos: (opcao.dataset.projetos ?? '').split(' ').filter(Boolean) };
+    const r = incluirProjetoNaSala(sala, id, motivoInc.value);
+    if (!r.ok) {
+      mostrarErro(eInc, r.erro);
+      return;
+    }
+    registrarSimulacaoSala(r.registro.tipo, id, nome, r.registro.descricao, r.registro.motivo);
+    opcao.dataset.projetos = r.sala.projetos.join(' ');
+    const res = alvoInc.querySelector<HTMLElement>('[data-sl-resultado]')!;
+    res.textContent = `Simulação: incluído na sala "${sala.titulo}". Nada foi gravado.`;
+    res.hidden = false;
+    alvoInc.querySelector('[data-sl-incluir-aberta]')?.remove();
+    alvoInc.querySelector('[data-sl-abrir]')?.remove();
+    dInc.close();
+    avisar(`Simulação: ${nome} incluído na sala. Nada foi gravado.`);
+    fInc.reset();
+  });
+  dInc.querySelector('[data-sl-inc-cancelar]')!.addEventListener('click', () => dInc.close());
 });
 </script>

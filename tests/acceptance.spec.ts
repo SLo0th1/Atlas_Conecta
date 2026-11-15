@@ -274,6 +274,58 @@ test('govnexa: sala de guerra',async({page})=>{
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`sala ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
 
+test('govnexa: sala de guerra incluir e retirar',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ // candidatos explicam o porquê
+ await page.goto('/plataforma/projetos-sala/');
+ const cand=page.locator('[data-sl-candidato]');
+ if(await cand.count())await expect(cand.first()).toContainText('Sugerido porque');
+ // página da sala S-1 (1 projeto): retirar desabilitado
+ await page.goto('/plataforma/sala-de-guerra/S-1/');
+ const lista=page.locator('[data-sl-proj-lista]');
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(1);
+ await expect(lista.getByRole('button',{name:/Retirar da sala/})).toBeDisabled();
+ await expect(page.getByText('A sala precisa de ao menos um projeto.')).toBeVisible();
+ // incluir projeto buscando "Exemplo"
+ await page.getByRole('button',{name:'Incluir projeto'}).click();
+ const dInc=page.locator('#sl-incluir-dialog');
+ await expect(dInc).toContainText('Modo simulação');
+ await dInc.getByLabel(/Buscar projeto/).fill('Exemplo');
+ const botoes=dInc.locator('[data-sl-busca-lista] button:not([disabled])');
+ expect(await botoes.count()).toBeGreaterThan(0);
+ await dInc.locator('[data-sl-inc-motivo]').fill('Mesmo tema');
+ await botoes.first().click();
+ await expect(page.locator('#toast')).toContainText('Simulação');
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(2);
+ // retirar sem motivo não retira; com motivo retira
+ await lista.getByRole('button',{name:/Retirar da sala/}).first().click();
+ const dRet=page.locator('#sl-retirar-dialog');
+ await expect(dRet).toContainText('Modo simulação');
+ await dRet.getByRole('button',{name:'Retirar (simulação)'}).click();
+ await expect(dRet.locator('[data-sl-ret-erro]')).toContainText('Informe o motivo');
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(2);
+ await dRet.getByLabel(/Motivo/).fill('Saiu do escopo');
+ await dRet.getByRole('button',{name:'Retirar (simulação)'}).click();
+ await expect(lista.locator('[data-sl-proj]')).toHaveCount(1);
+ // registros no histórico
+ await page.goto('/plataforma/projetos-log/');
+ await expect(page.locator('[data-lg-corpo]')).toContainText('Projeto retirado da sala de guerra');
+ await expect(page.locator('[data-lg-corpo]')).toContainText('Projeto incluído na sala de guerra');
+ // sem rolagem horizontal (1280 e 390)
+ for(const largura of [1280,390]){
+  await page.setViewportSize({width:largura,height:900});
+  await page.goto('/plataforma/sala-de-guerra/S-1/');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`rolagem ${largura}`).toBeTruthy();
+  await page.getByRole('button',{name:'Incluir projeto'}).click();
+  await page.getByLabel(/Buscar projeto/).fill('Exemplo');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`rolagem diálogo ${largura}`).toBeTruthy();
+  await page.getByRole('button',{name:'Fechar'}).click();
+ }
+ await page.setViewportSize({width:1280,height:900});
+ // axe na página da sala, claro e escuro
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`sala incluir ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
 test('govnexa: tema escolhido se mantém ao trocar de guia',async({page})=>{
  for(const [esquema,escolhido] of [['light','dark'],['dark','light']] as const){
   await page.emulateMedia({colorScheme:esquema});await page.goto('/plataforma/projetos/');
@@ -398,4 +450,11 @@ test('govnexa: novo projeto em colunas e foco no resultado',async({page})=>{
  await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
  await expect(page.locator('[data-np-ok]')).toBeFocused();
  await expect(page.locator('[data-np-ok]')).toBeInViewport();
+});
+
+test('govnexa: paginação compacta com reticências',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});await page.goto('/plataforma/captacao-acompanhamento/');
+ const n=page.locator('[data-page-numbers]').first();const total=await n.locator('button').count();
+ if(total<=7){await expect(n.locator('.pag-reticencias')).toHaveCount(0);return;}
+ await expect(n.locator('button').first()).toHaveText('1');await expect(n.locator('.pag-reticencias')).toHaveCount(1);expect(total).toBeLessThanOrEqual(7);
 });

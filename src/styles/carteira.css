@@ -309,6 +309,13 @@
 .sl-candidato{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem 1rem;align-items:start;padding:.7rem .8rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow-wrap:anywhere}
 .sl-motivos{margin:.3rem 0 0;padding-left:1.2rem;font-size:.9rem}
 .sl-resultado{margin:.4rem 0 0;font-weight:600}
+.sl-porque{margin:.25rem 0 0;padding:.25rem .5rem;border-left:4px solid var(--accent);background:var(--soft);font-size:.95rem}
+.sl-candidato-acoes{display:flex;flex-wrap:wrap;gap:.5rem}
+.sl-proj-lista{list-style:none;margin:0 0 .5rem;padding:0;display:grid;gap:.5rem}
+.sl-proj{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem 1rem;align-items:center;padding:.6rem .75rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow-wrap:anywhere}
+.sl-proj p{margin:0}
+.sl-busca-lista{list-style:none;margin:0;padding:0;display:grid;gap:.4rem;max-height:16rem;overflow-y:auto}
+.sl-busca-lista li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem;align-items:center;padding:.4rem .5rem;border:1px solid var(--line);border-radius:8px;overflow-wrap:anywhere}
 .sl-enc{padding:.75rem 1rem;margin:0 0 .5rem}
 .sl-enc summary{cursor:pointer;font-weight:600}
 .sl-enc h3{font-size:1rem;margin:.75rem 0 .25rem}
@@ -343,7 +350,7 @@
 .sl-reuniao h3{margin:0 0 .3rem;font-size:1rem}
 .sl-reuniao p{margin:.2rem 0;overflow-wrap:anywhere}
 .sl-marcos{margin:0;padding-left:1.2rem}
-@media (max-width:900px){.sl-raid,.sl-notas{grid-template-columns:minmax(0,1fr)}.sl-candidato{grid-template-columns:minmax(0,1fr)}.sl-dl{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.sl-proj{grid-template-columns:minmax(0,1fr)}.sl-raid,.sl-notas{grid-template-columns:minmax(0,1fr)}.sl-candidato{grid-template-columns:minmax(0,1fr)}.sl-dl{grid-template-columns:minmax(0,1fr)}}
 @media print{
  .sl-nao-imprimir{display:none!important}
  [data-cart] [data-sl-reuniao][hidden]{display:block!important}
@@ -389,3 +396,5 @@
 .np-ok h2{font-size:1.25rem;margin:0 0 .5rem}
 .np-ok h3{font-size:1rem;margin:.75rem 0 .25rem}
 @media(max-width:640px){.np-acoes .primary,.np-acoes .secondary{width:100%}}
+/* Paginação compacta: reticências entre a primeira/última página e a janela. */
+.pag-reticencias{display:inline-flex;align-items:center;padding:0 .35rem;color:var(--muted);user-select:none}
