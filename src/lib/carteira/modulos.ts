@@ -119,6 +119,7 @@ function detalheProjeto(p: Projeto, ficticio: boolean, arquivo: string, importad
       ? recentes.map((h) => `${dataHoraBr(h.em)} · ${rotuloAcao(h.tipo)} · ${resumoRegistro(h)} · por ${h.autor}`)
       : ['Nenhuma alteração registrada ainda'],
   });
+  links.push({ rotulo: 'Localização e fotos', url: `/plataforma/projetos-localizacao/?id=${encodeURIComponent(p.id)}` });
   links.push({ rotulo: 'Ver histórico completo', url: `/plataforma/projetos-log/?projeto=${encodeURIComponent(p.id)}` });
   secoes.push({ titulo: 'Pendências de dado', itens: p.pendencias.length ? p.pendencias : ['Nenhuma'] });
   secoes.push({

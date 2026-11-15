@@ -1,0 +1,812 @@
+{
+  "bairros": {
+    "Bro Água Branca": {
+      "busca": "Água Branca",
+      "encontrado": true,
+      "lat": -16.69557,
+      "lng": -49.21945
+    },
+    "Bro Alto da Glória": {
+      "busca": "Bairro Alto da Glória",
+      "encontrado": true,
+      "lat": -16.71428,
+      "lng": -49.2382
+    },
+    "Bro Capuava": {
+      "busca": "Capuava",
+      "encontrado": true,
+      "lat": -16.65565,
+      "lng": -49.32322
+    },
+    "Bro Cidade Jardim": {
+      "busca": "Cidade Jardim",
+      "encontrado": true,
+      "lat": -16.68524,
+      "lng": -49.30395
+    },
+    "Bro dos Aeroviários": {
+      "busca": "Bairro dos Aeroviários",
+      "encontrado": false
+    },
+    "Bro Feliz": {
+      "busca": "Bairro Feliz",
+      "encontrado": true,
+      "lat": -16.6621,
+      "lng": -49.22855
+    },
+    "Bro Floresta": {
+      "busca": "Bairro Floresta",
+      "encontrado": true,
+      "lat": -16.59143,
+      "lng": -49.33796
+    },
+    "Bro Goiá": {
+      "busca": "Bairro Goiá",
+      "encontrado": true,
+      "lat": -16.68177,
+      "lng": -49.3283
+    },
+    "Bro Jardim América": {
+      "busca": "Jardim América",
+      "encontrado": true,
+      "lat": -16.70912,
+      "lng": -49.28882
+    },
+    "Bro Jardim Diamantina": {
+      "busca": "Jardim Diamantina",
+      "encontrado": true,
+      "lat": -16.6356,
+      "lng": -49.28069
+    },
+    "Bro Santa Genoveva": {
+      "busca": "Santa Genoveva",
+      "encontrado": true,
+      "lat": -16.63432,
+      "lng": -49.23631
+    },
+    "Bro Santa Rita": {
+      "busca": "Santa Rita",
+      "encontrado": true,
+      "lat": -16.72232,
+      "lng": -49.36386
+    },
+    "Bro Santo Hilário": {
+      "busca": "Bairro Santo Hilário",
+      "encontrado": true,
+      "lat": -16.6508,
+      "lng": -49.19548
+    },
+    "Bro São Carlos": {
+      "busca": "Bairro São Carlos",
+      "encontrado": true,
+      "lat": -16.5942,
+      "lng": -49.34859
+    },
+    "Bro São Francisco": {
+      "busca": "São Francisco",
+      "encontrado": true,
+      "lat": -16.69156,
+      "lng": -49.21599
+    },
+    "Ch Alto da Glória": {
+      "busca": "Ch Alto da Glória",
+      "encontrado": true,
+      "lat": -16.71252,
+      "lng": -49.23903
+    },
+    "Ch São Joaquim": {
+      "busca": "Ch São Joaquim",
+      "encontrado": true,
+      "lat": -16.63374,
+      "lng": -49.34781
+    },
+    "Ch São José": {
+      "busca": "Ch São José",
+      "encontrado": true,
+      "lat": -16.71008,
+      "lng": -49.38437
+    },
+    "Cj Anhangüera": {
+      "busca": "Conjunto Anhangüera",
+      "encontrado": true,
+      "lat": -16.72797,
+      "lng": -49.24005
+    },
+    "Cj Baliza": {
+      "busca": "Conjunto Baliza",
+      "encontrado": true,
+      "lat": -16.77411,
+      "lng": -49.36113
+    },
+    "Cj Habitacional Aruanã III": {
+      "busca": "Conjunto Habitacional Aruanã III",
+      "encontrado": false
+    },
+    "Cj Habitacional Madre Germana 2": {
+      "busca": "Conjunto Habitacional Madre Germana 2",
+      "encontrado": true,
+      "lat": -16.81902,
+      "lng": -49.37067
+    },
+    "Cj Vera Cruz": {
+      "busca": "Conjunto Vera Cruz",
+      "encontrado": true,
+      "lat": -16.67078,
+      "lng": -49.38649
+    },
+    "Cjr Romildo F. R. do Amaral": {
+      "busca": "Conjunto Residencial Romildo F. R. do Amaral",
+      "encontrado": false
+    },
+    "Con das Esmeraldas": {
+      "busca": "Condomínio das Esmeraldas",
+      "encontrado": true,
+      "lat": -16.78516,
+      "lng": -49.35677
+    },
+    "Esp do Anicuns": {
+      "busca": "Esplanada do Anicuns",
+      "encontrado": true,
+      "lat": -16.66786,
+      "lng": -49.31198
+    },
+    "Faz Vau das Pombas": {
+      "busca": "Vau das Pombas",
+      "encontrado": true,
+      "lat": -16.77503,
+      "lng": -49.16654
+    },
+    "Gleba: Cemitério, Maçonaria e FAMA": {
+      "busca": "Gleba: Cemitério, Maçonaria e FAMA",
+      "encontrado": false
+    },
+    "Jd Aritana": {
+      "busca": "Jardim Aritana",
+      "encontrado": true,
+      "lat": -16.71904,
+      "lng": -49.374
+    },
+    "Jd Aroeiras": {
+      "busca": "Jardim Aroeiras",
+      "encontrado": true,
+      "lat": -16.66086,
+      "lng": -49.19546
+    },
+    "Jd Atlântico": {
+      "busca": "Jardim Atlântico",
+      "encontrado": true,
+      "lat": -16.7353,
+      "lng": -49.29259
+    },
+    "Jd Bela Vista": {
+      "busca": "Jardim Bela Vista",
+      "encontrado": true,
+      "lat": -16.73359,
+      "lng": -49.23205
+    },
+    "Jd Colorado I": {
+      "busca": "Jardim Colorado I",
+      "encontrado": true,
+      "lat": -16.62971,
+      "lng": -49.33637
+    },
+    "Jd Curitiba": {
+      "busca": "Jardim Curitiba",
+      "encontrado": true,
+      "lat": -16.60025,
+      "lng": -49.331
+    },
+    "Jd Goiás": {
+      "busca": "Jardim Goiás",
+      "encontrado": true,
+      "lat": -16.70242,
+      "lng": -49.2386
+    },
+    "Jd Guanabara": {
+      "busca": "Jardim Guanabara",
+      "encontrado": true,
+      "lat": -16.62221,
+      "lng": -49.21205
+    },
+    "Jd Guanabara II": {
+      "busca": "Jardim Guanabara II",
+      "encontrado": true,
+      "lat": -16.60998,
+      "lng": -49.21508
+    },
+    "Jd Mariliza": {
+      "busca": "Jardim Mariliza",
+      "encontrado": true,
+      "lat": -16.73587,
+      "lng": -49.2
+    },
+    "Jd Mirabel": {
+      "busca": "Jardim Mirabel",
+      "encontrado": true,
+      "lat": -16.68987,
+      "lng": -49.33842
+    },
+    "Jd Nova Esperança": {
+      "busca": "Jardim Nova Esperança",
+      "encontrado": true,
+      "lat": -16.64477,
+      "lng": -49.32415
+    },
+    "Jd Novo Mundo": {
+      "busca": "Jardim Novo Mundo",
+      "encontrado": true,
+      "lat": -16.67539,
+      "lng": -49.22054
+    },
+    "Jd Novo Petrópolis": {
+      "busca": "Jardim Novo Petrópolis",
+      "encontrado": true,
+      "lat": -16.65658,
+      "lng": -49.34556
+    },
+    "Jd Petrópolis": {
+      "busca": "Jardim Petrópolis",
+      "encontrado": true,
+      "lat": -16.66213,
+      "lng": -49.33674
+    },
+    "Jd Presidente": {
+      "busca": "Jardim Presidente",
+      "encontrado": true,
+      "lat": -16.74821,
+      "lng": -49.33493
+    },
+    "Jd Real": {
+      "busca": "Jardim Real",
+      "encontrado": true,
+      "lat": -16.71256,
+      "lng": -49.38223
+    },
+    "Jd Santo Antônio": {
+      "busca": "Jardim Santo Antônio",
+      "encontrado": true,
+      "lat": -16.73234,
+      "lng": -49.25351
+    },
+    "Jd São José": {
+      "busca": "Jardim São José",
+      "encontrado": true,
+      "lat": -16.69151,
+      "lng": -49.39188
+    },
+    "Lot Aruanã Park": {
+      "busca": "Loteamento Aruanã Park",
+      "encontrado": true,
+      "lat": -16.69318,
+      "lng": -49.19894
+    },
+    "Lot Faiçalville": {
+      "busca": "Faiçalville",
+      "encontrado": true,
+      "lat": -16.73895,
+      "lng": -49.3194
+    },
+    "Lot Goiânia 2": {
+      "busca": "Loteamento Goiânia 2",
+      "encontrado": true,
+      "lat": -16.58887,
+      "lng": -49.19652
+    },
+    "Lot Grande Retiro": {
+      "busca": "Loteamento Grande Retiro",
+      "encontrado": true,
+      "lat": -16.66677,
+      "lng": -49.18165
+    },
+    "Lot Moinho dos Ventos": {
+      "busca": "Moinho dos Ventos",
+      "encontrado": true,
+      "lat": -16.72962,
+      "lng": -49.34732
+    },
+    "Lot Park Lozandes": {
+      "busca": "Park Lozandes",
+      "encontrado": true,
+      "lat": -16.7035,
+      "lng": -49.22504
+    },
+    "Lot Tropical Ville": {
+      "busca": "Tropical Ville",
+      "encontrado": true,
+      "lat": -16.65294,
+      "lng": -49.38139
+    },
+    "Prq Amazônia": {
+      "busca": "Parque Amazônia",
+      "encontrado": true,
+      "lat": -16.72685,
+      "lng": -49.28161
+    },
+    "Prq Atheneu": {
+      "busca": "Parque Atheneu",
+      "encontrado": true,
+      "lat": -16.74435,
+      "lng": -49.19703
+    },
+    "Prq das Flores": {
+      "busca": "Parque das Flores",
+      "encontrado": true,
+      "lat": -16.62642,
+      "lng": -49.29007
+    },
+    "Prq das Laranjeiras": {
+      "busca": "Parque das Laranjeiras",
+      "encontrado": true,
+      "lat": -16.72542,
+      "lng": -49.22605
+    },
+    "Prq Eldorado Oeste": {
+      "busca": "Parque Eldorado Oeste",
+      "encontrado": true,
+      "lat": -16.68926,
+      "lng": -49.40932
+    },
+    "Res Alice Barbosa": {
+      "busca": "Residencial Alice Barbosa",
+      "encontrado": true,
+      "lat": -16.59542,
+      "lng": -49.27048
+    },
+    "Res Antônio Barbosa": {
+      "busca": "Residencial Antônio Barbosa",
+      "encontrado": true,
+      "lat": -16.59033,
+      "lng": -49.26737
+    },
+    "Res Antonio Carlos Pires": {
+      "busca": "Residencial Antonio Carlos Pires",
+      "encontrado": true,
+      "lat": -16.54484,
+      "lng": -49.27015
+    },
+    "Res Aruanã": {
+      "busca": "Residencial Aruanã",
+      "encontrado": true,
+      "lat": -16.69622,
+      "lng": -49.19592
+    },
+    "Res Balneário": {
+      "busca": "Residencial Balneário",
+      "encontrado": true,
+      "lat": -16.61741,
+      "lng": -49.28922
+    },
+    "Res Barravento": {
+      "busca": "Residencial Barravento",
+      "encontrado": true,
+      "lat": -16.62253,
+      "lng": -49.30714
+    },
+    "Res Campos Dourados": {
+      "busca": "Residencial Campos Dourados",
+      "encontrado": true,
+      "lat": -16.80114,
+      "lng": -49.36676
+    },
+    "Res Canadá": {
+      "busca": "Residencial Canadá",
+      "encontrado": true,
+      "lat": -16.72346,
+      "lng": -49.34698
+    },
+    "Res Center Ville": {
+      "busca": "Residencial Center Ville",
+      "encontrado": false
+    },
+    "Res Della Pena": {
+      "busca": "Residencial Della Pena",
+      "encontrado": false
+    },
+    "Res Eldorado": {
+      "busca": "Eldorado",
+      "encontrado": true,
+      "lat": -16.68926,
+      "lng": -49.40932
+    },
+    "Res Elizene Santana": {
+      "busca": "Residencial Elizene Santana",
+      "encontrado": true,
+      "lat": -16.59683,
+      "lng": -49.21542
+    },
+    "Res Fonte das Aguas": {
+      "busca": "Residencial Fonte das Aguas",
+      "encontrado": true,
+      "lat": -16.60086,
+      "lng": -49.37717
+    },
+    "Res Goiânia Golfe Clube": {
+      "busca": "Residencial Goiânia Golfe Clube",
+      "encontrado": true,
+      "lat": -16.74842,
+      "lng": -49.16952
+    },
+    "Res Granville": {
+      "busca": "Residencial Granville",
+      "encontrado": true,
+      "lat": -16.71438,
+      "lng": -49.32847
+    },
+    "Res Guanabara": {
+      "busca": "Residencial Guanabara",
+      "encontrado": true,
+      "lat": -16.60995,
+      "lng": -49.22879
+    },
+    "Res Itaipú": {
+      "busca": "Residencial Itaipú",
+      "encontrado": true,
+      "lat": -16.79167,
+      "lng": -49.36952
+    },
+    "Res Jardins do Cerrado 1": {
+      "busca": "Residencial Jardins do Cerrado 1",
+      "encontrado": true,
+      "lat": -16.66583,
+      "lng": -49.41682
+    },
+    "Res João Paulo II": {
+      "busca": "Residencial João Paulo II",
+      "encontrado": true,
+      "lat": -16.60239,
+      "lng": -49.21198
+    },
+    "Res Juscelino Kubitschek": {
+      "busca": "Residencial Juscelino Kubitschek",
+      "encontrado": true,
+      "lat": -16.58573,
+      "lng": -49.35424
+    },
+    "Res Kátia": {
+      "busca": "Residencial Kátia",
+      "encontrado": false
+    },
+    "Res Linda Vista": {
+      "busca": "Linda Vista",
+      "encontrado": true,
+      "lat": -16.60937,
+      "lng": -49.31624
+    },
+    "Res Mendanha": {
+      "busca": "Residencial Mendanha",
+      "encontrado": true,
+      "lat": -16.66946,
+      "lng": -49.33824
+    },
+    "Res Primavera": {
+      "busca": "Primavera",
+      "encontrado": true,
+      "lat": -16.58828,
+      "lng": -49.37338
+    },
+    "Res Privê Itanhangã": {
+      "busca": "Residencial Privê Itanhangã",
+      "encontrado": true,
+      "lat": -16.57316,
+      "lng": -49.27587
+    },
+    "Res Real Conquista": {
+      "busca": "Residencial Real Conquista",
+      "encontrado": true,
+      "lat": -16.78217,
+      "lng": -49.3853
+    },
+    "Res Recanto das Emas": {
+      "busca": "Residencial Recanto das Emas",
+      "encontrado": true,
+      "lat": -16.74115,
+      "lng": -49.36508
+    },
+    "Res Recanto do Bosque": {
+      "busca": "Residencial Recanto do Bosque",
+      "encontrado": true,
+      "lat": -16.6066,
+      "lng": -49.30863
+    },
+    "Res Rio Jordão": {
+      "busca": "Residencial Rio Jordão",
+      "encontrado": true,
+      "lat": -16.64037,
+      "lng": -49.18199
+    },
+    "Res Santa Fé": {
+      "busca": "Residencial Santa Fé",
+      "encontrado": true,
+      "lat": -16.74743,
+      "lng": -49.38625
+    },
+    "Res Solar Ville": {
+      "busca": "Residencial Solar Ville",
+      "encontrado": true,
+      "lat": -16.63135,
+      "lng": -49.36445
+    },
+    "Res Vereda dos Buritis": {
+      "busca": "Vereda dos Buritis",
+      "encontrado": true,
+      "lat": -16.64091,
+      "lng": -49.38062
+    },
+    "S Aeroporto": {
+      "busca": "Setor Aeroporto",
+      "encontrado": true,
+      "lat": -16.67377,
+      "lng": -49.27099
+    },
+    "S Bueno": {
+      "busca": "Setor Bueno",
+      "encontrado": true,
+      "lat": -16.69788,
+      "lng": -49.27792
+    },
+    "S Campinas": {
+      "busca": "Setor Campinas",
+      "encontrado": true,
+      "lat": -16.66928,
+      "lng": -49.29038
+    },
+    "S Candida de Morais": {
+      "busca": "Setor Candida de Morais",
+      "encontrado": true,
+      "lat": -16.64898,
+      "lng": -49.32936
+    },
+    "S Central": {
+      "busca": "Setor Central",
+      "encontrado": true,
+      "lat": -16.67487,
+      "lng": -49.25818
+    },
+    "S Coimbra": {
+      "busca": "Setor Coimbra",
+      "encontrado": true,
+      "lat": -16.67748,
+      "lng": -49.29148
+    },
+    "S Criméia Leste": {
+      "busca": "Setor Criméia Leste",
+      "encontrado": true,
+      "lat": -16.64732,
+      "lng": -49.25848
+    },
+    "S Criméia Oeste": {
+      "busca": "Setor Criméia Oeste",
+      "encontrado": true,
+      "lat": -16.64732,
+      "lng": -49.25848
+    },
+    "S Cristina": {
+      "busca": "Cristina",
+      "encontrado": true,
+      "lat": -16.63984,
+      "lng": -49.29355
+    },
+    "S das Nações": {
+      "busca": "das Nações",
+      "encontrado": true,
+      "lat": -16.6217,
+      "lng": -49.28266
+    },
+    "S Empresarial": {
+      "busca": "Setor Empresarial",
+      "encontrado": true,
+      "lat": -16.6422,
+      "lng": -49.31098
+    },
+    "S Gentil Meirelles": {
+      "busca": "Setor Gentil Meirelles",
+      "encontrado": true,
+      "lat": -16.64713,
+      "lng": -49.28491
+    },
+    "S Grajaú": {
+      "busca": "Grajaú",
+      "encontrado": true,
+      "lat": -16.76195,
+      "lng": -49.36611
+    },
+    "S Jaó": {
+      "busca": "Setor Jaó",
+      "encontrado": true,
+      "lat": -16.6494,
+      "lng": -49.22982
+    },
+    "S Leste Universitário": {
+      "busca": "Setor Leste Universitário",
+      "encontrado": true,
+      "lat": -16.67697,
+      "lng": -49.24386
+    },
+    "S Marabá": {
+      "busca": "Setor Marabá",
+      "encontrado": true,
+      "lat": -16.6432,
+      "lng": -49.31508
+    },
+    "S Negrão de Lima": {
+      "busca": "Setor Negrão de Lima",
+      "encontrado": true,
+      "lat": -16.65334,
+      "lng": -49.24186
+    },
+    "S Norte Ferroviário": {
+      "busca": "Setor Norte Ferroviário",
+      "encontrado": true,
+      "lat": -16.65899,
+      "lng": -49.2623
+    },
+    "S Novo Horizonte": {
+      "busca": "Setor Novo Horizonte",
+      "encontrado": true,
+      "lat": -16.71876,
+      "lng": -49.32976
+    },
+    "S Novo Planalto": {
+      "busca": "Setor Novo Planalto",
+      "encontrado": true,
+      "lat": -16.62128,
+      "lng": -49.33931
+    },
+    "S Oeste": {
+      "busca": "Setor Oeste",
+      "encontrado": true,
+      "lat": -16.68122,
+      "lng": -49.27217
+    },
+    "S Parque Tremendão": {
+      "busca": "Setor Parque Tremendão",
+      "encontrado": true,
+      "lat": -16.60958,
+      "lng": -49.32652
+    },
+    "S Pedro Ludovico": {
+      "busca": "Setor Pedro Ludovico",
+      "encontrado": true,
+      "lat": -16.71373,
+      "lng": -49.25274
+    },
+    "S Recanto das Minas Gerais": {
+      "busca": "Setor Recanto das Minas Gerais",
+      "encontrado": true,
+      "lat": -16.6469,
+      "lng": -49.18231
+    },
+    "S Sudoeste": {
+      "busca": "Sudoeste",
+      "encontrado": true,
+      "lat": -16.69537,
+      "lng": -49.29776
+    },
+    "S Sul": {
+      "busca": "Setor Sul",
+      "encontrado": true,
+      "lat": -16.69128,
+      "lng": -49.25217
+    },
+    "S Três Marias": {
+      "busca": "Três Marias",
+      "encontrado": true,
+      "lat": -16.65449,
+      "lng": -49.23981
+    },
+    "S União": {
+      "busca": "União",
+      "encontrado": true,
+      "lat": -16.7096,
+      "lng": -49.30449
+    },
+    "S Urias Magalhães": {
+      "busca": "Setor Urias Magalhães",
+      "encontrado": true,
+      "lat": -16.64041,
+      "lng": -49.27108
+    },
+    "Sir Ipê": {
+      "busca": "Sítio de Recreio Ipê",
+      "encontrado": true,
+      "lat": -16.62037,
+      "lng": -49.1954
+    },
+    "Sir Panorama": {
+      "busca": "Panorama",
+      "encontrado": true,
+      "lat": -16.62683,
+      "lng": -49.30437
+    },
+    "St. Sol Nascente": {
+      "busca": "Sol Nascente",
+      "encontrado": true,
+      "lat": -16.62508,
+      "lng": -49.32553
+    },
+    "Vl Abajá": {
+      "busca": "Vila Abajá",
+      "encontrado": true,
+      "lat": -16.66426,
+      "lng": -49.28661
+    },
+    "Vl Alpes": {
+      "busca": "Vila Alpes",
+      "encontrado": true,
+      "lat": -16.70604,
+      "lng": -49.30601
+    },
+    "Vl Bandeirantes": {
+      "busca": "Vila Bandeirantes",
+      "encontrado": true,
+      "lat": -16.6716,
+      "lng": -49.22666
+    },
+    "Vl Canaã": {
+      "busca": "Vila Canaã",
+      "encontrado": true,
+      "lat": -16.68917,
+      "lng": -49.30975
+    },
+    "Vl Cristina": {
+      "busca": "Vila Cristina",
+      "encontrado": true,
+      "lat": -16.63984,
+      "lng": -49.29355
+    },
+    "Vl Isaura": {
+      "busca": "Vila Isaura",
+      "encontrado": true,
+      "lat": -16.6606,
+      "lng": -49.28139
+    },
+    "Vl Jardim Pompéia": {
+      "busca": "Vila Jardim Pompéia",
+      "encontrado": true,
+      "lat": -16.61301,
+      "lng": -49.25051
+    },
+    "Vl Jardim Vitória": {
+      "busca": "Vila Jardim Vitória",
+      "encontrado": true,
+      "lat": -16.7145,
+      "lng": -49.22317
+    },
+    "Vl Legionárias": {
+      "busca": "Vila Legionárias",
+      "encontrado": false
+    },
+    "Vl Maria Luiza": {
+      "busca": "Vila Maria Luiza",
+      "encontrado": true,
+      "lat": -16.68609,
+      "lng": -49.21955
+    },
+    "Vl Morais": {
+      "busca": "Vila Morais",
+      "encontrado": true,
+      "lat": -16.66434,
+      "lng": -49.22141
+    },
+    "Vl Redenção": {
+      "busca": "Vila Redenção",
+      "encontrado": true,
+      "lat": -16.71918,
+      "lng": -49.24227
+    },
+    "Vl Vera Cruz": {
+      "busca": "Vera Cruz",
+      "encontrado": true,
+      "lat": -16.82989,
+      "lng": -49.24488
+    },
+    "Vlg Casa Grande": {
+      "busca": "Village Casa Grande",
+      "encontrado": true,
+      "lat": -16.6133,
+      "lng": -49.26873
+    }
+  },
+  "fonte": "OpenStreetMap Nominatim (© colaboradores do OpenStreetMap, ODbL)",
+  "gerado_em": "2026-11-15T21:46:18.239Z"
+}

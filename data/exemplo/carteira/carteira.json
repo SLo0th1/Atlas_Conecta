@@ -511,6 +511,14 @@
    "origem": {
     "aba": "EXEMPLO",
     "linha": 7
+   },
+   "localizacao": {
+    "tipo": "ponto",
+    "ponto": {
+     "lat": -16.6786,
+     "lng": -49.2539
+    },
+    "endereco": "Praça Cívica, Setor Central"
    }
   },
   {
@@ -1102,6 +1110,22 @@
    "origem": {
     "aba": "EXEMPLO",
     "linha": 14
+   },
+   "localizacao": {
+    "tipo": "trechos",
+    "trechos": [
+     {
+      "rua": "Avenida T-7",
+      "de": "Avenida T-63",
+      "ate": "Rua T-30",
+      "linha": [
+       { "lat": -16.7058, "lng": -49.2793 },
+       { "lat": -16.7071, "lng": -49.2741 },
+       { "lat": -16.7084, "lng": -49.2689 },
+       { "lat": -16.7097, "lng": -49.2637 }
+      ]
+     }
+    ]
    }
   },
   {

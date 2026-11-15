@@ -9,11 +9,14 @@ export const TRANSVERSAL = [
   'middleware.ts', 'api/**', 'lib/**', 'vercel.json', 'astro.config.*', 'package.json',
 ];
 
+/** Mapa das obras e localização: pertence ao Painel do prefeito (mapa) e ao Cadastro do projeto (editor de localização). */
+const MAPA = ['src/lib/mapa/**', 'src/components/mapa/**', 'src/styles/mapa.css', 'scripts/geocodificar-bairros.ts'];
+
 /** Etapa do mapa geral (id de fluxo.ts) → partes do código. */
 export const COMPONENTES: Record<string, string[]> = {
   inicio: ['src/lib/carteira/modulos.ts', 'src/lib/carteira/visoes.ts'],
   planilha: ['scripts/importar-carteira.ts', 'scripts/importar-cronogramas.ts', 'scripts/lib/**', 'scripts/baixar-dados.mjs', 'data/carga-real/**', 'src/lib/carteira/carga.ts', 'src/lib/cronograma/carga.ts'],
-  cadastro: ['src/components/carteira/NovoProjeto.astro', 'src/lib/carteira/movimentacao.ts', 'src/lib/carteira/tipos.ts', 'src/lib/repositorio/**', 'db/migracoes/**'],
+  cadastro: ['src/components/carteira/NovoProjeto.astro', 'src/lib/carteira/movimentacao.ts', 'src/lib/carteira/tipos.ts', 'src/lib/repositorio/**', 'db/migracoes/**', ...MAPA],
   estruturacao: ['src/lib/carteira/macroetapas.ts', 'src/components/carteira/Kanban.astro', 'src/lib/carteira/modulos.ts'],
   precisaRecurso: ['src/lib/carteira/visoes.ts'],
   fontesFederais: ['coletores/**', 'src/lib/dados/**', '.github/workflows/atualizar-dados*.yml'],
@@ -40,7 +43,7 @@ export const COMPONENTES: Record<string, string[]> = {
   alertas: ['src/lib/dados/alertas.ts', 'src/lib/carteira/visoes.ts'],
   parado: ['src/lib/cronograma/visoes.ts', 'src/components/cronograma/Parado.astro'],
   sala: ['src/lib/sala/**', 'src/components/sala/**', 'src/pages/plataforma/sala-de-guerra/**'],
-  painel: ['src/components/carteira/VisaoOrgaos.astro', 'src/lib/govnexa/catalogo.ts', 'src/lib/gestao/**', 'src/components/gestao/**'],
+  painel: ['src/components/carteira/VisaoOrgaos.astro', 'src/lib/govnexa/catalogo.ts', 'src/lib/gestao/**', 'src/components/gestao/**', ...MAPA],
   log: ['src/lib/log/**', 'src/components/log/**', 'db/migracoes/002_*'],
 };
 

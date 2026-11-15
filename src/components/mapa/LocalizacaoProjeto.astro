@@ -1,0 +1,194 @@
+---
+import '../../styles/carteira.css';
+import '../../styles/mapa.css';
+import EditorLocalizacao from './EditorLocalizacao.astro';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { AVISO_SIMULACAO } from '../../lib/carteira/simulacao.ts';
+import { validarLocalizacao } from '../../lib/mapa/geo.ts';
+import { carregarGeoBairros } from '../../lib/mapa/obras.ts';
+import type { PontoGeo } from '../../lib/mapa/tipos.ts';
+
+const projetos = carregarCarteira().projetos;
+const geoBairros = carregarGeoBairros();
+const geo: Record<string, PontoGeo> = {};
+for (const [nome, g] of Object.entries(geoBairros.bairros)) if (g.encontrado && typeof g.lat === 'number' && typeof g.lng === 'number') geo[nome] = { lat: g.lat, lng: g.lng };
+const nomesBairros = Object.keys(geo).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const lista = projetos.map((p) => ({
+  id: p.id,
+  nome: p.nome,
+  orgao: p.orgao,
+  bairro: p.bairro,
+  cadastrada: p.localizacao && validarLocalizacao(p.localizacao).length === 0 ? p.localizacao : null,
+  bairroOk: !!(p.bairro && geo[p.bairro.trim()]),
+  fotos: (p.fotos ?? []).map((f) => ({ url: f.url, legenda: f.legenda, capa: f.capa })),
+}));
+const dados = JSON.stringify({ projetos: lista }).replaceAll('<', '\\u003c');
+---
+<div data-localizacao-projeto>
+  <p class="cart-aviso" role="note">{AVISO_SIMULACAO}</p>
+
+  <div class="mp-busca">
+    <label for="lp-projeto">Projeto (digite o código ou parte do nome)
+      <input id="lp-projeto" type="text" list="lp-projetos" autocomplete="off" data-lp-busca />
+    </label>
+    <datalist id="lp-projetos">
+      {lista.map((p) => <option value={`${p.id} · ${p.nome}`}></option>)}
+    </datalist>
+  </div>
+  <p class="mp-nota" data-lp-msg role="status" aria-live="polite">Escolha um projeto para marcar onde ele fica.</p>
+
+  <div data-lp-area hidden>
+    <div class="mp-ficha" data-lp-ficha>
+      <p><strong data-lp-nome></strong></p>
+      <p data-lp-orgao></p>
+      <p data-lp-bairro></p>
+      <p data-lp-precisao></p>
+    </div>
+
+    <EditorLocalizacao idPrefixo="lp-loc" bairros={nomesBairros} geo={geo} />
+
+    <div class="actions">
+      <button type="button" class="primary" data-lp-salvar>Salvar localização (simulação)</button>
+    </div>
+    <div class="mp-ok" role="status" data-lp-ok hidden>
+      <p data-lp-ok-texto></p>
+      <p><a href="/plataforma/gestao/#mapa">Ver no mapa do painel</a></p>
+    </div>
+
+    <section class="mp-fotos" aria-labelledby="lp-fotos-titulo">
+      <h2 id="lp-fotos-titulo">Fotos</h2>
+      <p>O envio de fotos fica disponível quando o banco de dados estiver ligado. Formatos JPG, PNG ou WEBP, até 10 MB cada. A foto marcada como capa aparece no mapa do painel.</p>
+      <label for="lp-enviar-fotos">Enviar fotos
+        <input id="lp-enviar-fotos" type="file" accept="image/jpeg,image/png,image/webp" multiple disabled />
+      </label>
+      <ul class="mp-trechos" data-lp-fotos></ul>
+      <p data-lp-sem-fotos>Nenhuma foto ainda.</p>
+    </section>
+  </div>
+  <script is:inline type="application/json" data-lp-dados set:html={dados}></script>
+</div>
+
+<script>
+import { AVISO_SIMULACAO, avisar } from '../../lib/carteira/simulacao.ts';
+import { validarLocalizacao } from '../../lib/mapa/geo.ts';
+import { descricaoLocalizacao, guardarLocalizacaoSimulada, lerLocalizacoesSimuladas } from '../../lib/mapa/simulacao.ts';
+import type { Localizacao } from '../../lib/mapa/tipos.ts';
+
+interface ProjetoLista {
+  id: string;
+  nome: string;
+  orgao: string | null;
+  bairro: string | null;
+  cadastrada: Localizacao | null;
+  bairroOk: boolean;
+  fotos: { url: string; legenda: string | null; capa: boolean }[];
+}
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-localizacao-projeto]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  let projetos: ProjetoLista[] = [];
+  try {
+    projetos = JSON.parse(raiz.querySelector('[data-lp-dados]')?.textContent || '{}').projetos ?? [];
+  } catch {
+    projetos = [];
+  }
+  const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+  const busca = q<HTMLInputElement>('[data-lp-busca]');
+  const msg = q('[data-lp-msg]');
+  const area = q('[data-lp-area]');
+  const ok = q('[data-lp-ok]');
+  const editor = q('#lp-loc');
+  let atual: ProjetoLista | null = null;
+
+  /** O editor inicia no mesmo evento de carga da página; espera ele estar pronto antes de lhe mandar a localização. */
+  const quandoPronto = (fn: () => void): void => {
+    if (editor.dataset.pronto) fn();
+    else setTimeout(() => quandoPronto(fn), 30);
+  };
+
+  const achar = (texto: string): ProjetoLista | null => {
+    const t = texto.trim();
+    if (!t) return null;
+    const id = t.split(' · ')[0].trim().toLowerCase();
+    const porId = projetos.find((p) => p.id.toLowerCase() === id);
+    if (porId) return porId;
+    const porNome = projetos.filter((p) => p.nome.toLowerCase() === t.toLowerCase());
+    return porNome.length === 1 ? porNome[0] : null;
+  };
+
+  function precisaoTexto(p: ProjetoLista, sim: Record<string, Localizacao>): string {
+    if (sim[p.id] || p.cadastrada) return 'Cadastrada';
+    return p.bairroOk ? 'Aproximada pelo bairro' : 'Sem localização';
+  }
+
+  function escolher(p: ProjetoLista): void {
+    atual = p;
+    const sim = lerLocalizacoesSimuladas();
+    q('[data-lp-nome]').textContent = `${p.id} · ${p.nome}`;
+    q('[data-lp-orgao]').textContent = `Órgão: ${p.orgao ?? 'não informado'}`;
+    q('[data-lp-bairro]').textContent = `Bairro: ${p.bairro ?? 'não informado'}`;
+    q('[data-lp-precisao]').textContent = `Localização atual: ${precisaoTexto(p, sim)}${sim[p.id] ? ' (simulação)' : ''}`;
+    area.hidden = false;
+    ok.hidden = true;
+    quandoPronto(() => {
+      editor.dispatchEvent(new CustomEvent('localizacao-definir', { detail: sim[p.id] ?? p.cadastrada ?? null }));
+      const seletor = editor.querySelector<HTMLSelectElement>('[data-ed-bairro]');
+      if (seletor && p.bairro && p.bairroOk) {
+        seletor.value = p.bairro.trim();
+        if (!(sim[p.id] ?? p.cadastrada)) seletor.dispatchEvent(new Event('change'));
+      }
+    });
+    const lista = q('[data-lp-fotos]');
+    lista.replaceChildren();
+    for (const f of p.fotos) {
+      const li = document.createElement('li');
+      li.textContent = `${f.legenda ?? 'Foto sem legenda'}${f.capa ? ' (capa)' : ''}`;
+      lista.append(li);
+    }
+    q('[data-lp-sem-fotos]').hidden = p.fotos.length > 0;
+    msg.textContent = '';
+  }
+
+  busca.addEventListener('input', () => {
+    const p = achar(busca.value);
+    if (p) escolher(p);
+    else if (busca.value.trim() === '') {
+      atual = null;
+      area.hidden = true;
+      msg.textContent = 'Escolha um projeto para marcar onde ele fica.';
+    }
+  });
+
+  q('[data-lp-salvar]').addEventListener('click', () => {
+    if (!atual) return;
+    let valor: Localizacao | null = null;
+    try {
+      valor = JSON.parse(editor.dataset.valor || 'null');
+    } catch {
+      valor = null;
+    }
+    const erros = valor ? validarLocalizacao(valor) : ['Marque a localização no mapa antes de salvar.'];
+    editor.dispatchEvent(new CustomEvent('localizacao-erros', { detail: erros }));
+    if (erros.length > 0 || !valor) {
+      ok.hidden = true;
+      return;
+    }
+    guardarLocalizacaoSimulada(atual.id, atual.nome, valor);
+    q('[data-lp-ok-texto]').textContent = `${descricaoLocalizacao(valor)} em ${atual.id}. ${AVISO_SIMULACAO}`;
+    q('[data-lp-precisao]').textContent = 'Localização atual: Cadastrada (simulação)';
+    ok.hidden = false;
+    avisar(AVISO_SIMULACAO);
+  });
+
+  const idUrl = new URLSearchParams(location.search).get('id');
+  if (idUrl) {
+    const p = projetos.find((x) => x.id === idUrl);
+    if (p) {
+      busca.value = `${p.id} · ${p.nome}`;
+      escolher(p);
+    } else msg.textContent = 'Projeto não encontrado. Escolha outro na lista.';
+  }
+});
+</script>

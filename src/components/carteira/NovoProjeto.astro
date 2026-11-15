@@ -2,6 +2,14 @@
 import '../../styles/carteira.css';
 import { carregarCarteira } from '../../lib/carteira/carga.ts';
 import { AVISO_SIMULACAO } from '../../lib/carteira/simulacao.ts';
+import EditorLocalizacao from '../mapa/EditorLocalizacao.astro';
+import { carregarGeoBairros } from '../../lib/mapa/obras.ts';
+import type { PontoGeo } from '../../lib/mapa/tipos.ts';
+
+const geoBairros = carregarGeoBairros().bairros;
+const geoCentros: Record<string, PontoGeo> = {};
+for (const [nome, g] of Object.entries(geoBairros)) if (g.encontrado && typeof g.lat === 'number' && typeof g.lng === 'number') geoCentros[nome] = { lat: g.lat, lng: g.lng };
+const nomesBairros = Object.keys(geoCentros).sort((a, b) => a.localeCompare(b, 'pt-BR'));
 
 const projetos = carregarCarteira().projetos;
 const unicos = (l: (string | null | undefined)[]) => [...new Set(l.map((x) => (x ?? '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
@@ -150,6 +158,11 @@ const descreve = (c: Campo) => [c.dica ? `np-${c.id}-dica` : '', `np-${c.id}-err
         )}
       </>
     ))}
+    <fieldset class="np-bloco">
+      <legend>Localização (opcional)</legend>
+      <p class="np-dica">Marque no mapa onde fica a obra. Se não souber agora, deixe em branco: o mapa usa o centro do bairro e a localização pode ser cadastrada depois.</p>
+      <EditorLocalizacao idPrefixo="np-loc" bairros={nomesBairros} geo={geoCentros} />
+    </fieldset>
     <div class="actions np-acoes">
       <button type="submit" class="primary">Validar e simular cadastro</button>
       <button type="button" class="secondary" data-np-limpar>Limpar</button>
@@ -172,6 +185,9 @@ const descreve = (c: Campo) => [c.dica ? `np-${c.id}-dica` : '', `np-${c.id}-err
 import { criarProjeto } from '../../lib/carteira/movimentacao.ts';
 import { AUTOR_SIMULACAO, avisar, guardarLogSimulacao, nomeEtapa } from '../../lib/carteira/simulacao.ts';
 import type { Projeto } from '../../lib/carteira/tipos.ts';
+import { validarLocalizacao } from '../../lib/mapa/geo.ts';
+import { guardarLocalizacaoSimulada } from '../../lib/mapa/simulacao.ts';
+import type { Localizacao } from '../../lib/mapa/tipos.ts';
 
 const SEI = /^\d{2}\.\d{1,2}\.\d{9}-\d$/;
 const ROTULO_DATAS: [string, string][] = [
@@ -262,6 +278,16 @@ document.addEventListener('astro:page-load', () => {
     const termo = valor('termo');
     const compromisso = (form.querySelector<HTMLInputElement>('input[name="compromisso"]:checked')?.value ?? 'ideia') as Projeto['compromisso'];
     const d = (id: string) => valor(id) || null;
+    const editorLoc = raiz.querySelector<HTMLElement>('#np-loc');
+    let localizacao: Localizacao | null = null;
+    try {
+      localizacao = JSON.parse(editorLoc?.dataset.valor || 'null');
+    } catch {
+      localizacao = null;
+    }
+    const errosLoc = localizacao ? validarLocalizacao(localizacao) : [];
+    editorLoc?.dispatchEvent(new CustomEvent('localizacao-erros', { detail: errosLoc }));
+    for (const e of errosLoc) erros.push(['loc', `Localização: ${e}`]);
 
     const r = criarProjeto(
       {
@@ -339,6 +365,10 @@ document.addEventListener('astro:page-load', () => {
       else anterior = [v, rotulo];
     }
     guardarLogSimulacao(r.historico, r.projeto.nome);
+    if (localizacao) {
+      r.projeto.localizacao = localizacao;
+      guardarLocalizacaoSimulada(r.projeto.id, r.projeto.nome, localizacao);
+    }
     ok.querySelector('[data-np-ok-texto]')!.textContent = `Simulação: o projeto ${r.projeto.id} · ${r.projeto.nome} seria incluído em ${r.projeto.macroetapa} – ${nomeEtapa(r.projeto.macroetapa)}. Nada foi gravado.`;
     const lista = ok.querySelector<HTMLElement>('[data-np-ok-lista]')!;
     lista.replaceChildren();
@@ -358,6 +388,7 @@ document.addEventListener('astro:page-load', () => {
 
   raiz.querySelector('[data-np-limpar]')!.addEventListener('click', () => {
     form.reset();
+    raiz.querySelector('#np-loc')?.dispatchEvent(new CustomEvent('localizacao-definir', { detail: null }));
     limparErros();
     atualizarOutros();
     ok.hidden = true;

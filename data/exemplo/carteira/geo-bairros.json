@@ -1,0 +1,10 @@
+{
+  "bairros": {
+    "Bairro Exemplo": {
+      "busca": "Bairro Exemplo",
+      "encontrado": false
+    }
+  },
+  "fonte": "OpenStreetMap Nominatim (© colaboradores do OpenStreetMap, ODbL)",
+  "gerado_em": "2026-11-15T21:29:20.827Z"
+}

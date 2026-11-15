@@ -5,6 +5,8 @@ import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
 import { carregarSalas } from '../../lib/sala/carga.ts';
 import { br, reais } from '../../lib/dados/formato.ts';
 import { montarPainel, reaisAbreviado, resumoCaptacao } from '../../lib/gestao/painel.ts';
+import MapaObras from '../mapa/MapaObras.astro';
+import { carregarGeoBairros, obrasDoMapa, obrasSemLocal } from '../../lib/mapa/obras.ts';
 
 const carteira = carregarCarteira();
 const hoje = new Date().toISOString().slice(0, 10);
@@ -35,6 +37,9 @@ const cartoes = [
   { rotulo: 'Entregas em 90 dias', valor: String(p.entregas.qtd), nota: 'previstas até 3 meses', href: URL.gantt },
 ];
 const r = p.recursos;
+const geo = carregarGeoBairros();
+const mapaObras = obrasDoMapa(carteira, geo, hoje);
+const mapaSemLocal = obrasSemLocal(carteira, geo, hoje);
 ---
 <div class="pn" data-painel>
   <p class="pn-linha">Dados de {br(carteira.fonte.importado_em)} · <a href={URL.log}>Histórico de alterações →</a></p>
@@ -51,6 +56,10 @@ const r = p.recursos;
       </li>
     ))}
   </ul>
+
+  <section id="mapa" data-cart class="mp-bloco" aria-label="Mapa das obras">
+    <MapaObras obras={mapaObras.obras} semLocal={mapaObras.semLocal} semLocalLista={mapaSemLocal} />
+  </section>
 
   <section class="pn-bloco" aria-labelledby="pn-fase">
     <h2 id="pn-fase">Por fase</h2>

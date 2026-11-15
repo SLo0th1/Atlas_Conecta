@@ -67,6 +67,15 @@ export const NOVOS_MODULOS = [
     source: 'govnexa-carteira',
   },
   {
+    slug: 'projetos-localizacao',
+    title: 'Localização e fotos',
+    group: 'Projetos',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-localizacao',
+  },
+  {
     slug: 'projetos-kanban',
     title: 'Kanban por macroetapa',
     group: 'Projetos',
