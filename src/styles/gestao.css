@@ -1,0 +1,55 @@
+/* Painel do prefeito (guia Gestão). Prefixo pn-. Cores só pelas variáveis do tema (claro/escuro); nada depende só de cor. */
+.pn{display:grid;gap:1.5rem;min-width:0}
+.pn p,.pn ul{max-width:none}
+.pn-linha{margin:0;color:var(--muted)}
+.pn-nao-imprimir{margin:0}
+.pn-cartoes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.75rem}
+.pn-cartao{display:grid;gap:.15rem;height:100%;padding:1rem;border:1px solid var(--line);border-top:5px solid var(--accent);border-radius:12px;background:var(--surface);color:var(--text);text-decoration:none;min-width:0}
+.pn-cartao:hover{background:var(--soft)}
+.pn-cartao:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pn-rotulo{font-size:.95rem;font-weight:600;color:var(--text)}
+.pn-numero{font-size:clamp(1.6rem,2.1vw,2.2rem);line-height:1.1;font-weight:700;color:var(--text);overflow-wrap:anywhere}
+.pn-nota{font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}
+.pn-bloco{margin:0;max-width:none;padding:1.1rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);min-width:0}
+.pn-bloco h2{margin:0 0 .5rem;font-size:1.3rem}
+.pn-sub{margin:1rem 0 .4rem;font-size:1.05rem}
+.pn-total{margin:0 0 .6rem;font-size:1.1rem;font-weight:600;color:var(--text)}
+.pn-vazio{margin:0 0 .5rem;color:var(--muted)}
+.pn-blocos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}
+.pn-lista{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.pn-lista li{display:grid;gap:.15rem;padding-bottom:.6rem;border-bottom:1px solid var(--line);min-width:0}
+.pn-lista li:last-child{border-bottom:0;padding-bottom:0}
+.pn-lista li>a{font-weight:600;overflow-wrap:anywhere}
+.pn-lista li>span{color:var(--muted);font-size:.9rem;overflow-wrap:anywhere}
+.pn-recursos li{display:flex;justify-content:space-between;gap:.75rem;align-items:baseline}
+.pn-recursos li>span{font-size:1rem;color:var(--text)}
+.pn-recursos li>a{font-size:1.15rem}
+.pn-todos{margin:.8rem 0 0;font-weight:600}
+.pn-fases{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.pn-fase{display:grid;grid-template-columns:minmax(0,13rem) minmax(0,1fr);gap:.1rem .75rem;align-items:center;padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;color:var(--text);text-decoration:none}
+.pn-fase:hover{background:var(--soft)}
+.pn-fase:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pn-fase-nome{font-weight:700}
+.pn-fase-texto{color:var(--text);overflow-wrap:anywhere}
+.pn-fase .pn-barra{grid-column:1/-1}
+.pn-barra{display:block;height:.7rem;border-radius:6px;background:var(--soft);border:1px solid var(--line);overflow:hidden}
+.pn-barra>span{display:block;height:100%;background:var(--cor,var(--accent))}
+.pn-lista .pn-barra{margin-top:.2rem}
+.pn-aviso{margin:0;padding:.6rem .8rem;border:1px solid var(--line);border-left:5px solid var(--cart-amarelo);border-radius:6px;background:var(--soft);color:var(--text);font-size:.9rem}
+@media (max-width:1100px){.pn-cartoes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){.pn-blocos{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){
+ .pn-cartoes{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pn-fase{grid-template-columns:minmax(0,1fr)}
+}
+@media print{
+ .pn-nao-imprimir{display:none!important}
+ .pn{gap:.6rem}
+ .pn-cartoes{grid-template-columns:repeat(6,minmax(0,1fr))}
+ .pn-cartao,.pn-bloco,.pn-fase{break-inside:avoid;border-color:#888}
+ .pn-blocos{grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+ .pn-lista{font-size:9pt;gap:.3rem}
+ .pn-numero{font-size:16pt}
+ .pn a{text-decoration:none}
+ .pn-barra{border-color:#888}
+}
