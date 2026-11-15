@@ -188,7 +188,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
  const resposta=await page.goto('/plataforma/projetos-fluxo/');
  expect(resposta?.status()).toBe(200);
  await expect(page.locator('h1')).toHaveCount(1);
- await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(28);
+ await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(29);
  // clique no portão: validações e link para as pendências
  await page.locator('svg.fx-svg [data-no="portao"]').click();
  const dlg=page.locator('#fluxo-detalhe');
@@ -218,5 +218,58 @@ test('govnexa: fluxo do sistema',async({page})=>{
 
 test('govnexa: fluxo exporta em PDF',async({page})=>{
  await page.goto('/plataforma/projetos-fluxo/');await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeVisible();
- await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(28);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
+ await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(29);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
+});
+
+test('govnexa: sala de guerra',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const resposta=await page.goto('/plataforma/projetos-sala/');
+ expect(resposta?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveCount(1);
+ for(const nome of ['Em sala agora','Candidatos à sala','Encerradas'])await expect(page.getByRole('heading',{name:nome})).toBeVisible();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ // "Abrir sala" num candidato (se houver): diálogo, aviso de simulação e registro
+ const abrir=page.locator('[data-sl-candidato]').first().getByRole('button',{name:/Abrir sala/});
+ if(await abrir.count()){
+  await abrir.click();
+  const dlg=page.locator('#sl-dialog');
+  await expect(dlg).toContainText('Modo simulação: nada é gravado até o banco de dados ser configurado.');
+  await dlg.getByLabel(/Objetivo/).fill('Destravar a etapa parada');
+  await dlg.getByLabel(/Dono da sala/).fill('Responsável 1');
+  await dlg.getByRole('button',{name:'Abrir sala (simulação)'}).click();
+  await expect(page.locator('#toast')).toContainText('Simulação');
+  await page.goto('/plataforma/projetos-log/');
+  await expect(page.locator('[data-lg-corpo] tr').first()).toContainText('Sala de guerra aberta');
+  await page.goto('/plataforma/projetos-sala/');
+ }
+ // axe na lista, claro e escuro
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`sala lista ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+ // página da 1ª sala: quadro RAID, ação vencida, modo reunião
+ await page.locator('.sl-cartao').first().getByRole('link',{name:/Abrir sala/}).click();
+ await expect(page).toHaveURL(/\/plataforma\/sala-de-guerra\/S-1\/$/);
+ await expect(page.locator('h1')).toHaveCount(1);
+ for(const nome of ['Riscos','Ações','Problemas','Decisões'])await expect(page.locator('.sl-coluna').getByRole('heading',{name:nome})).toBeVisible();
+ await expect(page.locator('.sl-vencida').first()).toContainText('vencida');
+ await expect(page.locator('[data-sl-reuniao]')).toBeHidden();
+ await page.getByRole('button',{name:'Modo reunião'}).click();
+ await expect(page.locator('[data-sl-reuniao]')).toBeVisible();
+ await expect(page.locator('.sl-pauta li').first()).toContainText('Objetivo e prazo');
+ await page.locator('[data-sl-item-pauta]').first().check();
+ await page.getByRole('button',{name:'Registrar reunião'}).click();
+ await expect(page.locator('#toast')).toContainText('Simulação');
+ // nova ação em simulação
+ await page.getByRole('button',{name:'Nova ação'}).click();
+ await expect(page.locator('#sl-item-dialog')).toContainText('Modo simulação');
+ await page.locator('[data-sl-item-desc]').fill('Ação criada no teste');
+ await page.locator('#sl-item-dialog').getByRole('button',{name:'Adicionar (simulação)'}).click();
+ await expect(page.locator('[data-sl-coluna="acao"]')).toContainText('Ação criada no teste');
+ // sem rolagem horizontal em 1280px
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ // exportar em PDF: na impressão tudo aparece expandido e os botões somem
+ await page.emulateMedia({media:'print'});
+ await expect(page.locator('[data-sl-reuniao]')).toBeVisible();
+ await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
+ await page.emulateMedia({media:'screen'});
+ // axe na página da sala, claro e escuro
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`sala ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });

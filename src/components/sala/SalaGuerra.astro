@@ -1,0 +1,182 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
+import { carregarSalas } from '../../lib/sala/carga.ts';
+import { ROTULO_CADENCIA, ROTULO_ESCALONAMENTO, ROTULO_TIPO_SALA, type Sala } from '../../lib/sala/tipos.ts';
+import { candidatosSala, dataBr, indicadoresSala, textoPrazo } from '../../lib/sala/visoes.ts';
+import { AVISO_SIMULACAO_SALA } from '../../lib/sala/simulacao.ts';
+
+const hoje = new Date().toISOString().slice(0, 10);
+const carteira = carregarCarteira();
+const cronogramas = carregarCronogramas().cronogramas;
+const salas = carregarSalas().salas;
+const nomes = new Map(carteira.projetos.map((p) => [p.id, p.nome]));
+const ativas = salas.filter((s) => s.situacao === 'aberta' || s.situacao === 'em_andamento');
+const encerradas = salas.filter((s) => s.situacao === 'resolvida' || s.situacao === 'encerrada');
+const candidatos = candidatosSala(carteira, cronogramas, hoje, salas);
+const prazoPadrao = new Date(Date.parse(`${hoje}T00:00:00Z`) + 30 * 86400000).toISOString().slice(0, 10);
+const contagem = (s: Sala, tipo: string) => s.raid.filter((i) => i.tipo === tipo && (i.situacao === 'aberto' || i.situacao === 'em_andamento')).length;
+const rotuloFarol = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' } as const;
+---
+<div data-cart data-sala-guerra>
+  <p class="cart-aviso" role="note">{AVISO_SIMULACAO_SALA}</p>
+
+  <section class="sl-secao" aria-labelledby="sl-agora">
+    <h2 id="sl-agora">Em sala agora <span class="pill">{ativas.length}</span></h2>
+    {ativas.length === 0 ? <p>Nenhuma sala aberta no momento.</p> : (
+      <div class="sl-cartoes">
+        {ativas.map((s) => {
+          const ind = indicadoresSala(s, carteira, cronogramas, hoje);
+          return (
+            <article class="card sl-cartao">
+              <p><span class={`sl-selo sl-selo-${s.tipo}`}>{ROTULO_TIPO_SALA[s.tipo]}</span></p>
+              <h3>{s.titulo}</h3>
+              <p class="sl-projetos">{s.projetos.map((id) => nomes.get(id) ?? id).join(', ')}</p>
+              <p><strong>Dono:</strong> {s.dono}</p>
+              <p><strong>Prazo:</strong> {dataBr(s.prazo)} ({textoPrazo(ind.diasParaPrazo)})</p>
+              <p>{ROTULO_CADENCIA[s.cadencia]} · {ROTULO_ESCALONAMENTO[s.escalonamento]}</p>
+              <p class="sl-farol"><span class={`cart-ponto ${ind.farol.cor}`} aria-hidden="true"></span><span><strong>Farol {rotuloFarol[ind.farol.cor]}:</strong> {ind.farol.motivo}</span></p>
+              <p class="sl-contagem">Riscos {contagem(s, 'risco')} · Ações {contagem(s, 'acao')} · Problemas {contagem(s, 'problema')} · Decisões {contagem(s, 'decisao')}</p>
+              <p><a class="button secondary" href={`/plataforma/sala-de-guerra/${s.id}/`} aria-label={`Abrir sala: ${s.titulo}`}>Abrir sala</a></p>
+            </article>
+          );
+        })}
+      </div>
+    )}
+  </section>
+
+  <section class="sl-secao" aria-labelledby="sl-candidatos">
+    <h2 id="sl-candidatos">Candidatos à sala <span class="pill">{candidatos.length}</span></h2>
+    <p class="muted">Projetos que o sistema sugere reunir em sala, pelos motivos abaixo.</p>
+    {candidatos.length === 0 ? <p>Nenhum candidato no momento.</p> : (
+      <ul class="sl-candidatos">
+        {candidatos.map((c) => (
+          <li class="sl-candidato" data-sl-candidato data-projeto-id={c.projeto.id} data-projeto-nome={c.projeto.nome}>
+            <div>
+              <strong>{c.projeto.nome}</strong> <span class="muted">({c.projeto.id})</span>
+              <ul class="sl-motivos">{c.motivos.map((m) => <li>{m}</li>)}</ul>
+              <p class="sl-resultado" data-sl-resultado role="status" hidden></p>
+            </div>
+            <div><button type="button" class="primary" data-sl-abrir aria-label={`Abrir sala para ${c.projeto.nome}`}>Abrir sala</button></div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section class="sl-secao" aria-labelledby="sl-encerradas">
+    <h2 id="sl-encerradas">Encerradas <span class="pill">{encerradas.length}</span></h2>
+    {encerradas.length === 0 ? <p>Nenhuma sala encerrada.</p> : (
+      <div class="sl-encerradas">
+        {encerradas.map((s) => (
+          <details class="card sl-enc">
+            <summary>{s.titulo} <span class={`sl-selo sl-selo-${s.tipo}`}>{ROTULO_TIPO_SALA[s.tipo]}</span></summary>
+            <p><strong>Resultado:</strong> {s.resultado ?? 'Sem resultado registrado.'}</p>
+            <h3>Lições aprendidas</h3>
+            {s.licoes?.length ? <ul>{s.licoes.map((l) => <li>{l}</li>)}</ul> : <p>Nenhuma lição registrada.</p>}
+            <p><a href={`/plataforma/sala-de-guerra/${s.id}/`}>Ver a sala completa</a></p>
+          </details>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <dialog id="sl-dialog" class="cart-dialogo" aria-labelledby="sl-dialog-titulo">
+    <form data-sl-form>
+      <h2 id="sl-dialog-titulo">Abrir sala de guerra</h2>
+      <p data-sl-dlg-projeto></p>
+      <p class="cart-aviso">{AVISO_SIMULACAO_SALA}</p>
+      <label>Tipo
+        <select name="tipo" data-sl-tipo>
+          <option value="crise">Crise (algo travou e precisa de solução rápida)</option>
+          <option value="missao">Missão (uma entrega importante com prazo)</option>
+        </select>
+      </label>
+      <label>Objetivo (obrigatório)
+        <textarea name="objetivo" rows="2" data-sl-objetivo></textarea>
+      </label>
+      <label>Prazo (obrigatório)
+        <input type="date" name="prazo" value={prazoPadrao} data-sl-prazo />
+      </label>
+      <label>Cadência das reuniões
+        <select name="cadencia" data-sl-cadencia>
+          <option value="diaria">Diária</option>
+          <option value="duas_por_semana">Duas vezes por semana</option>
+          <option value="semanal">Semanal</option>
+        </select>
+      </label>
+      <label>Escalonamento
+        <select name="escalonamento" data-sl-escalonamento>
+          <option value="1">Nível 1: equipe</option>
+          <option value="2">Nível 2: secretário(a)</option>
+          <option value="3">Nível 3: gabinete</option>
+        </select>
+      </label>
+      <label>Dono da sala (obrigatório)
+        <input type="text" name="dono" placeholder="Ex.: Responsável 1" data-sl-dono />
+      </label>
+      <div class="cart-erro" role="alert" data-sl-erro hidden></div>
+      <div class="actions">
+        <button type="submit" class="primary">Abrir sala (simulação)</button>
+        <button type="button" class="secondary" data-sl-cancelar>Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+</div>
+<script>
+import { avisar, mostrarErro } from '../../lib/carteira/simulacao.ts';
+import { registrarSimulacaoSala } from '../../lib/sala/simulacao.ts';
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-sala-guerra]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  const dlg = raiz.querySelector<HTMLDialogElement>('#sl-dialog')!;
+  const form = dlg.querySelector<HTMLFormElement>('[data-sl-form]')!;
+  const erro = dlg.querySelector<HTMLElement>('[data-sl-erro]')!;
+  const campo = <T extends HTMLElement>(sel: string) => dlg.querySelector<T>(sel)!;
+  let alvo: HTMLElement | null = null;
+
+  raiz.addEventListener('click', (e) => {
+    const botao = (e.target as HTMLElement).closest<HTMLElement>('[data-sl-abrir]');
+    if (!botao) return;
+    alvo = botao.closest<HTMLElement>('[data-sl-candidato]');
+    if (!alvo) return;
+    dlg.querySelector('[data-sl-dlg-projeto]')!.textContent = `Projeto: ${alvo.dataset.projetoNome} (${alvo.dataset.projetoId})`;
+    erro.hidden = true;
+    dlg.showModal();
+    campo<HTMLTextAreaElement>('[data-sl-objetivo]').focus();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!alvo) return;
+    const tipo = campo<HTMLSelectElement>('[data-sl-tipo]').value;
+    const objetivo = campo<HTMLTextAreaElement>('[data-sl-objetivo]').value.trim();
+    const prazo = campo<HTMLInputElement>('[data-sl-prazo]').value;
+    const dono = campo<HTMLInputElement>('[data-sl-dono]').value.trim();
+    const faltando: string[] = [];
+    if (!objetivo) faltando.push('Informe o objetivo.');
+    if (!prazo) faltando.push('Informe o prazo.');
+    if (!dono) faltando.push('Informe o dono da sala.');
+    if (faltando.length) {
+      mostrarErro(erro, 'Falta preencher:', faltando);
+      return;
+    }
+    const cadencia = campo<HTMLSelectElement>('[data-sl-cadencia]').selectedOptions[0].textContent ?? '';
+    const nivel = campo<HTMLSelectElement>('[data-sl-escalonamento]').selectedOptions[0].textContent ?? '';
+    const nome = alvo.dataset.projetoNome ?? '';
+    const descricao = `Sala de guerra (${tipo === 'crise' ? 'crise' : 'missão'}) aberta para ${nome}. Objetivo: ${objetivo}. Prazo: ${prazo.split('-').reverse().join('/')}. Cadência: ${cadencia}. ${nivel}. Dono: ${dono}.`;
+    registrarSimulacaoSala('sala_aberta', alvo.dataset.projetoId ?? '', nome, descricao);
+    const res = alvo.querySelector<HTMLElement>('[data-sl-resultado]')!;
+    res.textContent = 'Simulação: sala aberta. Nada foi gravado.';
+    res.hidden = false;
+    alvo.querySelector('[data-sl-abrir]')?.remove();
+    dlg.close();
+    avisar(`Simulação: sala aberta para ${nome}. Nada foi gravado.`);
+    form.reset();
+  });
+  dlg.querySelector('[data-sl-cancelar]')!.addEventListener('click', () => dlg.close());
+});
+</script>

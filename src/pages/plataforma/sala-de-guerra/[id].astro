@@ -1,0 +1,307 @@
+---
+import '../../../styles/carteira.css';
+import Platform from '../../../layouts/Platform.astro';
+import { carregarCarteira } from '../../../lib/carteira/carga.ts';
+import { carregarCronogramas } from '../../../lib/cronograma/carga.ts';
+import { carregarSalas } from '../../../lib/sala/carga.ts';
+import { ROTULO_CADENCIA, ROTULO_ESCALONAMENTO, ROTULO_SITUACAO_RAID, ROTULO_SITUACAO_SALA, ROTULO_TIPO_SALA, type ItemRaid, type Sala, type TipoRaid } from '../../../lib/sala/tipos.ts';
+import { AVISO_SIMULACAO_SALA } from '../../../lib/sala/simulacao.ts';
+import { dataBr, indicadoresSala, pautaReuniao, textoPrazo } from '../../../lib/sala/visoes.ts';
+import { diasEntre } from '../../../lib/cronograma/visoes.ts';
+
+export function getStaticPaths() {
+  return carregarSalas().salas.map((s) => ({ params: { id: s.id }, props: { sala: s } }));
+}
+const { sala: s } = Astro.props as { sala: Sala };
+const hoje = new Date().toISOString().slice(0, 10);
+const carteira = carregarCarteira();
+const cronogramas = carregarCronogramas().cronogramas;
+const ind = indicadoresSala(s, carteira, cronogramas, hoje);
+const pauta = pautaReuniao(s, carteira, hoje);
+const encerrada = s.situacao === 'resolvida' || s.situacao === 'encerrada';
+const rotuloFarol = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' } as const;
+const projetos = s.projetos.map((id) => ({
+  id,
+  nome: carteira.projetos.find((p) => p.id === id)?.nome ?? id,
+  cronogramas: cronogramas.filter((c) => c.projeto_id === id),
+}));
+const colunas: { tipo: TipoRaid; titulo: string; unico: string; novo: string }[] = [
+  { tipo: 'risco', titulo: 'Riscos', unico: 'risco', novo: 'Novo risco' },
+  { tipo: 'acao', titulo: 'Ações', unico: 'ação', novo: 'Nova ação' },
+  { tipo: 'problema', titulo: 'Problemas', unico: 'problema', novo: 'Novo problema' },
+  { tipo: 'decisao', titulo: 'Decisões', unico: 'decisão', novo: 'Nova decisão' },
+];
+const rotImpacto = { baixo: 'baixo', medio: 'médio', alto: 'alto' } as const;
+const rotProb = { baixa: 'baixa', media: 'média', alta: 'alta' } as const;
+const estaVencido = (i: ItemRaid) => (i.situacao === 'aberto' || i.situacao === 'em_andamento') && !!i.prazo && i.prazo < hoje;
+const ordenar = (l: ItemRaid[]) => [...l].sort((a, b) => (a.prazo ?? '9999') < (b.prazo ?? '9999') ? -1 : (a.prazo ?? '9999') > (b.prazo ?? '9999') ? 1 : 0);
+---
+<Platform title={s.titulo} slug="projetos-sala">
+  <div class="section-head">
+    <div>
+      <h1>{s.titulo}</h1>
+      <p class="muted"><a href="/plataforma/projetos-sala/">← Todas as salas de guerra</a></p>
+    </div>
+  </div>
+  <div data-cart data-sala-pagina data-sala-id={s.id} data-projeto-id={s.projetos[0] ?? ''} data-projeto-nome={projetos[0]?.nome ?? ''} data-sala-titulo={s.titulo}>
+    <p class="cart-aviso sl-nao-imprimir" role="note">{AVISO_SIMULACAO_SALA}</p>
+    <div class="actions sl-nao-imprimir">
+      {!encerrada && <button type="button" class="primary" data-sl-modo aria-expanded="false" aria-controls="sl-reuniao">Modo reunião</button>}
+      <button type="button" class="secondary" data-sl-pdf>Exportar em PDF</button>
+    </div>
+
+    <section class="sl-cabeca" aria-labelledby="sl-cabeca-t">
+      <h2 id="sl-cabeca-t">Sobre a sala</h2>
+      <dl class="sl-dl">
+        <dt>Tipo</dt><dd><span class={`sl-selo sl-selo-${s.tipo}`}>{ROTULO_TIPO_SALA[s.tipo]}</span> · {ROTULO_SITUACAO_SALA[s.situacao]}</dd>
+        <dt>Objetivo</dt><dd>{s.objetivo}</dd>
+        <dt>Por que foi aberta</dt><dd>{s.motivo_abertura}</dd>
+        <dt>Prazo</dt><dd>{dataBr(s.prazo)} ({textoPrazo(ind.diasParaPrazo)})</dd>
+        <dt>Aberta em</dt><dd>{dataBr(s.aberta_em)}</dd>
+        <dt>Dono</dt><dd>{s.dono}</dd>
+        <dt>Equipe</dt><dd>{s.equipe.join(', ')}</dd>
+        <dt>Cadência</dt><dd>{ROTULO_CADENCIA[s.cadencia]}</dd>
+        <dt>Escalonamento</dt><dd>{ROTULO_ESCALONAMENTO[s.escalonamento]}</dd>
+        <dt>Projetos</dt>
+        <dd>
+          <ul class="sl-lista-simples">
+            {projetos.map((p) => (
+              <li>
+                <a href={`/plataforma/projetos-carteira/?q=${encodeURIComponent(p.id)}`}>{p.id} · {p.nome}</a>
+                {p.cronogramas.map((c) => <> · <a href={`/plataforma/cronograma/${c.id}/`}>Cronograma</a></>)}
+              </li>
+            ))}
+          </ul>
+        </dd>
+      </dl>
+    </section>
+
+    <section class="sl-secao" aria-labelledby="sl-ind-t">
+      <h2 id="sl-ind-t">Indicadores</h2>
+      <p class="sl-farol"><span class={`cart-ponto ${ind.farol.cor}`} aria-hidden="true"></span><span><strong>Farol {rotuloFarol[ind.farol.cor]}:</strong> {ind.farol.motivo}</span></p>
+      <ul class="sl-indicadores">
+        <li><strong>{ind.diasParaPrazo >= 0 ? ind.diasParaPrazo : -ind.diasParaPrazo}</strong> {ind.diasParaPrazo >= 0 ? 'dias para o prazo' : 'dias de prazo vencido'}</li>
+        <li><strong>{ind.acoesAbertas}</strong> ações abertas</li>
+        <li><strong>{ind.acoesVencidas}</strong> ações vencidas</li>
+        <li><strong>{ind.problemasAbertos}</strong> problemas abertos</li>
+        <li><strong>{ind.riscosAltos}</strong> riscos de impacto alto</li>
+        <li><strong>{ind.etapasAtrasadas}</strong> etapas atrasadas nos cronogramas</li>
+      </ul>
+    </section>
+
+    <section class="sl-secao" aria-labelledby="sl-raid-t">
+      <h2 id="sl-raid-t">Quadro de riscos, ações, problemas e decisões</h2>
+      <div class="sl-raid">
+        {colunas.map((col) => {
+          const itens = ordenar(s.raid.filter((i) => i.tipo === col.tipo));
+          return (
+            <section class="sl-coluna" aria-labelledby={`sl-col-${col.tipo}`} data-sl-coluna={col.tipo}>
+              <header>
+                <h3 id={`sl-col-${col.tipo}`}>{col.titulo} <span class="pill">{itens.length}</span></h3>
+                {!encerrada && <button type="button" class="secondary sl-nao-imprimir" data-sl-novo={col.tipo}>{col.novo}</button>}
+              </header>
+              <ul class="sl-itens" tabindex="0" aria-label={`Lista de ${col.titulo.toLowerCase()}`}>
+                {itens.length === 0 && <li class="sl-vazio">Nenhum item.</li>}
+                {itens.map((i) => {
+                  const venc = estaVencido(i);
+                  return (
+                    <li class={`sl-item${venc ? ' sl-vencida' : ''}`}>
+                      <p class="sl-item-texto">{venc && <span class="sl-selo-venc">Vencida</span>} {i.descricao}</p>
+                      <p class="sl-item-meta">
+                        {i.responsavel ?? 'Sem responsável'}
+                        {i.prazo && <> · Prazo {dataBr(i.prazo)}{venc && ` (vencida há ${-diasEntre(hoje, i.prazo)} dias)`}</>}
+                        {' · '}{ROTULO_SITUACAO_RAID[i.situacao]}
+                        {i.impacto && <> · Impacto {rotImpacto[i.impacto]}</>}
+                        {i.probabilidade && <> · Probabilidade {rotProb[i.probabilidade]}</>}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          );
+        })}
+      </div>
+    </section>
+
+    {!encerrada && (
+      <section class="sl-secao" id="sl-reuniao" data-sl-reuniao hidden aria-labelledby="sl-reuniao-t">
+        <h2 id="sl-reuniao-t">Modo reunião</h2>
+        <p class="muted">Reunião curta: percorra a pauta na ordem, marque o que foi tratado e anote as decisões e os encaminhamentos.</p>
+        <ol class="sl-pauta">
+          {pauta.map((t) => (
+            <li><label><input type="checkbox" data-sl-item-pauta /> <span>{t}</span></label></li>
+          ))}
+        </ol>
+        <div class="sl-notas">
+          <label>Decisões da reunião
+            <textarea rows="3" data-sl-decisoes></textarea>
+          </label>
+          <label>Encaminhamentos
+            <textarea rows="3" data-sl-encaminhamentos></textarea>
+          </label>
+        </div>
+        <div class="actions sl-nao-imprimir">
+          <button type="button" class="primary" data-sl-registrar>Registrar reunião</button>
+        </div>
+        <p class="sl-resultado" role="status" data-sl-resultado-reuniao hidden></p>
+      </section>
+    )}
+
+    <section class="sl-secao" aria-labelledby="sl-reun-t">
+      <h2 id="sl-reun-t">Reuniões anteriores</h2>
+      {s.reunioes.length === 0 ? <p>Nenhuma reunião registrada.</p> : (
+        <div class="sl-reunioes">
+          {[...s.reunioes].sort((a, b) => (a.data < b.data ? 1 : -1)).map((r) => (
+            <article class="card sl-reuniao">
+              <h3>{dataBr(r.data)}</h3>
+              <p><strong>Pauta:</strong> {r.pauta.join('; ')}</p>
+              <p><strong>Decisões:</strong> {r.decisoes.length ? r.decisoes.join(' ') : 'Nenhuma.'}</p>
+              <p><strong>Encaminhamentos:</strong> {r.encaminhamentos.length ? r.encaminhamentos.join(' ') : 'Nenhum.'}</p>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+
+    <section class="sl-secao" aria-labelledby="sl-marcos-t">
+      <h2 id="sl-marcos-t">Marcos</h2>
+      {s.marcos.length === 0 ? <p>Nenhum marco definido.</p> : (
+        <ul class="sl-marcos">
+          {[...s.marcos].sort((a, b) => (a.data < b.data ? -1 : 1)).map((m) => (
+            <li>{m.feito ? 'Feito' : 'Pendente'} · {dataBr(m.data)} · {m.descricao}</li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+    {encerrada && (
+      <section class="sl-secao" aria-labelledby="sl-res-t">
+        <h2 id="sl-res-t">Resultado</h2>
+        <p>{s.resultado ?? 'Sem resultado registrado.'}</p>
+        <h2>Lições aprendidas</h2>
+        {s.licoes?.length ? <ul>{s.licoes.map((l) => <li>{l}</li>)}</ul> : <p>Nenhuma lição registrada.</p>}
+      </section>
+    )}
+
+    <dialog id="sl-item-dialog" class="cart-dialogo" aria-labelledby="sl-item-titulo">
+      <form data-sl-item-form>
+        <h2 id="sl-item-titulo" data-sl-item-titulo>Novo item</h2>
+        <p class="cart-aviso">{AVISO_SIMULACAO_SALA}</p>
+        <label>Descrição (obrigatória)
+          <textarea rows="2" data-sl-item-desc></textarea>
+        </label>
+        <label>Responsável
+          <input type="text" placeholder="Ex.: Responsável 1" data-sl-item-resp />
+        </label>
+        <label>Prazo
+          <input type="date" data-sl-item-prazo />
+        </label>
+        <label data-sl-item-so-risco>Impacto (risco)
+          <select data-sl-item-impacto><option value="baixo">Baixo</option><option value="medio" selected>Médio</option><option value="alto">Alto</option></select>
+        </label>
+        <label data-sl-item-so-risco>Probabilidade (risco)
+          <select data-sl-item-prob><option value="baixa">Baixa</option><option value="media" selected>Média</option><option value="alta">Alta</option></select>
+        </label>
+        <div class="cart-erro" role="alert" data-sl-item-erro hidden></div>
+        <div class="actions">
+          <button type="submit" class="primary">Adicionar (simulação)</button>
+          <button type="button" class="secondary" data-sl-item-cancelar>Cancelar</button>
+        </div>
+      </form>
+    </dialog>
+  </div>
+</Platform>
+<script>
+import { avisar, mostrarErro } from '../../../lib/carteira/simulacao.ts';
+import { registrarSimulacaoSala } from '../../../lib/sala/simulacao.ts';
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-sala-pagina]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  const projetoId = raiz.dataset.projetoId ?? '';
+  const projetoNome = raiz.dataset.projetoNome ?? '';
+  const titulo = raiz.dataset.salaTitulo ?? '';
+
+  raiz.querySelector('[data-sl-pdf]')?.addEventListener('click', () => window.print());
+
+  const modo = raiz.querySelector<HTMLButtonElement>('[data-sl-modo]');
+  const painel = raiz.querySelector<HTMLElement>('[data-sl-reuniao]');
+  modo?.addEventListener('click', () => {
+    if (!painel) return;
+    const abrir = painel.hidden;
+    painel.hidden = !abrir;
+    modo.setAttribute('aria-expanded', String(abrir));
+    modo.textContent = abrir ? 'Fechar modo reunião' : 'Modo reunião';
+    if (abrir) painel.scrollIntoView({ block: 'start' });
+  });
+
+  raiz.querySelector('[data-sl-registrar]')?.addEventListener('click', () => {
+    const decisoes = raiz.querySelector<HTMLTextAreaElement>('[data-sl-decisoes]')!.value.trim();
+    const encaminhamentos = raiz.querySelector<HTMLTextAreaElement>('[data-sl-encaminhamentos]')!.value.trim();
+    const tratados = raiz.querySelectorAll<HTMLInputElement>('[data-sl-item-pauta]:checked').length;
+    const total = raiz.querySelectorAll('[data-sl-item-pauta]').length;
+    const descricao = `Reunião da sala "${titulo}" registrada: ${tratados} de ${total} itens da pauta tratados. Decisões: ${decisoes || 'nenhuma'}. Encaminhamentos: ${encaminhamentos || 'nenhum'}.`;
+    registrarSimulacaoSala('sala_reuniao', projetoId, projetoNome, descricao);
+    const res = raiz.querySelector<HTMLElement>('[data-sl-resultado-reuniao]')!;
+    res.textContent = 'Simulação: reunião registrada. Nada foi gravado.';
+    res.hidden = false;
+    avisar('Simulação: reunião registrada. Nada foi gravado.');
+  });
+
+  const dlg = raiz.querySelector<HTMLDialogElement>('#sl-item-dialog')!;
+  const form = dlg.querySelector<HTMLFormElement>('[data-sl-item-form]')!;
+  const erro = dlg.querySelector<HTMLElement>('[data-sl-item-erro]')!;
+  const campo = <T extends HTMLElement>(sel: string) => dlg.querySelector<T>(sel)!;
+  const nomes: Record<string, string> = { risco: 'Novo risco', acao: 'Nova ação', problema: 'Novo problema', decisao: 'Nova decisão' };
+  const rotulos: Record<string, string> = { risco: 'risco', acao: 'ação', problema: 'problema', decisao: 'decisão' };
+  let tipo = '';
+
+  raiz.querySelectorAll<HTMLElement>('[data-sl-novo]').forEach((b) =>
+    b.addEventListener('click', () => {
+      tipo = b.dataset.slNovo ?? '';
+      dlg.querySelector('[data-sl-item-titulo]')!.textContent = nomes[tipo] ?? 'Novo item';
+      dlg.querySelectorAll<HTMLElement>('[data-sl-item-so-risco]').forEach((x) => (x.hidden = tipo !== 'risco'));
+      erro.hidden = true;
+      dlg.showModal();
+      campo<HTMLTextAreaElement>('[data-sl-item-desc]').focus();
+    }),
+  );
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const desc = campo<HTMLTextAreaElement>('[data-sl-item-desc]').value.trim();
+    if (!desc) {
+      mostrarErro(erro, 'Informe a descrição.');
+      return;
+    }
+    const resp = campo<HTMLInputElement>('[data-sl-item-resp]').value.trim();
+    const prazo = campo<HTMLInputElement>('[data-sl-item-prazo]').value;
+    const partes = [resp || 'Sem responsável', prazo ? `Prazo ${prazo.split('-').reverse().join('/')}` : '', 'Aberto (simulação)'];
+    if (tipo === 'risco') {
+      partes.push(`Impacto ${campo<HTMLSelectElement>('[data-sl-item-impacto]').selectedOptions[0].textContent?.toLowerCase()}`);
+      partes.push(`Probabilidade ${campo<HTMLSelectElement>('[data-sl-item-prob]').selectedOptions[0].textContent?.toLowerCase()}`);
+    }
+    registrarSimulacaoSala('sala_item', projetoId, projetoNome, `Novo(a) ${rotulos[tipo] ?? 'item'} na sala "${titulo}": ${desc}`);
+    const lista = raiz.querySelector<HTMLElement>(`[data-sl-coluna="${tipo}"] .sl-itens`);
+    if (lista) {
+      lista.querySelector('.sl-vazio')?.remove();
+      const li = document.createElement('li');
+      li.className = 'sl-item';
+      const p1 = document.createElement('p');
+      p1.className = 'sl-item-texto';
+      p1.textContent = desc;
+      const p2 = document.createElement('p');
+      p2.className = 'sl-item-meta';
+      p2.textContent = partes.filter(Boolean).join(' · ');
+      li.append(p1, p2);
+      lista.prepend(li);
+    }
+    dlg.close();
+    form.reset();
+    avisar(`Simulação: ${rotulos[tipo] ?? 'item'} adicionado(a). Nada foi gravado.`);
+  });
+  dlg.querySelector('[data-sl-item-cancelar]')!.addEventListener('click', () => dlg.close());
+});
+</script>
