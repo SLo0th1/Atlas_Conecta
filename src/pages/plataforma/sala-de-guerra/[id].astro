@@ -6,6 +6,8 @@ import { carregarCronogramas } from '../../../lib/cronograma/carga.ts';
 import { carregarSalas } from '../../../lib/sala/carga.ts';
 import { ROTULO_CADENCIA, ROTULO_ESCALONAMENTO, ROTULO_SITUACAO_RAID, ROTULO_SITUACAO_SALA, ROTULO_TIPO_SALA, type ItemRaid, type Sala, type TipoRaid } from '../../../lib/sala/tipos.ts';
 import { AVISO_SIMULACAO_SALA } from '../../../lib/sala/simulacao.ts';
+import { nomeEtapa } from '../../../lib/carteira/simulacao.ts';
+import { farol } from '../../../lib/carteira/visoes.ts';
 import { dataBr, indicadoresSala, pautaReuniao, textoPrazo } from '../../../lib/sala/visoes.ts';
 import { diasEntre } from '../../../lib/cronograma/visoes.ts';
 
@@ -25,6 +27,13 @@ const projetos = s.projetos.map((id) => ({
   nome: carteira.projetos.find((p) => p.id === id)?.nome ?? id,
   cronogramas: cronogramas.filter((c) => c.projeto_id === id),
 }));
+const rotFarolProj = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' } as const;
+const projetosSala = s.projetos.map((id) => {
+  const p = carteira.projetos.find((x) => x.id === id);
+  const f = p ? farol(p, hoje) : null;
+  return { id, nome: p?.nome ?? id, orgao: p?.orgao ?? 'sem órgão', etapa: nomeEtapa(p?.macroetapa ?? null), farol: f ? `Farol ${rotFarolProj[f.cor]}: ${f.motivo}` : 'Farol não disponível' };
+});
+const dadosBusca = JSON.stringify(carteira.projetos.map((p) => ({ id: p.id, nome: p.nome, orgao: p.orgao, sei: p.sei, macroetapa: p.macroetapa }))).replace(/</g, '\\u003c');
 const colunas: { tipo: TipoRaid; titulo: string; unico: string; novo: string }[] = [
   { tipo: 'risco', titulo: 'Riscos', unico: 'risco', novo: 'Novo risco' },
   { tipo: 'acao', titulo: 'Ações', unico: 'ação', novo: 'Nova ação' },
@@ -66,7 +75,7 @@ const ordenar = (l: ItemRaid[]) => [...l].sort((a, b) => (a.prazo ?? '9999') < (
         <dd>
           <ul class="sl-lista-simples">
             {projetos.map((p) => (
-              <li>
+              <li data-projeto-id={p.id}>
                 <a href={`/plataforma/projetos-carteira/?q=${encodeURIComponent(p.id)}`}>{p.id} · {p.nome}</a>
                 {p.cronogramas.map((c) => <> · <a href={`/plataforma/cronograma/${c.id}/`}>Cronograma</a></>)}
               </li>
@@ -74,6 +83,21 @@ const ordenar = (l: ItemRaid[]) => [...l].sort((a, b) => (a.prazo ?? '9999') < (
           </ul>
         </dd>
       </dl>
+    </section>
+
+    <section class="sl-secao" aria-labelledby="sl-proj-t">
+      <h2 id="sl-proj-t">Projetos da sala <span class="pill" data-sl-proj-total>{projetosSala.length}</span></h2>
+      <ul class="sl-proj-lista" data-sl-proj-lista>
+        {projetosSala.map((p) => (
+          <li class="sl-proj" data-sl-proj data-projeto-id={p.id} data-projeto-nome={p.nome}>
+            <p><strong>{p.id} · {p.nome}</strong><br /><span class="muted">{p.orgao} · {p.etapa} · {p.farol}</span></p>
+            {!encerrada && <button type="button" class="secondary sl-nao-imprimir" data-sl-retirar aria-label={`Retirar da sala: ${p.nome}`}>Retirar da sala</button>}
+          </li>
+        ))}
+      </ul>
+      {!encerrada && <p class="muted sl-nao-imprimir" data-sl-proj-dica hidden>A sala precisa de ao menos um projeto.</p>}
+      {!encerrada && <p class="sl-nao-imprimir"><button type="button" class="primary" data-sl-incluir>Incluir projeto</button></p>}
+      <p class="sl-resultado" role="status" data-sl-proj-resultado hidden></p>
     </section>
 
     <section class="sl-secao" aria-labelledby="sl-ind-t">
@@ -184,7 +208,46 @@ const ordenar = (l: ItemRaid[]) => [...l].sort((a, b) => (a.prazo ?? '9999') < (
       </section>
     )}
 
-    <dialog id="sl-item-dialog" class="cart-dialogo" aria-labelledby="sl-item-titulo">
+    {!encerrada && (
+      <>
+        <script type="application/json" id="sl-busca-dados" is:inline set:html={dadosBusca}></script>
+        <dialog id="sl-incluir-dialog" class="cart-dialogo" aria-labelledby="sl-incluir-titulo">
+          <form data-sl-incluir-form>
+            <h2 id="sl-incluir-titulo">Incluir projeto na sala</h2>
+            <p class="cart-aviso">{AVISO_SIMULACAO_SALA}</p>
+            <label>Buscar projeto (nome, ID, órgão ou SEI)
+              <input type="search" autocomplete="off" data-sl-busca />
+            </label>
+            <p class="muted" role="status" data-sl-busca-msg>Digite ao menos 2 letras para buscar.</p>
+            <ul class="sl-busca-lista" data-sl-busca-lista></ul>
+            <label>Motivo (opcional)
+              <input type="text" data-sl-inc-motivo />
+            </label>
+            <div class="cart-erro" role="alert" data-sl-inc-erro hidden></div>
+            <div class="actions">
+              <button type="button" class="secondary" data-sl-inc-cancelar>Fechar</button>
+            </div>
+          </form>
+        </dialog>
+        <dialog id="sl-retirar-dialog" class="cart-dialogo" aria-labelledby="sl-retirar-titulo">
+          <form data-sl-retirar-form>
+            <h2 id="sl-retirar-titulo">Retirar projeto da sala</h2>
+            <p data-sl-ret-projeto></p>
+            <p class="cart-aviso">{AVISO_SIMULACAO_SALA}</p>
+            <label>Motivo (obrigatório)
+              <textarea rows="2" data-sl-ret-motivo></textarea>
+            </label>
+            <div class="cart-erro" role="alert" data-sl-ret-erro hidden></div>
+            <div class="actions">
+              <button type="submit" class="primary">Retirar (simulação)</button>
+              <button type="button" class="secondary" data-sl-ret-cancelar>Cancelar</button>
+            </div>
+          </form>
+        </dialog>
+      </>
+    )}
+
+    <dialog id="sl-item-dialog"class="cart-dialogo" aria-labelledby="sl-item-titulo">
       <form data-sl-item-form>
         <h2 id="sl-item-titulo" data-sl-item-titulo>Novo item</h2>
         <p class="cart-aviso">{AVISO_SIMULACAO_SALA}</p>
@@ -214,7 +277,8 @@ const ordenar = (l: ItemRaid[]) => [...l].sort((a, b) => (a.prazo ?? '9999') < (
 </Platform>
 <script>
 import { avisar, mostrarErro } from '../../../lib/carteira/simulacao.ts';
-import { registrarSimulacaoSala } from '../../../lib/sala/simulacao.ts';
+import { incluirProjetoNaSala, registrarSimulacaoSala, retirarProjetoDaSala } from '../../../lib/sala/simulacao.ts';
+import { nomeEtapa } from '../../../lib/carteira/simulacao.ts';
 
 document.addEventListener('astro:page-load', () => {
   const raiz = document.querySelector<HTMLElement>('[data-sala-pagina]');
@@ -303,5 +367,163 @@ document.addEventListener('astro:page-load', () => {
     avisar(`Simulação: ${rotulos[tipo] ?? 'item'} adicionado(a). Nada foi gravado.`);
   });
   dlg.querySelector('[data-sl-item-cancelar]')!.addEventListener('click', () => dlg.close());
+
+  // Projetos da sala: incluir e retirar (simulação)
+  const lista = raiz.querySelector<HTMLElement>('[data-sl-proj-lista]');
+  const dInc = raiz.querySelector<HTMLDialogElement>('#sl-incluir-dialog');
+  const dRet = raiz.querySelector<HTMLDialogElement>('#sl-retirar-dialog');
+  if (!lista || !dInc || !dRet) return;
+  type ProjBusca = { id: string; nome: string; orgao: string | null; sei: string[]; macroetapa: string | null };
+  let todos: ProjBusca[] = [];
+  try {
+    todos = JSON.parse(document.querySelector('#sl-busca-dados')?.textContent || '[]');
+  } catch {
+    todos = [];
+  }
+  const sala = { id: raiz.dataset.salaId ?? '', titulo, projetos: Array.from(lista.querySelectorAll<HTMLElement>('[data-sl-proj]')).map((li) => li.dataset.projetoId ?? '') };
+  const total = raiz.querySelector<HTMLElement>('[data-sl-proj-total]')!;
+  const dica = raiz.querySelector<HTMLElement>('[data-sl-proj-dica]')!;
+  const resultado = raiz.querySelector<HTMLElement>('[data-sl-proj-resultado]')!;
+  const listaDl = raiz.querySelector<HTMLElement>('.sl-dl .sl-lista-simples');
+  const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  const atualizar = () => {
+    total.textContent = String(sala.projetos.length);
+    const unico = sala.projetos.length <= 1;
+    dica.hidden = !unico;
+    lista.querySelectorAll<HTMLButtonElement>('[data-sl-retirar]').forEach((b) => (b.disabled = unico));
+  };
+  const avisoProj = (texto: string) => {
+    resultado.textContent = texto;
+    resultado.hidden = false;
+    avisar(texto);
+  };
+  atualizar();
+
+  // Incluir
+  const busca = dInc.querySelector<HTMLInputElement>('[data-sl-busca]')!;
+  const msg = dInc.querySelector<HTMLElement>('[data-sl-busca-msg]')!;
+  const resultados = dInc.querySelector<HTMLElement>('[data-sl-busca-lista]')!;
+  const motivoInc = dInc.querySelector<HTMLInputElement>('[data-sl-inc-motivo]')!;
+  const erroInc = dInc.querySelector<HTMLElement>('[data-sl-inc-erro]')!;
+  const nomeDe = (id: string) => todos.find((p) => p.id === id)?.nome ?? id;
+
+  const desenhar = () => {
+    resultados.replaceChildren();
+    erroInc.hidden = true;
+    const q = norm(busca.value.trim());
+    if (q.length < 2) {
+      msg.textContent = 'Digite ao menos 2 letras para buscar.';
+      return;
+    }
+    const achados = todos.filter((p) => norm(`${p.id} ${p.nome} ${p.orgao ?? ''} ${p.sei.join(' ')}`).includes(q));
+    msg.textContent = achados.length === 0 ? 'Nenhum projeto encontrado.' : achados.length > 20 ? `Mostrando 20 de ${achados.length} projetos. Refine a busca.` : `${achados.length} projeto(s) encontrado(s).`;
+    for (const p of achados.slice(0, 20)) {
+      const li = document.createElement('li');
+      const txt = document.createElement('span');
+      txt.textContent = `${p.id} · ${p.nome} · ${p.orgao ?? 'sem órgão'}`;
+      const b = document.createElement('button');
+      b.type = 'button';
+      const ja = sala.projetos.includes(p.id);
+      b.className = 'secondary';
+      b.textContent = ja ? 'Já está na sala' : 'Incluir';
+      b.disabled = ja;
+      b.setAttribute('aria-label', ja ? `${p.nome}: já está na sala` : `Incluir ${p.nome}`);
+      if (!ja) b.dataset.slIncluirId = p.id;
+      li.append(txt, b);
+      resultados.append(li);
+    }
+  };
+  busca.addEventListener('input', desenhar);
+  raiz.querySelector('[data-sl-incluir]')?.addEventListener('click', () => {
+    busca.value = '';
+    motivoInc.value = '';
+    desenhar();
+    dInc.showModal();
+    busca.focus();
+  });
+  resultados.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-sl-incluir-id]');
+    if (!b) return;
+    const id = b.dataset.slIncluirId ?? '';
+    const r = incluirProjetoNaSala(sala, id, motivoInc.value);
+    if (!r.ok) {
+      mostrarErro(erroInc, r.erro);
+      return;
+    }
+    const p = todos.find((x) => x.id === id);
+    registrarSimulacaoSala(r.registro.tipo, id, p?.nome ?? id, r.registro.descricao, r.registro.motivo);
+    sala.projetos = r.sala.projetos;
+    const li = document.createElement('li');
+    li.className = 'sl-proj';
+    li.dataset.slProj = '';
+    li.dataset.projetoId = id;
+    li.dataset.projetoNome = p?.nome ?? id;
+    const par = document.createElement('p');
+    const forte = document.createElement('strong');
+    forte.textContent = `${id} · ${p?.nome ?? id}`;
+    const det = document.createElement('span');
+    det.className = 'muted';
+    det.textContent = `${p?.orgao ?? 'sem órgão'} · ${nomeEtapa((p?.macroetapa ?? null) as Parameters<typeof nomeEtapa>[0])} · Farol: será calculado quando a mudança for gravada`;
+    par.append(forte, document.createElement('br'), det);
+    const bt = document.createElement('button');
+    bt.type = 'button';
+    bt.className = 'secondary sl-nao-imprimir';
+    bt.dataset.slRetirar = '';
+    bt.textContent = 'Retirar da sala';
+    bt.setAttribute('aria-label', `Retirar da sala: ${p?.nome ?? id}`);
+    li.append(par, bt);
+    lista.append(li);
+    if (listaDl) {
+      const item = document.createElement('li');
+      item.dataset.projetoId = id;
+      const a = document.createElement('a');
+      a.href = `/plataforma/projetos-carteira/?q=${encodeURIComponent(id)}`;
+      a.textContent = `${id} · ${p?.nome ?? id}`;
+      item.append(a);
+      listaDl.append(item);
+    }
+    atualizar();
+    dInc.close();
+    avisoProj(`Simulação: ${p?.nome ?? id} incluído na sala. Nada foi gravado.`);
+  });
+  dInc.querySelector('[data-sl-inc-cancelar]')!.addEventListener('click', () => dInc.close());
+  dInc.querySelector('form')!.addEventListener('submit', (e) => e.preventDefault());
+
+  // Retirar
+  const formRet = dRet.querySelector<HTMLFormElement>('[data-sl-retirar-form]')!;
+  const erroRet = dRet.querySelector<HTMLElement>('[data-sl-ret-erro]')!;
+  const motivoRet = dRet.querySelector<HTMLTextAreaElement>('[data-sl-ret-motivo]')!;
+  let retirando = '';
+  lista.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-sl-retirar]');
+    if (!b || b.disabled) return;
+    retirando = b.closest<HTMLElement>('[data-sl-proj]')?.dataset.projetoId ?? '';
+    dRet.querySelector('[data-sl-ret-projeto]')!.textContent = `Projeto: ${nomeDe(retirando)} (${retirando})`;
+    motivoRet.value = '';
+    erroRet.hidden = true;
+    dRet.showModal();
+    motivoRet.focus();
+  });
+  formRet.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const r = retirarProjetoDaSala(sala, retirando, motivoRet.value);
+    if (!r.ok) {
+      mostrarErro(erroRet, r.erro);
+      return;
+    }
+    registrarSimulacaoSala(r.registro.tipo, retirando, nomeDe(retirando), r.registro.descricao, r.registro.motivo);
+    sala.projetos = r.sala.projetos;
+    lista.querySelectorAll<HTMLElement>('[data-sl-proj]').forEach((li) => {
+      if (li.dataset.projetoId === retirando) li.remove();
+    });
+    listaDl?.querySelectorAll<HTMLElement>('li').forEach((li) => {
+      if (li.dataset.projetoId === retirando) li.remove();
+    });
+    atualizar();
+    dRet.close();
+    avisoProj(`Simulação: ${nomeDe(retirando)} retirado da sala. Nada foi gravado.`);
+  });
+  dRet.querySelector('[data-sl-ret-cancelar]')!.addEventListener('click', () => dRet.close());
 });
 </script>

@@ -6,7 +6,8 @@ import { test } from 'node:test';
 import type { Carteira, Projeto } from '../../src/lib/carteira/tipos.ts';
 import type { Cronograma, EtapaCronograma } from '../../src/lib/cronograma/tipos.ts';
 import type { ItemRaid, Sala } from '../../src/lib/sala/tipos.ts';
-import { candidatosSala, indicadoresSala, pautaReuniao } from '../../src/lib/sala/visoes.ts';
+import { candidatosSala, indicadoresSala, pautaReuniao, porqueSugerido } from '../../src/lib/sala/visoes.ts';
+import { incluirProjetoNaSala, retirarProjetoDaSala } from '../../src/lib/sala/simulacao.ts';
 
 const HOJE = '2026-11-15';
 const carteira = JSON.parse(readFileSync('data/exemplo/carteira/carteira.json', 'utf8')) as Carteira;
@@ -196,4 +197,46 @@ test('salas de exemplo: 3 salas fictícias, projetos existentes na carteira e pa
   for (const s of salasExemplo) for (const id of s.projetos) assert.ok(ids.has(id), `${s.id}: projeto ${id} não existe`);
   assert.deepEqual(salasExemplo.map((s) => s.situacao), ['aberta', 'em_andamento', 'encerrada']);
   assert.equal(salasExemplo[2].licoes?.length, 3);
+});
+
+test('porqueSugerido: cada motivo vira uma frase simples e a junção usa vírgula e "e"', () => {
+  assert.equal(porqueSugerido(['Prioridade alta com prazo de etapa vencido']), 'Sugerido porque a prioridade é alta e o prazo da etapa já venceu.');
+  assert.equal(porqueSugerido(['Cronograma em ritmo vermelho (realizado abaixo do previsto)']), 'Sugerido porque o cronograma está andando abaixo do previsto.');
+  assert.equal(porqueSugerido(['Etapa parada há mais de 30 dias: Parecer jurídico (PGM)']), 'Sugerido porque a etapa Parecer jurídico está parada há mais de 30 dias com PGM.');
+  assert.equal(porqueSugerido(['Em contratação com saldo sem fonte']), 'Sugerido porque está em contratação sem fonte para todo o valor.');
+  assert.equal(porqueSugerido(['Entrega próxima e em risco']), 'Sugerido porque a entrega está próxima e em risco.');
+  assert.equal(porqueSugerido(['Outro Motivo Qualquer']), 'Sugerido porque outro motivo qualquer.');
+  assert.equal(porqueSugerido(['Entrega próxima e em risco', 'Em contratação com saldo sem fonte']), 'Sugerido porque a entrega está próxima e em risco e está em contratação sem fonte para todo o valor.');
+  assert.equal(
+    porqueSugerido(['Prioridade alta com prazo de etapa vencido', 'Cronograma em ritmo vermelho (realizado abaixo do previsto)', 'Entrega próxima e em risco']),
+    'Sugerido porque a prioridade é alta e o prazo da etapa já venceu, o cronograma está andando abaixo do previsto e a entrega está próxima e em risco.',
+  );
+  assert.equal(porqueSugerido([]), '');
+});
+
+test('incluir e retirar projeto da sala (simulação): sucesso e cada erro', () => {
+  const base = { ...salaCom([]), projetos: ['P-1'] };
+  const inc = incluirProjetoNaSala(base, 'P-2', ' mais um ');
+  assert.ok(inc.ok);
+  if (inc.ok) {
+    assert.deepEqual(inc.sala.projetos, ['P-1', 'P-2']);
+    assert.deepEqual(base.projetos, ['P-1']); // não altera a sala recebida
+    assert.equal(inc.registro.tipo, 'sala_projeto_incluido');
+    assert.equal(inc.registro.projeto_id, 'P-2');
+    assert.equal(inc.registro.motivo, 'mais um');
+    assert.ok(inc.registro.descricao.includes(base.titulo));
+  }
+  assert.deepEqual(incluirProjetoNaSala(base, 'P-1'), { ok: false, erro: 'Projeto já está na sala.' });
+  const dois = { ...base, projetos: ['P-1', 'P-2'] };
+  const ret = retirarProjetoDaSala(dois, 'P-1', 'saiu do escopo');
+  assert.ok(ret.ok);
+  if (ret.ok) {
+    assert.deepEqual(ret.sala.projetos, ['P-2']);
+    assert.equal(ret.registro.tipo, 'sala_projeto_retirado');
+    assert.equal(ret.registro.projeto_id, 'P-1');
+    assert.equal(ret.registro.motivo, 'saiu do escopo');
+  }
+  assert.deepEqual(retirarProjetoDaSala(dois, 'P-1', '  '), { ok: false, erro: 'Informe o motivo para retirar.' });
+  assert.deepEqual(retirarProjetoDaSala(base, 'P-1', 'x'), { ok: false, erro: 'A sala precisa de ao menos um projeto.' });
+  assert.deepEqual(retirarProjetoDaSala(dois, 'P-9', 'x'), { ok: false, erro: 'Projeto não está na sala.' });
 });
