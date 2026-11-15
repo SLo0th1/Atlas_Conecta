@@ -56,3 +56,10 @@ test('rodada 4: paginação informa intervalo e avança',async({page})=>{
 test('rodada 4: login mostra e oculta senha',async({page})=>{
  await page.goto('/entrar/');const password=page.getByLabel('Senha',{exact:true});await password.fill('exemplo-local');await page.getByRole('button',{name:'Mostrar senha',exact:true}).click();await expect(password).toHaveAttribute('type','text');await expect(page.locator('#password-toggle')).toHaveAttribute('aria-pressed','true');await page.getByRole('button',{name:'Ocultar senha',exact:true}).click();await expect(password).toHaveAttribute('type','password');await expect(password).toHaveValue('exemplo-local');await expect(page.locator('#password-toggle')).toHaveAttribute('aria-pressed','false');
 });
+
+test('govnexa: marca e módulos na plataforma',async({page})=>{
+ for(const path of ['/plataforma/projetos/','/plataforma/gestao/']){const response=await page.goto(path);expect(response?.status(),path).toBe(200);await expect(page.locator('h1'),path).toHaveCount(1);}
+ await page.goto('/plataforma/');await expect(page).toHaveTitle(/GovNexa/);
+ const side=page.locator('.sidebar');for(const t of ['Projetos','Captação','Licitações','Gestão'])await expect(side).toContainText(t);await expect(side).not.toContainText('Área do comprador');
+ await page.goto('/entrar/');await expect(page).toHaveTitle(/Atlas/);
+});

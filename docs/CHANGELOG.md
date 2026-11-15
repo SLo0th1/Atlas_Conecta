@@ -1,3 +1,14 @@
+# Changelog
+
+## GovNexa — Fase 0: base e identidade (em andamento)
+- 2026-11-15: a plataforma passa a se chamar **GovNexa — Inteligência para a gestão pública** (marca centralizada em `src/lib/marca.ts`; site público e login seguem com a marca anterior até decisão, chave `USAR_NO_SITE_PUBLICO`).
+- 2026-11-15: menu lateral agrupado por módulo (Projetos, Captação, Licitações, Gestão, Conta) via `src/lib/govnexa/catalogo.ts`, sem alterar `src/data/modules.json`; removido o texto "Área do comprador".
+- 2026-11-15: páginas iniciais dos módulos **Projetos** (roteiro das fases) e **Gestão** (módulos ativos).
+- 2026-11-15: município ativo lido de `data/config/municipio.json` (`src/lib/municipio-ativo.ts`): nome de exibição e logo deixam de ser fixos no código.
+- 2026-11-15: documentos `docs/govnexa/visao-geral.md` e `docs/govnexa/modelo-dados.md` (modelo para PostgreSQL com isolamento por prefeitura e formato JSON do MVP).
+- 2026-11-15: testes `tests/govnexa/catalogo.test.ts` e teste de interface "govnexa: marca e módulos na plataforma".
+- Observado (anterior a esta fase): o rodapé da plataforma fica atrás da barra lateral em páginas curtas; tabelas com texto longo cortam a última coluna.
+
 # Changelog — bloco Captação
 
 ## Fase 0 — Fundação e descoberta (em andamento)
