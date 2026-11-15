@@ -5,6 +5,9 @@
       "nome": "Goiânia",
       "uf": "GO",
       "piloto": true,
+      "nome_exibicao": "Prefeitura Municipal de Goiânia",
+      "logo": "/brand/prefeitura-goiania.png",
+      "logo_alt": "Prefeitura de Goiânia",
       "cnpjs": [],
       "observacao": "CNPJs da prefeitura e dos fundos pendentes de levantamento (T5) e de validação pela prefeitura."
     }
