@@ -1,6 +1,6 @@
 /* Telas da Carteira de Projetos (Kanban, Gantt, Visão por órgão). Prefixo cart-/kb-/gt-/vo- para não colidir com o restante. */
-:root{--mc-00:#4B5563;--mc-01:#1D4ED8;--mc-02:#6D28D9;--mc-03:#B45309;--mc-04:#0E7490;--mc-05:#15803D;--mc-06:#334155;--cart-vermelho:#B91C1C;--cart-amarelo:#B45309;--cart-verde:#15803D;--fx-neutro:#4B5563;--fx-linha:#1F2937;--fx-apoio:#6B7280;--fx-raia-a:rgba(100,116,139,.06);--fx-raia-b:rgba(100,116,139,.14)}
-:root[data-theme=dark]{--mc-00:#9CA3AF;--mc-01:#60A5FA;--mc-02:#A78BFA;--mc-03:#FBBF24;--mc-04:#22D3EE;--mc-05:#4ADE80;--mc-06:#94A3B8;--cart-vermelho:#F87171;--cart-amarelo:#FBBF24;--cart-verde:#4ADE80;--fx-neutro:#9CA3AF;--fx-linha:#E5E7EB;--fx-apoio:#9CA3AF;--fx-raia-a:rgba(148,163,184,.05);--fx-raia-b:rgba(148,163,184,.13)}
+:root{--mc-00:#4B5563;--mc-01:#1D4ED8;--mc-02:#6D28D9;--mc-03:#B45309;--mc-04:#0E7490;--mc-05:#15803D;--mc-06:#334155;--cart-vermelho:#B91C1C;--cart-amarelo:#B45309;--cart-verde:#15803D;--fx-neutro:#4B5563;--fx-linha:#1F2937;--fx-apoio:#6B7280;--fx-raia-a:rgba(100,116,139,.06);--fx-raia-b:rgba(100,116,139,.14);--fx-exc:#9A3412}
+:root[data-theme=dark]{--mc-00:#9CA3AF;--mc-01:#60A5FA;--mc-02:#A78BFA;--mc-03:#FBBF24;--mc-04:#22D3EE;--mc-05:#4ADE80;--mc-06:#94A3B8;--cart-vermelho:#F87171;--cart-amarelo:#FBBF24;--cart-verde:#4ADE80;--fx-neutro:#9CA3AF;--fx-linha:#E5E7EB;--fx-apoio:#9CA3AF;--fx-raia-a:rgba(148,163,184,.05);--fx-raia-b:rgba(148,163,184,.13);--fx-exc:#FDBA74}
 [data-cart] [hidden]{display:none!important}
 .cart-filtros{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin:0 0 1rem}
 .cart-filtros label{display:grid;gap:.25rem;font-size:.9rem}
@@ -160,6 +160,9 @@
 .lg-filtros input,.lg-filtros select{width:100%;min-width:0;max-width:100%}
 .lg-filtros .lg-texto{grid-column:span 2}
 .lg-botoes{display:flex;gap:.5rem;flex-wrap:wrap}
+.lg-filtros .lg-exc{display:flex;align-items:center;gap:.5rem;min-height:2.5rem}
+.lg-filtros .lg-exc input{width:auto}
+.lg-selo-exc{border:2px dashed var(--fx-exc);font-weight:700}
 .lg-tabela{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 .lg-tabela table{width:100%;border-collapse:collapse;font-size:.85rem;table-layout:auto}
 .lg-tabela th,.lg-tabela td{padding:.5rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;color:var(--text);white-space:normal;overflow-wrap:anywhere;word-break:normal}
@@ -214,6 +217,20 @@
 .fx-no:hover .fx-forma{stroke-width:3.5}
 .fx-no:hover .fx-fino{stroke-width:2.5}
 .fx-no:focus-visible .fx-foco{stroke:var(--accent);stroke-width:3}
+.fx-exc{stroke:var(--fx-exc);stroke-dasharray:6 3}
+.fx-l-exc{stroke:var(--fx-exc);stroke-dasharray:4 2}
+.fx-exc-rot{font-weight:700;fill:var(--fx-exc);pointer-events:none}
+.fx-selo-sub{font-weight:700;fill:var(--text);pointer-events:none;text-decoration:underline}
+.fx-p-exc{border-color:var(--fx-exc);border-style:dashed;font-weight:700}
+.fx-ver-sub{margin-left:.6rem;font-size:.85rem;color:var(--text);text-decoration:underline;text-underline-offset:2px}
+.fx-ver-sub:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.fx-subs{margin:0 0 1rem;padding:.75rem 1rem;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}
+.fx-subs h2{font-size:1.05rem;margin:0 0 .25rem}
+.fx-subs p{margin:.1rem 0 .4rem;font-size:.85rem;max-width:none}
+.fx-subs ul{margin:0;padding-left:1.2rem}
+.fx-subs li{margin:.2rem 0}
+.fx-subs a{color:var(--text);text-decoration:underline;text-underline-offset:2px}
+.fx-subs a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fx-lista{margin:1.5rem 0}
 .fx-lista h2{font-size:1.15rem;margin:0 0 .25rem}
 .fx-lista-raia{margin:1rem 0;break-inside:avoid}
@@ -244,6 +261,7 @@
  .fx-dialogo{display:none!important}
  .fx-no{cursor:default}
  .fx-lista-raia a[role=button]{text-decoration:none}
+ .fx-subs{break-inside:avoid;font-size:9pt}
 }
 /* Fluxo: exportar em PDF (impressão do navegador). Na tela, o anexo e o cabeçalho de impressão ficam ocultos. */
 .fx-exportar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;margin:0 0 1rem}
@@ -333,6 +351,7 @@
  .sl-raid{break-inside:auto}
  .sl-coluna,.sl-item,.sl-reuniao{break-inside:avoid}
  .sl-indicadores li,.sl-cabeca{break-inside:avoid}
+}
 /* Celular: cada linha da tabela vira um cartão empilhado, com o rótulo de cada campo (sem rolagem horizontal). */
 @media (max-width:700px){
  .workspace .table-wrap{border:0;overflow:visible}
@@ -351,8 +370,11 @@
 /* Novo projeto (cadastro) */
 .np-form{display:grid;gap:1rem}
 .np-bloco{margin:0;min-width:0;padding:1rem 1.1rem 1.2rem;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}
-.np-bloco legend{padding:0 .4rem;font-weight:700;font-size:1.05rem}
-.np-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem}
+.np-bloco legend{float:left;width:100%;box-sizing:border-box;margin:0 0 1rem;padding:0 0 .5rem;border-bottom:2px solid var(--line);font-weight:700;font-size:1.3rem;line-height:1.3}
+.np-bloco legend+*{clear:both}
+.np-grade{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width:640px){.np-grade{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1000px){.np-grade{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .np-campo{display:grid;gap:.35rem;align-content:start;min-width:0}
 .np-largo{grid-column:1/-1}
 .np-dica{color:var(--muted);font-size:.8rem;margin:0}
@@ -366,4 +388,4 @@
 .np-ok{margin-top:1.25rem;padding:1rem 1.2rem;border:1px solid var(--cart-verde);border-left:5px solid var(--cart-verde);border-radius:8px;background:var(--surface);color:var(--text)}
 .np-ok h2{font-size:1.25rem;margin:0 0 .5rem}
 .np-ok h3{font-size:1rem;margin:.75rem 0 .25rem}
-@media(max-width:640px){.np-grade{grid-template-columns:1fr}.np-acoes .primary,.np-acoes .secondary{width:100%}}
+@media(max-width:640px){.np-acoes .primary,.np-acoes .secondary{width:100%}}

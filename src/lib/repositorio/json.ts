@@ -30,7 +30,7 @@ export function criarRepositorioJson(): RepositorioProjetos {
     },
     async criarProjeto(dados, autor) {
       const codigos = carregarCarteira().projetos.map((x) => x.codigo_legado);
-      const r = criarProjeto(dados, { autor, em: new Date().toISOString(), proximoCodigo: Math.max(0, ...codigos) + 1, origem: 'ficha' });
+      const r = criarProjeto(dados, { autor, em: new Date().toISOString(), proximoCodigo: Math.max(0, ...codigos) + 1, origem: 'cadastro' });
       if (!r.ok) return r;
       return { ok: false, erro: 'Gravação indisponível: o banco de dados ainda não foi configurado.' };
     },

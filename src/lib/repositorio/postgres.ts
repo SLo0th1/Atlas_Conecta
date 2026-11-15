@@ -123,7 +123,7 @@ export function criarRepositorioPostgres(cliente: ClienteSql, prefeituraId: numb
       return transacao(async (): Promise<ResultadoCriacaoProjeto> => {
         const m = await cliente.query('SELECT coalesce(max(codigo_legado), 0) + 1 AS proximo FROM projeto WHERE prefeitura_id = $1', [prefeituraId]);
         const proximoCodigo = Number(m.rows[0]?.proximo ?? 1);
-        const res = criarProjeto(dados, { autor, em: new Date().toISOString(), proximoCodigo, origem: 'ficha' });
+        const res = criarProjeto(dados, { autor, em: new Date().toISOString(), proximoCodigo, origem: 'cadastro' });
         if (!res.ok) return res;
         const p: any = res.projeto;
         // Nomes de coluna vêm de listas fixas no código; valores só por parâmetro.

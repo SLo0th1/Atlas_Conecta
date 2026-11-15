@@ -21,7 +21,8 @@ export interface NoFluxo {
   fase: string; // onde entra no roteiro
   telas: Tela[];
 }
-export interface Ligacao { de: string; para: string; rotulo?: string; tipo?: 'fluxo' | 'apoio' } // apoio = tracejada (informação/controle)
+/** apoio = tracejada (informação/controle); via 'lado' = a seta chega pela lateral da caixa de destino (evita cruzar outra seta). */
+export interface Ligacao { de: string; para: string; rotulo?: string; tipo?: 'fluxo' | 'apoio'; via?: 'lado' }
 
 export const RAIAS: { id: Raia; nome: string; descricao: string }[] = [
   { id: 'integracoes', nome: 'Fontes e integrações', descricao: 'De onde vêm os dados: planilha, SEI, Transferegov, SIMEC, SISMOB, PNCP.' },
@@ -46,6 +47,8 @@ const T = {
   capPrincipal: { rotulo: 'Captação · Principal', url: '/plataforma/captacao/' },
   oportunidades: { rotulo: 'Oportunidades', url: '/plataforma/captacao-oportunidades/' },
   acompanhamento: { rotulo: 'Acompanhamento de convênios', url: '/plataforma/captacao-acompanhamento/' },
+  qualidade: { rotulo: 'Qualidade dos dados', url: '/plataforma/captacao-qualidade/' },
+  comparativo: { rotulo: 'Comparativo entre capitais', url: '/plataforma/captacao-comparativo/' },
   alertas: { rotulo: 'Alertas da Captação', url: '/plataforma/captacao-alertas/' },
   parecer: { rotulo: 'Projetos (parecer de elegibilidade)', url: '/plataforma/captacao-projetos/' },
   processos: { rotulo: 'Processos / Licitações', url: '/plataforma/processos/' },
@@ -79,9 +82,13 @@ export const NOS: NoFluxo[] = [
   { id: 'fontesFederais', raia: 'integracoes', linha: 4, tipo: 'tarefa', titulo: 'Transferegov, SIMEC, SISMOB',
     oQue: 'Coleta automática de programas abertos e convênios (Transferegov); educação (SIMEC) e saúde (SISMOB) por importação assistida.',
     valida: ['Dado atualizado e com origem', 'Convênio em uma única fonte'], quem: 'Sistema; captação',
-    situacao: 'disponivel', fase: 'Captação (Transferegov); SIMEC e SISMOB na Fase 4/5', telas: [T.oportunidades, T.acompanhamento] },
+    situacao: 'disponivel', fase: 'Captação (Transferegov); SIMEC e SISMOB na Fase 4/5', telas: [T.oportunidades, T.acompanhamento, T.qualidade] },
+  { id: 'casamento', raia: 'captacao', linha: 3, tipo: 'decisao', titulo: 'Oportunidade tem projeto na carteira?',
+    oQue: 'O sistema cruza, nos dois sentidos, as oportunidades abertas (programas e editais) com a carteira: projeto que já existe e ainda não tem recurso pode usar a oportunidade; oportunidade sem nenhum projeto sugere criar um projeto dentro da janela do programa (de 5 dias a 2 meses).',
+    valida: ['Tema, tipo de obra e valor compatíveis', 'Prazo de envio da proposta', 'Projeto ainda sem fonte para aquele valor'], quem: 'Captação; gestão de portfólio',
+    situacao: 'planejado', fase: 'Fase 4 (sugestão); oportunidades já disponíveis', telas: [T.oportunidades, T.carteira, T.comparativo] },
   { id: 'oportunidade', raia: 'captacao', linha: 4, tipo: 'tarefa', titulo: 'Oportunidade × projeto',
-    oQue: 'O sistema sugere programas abertos compatíveis com o projeto (e projetos para cada oportunidade); a equipe confirma ou descarta.',
+    oQue: 'Para cada par sugerido (projeto existente ou projeto criado para a oportunidade), a equipe confirma ou descarta e prepara a proposta dentro do prazo do programa.',
     valida: ['Tema e tipo de obra', 'Prazo de envio da proposta', 'Requisitos do programa (parecer)'], quem: 'Captação',
     situacao: 'planejado', fase: 'Fase 4 (sugestão); oportunidades já disponíveis', telas: [T.oportunidades, T.parecer] },
   { id: 'convenio', raia: 'captacao', linha: 5, tipo: 'tarefa', titulo: 'Proposta e convênio',
@@ -181,9 +188,11 @@ export const LIGACOES: Ligacao[] = [
   { de: 'planilha', para: 'cadastro', tipo: 'apoio', rotulo: 'carga' },
   { de: 'cadastro', para: 'estruturacao' },
   { de: 'estruturacao', para: 'precisaRecurso' },
-  { de: 'precisaRecurso', para: 'oportunidade', rotulo: 'sim' },
+  { de: 'precisaRecurso', para: 'casamento', rotulo: 'sim', via: 'lado' },
   { de: 'precisaRecurso', para: 'planejamento', rotulo: 'não' },
-  { de: 'fontesFederais', para: 'oportunidade', tipo: 'apoio' },
+  { de: 'fontesFederais', para: 'casamento', tipo: 'apoio', rotulo: 'programas abertos' },
+  { de: 'casamento', para: 'oportunidade', rotulo: 'sim: usar no projeto' },
+  { de: 'casamento', para: 'cadastro', rotulo: 'não: sugerir novo projeto' },
   { de: 'oportunidade', para: 'convenio' },
   { de: 'convenio', para: 'clausula' },
   { de: 'clausula', para: 'planejamento', rotulo: 'exigências viram tarefas', tipo: 'apoio' },

@@ -18,7 +18,7 @@ export function registrarSimulacaoSala(tipo: TipoRegistroSala, projetoId: string
       projeto_id: projetoId,
       projeto_nome: projetoNome,
       tipo,
-      origem: 'ficha',
+      origem: 'sala',
       autor: AUTOR_SIMULACAO,
       em,
       descricao,

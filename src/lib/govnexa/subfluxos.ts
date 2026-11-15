@@ -43,6 +43,8 @@ const T = {
   acompanhamento: { rotulo: 'Acompanhamento de convênios', url: '/plataforma/captacao-acompanhamento/' },
   alertas: { rotulo: 'Alertas da Captação', url: '/plataforma/captacao-alertas/' },
   processos: { rotulo: 'Processos / Licitações', url: '/plataforma/processos/' },
+  parecer: { rotulo: 'Projetos (parecer de elegibilidade)', url: '/plataforma/captacao-projetos/' },
+  oportunidades: { rotulo: 'Oportunidades', url: '/plataforma/captacao-oportunidades/' },
   sala: { rotulo: 'Sala de guerra', url: '/plataforma/projetos-sala/' },
   parado: { rotulo: 'Onde está parado', url: '/plataforma/projetos-parado/' },
 } satisfies Record<string, Tela>;
@@ -86,6 +88,44 @@ export const SUBFLUXOS: Subfluxo[] = [
       { de: 'c-valida', para: 'c-cria', rotulo: 'sim' },
       { de: 'c-pend-exc', para: 'c-cria' },
       { de: 'c-cria', para: 'c-fim' },
+    ],
+  },
+
+  // 1b) PROJETO × OPORTUNIDADE (Captação ↔ Projetos, nos dois sentidos)
+  {
+    id: 'oportunidade', no: 'casamento', titulo: 'Projeto × oportunidade',
+    resumo: 'Nos dois sentidos: projeto da carteira sem fonte encontra uma oportunidade; oportunidade sem projeto sugere criar um. A equipe sempre confirma; projeto criado às pressas para caber no prazo é exceção registrada.',
+    raias: [
+      { id: 'sistema', nome: 'Sistema', descricao: 'Cruzamento e sugestões.' },
+      { id: 'captacao', nome: 'Captação', descricao: 'Confirmação e proposta.' },
+      { id: 'projetos', nome: 'Projetos', descricao: 'Projeto existente ou novo.' },
+    ],
+    nos: [
+      { id: 'o-inicio', raia: 'sistema', linha: 1, tipo: 'inicio', titulo: 'Início: programa aberto ou projeto sem fonte', oQue: 'Um programa ou edital abre, ou um projeto da carteira precisa de recurso externo.', valida: ['Programa com prazo', 'Projeto com saldo sem fonte'], quem: 'Sistema', situacao: 'disponivel', fase: 'Captação', telas: [T.oportunidades] },
+      { id: 'o-cruza', raia: 'sistema', linha: 2, tipo: 'tarefa', titulo: 'Cruzar oportunidades × carteira', oQue: 'Compara tema, tipo de obra, valor, região e prazo de cada oportunidade com os projetos da carteira.', valida: ['Compatibilidade de tema e valor', 'Requisitos do programa (parecer)'], quem: 'Sistema', situacao: 'planejado', fase: 'Fase 4', telas: [T.oportunidades, T.parecer] },
+      { id: 'o-tem', raia: 'sistema', linha: 3, tipo: 'decisao', titulo: 'Há projeto compatível?', oQue: 'Se existe projeto na carteira que atende à oportunidade.', valida: ['Projeto ainda sem fonte para o valor'], quem: 'Sistema', situacao: 'planejado', fase: 'Fase 4', telas: [T.carteira] },
+      { id: 'o-sugere', raia: 'captacao', linha: 4, tipo: 'tarefa', titulo: 'Sugerir o projeto existente', oQue: 'Mostra os projetos compatíveis para a oportunidade (e as oportunidades para cada projeto).', valida: ['Par sugerido, nunca afirmado'], quem: 'Sistema; captação', situacao: 'planejado', fase: 'Fase 4', telas: [T.oportunidades, T.carteira] },
+      { id: 'o-novo', raia: 'projetos', linha: 4, tipo: 'tarefa', titulo: 'Sugerir criar um projeto', oQue: 'Oportunidade sem projeto: sugere cadastrar um projeto para usar o recurso (ex.: uma praça para um programa de praças).', valida: ['Interesse da secretaria'], quem: 'Captação; gestão de portfólio', situacao: 'planejado', fase: 'Fase 4', telas: [T.novo] },
+      { id: 'o-prazo', raia: 'projetos', linha: 5, tipo: 'decisao', titulo: 'Dá tempo de estruturar no prazo do programa?', oQue: 'A janela costuma ir de 5 dias a 2 meses.', valida: ['Prazo de envio × tempo de estruturação'], quem: 'Gestão de portfólio', situacao: 'planejado', fase: 'Fase 4', telas: [T.novo] },
+      { id: 'o-relampago', raia: 'projetos', linha: 6, tipo: 'excecao', titulo: 'Projeto criado às pressas para a oportunidade', oQue: 'Cadastrado para caber no prazo, mesmo sem estudo completo; o que faltar vira pendência.', valida: ['Motivo e programa'], quem: 'Gestão de portfólio', situacao: 'planejado', fase: 'Fase 4', telas: [T.excecoes], excecao: { aceitaQuando: 'A oportunidade é estratégica e a janela é curta (de 5 dias a 2 meses), mesmo sem estudo completo.', registro: `${EXC}: projeto nascido para a oportunidade, com o programa, o prazo e o que ficou para depois (estudos, orçamento).` } },
+      { id: 'o-confirma', raia: 'captacao', linha: 7, tipo: 'decisao', titulo: 'Equipe confirma o par?', oQue: 'A captação confirma ou descarta cada sugestão.', valida: ['Motivo do descarte'], quem: 'Captação', situacao: 'planejado', fase: 'Fase 4', telas: [T.oportunidades] },
+      { id: 'o-descarta', raia: 'sistema', linha: 8, tipo: 'fim', titulo: 'Fim: sugestão descartada', oQue: 'Fica registrada com o motivo, para melhorar as próximas sugestões.', valida: ['Motivo registrado'], quem: 'Captação', situacao: 'planejado', fase: 'Fase 4', telas: [T.log] },
+      { id: 'o-proposta', raia: 'captacao', linha: 8, tipo: 'tarefa', titulo: 'Preparar e enviar a proposta', oQue: 'Formulário padrão do concedente (Transferegov), com justificativa e indicadores; no futuro, com apoio de IA e revisão humana.', valida: ['Dentro do prazo do programa', 'Requisitos do programa confirmados'], quem: 'Captação', situacao: 'planejado', fase: 'Fase 4 (IA na Fase 5)', telas: [T.parecer] },
+      { id: 'o-fim', raia: 'captacao', linha: 9, tipo: 'fim', titulo: 'Fim: proposta enviada', oQue: 'Segue para o convênio (e, se houver, a cláusula suspensiva).', valida: [], quem: 'Captação', situacao: 'planejado', fase: 'Fase 4', telas: [T.acompanhamento] },
+    ],
+    ligacoes: [
+      { de: 'o-inicio', para: 'o-cruza' },
+      { de: 'o-cruza', para: 'o-tem' },
+      { de: 'o-tem', para: 'o-sugere', rotulo: 'sim' },
+      { de: 'o-tem', para: 'o-novo', rotulo: 'não' },
+      { de: 'o-novo', para: 'o-prazo' },
+      { de: 'o-prazo', para: 'o-relampago', rotulo: 'não' },
+      { de: 'o-prazo', para: 'o-confirma', rotulo: 'sim' },
+      { de: 'o-relampago', para: 'o-confirma' },
+      { de: 'o-sugere', para: 'o-confirma' },
+      { de: 'o-confirma', para: 'o-descarta', rotulo: 'não' },
+      { de: 'o-confirma', para: 'o-proposta', rotulo: 'sim' },
+      { de: 'o-proposta', para: 'o-fim' },
     ],
   },
 

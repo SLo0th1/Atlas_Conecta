@@ -33,6 +33,8 @@ export const ROTULO_ORIGEM: Record<OrigemEvento, string> = {
   pendencia: 'Pendências de etapa',
   sei: 'SEI',
   importacao: 'Importação da planilha',
+  cadastro: 'Cadastro de projeto',
+  sala: 'Sala de guerra',
 };
 
 /** Tipos de ação que aparecem no filtro (cada rótulo uma vez). */

@@ -17,6 +17,7 @@ export const COMPONENTES: Record<string, string[]> = {
   estruturacao: ['src/lib/carteira/macroetapas.ts', 'src/components/carteira/Kanban.astro', 'src/lib/carteira/modulos.ts'],
   precisaRecurso: ['src/lib/carteira/visoes.ts'],
   fontesFederais: ['coletores/**', 'src/lib/dados/**', '.github/workflows/atualizar-dados*.yml'],
+  casamento: ['src/lib/dados/captacao.ts', 'src/lib/carteira/modulos.ts'],
   oportunidade: ['src/lib/dados/captacao.ts', 'src/lib/dados/detalhes.ts', 'src/lib/projetos/**'],
   convenio: ['src/lib/dados/captacao.ts', 'src/lib/dados/detalhes-convenio.ts'],
   clausula: ['src/lib/dados/alertas.ts'],

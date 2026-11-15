@@ -11,6 +11,7 @@ export interface FiltroLog {
   acao?: string; // tipo de ação (ver ROTULO_ACAO)
   origem?: string;
   texto?: string;
+  excecoes?: boolean; // somente registros que são exceção
 }
 
 const FUSO = 'America/Sao_Paulo';
@@ -39,6 +40,14 @@ export function dataHoraBr(em: string): string {
 /** Tipos equivalentes: o motor grava 'passo' e 'pendencia'; o filtro usa 'registrar_passo' e 'resolver_pendencia'. */
 export function acaoCanonica(t: string): string {
   return t === 'passo' ? 'registrar_passo' : t === 'pendencia' ? 'resolver_pendencia' : t;
+}
+/** Exceção = movimentação forçada ou registro marcado com `excecao`. */
+export const ehExcecao = (r: Pick<RegistroLog, 'forcado' | 'excecao'>): boolean => r.forcado === true || !!r.excecao;
+/** Tipo e motivo da exceção, para o detalhe. */
+export function dadosExcecao(r: RegistroLog): { tipo: string; motivo: string } | null {
+  if (r.excecao) return { tipo: r.excecao.tipo, motivo: r.excecao.motivo };
+  if (r.forcado) return { tipo: 'movimentação forçada', motivo: r.motivo && r.motivo.trim() ? r.motivo : 'Não informado' };
+  return null;
 }
 export const rotuloAcao = (t: TipoAcaoLog | string): string => ROTULO_ACAO[t as TipoAcaoLog] ?? String(t);
 export const rotuloOrigem = (o: string): string => (ROTULO_ORIGEM as Record<string, string>)[o] ?? o;
@@ -116,6 +125,7 @@ export function filtrarLog(regs: RegistroLog[], f: FiltroLog): RegistroLog[] {
     if (f.autor && r.autor !== f.autor) return false;
     if (acao && acaoCanonica(r.tipo) !== acao) return false;
     if (f.origem && r.origem !== f.origem) return false;
+    if (f.excecoes && !ehExcecao(r)) return false;
     if (texto && !textoBusca(r).includes(texto)) return false;
     return true;
   });

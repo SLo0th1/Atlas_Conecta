@@ -188,7 +188,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
  const resposta=await page.goto('/plataforma/projetos-fluxo/');
  expect(resposta?.status()).toBe(200);
  await expect(page.locator('h1')).toHaveCount(1);
- await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(29);
+ await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(30);
  // clique no portão: validações e link para as pendências
  await page.locator('svg.fx-svg [data-no="portao"]').click();
  const dlg=page.locator('#fluxo-detalhe');
@@ -218,7 +218,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
 
 test('govnexa: fluxo exporta em PDF',async({page})=>{
  await page.goto('/plataforma/projetos-fluxo/');await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeVisible();
- await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(29);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
+ await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(30);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
 });
 
 test('govnexa: sala de guerra',async({page})=>{
@@ -317,4 +317,85 @@ test('govnexa: novo projeto',async({page})=>{
  await page.waitForURL(/projetos-log/);
  await expect(page.getByText('Simulação (não gravado)').first()).toBeVisible();
  await expect(page.locator('td').getByText('Projeto incluído').first()).toBeVisible();
+});
+
+test('govnexa: fluxos detalhados',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const ids=['cadastro','oportunidade','movimentacao','clausula','licitacao','sala'];
+ const urls=new Set<string>();
+ const coletar=async()=>{const lista:{telas:{url:string}[];subfluxo:string|null}[]=JSON.parse((await page.locator('[data-fx-dados]').textContent())||'[]');for(const n of lista){for(const t of n.telas)urls.add(t.url);if(n.subfluxo)urls.add(`/plataforma/fluxo/${n.subfluxo}/`);}};
+ // mapa geral: 6 fluxos detalhados listados, selo nas caixas e botão no diálogo
+ await page.goto('/plataforma/projetos-fluxo/');
+ await expect(page.getByRole('heading',{name:'Fluxos detalhados',level:2})).toBeVisible();
+ await expect(page.locator('.fx-subs li')).toHaveCount(6);
+ await expect(page.locator('svg.fx-svg .fx-selo-sub')).toHaveCount(6);
+ await coletar();
+ await page.locator('svg.fx-svg [data-no="cadastro"]').click();
+ const dlg=page.locator('#fluxo-detalhe');
+ const ver=dlg.getByRole('link',{name:'Ver fluxo detalhado'});
+ await expect(ver).toHaveAttribute('href','/plataforma/fluxo/cadastro/');
+ await ver.click();
+ await expect(page).toHaveURL(/\/plataforma\/fluxo\/cadastro\/$/);
+ // cada fluxo detalhado: 200, um h1, link de volta, PDF e hexágonos de exceção
+ for(const id of ids){
+  const r=await page.goto(`/plataforma/fluxo/${id}/`);
+  expect(r?.status(),id).toBe(200);
+  await expect(page.locator('h1'),id).toHaveCount(1);
+  await expect(page.locator('h1'),id).toContainText('Fluxo detalhado:');
+  await expect(page.getByRole('link',{name:/Voltar ao fluxo do sistema/}),id).toHaveAttribute('href','/plataforma/projetos-fluxo/');
+  await expect(page.getByRole('button',{name:'Exportar em PDF'}),id).toBeVisible();
+  expect(await page.locator('svg.fx-svg path.fx-exc').count(),`${id}: hexágonos de exceção`).toBeGreaterThan(0);
+  expect(await page.locator('svg.fx-svg [data-no] .fx-exc-rot').count(),id).toBe(await page.locator('svg.fx-svg path.fx-exc').count());
+  await coletar();
+ }
+ // clicar numa exceção mostra "Aceita quando" e o que fica registrado
+ await page.goto('/plataforma/fluxo/cadastro/');
+ await page.locator('svg.fx-svg [data-no="c-pend-exc"]').click();
+ const d=page.locator('dialog[open]');
+ await expect(d).toContainText('Aceita quando');
+ await expect(d).toContainText('O que fica registrado');
+ await expect(d.locator('[data-fx-exc]')).toBeVisible();
+ await page.keyboard.press('Escape');
+ // PDF: o anexo traz as exceções
+ await page.emulateMedia({media:'print'});
+ await expect(page.locator('.fx-anexo-no')).toHaveCount(11);
+ await expect(page.locator('.fx-anexo')).toContainText('Exceção aceita quando');
+ await page.emulateMedia({media:'screen'});
+ // todos os links de tela dos diálogos (mapa geral e fluxos detalhados) respondem 200
+ expect(urls.size).toBeGreaterThan(10);
+ for(const u of urls){const resp=await page.request.get(u);expect(resp.status(),u).toBe(200);}
+ // histórico: ?excecoes=1 mostra só exceções
+ await page.goto('/plataforma/projetos-log/');
+ await expect(page.locator('[data-lg-contador]')).toContainText('registros');
+ const total=Number(((await page.locator('[data-lg-contador]').textContent())||'').split(' de ')[0]);
+ await page.goto('/plataforma/projetos-log/?excecoes=1');
+ await expect(page.locator('[data-lg-excecoes]')).toBeChecked();
+ await expect.poll(async()=>page.locator('[data-lg-corpo] tr:not(.lg-detalhe)').count()).toBeGreaterThan(0);
+ expect(Number(((await page.locator('[data-lg-contador]').textContent())||'').split(' de ')[0])).toBeLessThan(total);
+ for(const linha of await page.locator('[data-lg-corpo] tr:not(.lg-detalhe)').all())await expect(linha).toContainText('Exceção');
+ await page.locator('[data-lg-corpo] .lg-ver').first().click();
+ await expect(page.locator('.lg-detalhe:not([hidden])').first()).toContainText('Exceção — motivo');
+ // sem rolagem horizontal em 1280 e 390px
+ for(const width of [1280,390])for(const u of ['/plataforma/fluxo/cadastro/','/plataforma/fluxo/licitacao/','/plataforma/projetos-fluxo/'])
+  {await page.setViewportSize({width,height:900});await page.goto(u);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${u} ${width}px`).toBeTruthy();}
+ // axe claro e escuro em um fluxo detalhado
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/fluxo/cadastro/');
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`subfluxo ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
+test('govnexa: novo projeto em colunas e foco no resultado',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/projetos-novo/');
+ const colunas=async()=>page.locator('.np-grade').first().evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length);
+ expect(await colunas()).toBe(3);
+ await page.setViewportSize({width:800,height:900});expect(await colunas()).toBe(2);
+ await page.setViewportSize({width:390,height:900});expect(await colunas()).toBe(1);
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ await expect(page.locator('[data-np-resumo]')).toBeFocused();
+ await page.locator('#np-nome').fill('Projeto do teste de foco');
+ await page.locator('#np-orgao').selectOption({index:1});
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ await expect(page.locator('[data-np-ok]')).toBeFocused();
+ await expect(page.locator('[data-np-ok]')).toBeInViewport();
 });

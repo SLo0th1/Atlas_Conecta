@@ -2,7 +2,7 @@
 // Todo caminho (Kanban, ficha, pendência, SEI, importação) passa por aqui e gera histórico.
 import type { CodigoMacroetapa, Projeto } from './tipos.ts';
 
-export type OrigemEvento = 'kanban' | 'ficha' | 'pendencia' | 'sei' | 'importacao';
+export type OrigemEvento = 'kanban' | 'ficha' | 'pendencia' | 'sei' | 'importacao' | 'cadastro' | 'sala';
 
 interface EventoBase {
   projeto_id: string;
@@ -29,6 +29,8 @@ export interface RegistroHistorico {
   campos?: { campo: string; antes: unknown; depois: unknown }[];
   motivo?: string;
   forcado?: boolean;
+  /** Exceção aceita e registrada (além do "forçado"): tipo e motivo, para garantia do processo e evolução. */
+  excecao?: { tipo: string; motivo: string };
   descricao?: string;
 }
 
@@ -288,8 +290,8 @@ export function criarProjeto(
   for (const k of [...CHAVES_RECURSO, 'termo_compromisso'] as const) add(`recurso.${k}`, (p.recurso as any)[k]);
   for (const k of [...CHAVES_DATAS, 'execucao_dias'] as const) add(`datas.${k}`, (p.datas as any)[k]);
 
-  const historico: RegistroHistorico[] = [
-    { id: `${id}-${ctx.em}-1`, projeto_id: id, tipo: 'criado', origem: ctx.origem, autor: ctx.autor, em: ctx.em, para: '00', descricao: 'Projeto incluído no cadastro', campos },
-  ];
+  const criado: RegistroHistorico = { id: `${id}-${ctx.em}-1`, projeto_id: id, tipo: 'criado', origem: ctx.origem, autor: ctx.autor, em: ctx.em, para: '00', descricao: 'Projeto incluído no cadastro', campos };
+  if (p.pendencias.length > 0) criado.excecao = { tipo: 'cadastro com pendências', motivo: p.pendencias.join('; ') };
+  const historico: RegistroHistorico[] = [criado];
   return { ok: true, projeto: p, historico };
 }

@@ -155,7 +155,7 @@ const descreve = (c: Campo) => [c.dica ? `np-${c.id}-dica` : '', `np-${c.id}-err
       <button type="button" class="secondary" data-np-limpar>Limpar</button>
     </div>
   </form>
-  <section class="np-ok" data-np-ok tabindex="-1" aria-labelledby="np-ok-titulo" hidden>
+  <div class="np-ok" role="region" data-np-ok tabindex="-1" aria-labelledby="np-ok-titulo" hidden>
     <h2 id="np-ok-titulo">Cadastro simulado</h2>
     <p data-np-ok-texto role="status"></p>
     <div data-np-ok-pendencias hidden>
@@ -166,7 +166,7 @@ const descreve = (c: Campo) => [c.dica ? `np-${c.id}-dica` : '', `np-${c.id}-err
       <a class="button primary" href="/plataforma/projetos-log/" data-np-ok-log>Ver no Histórico de alterações</a>
       <a class="button secondary" href="/plataforma/projetos-carteira/">Voltar à carteira</a>
     </div>
-  </section>
+  </div>
 </div>
 <script>
 import { criarProjeto } from '../../lib/carteira/movimentacao.ts';
@@ -182,6 +182,7 @@ const ROTULO_DATAS: [string, string][] = [
   ['d_mobilizacao', 'Fim da mobilização'],
   ['d_entrega', 'Entrega final'],
 ];
+const reduzMovimento = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const dataBr = (iso: string) => iso.split('-').reverse().join('/');
 
 document.addEventListener('astro:page-load', () => {
@@ -292,7 +293,7 @@ document.addEventListener('astro:page-load', () => {
         },
         datas: { inicio: null, pecas_tecnicas: d('d_pecas'), planejamento: d('d_planejamento'), preparatorio: d('d_preparatorio'), contratacao: d('d_contratacao'), mobilizacao: d('d_mobilizacao'), execucao_dias: execDias, encerramento: d('d_entrega') },
       },
-      { autor: AUTOR_SIMULACAO, em: new Date().toISOString(), proximoCodigo: proximo, origem: 'ficha' },
+      { autor: AUTOR_SIMULACAO, em: new Date().toISOString(), proximoCodigo: proximo, origem: 'cadastro' },
     );
     if (!r.ok) {
       if (r.faltando.includes('Nome do projeto')) erros.unshift(['nome', 'Informe o nome do projeto.']);
@@ -324,6 +325,7 @@ document.addEventListener('astro:page-load', () => {
       resumo.append(t, ul);
       resumo.hidden = false;
       resumo.focus();
+      resumo.scrollIntoView({ behavior: reduzMovimento() ? 'auto' : 'smooth', block: 'start' });
       return;
     }
     if (!r.ok) return;
@@ -349,6 +351,7 @@ document.addEventListener('astro:page-load', () => {
     ok.querySelector<HTMLAnchorElement>('[data-np-ok-log]')!.href = `/plataforma/projetos-log/?projeto=${encodeURIComponent(r.projeto.id)}`;
     ok.hidden = false;
     ok.focus();
+    ok.scrollIntoView({ behavior: reduzMovimento() ? 'auto' : 'smooth', block: 'start' });
     avisar(`Simulação: ${r.projeto.id} · ${r.projeto.nome}. Nada foi gravado.`);
     proximo += 1;
   });

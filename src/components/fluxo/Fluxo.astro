@@ -1,27 +1,50 @@
 ---
 import '../../styles/carteira.css';
-import { LIGACOES, NOS, RAIAS, ROTULO_SITUACAO } from '../../lib/govnexa/fluxo.ts';
-import type { NoFluxo } from '../../lib/govnexa/fluxo.ts';
+import type { Ligacao, Situacao, Tela } from '../../lib/govnexa/fluxo.ts';
+import { SUBFLUXOS, subfluxoDoNo } from '../../lib/govnexa/subfluxos.ts';
 import { municipioAtivo } from '../../lib/municipio-ativo.ts';
 import { MARCA } from '../../lib/marca.ts';
+
+// Desenho reutilizável: o mapa geral e cada fluxo detalhado (subprocesso) usam este componente.
+type TipoNoGen = 'inicio' | 'tarefa' | 'decisao' | 'excecao' | 'fim';
+interface NoGen {
+  id: string;
+  raia: string;
+  linha: number;
+  tipo: TipoNoGen;
+  titulo: string;
+  oQue: string;
+  valida: string[];
+  quem: string;
+  situacao: Situacao;
+  fase: string;
+  telas: Tela[];
+  excecao?: { aceitaQuando: string; registro: string };
+}
+interface Props {
+  raias: { id: string; nome: string; descricao: string }[];
+  nos: NoGen[];
+  ligacoes: Ligacao[];
+  rotuloSituacao: Record<Situacao, string>;
+  idPrefixo: string;
+  /** Título do diagrama (cabeçalho do PDF e rótulo de acessibilidade). */
+  titulo: string;
+  /** Mapa geral: mostra o selo "+ detalhe", os links para os fluxos detalhados e a seção "Fluxos detalhados". */
+  geral?: boolean;
+}
+const { raias: RAIAS, nos: NOS, ligacoes: LIGACOES, rotuloSituacao: ROTULO_SITUACAO, idPrefixo, titulo: tituloDiagrama, geral = false } = Astro.props;
 
 // ——— Geometria (viewBox em unidades fixas; o SVG ocupa 100% da largura do contêiner)
 const LARGURA = 1000;
 const COL = LARGURA / RAIAS.length;
+const E = RAIAS.length <= 3 ? 1.25 : 1; // poucas raias: formas e letras maiores
 const TOPO = 48;
-const LIN = 100;
 const MAX_LINHA = Math.max(...NOS.map((n) => n.linha));
-const ALTURA = TOPO + MAX_LINHA * LIN + 16;
 type Pt = [number, number];
-interface Geo { no: NoFluxo; col: number; cx: number; cy: number; hw: number; hh: number }
+interface Geo { no: NoGen; col: number; cx: number; cy: number; hw: number; hh: number; k: number; linhas: string[]; fs: number; passo: number; yTit: number; yExc: number; ySit: number; ySelo: number; temSub: boolean }
 
-const geo = new Map<string, Geo>();
-for (const no of NOS) {
-  const col = RAIAS.findIndex((r) => r.id === no.raia);
-  const [hw, hh] = no.tipo === 'decisao' ? [82, 46] : no.tipo === 'tarefa' ? [62, 33] : [44, 44];
-  geo.set(no.id, { no, col, cx: (col + 0.5) * COL, cy: TOPO + (no.linha - 0.5) * LIN, hw, hh });
-}
 const rotuloSit = { disponivel: 'disponível', simulacao: 'simulação', planejado: 'planejado' } as const;
+const subDe = (id: string) => (geral ? subfluxoDoNo(id) : undefined);
 
 // Quebra por palavras (no servidor)
 function quebrar(texto: string, max: number): string[] {
@@ -34,18 +57,70 @@ function quebrar(texto: string, max: number): string[] {
   if (atual) linhas.push(atual);
   return linhas;
 }
-const maxPorTipo = { tarefa: 17, decisao: 18, inicio: 11, fim: 11 } as const;
-const tamFonte = { tarefa: 11.5, decisao: 10.5, inicio: 10.5, fim: 10.5 } as const;
+const maxPorTipo = { tarefa: 17, decisao: 18, inicio: 12, fim: 12, excecao: 17 } as const;
+const tamFonte = { tarefa: 11.5, decisao: 10.5, inicio: 10.5, fim: 10.5, excecao: 10.5 } as const;
+const BASE: Record<TipoNoGen, [number, number]> = { decisao: [82, 46], tarefa: [62, 33], inicio: [44, 44], fim: [44, 44], excecao: [76, 44] };
+
+// Meia-largura disponível da forma a uma distância vertical dy do centro (para conferir se o texto cabe)
+function disponivel(tipo: TipoNoGen, hw: number, hh: number, k: number, dy: number): number {
+  const d = Math.abs(dy);
+  if (d > hh) return 0;
+  if (tipo === 'decisao') return hw * (1 - d / hh);
+  if (tipo === 'tarefa') return hw;
+  if (tipo === 'excecao') return hw - (k * d) / hh;
+  return Math.sqrt(Math.max(0, hw * hw - d * d));
+}
+
+// 1ª fase: tamanho de cada forma (cresce só se o texto não couber)
+const tam = new Map<string, Geo>();
+for (const no of NOS) {
+  const col = RAIAS.findIndex((r) => r.id === no.raia);
+  const fs = tamFonte[no.tipo] * E;
+  const passo = fs + 2 * E;
+  const linhas = quebrar(no.titulo, maxPorTipo[no.tipo]);
+  const temSub = !!subDe(no.id);
+  const exc = no.tipo === 'excecao';
+  const hTit = linhas.length * passo;
+  const hExc = exc ? 11 * E : 0;
+  const hSit = 12 * E;
+  const hSelo = temSub ? 11 * E : 0;
+  const alt = hTit + hExc + hSit + hSelo;
+  // posições relativas ao centro (linha de base de cada texto)
+  const yTit = -alt / 2 + fs;
+  const yExc = yTit + (linhas.length - 1) * passo + 11 * E;
+  const ySit = yTit + (linhas.length - 1) * passo + hExc + 12 * E;
+  const ySelo = ySit + 11 * E;
+  const largura = (t: string, f: number, f0: number) => t.length * f * f0;
+  const itens: { dy1: number; dy2: number; w: number }[] = [
+    ...linhas.map((t, i) => ({ dy1: yTit + i * passo - fs * 0.8, dy2: yTit + i * passo + fs * 0.25, w: largura(t, fs, 0.6) })),
+    { dy1: ySit - 9.5 * E * 0.8, dy2: ySit + 3, w: largura(rotuloSit[no.situacao], 9.5 * E, 0.55) },
+  ];
+  if (exc) itens.push({ dy1: yExc - 9 * E * 0.8, dy2: yExc + 3, w: largura('exceção', 9 * E, 0.62) });
+  if (temSub) itens.push({ dy1: ySelo - 8.5 * E * 0.8, dy2: ySelo + 3, w: largura('+ detalhe', 8.5 * E, 0.62) });
+  const [bw, bh] = BASE[no.tipo];
+  let s = 1;
+  for (; s < 3; s += 0.04) {
+    const hw = bw * E * s, hh = bh * E * s, k = 24 * E * s;
+    if (itens.every((it) => disponivel(no.tipo, hw, hh, k, Math.abs(it.dy1) > Math.abs(it.dy2) ? it.dy1 : it.dy2) >= it.w / 2 + 4 && Math.max(Math.abs(it.dy1), Math.abs(it.dy2)) <= hh - 2)) break;
+  }
+  tam.set(no.id, { no, col, cx: (col + 0.5) * COL, cy: 0, hw: bw * E * s, hh: bh * E * s, k: 24 * E * s, linhas, fs, passo, yTit, yExc, ySit, ySelo, temSub });
+}
+const LIN = Math.max(100 * E, 2 * Math.max(...[...tam.values()].map((g) => g.hh)) + 14);
+const ALTURA = TOPO + MAX_LINHA * LIN + 16;
+const geo = new Map<string, Geo>();
+for (const [id, g] of tam) geo.set(id, { ...g, cy: TOPO + (g.no.linha - 0.5) * LIN });
 
 // Borda da forma em uma posição (para as setas encostarem no contorno)
 function bordaY(g: Geo, x: number, lado: 'topo' | 'base'): number {
   const dx = Math.min(Math.abs(x - g.cx), g.hw);
-  const desl = g.no.tipo === 'decisao' ? g.hh * (1 - dx / g.hw) : g.no.tipo === 'tarefa' ? g.hh : Math.sqrt(Math.max(0, g.hw * g.hw - dx * dx));
+  const t = g.no.tipo;
+  const desl = t === 'decisao' ? g.hh * (1 - dx / g.hw) : t === 'tarefa' ? g.hh : t === 'excecao' ? (dx <= g.hw - g.k ? g.hh : (g.hh * (g.hw - dx)) / g.k) : Math.sqrt(Math.max(0, g.hw * g.hw - dx * dx));
   return lado === 'topo' ? g.cy - desl : g.cy + desl;
 }
 function bordaX(g: Geo, y: number, lado: 'esq' | 'dir'): number {
   const dy = Math.min(Math.abs(y - g.cy), g.hh);
-  const desl = g.no.tipo === 'decisao' ? g.hw * (1 - dy / g.hh) : g.no.tipo === 'tarefa' ? g.hw : Math.sqrt(Math.max(0, g.hh * g.hh - dy * dy));
+  const t = g.no.tipo;
+  const desl = t === 'decisao' ? g.hw * (1 - dy / g.hh) : t === 'tarefa' ? g.hw : t === 'excecao' ? g.hw - (g.k * dy) / g.hh : Math.sqrt(Math.max(0, g.hh * g.hh - dy * dy));
   return lado === 'esq' ? g.cx - desl : g.cx + desl;
 }
 
@@ -104,6 +179,11 @@ function rotear(de: string, para: string, indice: number): Pt[] {
   }
   const abaixo = B.no.linha > A.no.linha;
   const ya = A.cy + desl(de, ladoA), yb = B.cy + desl(para, ladoB);
+  if (LIGACOES[indice]?.via === 'lado') {
+    const xa = bordaX(A, ya, ladoA), xb = bordaX(B, yb, ladoB), xm = (xa + xb) / 2;
+    const z: Pt[] = [[xa, ya], [xm, ya], [xm, yb], [xb, yb]];
+    if (livre(z, ign)) { marcar(de, ladoA); marcar(para, ladoB); return z; }
+  }
   const candA: Pt[] = [[bordaX(A, ya, ladoA), ya], [B.cx, ya], [B.cx, bordaY(B, B.cx, abaixo ? 'topo' : 'base')]];
   if (livre(candA, ign)) { marcar(de, ladoA); return candA; }
   const candB: Pt[] = [[A.cx, bordaY(A, A.cx, abaixo ? 'base' : 'topo')], [A.cx, yb], [bordaX(B, yb, ladoB), yb]];
@@ -128,9 +208,10 @@ const ligacoes = LIGACOES.map((l, i) => {
 });
 
 // Dados para o detalhe (cliente)
-const titulo = (id: string) => NOS.find((n) => n.id === id)!.titulo;
+const tituloDe = (id: string) => NOS.find((n) => n.id === id)!.titulo;
 const dados = NOS.map((n) => ({
   id: n.id,
+  tipo: n.tipo,
   titulo: n.titulo,
   situacao: ROTULO_SITUACAO[n.situacao],
   fase: n.fase,
@@ -138,20 +219,28 @@ const dados = NOS.map((n) => ({
   oQue: n.oQue,
   valida: n.valida,
   quem: n.quem,
-  anteriores: LIGACOES.filter((l) => l.para === n.id).map((l) => ({ id: l.de, titulo: titulo(l.de), rotulo: l.rotulo ?? '' })),
-  proximas: LIGACOES.filter((l) => l.de === n.id).map((l) => ({ id: l.para, titulo: titulo(l.para), rotulo: l.rotulo ?? '' })),
+  anteriores: LIGACOES.filter((l) => l.para === n.id).map((l) => ({ id: l.de, titulo: tituloDe(l.de), rotulo: l.rotulo ?? '' })),
+  proximas: LIGACOES.filter((l) => l.de === n.id).map((l) => ({ id: l.para, titulo: tituloDe(l.para), rotulo: l.rotulo ?? '' })),
   telas: n.telas,
+  excecao: n.excecao ?? null,
+  subfluxo: subDe(n.id)?.id ?? null,
 }));
 const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
+const idDetalhe = `${idPrefixo}-detalhe`;
+const proximasTxt = (id: string) => LIGACOES.filter((l) => l.de === id).map((l) => (NOS.find((x) => x.id === l.para)?.titulo ?? l.para) + (l.rotulo ? ' (' + l.rotulo + ')' : '')).join('; ') || '—';
+const hex = (g: Geo, m: number) => {
+  const w = g.hw + m, h = g.hh + m, k = g.k;
+  return `M${g.cx - w} ${g.cy} L${g.cx - w + k} ${g.cy - h} L${g.cx + w - k} ${g.cy - h} L${g.cx + w} ${g.cy} L${g.cx + w - k} ${g.cy + h} L${g.cx - w + k} ${g.cy + h} Z`;
+};
 ---
-<div class="fx" data-fluxo>
+<div class="fx" data-fluxo data-fx-titulo-pdf={tituloDiagrama}>
   <div class="fx-exportar cart-nao-imprimir">
     <button type="button" class="primary" data-fx-pdf>Exportar em PDF</button>
     <span class="muted">Abre a impressão do navegador: em Destino, escolha <strong>Salvar como PDF</strong>. O PDF traz o diagrama e o detalhe de cada etapa.</span>
   </div>
-  <p class="fx-so-impressao fx-cab-impressao"><strong>{MARCA.nome} — Fluxo do sistema</strong> · {municipioAtivo().nomeExibicao} · <span data-fx-data-impressao></span></p>
-  <section class="fx-legenda" aria-labelledby="fx-leg-t">
-    <h2 id="fx-leg-t">Como ler o diagrama</h2>
+  <p class="fx-so-impressao fx-cab-impressao"><strong>{MARCA.nome} — {tituloDiagrama}</strong> · {municipioAtivo().nomeExibicao} · <span data-fx-data-impressao></span></p>
+  <section class="fx-legenda" aria-labelledby={`${idPrefixo}-leg-t`}>
+    <h2 id={`${idPrefixo}-leg-t`}>Como ler o diagrama</h2>
     <div class="fx-leg-grupos">
       <div>
         <h3>Formas</h3>
@@ -159,6 +248,7 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
           <li><svg viewBox="0 0 28 28" width="26" height="26" aria-hidden="true"><circle cx="14" cy="14" r="11" class="fx-l-forma fx-l-fino"/></svg> Início (borda fina)</li>
           <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><rect x="3" y="5" width="30" height="18" rx="5" class="fx-l-forma"/></svg> Etapa</li>
           <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><path d="M18 2 L33 14 L18 26 L3 14 Z" class="fx-l-forma"/></svg> Decisão (sim ou não)</li>
+          <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><path d="M2 14 L9 4 L27 4 L34 14 L27 24 L9 24 Z" class="fx-l-forma fx-l-exc"/></svg> Exceção (aceita e registrada)</li>
           <li><svg viewBox="0 0 28 28" width="26" height="26" aria-hidden="true"><circle cx="14" cy="14" r="10" class="fx-l-forma fx-l-grosso"/></svg> Fim (borda grossa)</li>
         </ul>
       </div>
@@ -178,14 +268,26 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
         </ul>
       </div>
     </div>
-    <p class="muted">As colunas são as áreas (raias) e o tempo corre de cima para baixo. Clique em uma caixa, ou use Tab e Enter, para ver o que é feito, processado e validado e abrir a tela correspondente.</p>
+    <p class="muted">As colunas são as áreas (raias) e o tempo corre de cima para baixo. Clique em uma caixa, ou use Tab e Enter, para ver o que é feito, processado e validado e abrir a tela correspondente.{geral ? ' Caixas com "+ detalhe" têm um fluxo detalhado próprio.' : ''}</p>
   </section>
 
+  {geral && (
+    <section class="fx-subs" aria-labelledby={`${idPrefixo}-subs-t`}>
+      <h2 id={`${idPrefixo}-subs-t`}>Fluxos detalhados</h2>
+      <p class="muted">Algumas caixas têm um processo próprio. Cada fluxo detalhado mostra todas as etapas, as exceções aceitas e o que fica registrado.</p>
+      <ul>
+        {SUBFLUXOS.map((s) => (
+          <li><a href={`/plataforma/fluxo/${s.id}/`} data-astro-reload>{s.titulo}</a> <span class="muted">(detalha: {tituloDe(s.no)})</span></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
   <div class="fx-quadro">
-    <svg class="fx-svg" viewBox={`0 0 ${LARGURA} ${ALTURA}`} role="group" aria-label="Diagrama do fluxo do sistema, do início ao fim, em raias" preserveAspectRatio="xMidYMin meet">
+    <svg class="fx-svg" viewBox={`0 0 ${LARGURA} ${ALTURA.toFixed(0)}`} role="group" aria-label={`Diagrama: ${tituloDiagrama}, do início ao fim, em raias`} preserveAspectRatio="xMidYMin meet">
       <defs>
-        <marker id="fx-m-fluxo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="fx-seta-fluxo"/></marker>
-        <marker id="fx-m-apoio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="fx-seta-apoio"/></marker>
+        <marker id={`${idPrefixo}-m-fluxo`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="fx-seta-fluxo"/></marker>
+        <marker id={`${idPrefixo}-m-apoio`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="fx-seta-apoio"/></marker>
       </defs>
       {RAIAS.map((r, i) => (
         <g>
@@ -195,22 +297,16 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
       ))}
       <line x1="0" y1={TOPO} x2={LARGURA} y2={TOPO} class="fx-raia-linha"/>
       {ligacoes.map((l) => (
-        <path d={l.d} class={`fx-lin fx-lin-${l.tipo}`} marker-end={`url(#fx-m-${l.tipo})`} fill="none"/>
+        <path d={l.d} class={`fx-lin fx-lin-${l.tipo}`} marker-end={`url(#${idPrefixo}-m-${l.tipo})`} fill="none"/>
       ))}
       {ligacoes.filter((l) => l.lab).map((l) => (
         <text x={l.lab!.x} y={l.lab!.y} text-anchor={l.lab!.ancora} class="fx-rot-lig">{l.rotulo}</text>
       ))}
       {NOS.map((n) => {
         const g = geo.get(n.id)!;
-        const linhas = quebrar(n.titulo, maxPorTipo[n.tipo]);
-        const fs = tamFonte[n.tipo];
-        const passo = fs + 2;
-        const altBloco = linhas.length * passo + 12;
-        const y0 = g.cy - altBloco / 2 + fs;
-        const yRot = y0 + (linhas.length - 1) * passo + 12;
         const m = 5;
         return (
-          <g class="fx-no" role="button" tabindex="0" data-no={n.id} aria-label={`${n.titulo}: ${ROTULO_SITUACAO[n.situacao]}`}>
+          <g class="fx-no" role="button" tabindex="0" data-no={n.id} aria-label={`${n.tipo === 'excecao' ? 'Exceção: ' : ''}${n.titulo}: ${ROTULO_SITUACAO[n.situacao]}`}>
             {n.tipo === 'decisao'
               ? <>
                   <path d={`M${g.cx} ${g.cy - g.hh - m} L${g.cx + g.hw + m} ${g.cy} L${g.cx} ${g.cy + g.hh + m} L${g.cx - g.hw - m} ${g.cy} Z`} class="fx-foco"/>
@@ -221,20 +317,27 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
                     <rect x={g.cx - g.hw - m} y={g.cy - g.hh - m} width={2 * g.hw + 2 * m} height={2 * g.hh + 2 * m} rx="13" class="fx-foco"/>
                     <rect x={g.cx - g.hw} y={g.cy - g.hh} width={2 * g.hw} height={2 * g.hh} rx="9" class={`fx-forma fx-s-${n.situacao}`}/>
                   </>
-                : <>
-                    <circle cx={g.cx} cy={g.cy} r={g.hw + m} class="fx-foco"/>
-                    <circle cx={g.cx} cy={g.cy} r={g.hw} class={`fx-forma fx-s-${n.situacao} ${n.tipo === 'fim' ? 'fx-grosso' : 'fx-fino'}`}/>
-                  </>}
-            {linhas.map((t, i) => <text x={g.cx} y={y0 + i * passo} text-anchor="middle" class="fx-tit" style={`font-size:${fs}px`}>{t}</text>)}
-            <text x={g.cx} y={yRot} text-anchor="middle" class="fx-sit">{rotuloSit[n.situacao]}</text>
+                : n.tipo === 'excecao'
+                  ? <>
+                      <path d={hex(g, m)} class="fx-foco"/>
+                      <path d={hex(g, 0)} class="fx-forma fx-exc"/>
+                    </>
+                  : <>
+                      <circle cx={g.cx} cy={g.cy} r={g.hw + m} class="fx-foco"/>
+                      <circle cx={g.cx} cy={g.cy} r={g.hw} class={`fx-forma fx-s-${n.situacao} ${n.tipo === 'fim' ? 'fx-grosso' : 'fx-fino'}`}/>
+                    </>}
+            {g.linhas.map((t, i) => <text x={g.cx} y={g.cy + g.yTit + i * g.passo} text-anchor="middle" class="fx-tit" style={`font-size:${g.fs}px`}>{t}</text>)}
+            {n.tipo === 'excecao' && <text x={g.cx} y={g.cy + g.yExc} text-anchor="middle" class="fx-exc-rot" style={`font-size:${9 * E}px`}>exceção</text>}
+            <text x={g.cx} y={g.cy + g.ySit} text-anchor="middle" class="fx-sit" style={`font-size:${9.5 * E}px`}>{rotuloSit[n.situacao]}</text>
+            {g.temSub && <text x={g.cx} y={g.cy + g.ySelo} text-anchor="middle" class="fx-selo-sub" style={`font-size:${8.5 * E}px`}>+ detalhe</text>}
           </g>
         );
       })}
     </svg>
   </div>
 
-  <section class="fx-lista" aria-labelledby="fx-lista-t">
-    <h2 id="fx-lista-t">Lista das etapas</h2>
+  <section class="fx-lista" aria-labelledby={`${idPrefixo}-lista-t`}>
+    <h2 id={`${idPrefixo}-lista-t`}>Lista das etapas</h2>
     <p class="muted">As mesmas etapas do diagrama, por área e na ordem do tempo. Para leitura, impressão e leitor de tela.</p>
     {RAIAS.map((r) => (
       <div class="fx-lista-raia">
@@ -243,8 +346,10 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
         <ol>
           {NOS.filter((n) => n.raia === r.id).sort((a, b) => a.linha - b.linha).map((n) => (
             <li>
-              <a href="#fluxo-detalhe" role="button" data-abrir={n.id}>{n.titulo}</a>
+              <a href={`#${idDetalhe}`} role="button" data-abrir={n.id}>{n.titulo}</a>
               <span class={`fx-pilula fx-p-${n.situacao}`}>{rotuloSit[n.situacao]}</span>
+              {n.tipo === 'excecao' && <span class="fx-pilula fx-p-exc">exceção</span>}
+              {subDe(n.id) && <a class="fx-ver-sub" href={`/plataforma/fluxo/${subDe(n.id)!.id}/`} data-astro-reload aria-label={`Ver fluxo detalhado: ${n.titulo}`}>Ver fluxo detalhado</a>}
             </li>
           ))}
         </ol>
@@ -260,27 +365,35 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
         <p>{r.descricao}</p>
         {NOS.filter((n) => n.raia === r.id).sort((a, b) => a.linha - b.linha).map((n) => (
           <article class="fx-anexo-no">
-            <h4>{n.titulo}</h4>
+            <h4>{n.titulo}{n.tipo === 'excecao' ? ' (exceção)' : ''}</h4>
             <p><strong>Situação:</strong> {ROTULO_SITUACAO[n.situacao]} · {n.fase}</p>
             <p><strong>O que é feito:</strong> {n.oQue}</p>
-            <p><strong>O que é validado:</strong> {n.valida.join('; ')}.</p>
+            <p><strong>O que é validado:</strong> {n.valida.length ? n.valida.join('; ') + '.' : '—'}</p>
+            {n.excecao && <p><strong>Exceção aceita quando:</strong> {n.excecao.aceitaQuando}</p>}
+            {n.excecao && <p><strong>O que fica registrado:</strong> {n.excecao.registro}</p>}
             <p><strong>Quem:</strong> {n.quem}</p>
-            <p><strong>Próximas etapas:</strong> {LIGACOES.filter((l) => l.de === n.id).map((l) => (NOS.find((x) => x.id === l.para)?.titulo ?? l.para) + (l.rotulo ? ' (' + l.rotulo + ')' : '')).join('; ') || '—'}</p>
+            <p><strong>Próximas etapas:</strong> {proximasTxt(n.id)}</p>
             <p><strong>Telas:</strong> {n.telas.map((t) => t.rotulo).join('; ')}</p>
+            {subDe(n.id) && <p><strong>Fluxo detalhado:</strong> {subDe(n.id)!.titulo}</p>}
           </article>
         ))}
       </div>
     ))}
   </section>
 
-  <dialog id="fluxo-detalhe" class="cart-dialogo fx-dialogo" aria-labelledby="fx-d-titulo">
-    <h2 id="fx-d-titulo" data-fx-titulo></h2>
+  <dialog id={idDetalhe} class="cart-dialogo fx-dialogo" aria-labelledby={`${idPrefixo}-d-titulo`}>
+    <h2 id={`${idPrefixo}-d-titulo`} data-fx-titulo></h2>
     <p data-fx-situacao></p>
     <p data-fx-raia></p>
     <h3>O que é feito</h3>
     <p data-fx-oque></p>
     <h3>O que é validado</h3>
     <ul data-fx-valida></ul>
+    <div data-fx-exc hidden>
+      <h3>Exceção</h3>
+      <p><strong>Aceita quando:</strong> <span data-fx-exc-quando></span></p>
+      <p><strong>O que fica registrado:</strong> <span data-fx-exc-registro></span></p>
+    </div>
     <h3>Quem</h3>
     <p data-fx-quem></p>
     <h3>Etapas anteriores</h3>
@@ -289,29 +402,30 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
     <ul data-fx-prox></ul>
     <h3>Telas</h3>
     <ul data-fx-telas class="fx-telas"></ul>
+    <p data-fx-sub hidden><a class="button primary" data-astro-reload href="/plataforma/projetos-fluxo/">Ver fluxo detalhado</a></p>
     <div class="fx-d-acoes"><button type="button" data-fx-fechar>Fechar</button></div>
   </dialog>
-  <script type="application/json" id="fluxo-dados" set:html={dadosJson}></script>
+  <script type="application/json" data-fx-dados set:html={dadosJson}></script>
 </div>
 
 <script>
 document.addEventListener('astro:page-load', () => {
   const raiz = document.querySelector<HTMLElement>('[data-fluxo]');
-  const dlg = document.querySelector<HTMLDialogElement>('#fluxo-detalhe');
-  const fonte = document.querySelector('#fluxo-dados');
+  const dlg = raiz?.querySelector<HTMLDialogElement>('dialog') ?? null;
+  const fonte = raiz?.querySelector('[data-fx-dados]') ?? null;
   if (!raiz || !dlg || !fonte || raiz.dataset.pronto) return;
   raiz.querySelector<HTMLButtonElement>('[data-fx-pdf]')?.addEventListener('click', () => {
     const hoje = new Date();
     const alvo = raiz.querySelector('[data-fx-data-impressao]');
     if (alvo) alvo.textContent = 'gerado em ' + hoje.toLocaleDateString('pt-BR');
     const tituloAntes = document.title;
-    document.title = 'Fluxo do sistema - GovNexa - ' + hoje.toISOString().slice(0, 10);
+    document.title = (raiz.dataset.fxTituloPdf || 'Fluxo do sistema') + ' - GovNexa - ' + hoje.toISOString().slice(0, 10);
     window.addEventListener('afterprint', () => { document.title = tituloAntes; }, { once: true });
     window.print();
   });
   raiz.dataset.pronto = 'sim';
   interface Lig { id: string; titulo: string; rotulo: string }
-  interface No { id: string; titulo: string; situacao: string; fase: string; raia: string; oQue: string; valida: string[]; quem: string; anteriores: Lig[]; proximas: Lig[]; telas: { rotulo: string; url: string }[] }
+  interface No { id: string; tipo: string; titulo: string; situacao: string; fase: string; raia: string; oQue: string; valida: string[]; quem: string; anteriores: Lig[]; proximas: Lig[]; telas: { rotulo: string; url: string }[]; excecao: { aceitaQuando: string; registro: string } | null; subfluxo: string | null }
   const nos: No[] = JSON.parse(fonte.textContent || '[]');
   const q = <T extends HTMLElement>(s: string) => dlg.querySelector<T>(s)!;
 
@@ -344,6 +458,10 @@ document.addEventListener('astro:page-load', () => {
     q('[data-fx-oque]').textContent = n.oQue;
     itens(q('[data-fx-valida]'), n.valida);
     q('[data-fx-quem]').textContent = n.quem;
+    const exc = q('[data-fx-exc]');
+    exc.hidden = !n.excecao;
+    q('[data-fx-exc-quando]').textContent = n.excecao?.aceitaQuando ?? '';
+    q('[data-fx-exc-registro]').textContent = n.excecao?.registro ?? '';
     vizinhas(q('[data-fx-ant]'), n.anteriores);
     vizinhas(q('[data-fx-prox]'), n.proximas);
     const ul = q('[data-fx-telas]');
@@ -358,6 +476,9 @@ document.addEventListener('astro:page-load', () => {
       li.append(a);
       ul.append(li);
     }
+    const sub = q('[data-fx-sub]');
+    sub.hidden = !n.subfluxo;
+    if (n.subfluxo) q<HTMLAnchorElement>('[data-fx-sub] a').href = '/plataforma/fluxo/' + encodeURIComponent(n.subfluxo) + '/';
   };
   const abrir = (id: string) => {
     preencher(id);

@@ -1,0 +1,26 @@
+---
+import '../../../styles/carteira.css';
+import Platform from '../../../layouts/Platform.astro';
+import Fluxo from '../../../components/fluxo/Fluxo.astro';
+import { ROTULO_SITUACAO, NOS as NOS_GERAIS } from '../../../lib/govnexa/fluxo.ts';
+import { SUBFLUXOS } from '../../../lib/govnexa/subfluxos.ts';
+import type { Subfluxo } from '../../../lib/govnexa/subfluxos.ts';
+
+export function getStaticPaths() {
+  return SUBFLUXOS.map((s) => ({ params: { id: s.id }, props: { sub: s } }));
+}
+const { sub } = Astro.props as { sub: Subfluxo };
+const etapaGeral = NOS_GERAIS.find((n) => n.id === sub.no);
+const excecoes = sub.nos.filter((n) => n.tipo === 'excecao').length;
+---
+<Platform title={`Fluxo detalhado: ${sub.titulo}`} slug="projetos-fluxo">
+  <div class="section-head">
+    <div>
+      <h1>Fluxo detalhado: {sub.titulo}</h1>
+      <p class="muted">{sub.resumo}</p>
+      <p class="muted"><a href="/plataforma/projetos-fluxo/" data-astro-reload>← Voltar ao fluxo do sistema</a>{etapaGeral ? ` · Detalha a etapa "${etapaGeral.titulo}" do fluxo do sistema.` : ''}</p>
+      <p class="muted">Exceção pode ser aceita, mas sempre fica registrada (motivo, quem aceitou e quando).{excecoes > 0 ? ' ' : ''}{excecoes > 0 && <a href="/plataforma/projetos-log/?excecoes=1" data-astro-reload>Ver exceções no Histórico</a>}</p>
+    </div>
+  </div>
+  <Fluxo raias={sub.raias} nos={sub.nos} ligacoes={sub.ligacoes} rotuloSituacao={ROTULO_SITUACAO} idPrefixo={`sub-${sub.id}`} titulo={`Fluxo detalhado: ${sub.titulo}`} />
+</Platform>
