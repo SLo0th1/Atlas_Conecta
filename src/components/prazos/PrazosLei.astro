@@ -1,0 +1,187 @@
+---
+import '../../styles/carteira.css';
+import { feriados, avisoFeriados, formatarData } from '../../lib/prazos/calendario.ts';
+import { METAS, OBSERVACAO_METAS, PRAZOS } from '../../lib/prazos/lei14133.ts';
+import { municipioAtivo } from '../../lib/municipio-ativo.ts';
+
+const muni = municipioAtivo();
+const anoInicial = new Date().getFullYear();
+const lista = feriados(anoInicial, muni.codigo_ibge);
+const ROTULO_ABRANGENCIA = { nacional: 'Nacional', estadual: 'Estadual', municipal: 'Municipal' } as const;
+const tipoTexto = (t: string) => (t === 'piso' ? 'mínimo (piso)' : 'máximo (teto)');
+const contagemTexto = (c: string) => (c === 'uteis' ? 'dias úteis' : 'dias corridos');
+---
+<div data-cart data-prazos data-municipio={muni.codigo_ibge}>
+  <p class="cart-aviso" role="note">Conferir no texto oficial antes de usar em produção. {OBSERVACAO_METAS}</p>
+
+  <section aria-labelledby="pz-h-tabela">
+    <h2 id="pz-h-tabela">Prazos da lei e metas internas</h2>
+    <div class="pz-tabela-caixa">
+      <table class="pz-tabela" data-pz-tabela>
+        <thead>
+          <tr><th scope="col">Prazo</th><th scope="col">Tipo</th><th scope="col">Prazo da lei</th><th scope="col">Meta interna</th><th scope="col">Referência</th><th scope="col">Observação</th></tr>
+        </thead>
+        <tbody>
+          {PRAZOS.map((pz) => (
+            <tr data-pz-linha data-id={pz.id}>
+              <th scope="row" data-rotulo="Prazo">{pz.nome}<small>Quem cumpre: {pz.quemCumpre}</small></th>
+              <td data-rotulo="Tipo">{tipoTexto(pz.tipo)}</td>
+              <td data-rotulo="Prazo da lei">{pz.dias} {contagemTexto(pz.contagem)}</td>
+              <td data-rotulo="Meta interna">{METAS[pz.id] !== undefined && pz.tipo === 'teto' ? `${METAS[pz.id]} ${contagemTexto(pz.contagem)}` : 'Sem meta (não pode ser encurtado)'}</td>
+              <td data-rotulo="Referência">{pz.referencia}</td>
+              <td data-rotulo="Observação">{pz.observacao}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="pz-calc" aria-labelledby="pz-h-calc">
+    <h2 id="pz-h-calc">Calculadora de prazo</h2>
+    <p class="muted">Escolha o prazo e a data de início. A contagem não inclui o dia do início e só considera dias úteis (sem sábados, domingos e feriados).</p>
+    <div class="pz-campos">
+      <label>Prazo
+        <select id="pz-prazo" data-pz-prazo>
+          {PRAZOS.map((pz) => <option value={pz.id}>{pz.nome} ({tipoTexto(pz.tipo)})</option>)}
+        </select>
+      </label>
+      <label>Data de início
+        <input id="pz-inicio" type="date" data-pz-inicio />
+      </label>
+      <label data-pz-so-piso hidden>Data pretendida de abertura
+        <input id="pz-abertura" type="date" data-pz-abertura />
+      </label>
+      <label data-pz-so-teto>Concluído em (opcional)
+        <input id="pz-conclusao" type="date" data-pz-conclusao />
+      </label>
+      <label data-pz-so-teto>Hoje (para simulação)
+        <input id="pz-hoje" type="date" data-pz-hoje />
+      </label>
+    </div>
+    <div class="pz-resultado" data-pz-resultado role="status" aria-live="polite" data-estado="vazio">
+      <p class="pz-sit" data-pz-situacao>Informe a data de início para ver o resultado.</p>
+      <dl class="pz-dados" data-pz-dados hidden>
+        <div><dt>Limite da lei</dt><dd data-pz-legal></dd></div>
+        <div data-pz-linha-meta><dt>Meta interna</dt><dd data-pz-meta></dd></div>
+        <div data-pz-linha-restam><dt>Dias úteis restantes até o limite da lei</dt><dd data-pz-restam></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section aria-labelledby="pz-h-feriados">
+    <h2 id="pz-h-feriados">Feriados de <span data-pz-ano-titulo>{anoInicial}</span></h2>
+    <label class="pz-ano">Ano
+      <input id="pz-ano" type="number" min="2000" max="2100" value={anoInicial} data-pz-ano />
+    </label>
+    <p class="muted">Feriados nacionais, estaduais e municipais usados na contagem de dias úteis em {muni.nome}. {avisoFeriados(muni.codigo_ibge)}.</p>
+    <ul class="pz-feriados" data-pz-feriados>
+      {lista.map((f) => <li><strong>{formatarData(f.data)}</strong> · {f.nome} <span class="pill">{ROTULO_ABRANGENCIA[f.abrangencia]}</span></li>)}
+    </ul>
+  </section>
+</div>
+
+<script>
+import { feriados, formatarData } from '../../lib/prazos/calendario.ts';
+import { PRAZOS, avaliarPrazo, validarPiso } from '../../lib/prazos/lei14133.ts';
+
+const ROTULO = { nacional: 'Nacional', estadual: 'Estadual', municipal: 'Municipal' } as const;
+const ROTULO_SITUACAO: Record<string, string> = {
+  no_prazo: 'No prazo',
+  passou_meta: 'Passou da meta interna — atenção',
+  passou_lei: 'Passou do limite da lei — alerta',
+  concluido_no_prazo: 'Concluído no prazo',
+  concluido_apos_meta: 'Concluído depois da meta interna — atenção',
+  concluido_apos_lei: 'Concluído depois do limite da lei — alerta',
+};
+const ESTADO: Record<string, string> = {
+  no_prazo: 'ok', concluido_no_prazo: 'ok', passou_meta: 'atencao', concluido_apos_meta: 'atencao', passou_lei: 'alerta', concluido_apos_lei: 'alerta',
+};
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-prazos]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  const municipio = Number(raiz.dataset.municipio);
+  const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+  const selPrazo = q<HTMLSelectElement>('[data-pz-prazo]');
+  const inInicio = q<HTMLInputElement>('[data-pz-inicio]');
+  const inAbertura = q<HTMLInputElement>('[data-pz-abertura]');
+  const inConclusao = q<HTMLInputElement>('[data-pz-conclusao]');
+  const inHoje = q<HTMLInputElement>('[data-pz-hoje]');
+  const caixa = q<HTMLElement>('[data-pz-resultado]');
+  const sit = q<HTMLElement>('[data-pz-situacao]');
+  const dados = q<HTMLElement>('[data-pz-dados]');
+
+  const hojeLocal = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  inHoje.value = hojeLocal();
+
+  const calcular = () => {
+    const prazo = PRAZOS.find((x) => x.id === selPrazo.value)!;
+    const piso = prazo.tipo === 'piso';
+    raiz.querySelectorAll<HTMLElement>('[data-pz-so-piso]').forEach((e) => (e.hidden = !piso));
+    raiz.querySelectorAll<HTMLElement>('[data-pz-so-teto]').forEach((e) => (e.hidden = piso));
+    if (!inInicio.value) {
+      caixa.dataset.estado = 'vazio';
+      sit.textContent = 'Informe a data de início para ver o resultado.';
+      dados.hidden = true;
+      return;
+    }
+    dados.hidden = false;
+    const legal = q<HTMLElement>('[data-pz-legal]');
+    const meta = q<HTMLElement>('[data-pz-meta]');
+    const restam = q<HTMLElement>('[data-pz-restam]');
+    if (piso) {
+      const minimo = validarPiso(prazo.id, inInicio.value, inAbertura.value || '0000-00-00', municipio);
+      legal.textContent = `${formatarData(minimo.minimo)} (data mínima de abertura)`;
+      meta.textContent = 'Sem meta: prazo mínimo não pode ser encurtado';
+      q<HTMLElement>('[data-pz-linha-restam]').hidden = true;
+      if (!inAbertura.value) {
+        caixa.dataset.estado = 'vazio';
+        sit.textContent = `A abertura não pode ser antes de ${formatarData(minimo.minimo)}. Informe a data pretendida de abertura para conferir.`;
+      } else {
+        caixa.dataset.estado = minimo.ok ? 'ok' : 'alerta';
+        sit.textContent = (minimo.ok ? 'No prazo. ' : 'Alerta — abertura cedo demais. ') + minimo.texto;
+      }
+      return;
+    }
+    q<HTMLElement>('[data-pz-linha-restam]').hidden = false;
+    const hoje = inHoje.value || hojeLocal();
+    const av = avaliarPrazo(prazo.id, inInicio.value, hoje, municipio, inConclusao.value || undefined);
+    legal.textContent = formatarData(av.limiteLegal);
+    meta.textContent = av.limiteMeta ? formatarData(av.limiteMeta) : 'Sem meta interna cadastrada';
+    restam.textContent = av.diasRestantesLegais >= 0 ? String(av.diasRestantesLegais) : `${Math.abs(av.diasRestantesLegais)} em atraso`;
+    caixa.dataset.estado = ESTADO[av.situacao];
+    sit.textContent = `${ROTULO_SITUACAO[av.situacao]}. ${av.texto}`;
+  };
+  [selPrazo, inInicio, inAbertura, inConclusao, inHoje].forEach((e) => {
+    e.addEventListener('input', calcular);
+    e.addEventListener('change', calcular);
+  });
+  calcular();
+
+  const inAno = q<HTMLInputElement>('[data-pz-ano]');
+  const lista = q<HTMLElement>('[data-pz-feriados]');
+  const titulo = q<HTMLElement>('[data-pz-ano-titulo]');
+  inAno.addEventListener('input', () => {
+    const ano = Number(inAno.value);
+    if (!Number.isInteger(ano) || ano < 2000 || ano > 2100) return;
+    titulo.textContent = String(ano);
+    lista.replaceChildren(
+      ...feriados(ano, municipio).map((f) => {
+        const li = document.createElement('li');
+        const forte = document.createElement('strong');
+        forte.textContent = formatarData(f.data);
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.textContent = ROTULO[f.abrangencia];
+        li.append(forte, ` · ${f.nome} `, pill);
+        return li;
+      }),
+    );
+  });
+});
+</script>

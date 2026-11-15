@@ -459,6 +459,43 @@ test('govnexa: paginação compacta com reticências',async({page})=>{
  await expect(n.locator('button').first()).toHaveText('1');await expect(n.locator('.pag-reticencias')).toHaveCount(1);expect(total).toBeLessThanOrEqual(7);
 });
 
+test('govnexa: prazos da Lei 14.133',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const resp=await page.goto('/plataforma/licitacoes-prazos/');
+ expect(resp?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveCount(1);
+ await expect(page.locator('h1')).toHaveText('Prazos da Lei 14.133');
+ await expect(page.locator('[data-pz-tabela] tbody tr')).toHaveCount(11);
+ // teto: decisão do recurso, início 13/11/2026 -> limite 30/11 e meta 23/11 (20/11 é feriado)
+ await page.locator('#pz-prazo').selectOption('decisao_recurso');
+ await page.locator('#pz-inicio').fill('2026-11-13');
+ await page.locator('#pz-hoje').fill('2026-11-20');
+ await expect(page.locator('[data-pz-legal]')).toHaveText('30/11/2026');
+ await expect(page.locator('[data-pz-meta]')).toHaveText('23/11/2026');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('No prazo');
+ await page.locator('#pz-hoje').fill('2026-11-25');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('Passou da meta interna — atenção');
+ await page.locator('#pz-hoje').fill('2026-12-02');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('Passou do limite da lei — alerta');
+ // piso: abertura cedo demais mostra o aviso
+ await page.locator('#pz-prazo').selectOption('publicidade_bens_menor_preco');
+ await page.locator('#pz-abertura').fill('2026-11-16');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('A abertura não pode ser antes de 26/11/2026');
+ await page.locator('#pz-abertura').fill('2026-11-26');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('No prazo');
+ // feriados do ano
+ await page.locator('#pz-ano').fill('2026');
+ await expect(page.locator('[data-pz-feriados]')).toContainText('Aniversário de Goiânia');
+ await expect(page.locator('[data-pz-feriados]')).toContainText('20/11/2026');
+ // sem rolagem horizontal em 1280 e 390px
+ for(const width of [1280,390]){await page.setViewportSize({width,height:900});await page.goto('/plataforma/licitacoes-prazos/');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${width}px`).toBeTruthy();}
+ // axe claro e escuro
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/licitacoes-prazos/');
+ await page.locator('#pz-inicio').fill('2026-11-13');
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`prazos ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
 test('govnexa: reunião semanal',async({page})=>{
  await page.setViewportSize({width:1280,height:900});
  const resposta=await page.goto('/plataforma/projetos-reuniao/');
