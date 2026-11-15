@@ -1,7 +1,7 @@
 // Testes do motor de movimentação (regras de etapa, pendência, passo e campos).
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { aplicarEvento, aplicarEventos, portaoPara } from '../../src/lib/carteira/movimentacao.ts';
+import { aplicarEvento, aplicarEventos, criarProjeto, portaoPara } from '../../src/lib/carteira/movimentacao.ts';
 import type { Evento } from '../../src/lib/carteira/movimentacao.ts';
 import type { CodigoMacroetapa, Projeto } from '../../src/lib/carteira/tipos.ts';
 
@@ -195,4 +195,51 @@ test('aplicarEventos aplica em sequência com ids únicos e não muta a carteira
   assert.deepEqual(carteira, antes);
   const falha = aplicarEventos(carteira, [mover('01')]);
   assert.ok(!falha.ok);
+});
+
+test('criarProjeto: sem nome ou órgão é recusado e lista o que falta', () => {
+  const ctx = { autor: 'Ana', em: '2026-11-15T10:00:00Z', proximoCodigo: 15, origem: 'ficha' as const };
+  const r = criarProjeto({ nome: '  ', orgao: '' }, ctx);
+  assert.deepEqual(r, { ok: false, erro: 'Faltam dados obrigatórios.', faltando: ['Nome do projeto', 'Órgão'] });
+  const so = criarProjeto({ nome: 'Ponte', orgao: '' }, ctx);
+  assert.ok(!so.ok && so.faltando.length === 1 && so.faltando[0] === 'Órgão');
+});
+
+test('criarProjeto: id, macroetapa 00, compromisso padrão, pendências e histórico criado', () => {
+  const ctx = { autor: 'Ana', em: '2026-11-15T10:00:00Z', proximoCodigo: 15, origem: 'ficha' as const };
+  const r = criarProjeto({ nome: ' Nova UBS ', orgao: 'SMS' }, ctx);
+  assert.ok(r.ok);
+  assert.equal(r.projeto.id, 'P-15');
+  assert.equal(r.projeto.codigo_legado, 15);
+  assert.equal(r.projeto.nome, 'Nova UBS');
+  assert.equal(r.projeto.macroetapa, '00');
+  assert.equal(r.projeto.compromisso, 'ideia');
+  assert.deepEqual(r.projeto.origem, { aba: 'CADASTRO', linha: 0 });
+  assert.deepEqual(r.projeto.sei, []);
+  assert.deepEqual(r.projeto.por_ano, {});
+  assert.equal(r.projeto.valores.obra, null);
+  assert.equal(r.projeto.recurso.origem, null);
+  assert.equal(r.projeto.datas.encerramento, null);
+  assert.deepEqual(r.projeto.pendencias, ['Sem região', 'Sem valor de obra', 'Sem origem do valor']);
+  assert.equal(r.historico.length, 1);
+  assert.equal(r.historico[0].tipo, 'criado');
+  assert.equal(r.historico[0].descricao, 'Projeto incluído no cadastro');
+  assert.equal(r.historico[0].projeto_id, 'P-15');
+  assert.deepEqual(r.historico[0].campos?.map((c) => c.campo), ['nome', 'orgao', 'compromisso']);
+  assert.ok(r.historico[0].campos!.every((c) => c.antes === null));
+});
+
+test('criarProjeto: campos preenchidos entram sem pendências e compromisso inválido vira ideia', () => {
+  const ctx = { autor: 'Ana', em: '2026-11-15T10:00:00Z', proximoCodigo: 2, origem: 'ficha' as const };
+  const base = projeto('00');
+  const r = criarProjeto(
+    { nome: 'Ponte', orgao: 'SEINFRA', regiao: 'Norte', origem_valor: 'Estimativa', compromisso: 'condicionado', valores: { ...base.valores, obra: 500, total: null, executado: null }, sei: ['26.1.000000001-2'] },
+    ctx,
+  );
+  assert.ok(r.ok);
+  assert.deepEqual(r.projeto.pendencias, []);
+  assert.equal(r.projeto.compromisso, 'condicionado');
+  assert.ok(r.historico[0].campos!.some((c) => c.campo === 'valores.obra' && c.depois === 500));
+  const x = criarProjeto({ nome: 'A', orgao: 'B', compromisso: 'qualquer' as any }, ctx);
+  assert.ok(x.ok && x.projeto.compromisso === 'ideia');
 });

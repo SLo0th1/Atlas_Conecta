@@ -20,7 +20,7 @@ export type Evento =
 export interface RegistroHistorico {
   id: string; // `${projeto_id}-${em}-${n}`
   projeto_id: string;
-  tipo: 'mover_macroetapa' | 'passo' | 'pendencia' | 'atualizar_campos';
+  tipo: 'mover_macroetapa' | 'passo' | 'pendencia' | 'atualizar_campos' | 'criado';
   origem: OrigemEvento;
   autor: string;
   em: string;
@@ -209,4 +209,87 @@ export function aplicarEventos<C extends { projetos: Projeto[] }>(
     for (const h of r.historico) historico.push({ ...h, id: `${h.projeto_id}-${h.em}-${historico.length + 1}` });
   }
   return { ok: true, carteira: nova, historico };
+}
+
+export type ResultadoCriacao =
+  | { ok: true; projeto: Projeto; historico: RegistroHistorico[] }
+  | { ok: false; erro: string; faltando: string[] };
+
+const texto = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null);
+const numero = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+const COMPROMISSOS = ['decidido', 'condicionado', 'ideia'];
+const CHAVES_VALORES = ['projeto', 'obra', 'executado', 'em_captacao', 'captado', 'contrapartida', 'custeio_municipio', 'total', 'com_solicitacao_financeira'] as const;
+const CHAVES_RECURSO = ['origem', 'tipo', 'situacao', 'fonte_programa', 'unidade_financiadora', 'sugestao_financiar', 'numero_termo'] as const;
+const CHAVES_DATAS = ['inicio', 'pecas_tecnicas', 'planejamento', 'preparatorio', 'contratacao', 'mobilizacao', 'encerramento'] as const;
+
+/** Cria um projeto novo na macroetapa 00 (função pura). Obrigatórios: nome e órgão; o resto vira null. */
+export function criarProjeto(
+  dados: Partial<Projeto> & { nome: string; orgao: string },
+  ctx: { autor: string; em: string; proximoCodigo: number; origem: OrigemEvento },
+): { ok: true; projeto: Projeto; historico: RegistroHistorico[] } | { ok: false; erro: string; faltando: string[] } {
+  const nome = texto(dados?.nome);
+  const orgao = texto(dados?.orgao);
+  const faltando: string[] = [];
+  if (!nome) faltando.push('Nome do projeto');
+  if (!orgao) faltando.push('Órgão');
+  if (faltando.length > 0 || !nome || !orgao) return { ok: false, erro: 'Faltam dados obrigatórios.', faltando };
+
+  const valores: any = {};
+  for (const k of CHAVES_VALORES) valores[k] = numero((dados.valores as any)?.[k]);
+  const recurso: any = {};
+  for (const k of CHAVES_RECURSO) recurso[k] = texto((dados.recurso as any)?.[k]);
+  recurso.termo_compromisso = typeof dados.recurso?.termo_compromisso === 'boolean' ? dados.recurso.termo_compromisso : null;
+  const datas: any = {};
+  for (const k of CHAVES_DATAS) datas[k] = texto((dados.datas as any)?.[k]);
+  datas.execucao_dias = numero(dados.datas?.execucao_dias);
+
+  const id = `P-${ctx.proximoCodigo}`;
+  const p: Projeto = {
+    id,
+    codigo_legado: ctx.proximoCodigo,
+    nome,
+    orgao,
+    responsavel: texto(dados.responsavel),
+    tipo: texto(dados.tipo),
+    detalhamento: texto(dados.detalhamento),
+    sei: Array.isArray(dados.sei) ? dados.sei.map(texto).filter((x): x is string => x !== null) : [],
+    observacao: texto(dados.observacao),
+    macroetapa: '00',
+    status_projeto: null,
+    regiao: texto(dados.regiao),
+    bairro: texto(dados.bairro),
+    corredor: null,
+    origem_valor: texto(dados.origem_valor),
+    tem_projeto: typeof dados.tem_projeto === 'boolean' ? dados.tem_projeto : null,
+    prioridade: texto(dados.prioridade),
+    compromisso: COMPROMISSOS.includes(dados.compromisso as string) ? dados.compromisso : 'ideia',
+    tipo_contratacao: texto(dados.tipo_contratacao),
+    orgao_contratacao: texto(dados.orgao_contratacao),
+    solicitacoes_financeiras: null,
+    valores,
+    recurso,
+    datas,
+    por_ano: {},
+    atualizacao: { responsavel: null, data: null },
+    operacional: null,
+    pendencias: [],
+    origem: { aba: 'CADASTRO', linha: 0 },
+  };
+  if (!p.regiao) p.pendencias.push('Sem região');
+  if (p.valores.obra === null) p.pendencias.push('Sem valor de obra');
+  if (!p.origem_valor) p.pendencias.push('Sem origem do valor');
+
+  const campos: { campo: string; antes: unknown; depois: unknown }[] = [];
+  const add = (campo: string, depois: unknown) => {
+    if (depois !== null && depois !== undefined && !(Array.isArray(depois) && depois.length === 0)) campos.push({ campo, antes: null, depois });
+  };
+  for (const c of ['nome', 'orgao', 'responsavel', 'tipo', 'detalhamento', 'sei', 'observacao', 'regiao', 'bairro', 'origem_valor', 'tem_projeto', 'prioridade', 'compromisso', 'tipo_contratacao', 'orgao_contratacao'] as const) add(c, p[c]);
+  for (const k of CHAVES_VALORES) add(`valores.${k}`, p.valores[k]);
+  for (const k of [...CHAVES_RECURSO, 'termo_compromisso'] as const) add(`recurso.${k}`, (p.recurso as any)[k]);
+  for (const k of [...CHAVES_DATAS, 'execucao_dias'] as const) add(`datas.${k}`, (p.datas as any)[k]);
+
+  const historico: RegistroHistorico[] = [
+    { id: `${id}-${ctx.em}-1`, projeto_id: id, tipo: 'criado', origem: ctx.origem, autor: ctx.autor, em: ctx.em, para: '00', descricao: 'Projeto incluído no cadastro', campos },
+  ];
+  return { ok: true, projeto: p, historico };
 }

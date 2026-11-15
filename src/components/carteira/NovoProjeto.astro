@@ -1,0 +1,364 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { AVISO_SIMULACAO } from '../../lib/carteira/simulacao.ts';
+
+const projetos = carregarCarteira().projetos;
+const unicos = (l: (string | null | undefined)[]) => [...new Set(l.map((x) => (x ?? '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const orgaos = unicos(projetos.map((p) => p.orgao));
+const regioes = unicos(projetos.map((p) => p.regiao));
+const origensValor = unicos(projetos.map((p) => p.origem_valor));
+const detalhamentos = unicos(projetos.map((p) => p.detalhamento));
+const proximoCodigo = Math.max(0, ...projetos.map((p) => p.codigo_legado)) + 1;
+
+type Campo = {
+  id: string;
+  rotulo: string;
+  tipo: 'texto' | 'select' | 'numero' | 'data' | 'area' | 'reais';
+  obrigatorio?: boolean;
+  opcoes?: string[];
+  vazio?: string;
+  outro?: boolean;
+  lista?: string[];
+  dica?: string;
+  largo?: boolean;
+};
+const SIM_NAO = ['Sim', 'Não'];
+const blocos: { titulo: string; dica?: string; campos: Campo[] }[] = [
+  {
+    titulo: '1. Identificação',
+    campos: [
+      { id: 'nome', rotulo: 'Nome do projeto', tipo: 'texto', obrigatorio: true, largo: true },
+      { id: 'orgao', rotulo: 'Órgão', tipo: 'select', obrigatorio: true, opcoes: orgaos, vazio: 'Escolha o órgão', outro: true },
+      { id: 'responsavel', rotulo: 'Responsável', tipo: 'texto' },
+      { id: 'tipo', rotulo: 'Tipo', tipo: 'select', opcoes: ['OBRA INFRA', 'OBRA CIVIL', 'REFORMA', 'SERVIÇO'], vazio: 'Não informado' },
+      { id: 'detalhamento', rotulo: 'Detalhamento', tipo: 'texto', lista: detalhamentos, dica: 'Ex.: edificação, ponte, corredor. Você pode escolher um já usado ou digitar.' },
+      { id: 'regiao', rotulo: 'Região', tipo: 'select', opcoes: regioes, vazio: 'Não informada' },
+      { id: 'bairro', rotulo: 'Bairro', tipo: 'texto' },
+      { id: 'sei', rotulo: 'Processo SEI', tipo: 'texto', dica: 'Pode haver mais de um, separados por vírgula. Formato: 00.0.000000000-0' },
+      { id: 'observacao', rotulo: 'Observação', tipo: 'area', largo: true },
+    ],
+  },
+  {
+    titulo: '3. Valores',
+    campos: [
+      { id: 'valor_obra', rotulo: 'Valor estimado da obra (R$)', tipo: 'reais', dica: 'Ex.: 1.500.000,00' },
+      { id: 'valor_projeto', rotulo: 'Valor do projeto (R$)', tipo: 'reais', dica: 'Ex.: 80.000,00' },
+      { id: 'origem_valor', rotulo: 'Origem do valor', tipo: 'select', opcoes: origensValor, vazio: 'Não informada', outro: true },
+      { id: 'tem_projeto', rotulo: 'Tem projeto?', tipo: 'select', opcoes: ['Sim', 'Não', 'Não sei'], vazio: 'Não informado' },
+    ],
+  },
+  {
+    titulo: '4. Recurso',
+    campos: [
+      { id: 'recurso_origem', rotulo: 'Origem do recurso', tipo: 'select', opcoes: ['Municipal', 'Federal', 'Estadual', 'Outro'], vazio: 'Não informada' },
+      { id: 'fonte_programa', rotulo: 'Fonte ou programa', tipo: 'texto' },
+      { id: 'unidade_financiadora', rotulo: 'Unidade financiadora', tipo: 'texto' },
+      { id: 'termo', rotulo: 'Termo de compromisso', tipo: 'select', opcoes: SIM_NAO, vazio: 'Não informado' },
+      { id: 'numero_termo', rotulo: 'Número do termo', tipo: 'texto' },
+    ],
+  },
+  {
+    titulo: '5. Prioridade e contratação',
+    campos: [
+      { id: 'prioridade', rotulo: 'Prioridade', tipo: 'select', opcoes: ['Muito Alta', 'Alta', 'Média', 'Baixa'], vazio: 'Não informada' },
+      { id: 'tipo_contratacao', rotulo: 'Tipo de contratação', tipo: 'select', opcoes: ['LICITAÇÃO', 'Execução Própria', 'Adesão a Ata', 'Dispensa', 'Termo de compensação'], vazio: 'Não informado' },
+      { id: 'orgao_contratacao', rotulo: 'Órgão da contratação', tipo: 'texto' },
+    ],
+  },
+  {
+    titulo: '6. Datas previstas',
+    dica: 'Datas em ordem; o sistema avisa se estiverem fora de ordem.',
+    campos: [
+      { id: 'd_pecas', rotulo: 'Entrega das peças técnicas', tipo: 'data' },
+      { id: 'd_planejamento', rotulo: 'Fim do planejamento', tipo: 'data' },
+      { id: 'd_preparatorio', rotulo: 'Fim do preparatório', tipo: 'data' },
+      { id: 'd_contratacao', rotulo: 'Fim da contratação', tipo: 'data' },
+      { id: 'd_mobilizacao', rotulo: 'Fim da mobilização', tipo: 'data' },
+      { id: 'd_dias', rotulo: 'Dias de execução', tipo: 'numero' },
+      { id: 'd_entrega', rotulo: 'Entrega final', tipo: 'data' },
+    ],
+  },
+];
+const compromissos = [
+  { valor: 'decidido', nome: 'Decidido', texto: 'O projeto será executado, com ou sem recurso externo.' },
+  { valor: 'condicionado', nome: 'Condicionado', texto: 'Só será executado se vier recurso externo.' },
+  { valor: 'ideia', nome: 'Ideia', texto: 'Demanda ainda não avaliada.' },
+];
+const descreve = (c: Campo) => [c.dica ? `np-${c.id}-dica` : '', `np-${c.id}-erro`].filter(Boolean).join(' ');
+---
+<div data-novo-projeto data-proximo={proximoCodigo}>
+  <p class="cart-aviso" role="note">{AVISO_SIMULACAO}</p>
+  <div class="cart-erro" role="alert" tabindex="-1" data-np-resumo hidden></div>
+  <form class="np-form" data-np-form novalidate>
+    {blocos.map((b, i) => (
+      <>
+        <fieldset class="np-bloco">
+          <legend>{b.titulo}</legend>
+          {b.dica && <p class="np-dica">{b.dica}</p>}
+          <div class="np-grade">
+            {b.campos.map((c) => (
+              <div class={`np-campo${c.largo ? ' np-largo' : ''}`}>
+                <label for={`np-${c.id}`}>{c.rotulo}{c.obrigatorio ? ' (obrigatório)' : ''}</label>
+                {c.tipo === 'select' ? (
+                  <select id={`np-${c.id}`} name={c.id} aria-required={c.obrigatorio ? 'true' : undefined} aria-describedby={descreve(c)} data-np-outro-de={c.outro ? c.id : undefined}>
+                    <option value="">{c.vazio ?? 'Escolha'}</option>
+                    {(c.opcoes ?? []).map((o) => <option value={o}>{o}</option>)}
+                    {c.outro && <option value="__outro">Outro (digitar)</option>}
+                  </select>
+                ) : c.tipo === 'area' ? (
+                  <textarea id={`np-${c.id}`} name={c.id} rows="3" aria-describedby={descreve(c)}></textarea>
+                ) : (
+                  <input
+                    id={`np-${c.id}`}
+                    name={c.id}
+                    type={c.tipo === 'data' ? 'date' : c.tipo === 'numero' ? 'number' : 'text'}
+                    min={c.tipo === 'numero' ? '0' : undefined}
+                    inputmode={c.tipo === 'reais' ? 'decimal' : c.tipo === 'numero' ? 'numeric' : undefined}
+                    list={c.lista ? `np-${c.id}-lista` : undefined}
+                    autocomplete="off"
+                    aria-required={c.obrigatorio ? 'true' : undefined}
+                    aria-describedby={descreve(c)}
+                  />
+                )}
+                {c.lista && <datalist id={`np-${c.id}-lista`}>{c.lista.map((o) => <option value={o}></option>)}</datalist>}
+                {c.dica && <small class="np-dica" id={`np-${c.id}-dica`}>{c.dica}</small>}
+                <small class="np-erro" id={`np-${c.id}-erro`} hidden></small>
+                {c.outro && (
+                  <div class="np-outro" data-np-outro={c.id} hidden>
+                    <label for={`np-${c.id}-outro`}>{c.id === 'orgao' ? 'Qual é o órgão? (sigla)' : 'Qual é a origem do valor?'}</label>
+                    <input id={`np-${c.id}-outro`} name={`${c.id}-outro`} type="text" autocomplete="off" aria-describedby={`np-${c.id}-outro-erro`} />
+                    <small class="np-erro" id={`np-${c.id}-outro-erro`} hidden></small>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </fieldset>
+        {i === 0 && (
+          <fieldset class="np-bloco">
+            <legend>2. Compromisso</legend>
+            <div class="np-radios">
+              {compromissos.map((c) => (
+                <label class="np-radio">
+                  <input type="radio" name="compromisso" value={c.valor} checked={c.valor === 'ideia'} />
+                  <span><strong>{c.nome}</strong><br />{c.texto}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
+      </>
+    ))}
+    <div class="actions np-acoes">
+      <button type="submit" class="primary">Validar e simular cadastro</button>
+      <button type="button" class="secondary" data-np-limpar>Limpar</button>
+    </div>
+  </form>
+  <section class="np-ok" data-np-ok tabindex="-1" aria-labelledby="np-ok-titulo" hidden>
+    <h2 id="np-ok-titulo">Cadastro simulado</h2>
+    <p data-np-ok-texto role="status"></p>
+    <div data-np-ok-pendencias hidden>
+      <h3>Pendências de dado e avisos</h3>
+      <ul data-np-ok-lista></ul>
+    </div>
+    <div class="actions">
+      <a class="button primary" href="/plataforma/projetos-log/" data-np-ok-log>Ver no Histórico de alterações</a>
+      <a class="button secondary" href="/plataforma/projetos-carteira/">Voltar à carteira</a>
+    </div>
+  </section>
+</div>
+<script>
+import { criarProjeto } from '../../lib/carteira/movimentacao.ts';
+import { AUTOR_SIMULACAO, avisar, guardarLogSimulacao, nomeEtapa } from '../../lib/carteira/simulacao.ts';
+import type { Projeto } from '../../lib/carteira/tipos.ts';
+
+const SEI = /^\d{2}\.\d{1,2}\.\d{9}-\d$/;
+const ROTULO_DATAS: [string, string][] = [
+  ['d_pecas', 'Entrega das peças técnicas'],
+  ['d_planejamento', 'Fim do planejamento'],
+  ['d_preparatorio', 'Fim do preparatório'],
+  ['d_contratacao', 'Fim da contratação'],
+  ['d_mobilizacao', 'Fim da mobilização'],
+  ['d_entrega', 'Entrega final'],
+];
+const dataBr = (iso: string) => iso.split('-').reverse().join('/');
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-novo-projeto]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  const form = raiz.querySelector<HTMLFormElement>('[data-np-form]')!;
+  const resumo = raiz.querySelector<HTMLElement>('[data-np-resumo]')!;
+  const ok = raiz.querySelector<HTMLElement>('[data-np-ok]')!;
+  let proximo = Number(raiz.dataset.proximo) || 1;
+
+  const campo = (id: string) => form.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(`#np-${id}`)!;
+  const valor = (id: string) => campo(id).value.trim();
+
+  const atualizarOutros = () => {
+    form.querySelectorAll<HTMLSelectElement>('select[data-np-outro-de]').forEach((s) => {
+      const caixa = form.querySelector<HTMLElement>(`[data-np-outro="${s.dataset.npOutroDe}"]`);
+      if (caixa) caixa.hidden = s.value !== '__outro';
+    });
+  };
+  form.addEventListener('change', (e) => {
+    if ((e.target as HTMLElement).matches('select[data-np-outro-de]')) atualizarOutros();
+  });
+
+  const limparErros = () => {
+    resumo.hidden = true;
+    resumo.replaceChildren();
+    form.querySelectorAll<HTMLElement>('.np-erro').forEach((x) => {
+      x.hidden = true;
+      x.textContent = '';
+    });
+    form.querySelectorAll<HTMLElement>('[aria-invalid]').forEach((x) => x.removeAttribute('aria-invalid'));
+  };
+
+  const escolhido = (id: string): { texto: string; alvo: string } => {
+    const sel = campo(id) as HTMLSelectElement;
+    if (sel.value === '__outro') return { texto: valor(`${id}-outro`), alvo: `${id}-outro` };
+    return { texto: sel.value.trim(), alvo: id };
+  };
+
+  const reais = (id: string, rotulo: string, erros: [string, string][]): number | null => {
+    const bruto = valor(id).replace(/R\$/gi, '').replace(/\s/g, '');
+    if (!bruto) return null;
+    const n = /^(\d{1,3}(\.\d{3})+|\d+)(,\d{1,2})?$/.test(bruto) ? Number(bruto.replace(/\./g, '').replace(',', '.')) : NaN;
+    if (!Number.isFinite(n) || n < 0) {
+      erros.push([id, `${rotulo}: digite um valor em reais, como 1.500.000,00.`]);
+      return null;
+    }
+    return n;
+  };
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    limparErros();
+    ok.hidden = true;
+    const erros: [string, string][] = [];
+    const org = escolhido('orgao');
+    const ov = escolhido('origem_valor');
+    const sei = valor('sei')
+      .split(',')
+      .map((x) => x.trim())
+      .filter(Boolean);
+    const seiRuim = sei.filter((x) => !SEI.test(x));
+    if (seiRuim.length) erros.push(['sei', `Processo SEI fora do formato 00.0.000000000-0: ${seiRuim.join(', ')}.`]);
+    const obra = reais('valor_obra', 'Valor estimado da obra', erros);
+    const proj = reais('valor_projeto', 'Valor do projeto', erros);
+    const dias = valor('d_dias');
+    let execDias: number | null = null;
+    if (dias) {
+      execDias = Number(dias);
+      if (!Number.isInteger(execDias) || execDias < 0) {
+        erros.push(['d_dias', 'Dias de execução: digite um número inteiro, como 180.']);
+        execDias = null;
+      }
+    }
+    const tem = valor('tem_projeto');
+    const termo = valor('termo');
+    const compromisso = (form.querySelector<HTMLInputElement>('input[name="compromisso"]:checked')?.value ?? 'ideia') as Projeto['compromisso'];
+    const d = (id: string) => valor(id) || null;
+
+    const r = criarProjeto(
+      {
+        nome: valor('nome'),
+        orgao: org.texto,
+        responsavel: valor('responsavel') || null,
+        tipo: valor('tipo') || null,
+        detalhamento: valor('detalhamento') || null,
+        regiao: valor('regiao') || null,
+        bairro: valor('bairro') || null,
+        sei: seiRuim.length ? [] : sei,
+        observacao: valor('observacao') || null,
+        compromisso,
+        origem_valor: ov.texto || null,
+        tem_projeto: tem === 'Sim' ? true : tem === 'Não' ? false : null,
+        prioridade: valor('prioridade') || null,
+        tipo_contratacao: valor('tipo_contratacao') || null,
+        orgao_contratacao: valor('orgao_contratacao') || null,
+        valores: { projeto: proj, obra, executado: null, em_captacao: null, captado: null, contrapartida: null, custeio_municipio: null, total: null, com_solicitacao_financeira: null },
+        recurso: {
+          origem: valor('recurso_origem') || null,
+          tipo: null,
+          situacao: null,
+          fonte_programa: valor('fonte_programa') || null,
+          unidade_financiadora: valor('unidade_financiadora') || null,
+          sugestao_financiar: null,
+          termo_compromisso: termo === 'Sim' ? true : termo === 'Não' ? false : null,
+          numero_termo: valor('numero_termo') || null,
+        },
+        datas: { inicio: null, pecas_tecnicas: d('d_pecas'), planejamento: d('d_planejamento'), preparatorio: d('d_preparatorio'), contratacao: d('d_contratacao'), mobilizacao: d('d_mobilizacao'), execucao_dias: execDias, encerramento: d('d_entrega') },
+      },
+      { autor: AUTOR_SIMULACAO, em: new Date().toISOString(), proximoCodigo: proximo, origem: 'ficha' },
+    );
+    if (!r.ok) {
+      if (r.faltando.includes('Nome do projeto')) erros.unshift(['nome', 'Informe o nome do projeto.']);
+      if (r.faltando.includes('Órgão')) erros.splice(r.faltando.includes('Nome do projeto') ? 1 : 0, 0, [org.alvo, 'Escolha o órgão ou digite a sigla.']);
+    }
+    if (erros.length > 0) {
+      const ul = document.createElement('ul');
+      const t = document.createElement('p');
+      t.textContent = `Corrija ${erros.length === 1 ? 'este campo' : 'estes campos'} para continuar:`;
+      for (const [id, msg] of erros) {
+        const alvo = campo(id);
+        const span = form.querySelector<HTMLElement>(`#np-${id}-erro`);
+        if (span) {
+          span.textContent = msg;
+          span.hidden = false;
+        }
+        alvo.setAttribute('aria-invalid', 'true');
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#np-${id}`;
+        a.textContent = msg;
+        a.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          alvo.focus();
+        });
+        li.append(a);
+        ul.append(li);
+      }
+      resumo.append(t, ul);
+      resumo.hidden = false;
+      resumo.focus();
+      return;
+    }
+    if (!r.ok) return;
+
+    const avisos: string[] = [];
+    let anterior: [string, string] | null = null;
+    for (const [id, rotulo] of ROTULO_DATAS) {
+      const v = valor(id);
+      if (!v) continue;
+      if (anterior && v < anterior[0]) avisos.push(`Datas fora de ordem: ${rotulo} (${dataBr(v)}) é anterior a ${anterior[1]} (${dataBr(anterior[0])}).`);
+      else anterior = [v, rotulo];
+    }
+    guardarLogSimulacao(r.historico, r.projeto.nome);
+    ok.querySelector('[data-np-ok-texto]')!.textContent = `Simulação: o projeto ${r.projeto.id} · ${r.projeto.nome} seria incluído em ${r.projeto.macroetapa} – ${nomeEtapa(r.projeto.macroetapa)}. Nada foi gravado.`;
+    const lista = ok.querySelector<HTMLElement>('[data-np-ok-lista]')!;
+    lista.replaceChildren();
+    for (const x of [...r.projeto.pendencias, ...avisos]) {
+      const li = document.createElement('li');
+      li.textContent = x;
+      lista.append(li);
+    }
+    ok.querySelector<HTMLElement>('[data-np-ok-pendencias]')!.hidden = lista.children.length === 0;
+    ok.querySelector<HTMLAnchorElement>('[data-np-ok-log]')!.href = `/plataforma/projetos-log/?projeto=${encodeURIComponent(r.projeto.id)}`;
+    ok.hidden = false;
+    ok.focus();
+    avisar(`Simulação: ${r.projeto.id} · ${r.projeto.nome}. Nada foi gravado.`);
+    proximo += 1;
+  });
+
+  raiz.querySelector('[data-np-limpar]')!.addEventListener('click', () => {
+    form.reset();
+    limparErros();
+    atualizarOutros();
+    ok.hidden = true;
+    campo('nome').focus();
+  });
+});
+</script>

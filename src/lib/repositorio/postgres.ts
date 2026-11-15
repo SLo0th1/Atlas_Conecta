@@ -1,12 +1,12 @@
 // Repositório PostgreSQL (sem dependência: recebe um cliente com query(sql, params)).
 // Regras: todo valor vai por parâmetro ($1, $2...), nunca concatenado no SQL; toda consulta roda numa transação que
 // começa com set_config('app.prefeitura_id', ...) para a política de RLS (db/migracoes/001_govnexa_carteira.sql).
-import { aplicarEvento } from '../carteira/movimentacao.ts';
+import { aplicarEvento, criarProjeto } from '../carteira/movimentacao.ts';
 import type { Evento, RegistroHistorico } from '../carteira/movimentacao.ts';
 import type { Projeto } from '../carteira/tipos.ts';
 import type { Cronograma, EtapaCronograma, FaseCronograma } from '../cronograma/tipos.ts';
 import type { RegistroLog } from '../log/tipos.ts';
-import type { RepositorioProjetos, ResultadoAplicacao } from './tipos.ts';
+import type { RepositorioProjetos, ResultadoAplicacao, ResultadoCriacaoProjeto } from './tipos.ts';
 
 export interface ClienteSql {
   query(sql: string, params: unknown[]): Promise<{ rows: any[] }>;
@@ -14,7 +14,7 @@ export interface ClienteSql {
 
 const COLUNAS_TEXTO = [
   'nome', 'orgao', 'responsavel', 'tipo', 'detalhamento', 'observacao', 'macroetapa', 'status_projeto', 'regiao', 'bairro',
-  'corredor', 'origem_valor', 'tem_projeto', 'prioridade', 'tipo_contratacao', 'orgao_contratacao', 'solicitacoes_financeiras',
+  'corredor', 'origem_valor', 'tem_projeto', 'prioridade', 'compromisso', 'tipo_contratacao', 'orgao_contratacao', 'solicitacoes_financeiras',
 ] as const;
 const COLUNAS_JSON = ['valores', 'recurso', 'datas', 'por_ano', 'atualizacao', 'operacional', 'origem'] as const;
 const COLUNAS_ARRAY = ['sei', 'pendencias'] as const;
@@ -119,6 +119,37 @@ export function criarRepositorioPostgres(cliente: ClienteSql, prefeituraId: numb
           };
         });
       }),
+    async criarProjeto(dados, autor): Promise<ResultadoCriacaoProjeto> {
+      return transacao(async (): Promise<ResultadoCriacaoProjeto> => {
+        const m = await cliente.query('SELECT coalesce(max(codigo_legado), 0) + 1 AS proximo FROM projeto WHERE prefeitura_id = $1', [prefeituraId]);
+        const proximoCodigo = Number(m.rows[0]?.proximo ?? 1);
+        const res = criarProjeto(dados, { autor, em: new Date().toISOString(), proximoCodigo, origem: 'ficha' });
+        if (!res.ok) return res;
+        const p: any = res.projeto;
+        // Nomes de coluna vêm de listas fixas no código; valores só por parâmetro.
+        const cols: string[] = ['prefeitura_id', 'id', 'codigo_legado'];
+        const marcas: string[] = ['$1', '$2', '$3'];
+        const params: unknown[] = [prefeituraId, p.id, p.codigo_legado];
+        const add = (col: string, valor: unknown, cast = '') => {
+          params.push(valor);
+          cols.push(col);
+          marcas.push(`$${params.length}${cast}`);
+        };
+        for (const c of COLUNAS_TEXTO) add(c, p[c] ?? null);
+        for (const c of COLUNAS_JSON) add(c, p[c] == null ? null : JSON.stringify(p[c]), '::jsonb');
+        for (const c of COLUNAS_ARRAY) add(c, p[c] ?? [], '::text[]');
+        await cliente.query(`INSERT INTO projeto (${cols.join(', ')}, atualizado_em) VALUES (${marcas.join(', ')}, now())`, params);
+        for (const h of res.historico) {
+          await cliente.query(
+            `INSERT INTO evento_projeto (id, prefeitura_id, projeto_id, tipo, origem, autor, em, de, para, campos, motivo, forcado, descricao)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10::jsonb, $11, $12, $13)`,
+            [h.id, prefeituraId, h.projeto_id, h.tipo, h.origem, h.autor, h.em, h.de ?? null, h.para ?? null,
+              h.campos ? JSON.stringify(h.campos) : null, h.motivo ?? null, h.forcado ?? false, h.descricao ?? null],
+          );
+        }
+        return { ok: true, projeto: res.projeto, historico: res.historico };
+      });
+    },
     async aplicar(e: Evento): Promise<ResultadoAplicacao> {
       return transacao(async (): Promise<ResultadoAplicacao> => {
         const r = await cliente.query(`SELECT ${LISTA_COLUNAS} FROM projeto WHERE prefeitura_id = $1 AND id = $2 FOR UPDATE`, [prefeituraId, e.projeto_id]);

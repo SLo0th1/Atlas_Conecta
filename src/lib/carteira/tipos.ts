@@ -79,6 +79,8 @@ export interface Projeto {
   origem_valor: string | null;
   tem_projeto: boolean | null;
   prioridade: string | null; // Muito Alta, Alta, Média, Baixa...
+  /** decidido = executa com ou sem recurso externo; condicionado = só executa se vier recurso externo (projeto desejo); ideia = demanda ainda não avaliada. */
+  compromisso?: 'decidido' | 'condicionado' | 'ideia' | null;
   tipo_contratacao: string | null;
   orgao_contratacao: string | null;
   solicitacoes_financeiras: string | null;

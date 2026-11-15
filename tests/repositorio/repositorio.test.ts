@@ -123,3 +123,48 @@ test('Postgres: listarHistorico e historico leem a visão log_alteracoes só com
   assert.deepEqual(c2.params, [5208707, malicioso]);
   for (const c of chamadas) assert.ok(!c.sql.includes('DROP TABLE'), c.sql);
 });
+
+test('JSON: criarProjeto válido -> Gravação indisponível; sem nome -> erro da regra', async () => {
+  const repo = criarRepositorioJson();
+  assert.deepEqual(await repo.criarProjeto({ nome: 'Nova obra', orgao: 'SEINFRA' }, 'Ana'), { ok: false, erro: 'Gravação indisponível: o banco de dados ainda não foi configurado.' });
+  const r = await repo.criarProjeto({ nome: '', orgao: 'SEINFRA' }, 'Ana');
+  assert.ok(!r.ok && r.faltando?.includes('Nome do projeto'));
+});
+
+test('Postgres: criarProjeto usa transação, próximo código, INSERTs parametrizados e valor malicioso só em params', async () => {
+  const chamadas: { sql: string; params: unknown[] }[] = [];
+  const cliente: ClienteSql = {
+    async query(sql, params) {
+      chamadas.push({ sql, params });
+      if (/coalesce\(max\(codigo_legado\)/.test(sql)) return { rows: [{ proximo: 31 }] };
+      return { rows: [] };
+    },
+  };
+  const repo = criarRepositorioPostgres(cliente, 5208707);
+  const malicioso = "x'); DROP TABLE projeto; --";
+  const r = await repo.criarProjeto({ nome: malicioso, orgao: 'SEINFRA', observacao: malicioso }, 'Ana');
+  assert.ok(r.ok);
+  assert.equal(r.projeto.id, 'P-31');
+  assert.equal(chamadas[0].sql, 'BEGIN');
+  assert.match(chamadas[1].sql, /set_config\('app\.prefeitura_id', \$1, true\)/);
+  assert.equal(chamadas.at(-1)!.sql, 'COMMIT');
+  const ins = chamadas.find((c) => /^INSERT INTO projeto/.test(c.sql.trim()))!;
+  assert.match(ins.sql, /compromisso/);
+  assert.deepEqual(ins.params.slice(0, 3), [5208707, 'P-31', 31]);
+  assert.ok(ins.params.includes(malicioso));
+  assert.ok(chamadas.some((c) => /^\s*INSERT INTO evento_projeto/.test(c.sql)));
+  for (const c of chamadas) assert.ok(!c.sql.includes(malicioso) && !c.sql.includes('DROP TABLE'), c.sql);
+});
+
+test('Postgres: criarProjeto sem órgão não grava nada', async () => {
+  const chamadas: { sql: string; params: unknown[] }[] = [];
+  const cliente: ClienteSql = {
+    async query(sql, params) {
+      chamadas.push({ sql, params });
+      return { rows: [{ proximo: 1 }] };
+    },
+  };
+  const r = await criarRepositorioPostgres(cliente, 5208707).criarProjeto({ nome: 'A', orgao: ' ' }, 'Ana');
+  assert.ok(!r.ok);
+  assert.ok(!chamadas.some((c) => /^\s*INSERT/.test(c.sql)));
+});

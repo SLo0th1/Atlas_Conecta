@@ -347,3 +347,23 @@
  .workspace .table-wrap td:first-child,.workspace .table-wrap th:first-child{position:static!important;left:auto!important;width:100%!important;min-width:0!important;max-width:none!important;border:0!important;box-shadow:none!important;background:transparent!important}
  .workspace .table-wrap td>*{justify-self:start}
 }
+
+/* Novo projeto (cadastro) */
+.np-form{display:grid;gap:1rem}
+.np-bloco{margin:0;min-width:0;padding:1rem 1.1rem 1.2rem;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}
+.np-bloco legend{padding:0 .4rem;font-weight:700;font-size:1.05rem}
+.np-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1rem}
+.np-campo{display:grid;gap:.35rem;align-content:start;min-width:0}
+.np-largo{grid-column:1/-1}
+.np-dica{color:var(--muted);font-size:.8rem;margin:0}
+.np-erro{color:var(--cart-vermelho);font-weight:600;font-size:.85rem}
+.np-outro{display:grid;gap:.35rem;margin-top:.5rem}
+.np-campo [aria-invalid=true]{border-color:var(--cart-vermelho);outline:1px solid var(--cart-vermelho)}
+.np-radios{display:grid;gap:.6rem}
+.np-radio{display:flex;gap:.7rem;align-items:flex-start;font-weight:400;padding:.5rem .7rem;border:1px solid var(--line);border-radius:8px}
+.np-radio input{width:auto;margin-top:.3rem;flex:none}
+.np-acoes{margin:.5rem 0}
+.np-ok{margin-top:1.25rem;padding:1rem 1.2rem;border:1px solid var(--cart-verde);border-left:5px solid var(--cart-verde);border-radius:8px;background:var(--surface);color:var(--text)}
+.np-ok h2{font-size:1.25rem;margin:0 0 .5rem}
+.np-ok h3{font-size:1rem;margin:.75rem 0 .25rem}
+@media(max-width:640px){.np-grade{grid-template-columns:1fr}.np-acoes .primary,.np-acoes .secondary{width:100%}}

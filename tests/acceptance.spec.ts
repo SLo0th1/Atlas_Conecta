@@ -284,3 +284,37 @@ test('govnexa: tema escolhido se mantém ao trocar de guia',async({page})=>{
   }
  }
 });
+
+test('govnexa: novo projeto',async({page})=>{
+ await page.goto('/plataforma/projetos/');
+ await expect(page.locator('.workspace').getByRole('link',{name:'Novo projeto',exact:true})).toBeVisible();
+ await page.goto('/plataforma/projetos-carteira/');
+ await page.locator('.workspace').getByRole('link',{name:'Novo projeto',exact:true}).click();
+ await page.waitForURL(/projetos-novo/);
+ await expect(page.getByRole('heading',{name:'Novo projeto',level:1})).toBeVisible();
+ await expect(page.getByText('Modo simulação').first()).toBeVisible();
+ // enviar vazio mostra erros de Nome e Órgão
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ await expect(page.locator('[data-np-resumo]')).toContainText('Informe o nome do projeto');
+ await expect(page.locator('[data-np-resumo]')).toContainText('Escolha o órgão');
+ await expect(page.locator('#np-nome')).toHaveAttribute('aria-invalid','true');
+ await expect(page.locator('#np-orgao')).toHaveAttribute('aria-invalid','true');
+ // preencher nome e órgão
+ await page.locator('#np-nome').fill('Nova UBS do teste');
+ await page.locator('#np-orgao').selectOption({index:1});
+ await page.getByRole('button',{name:'Validar e simular cadastro'}).click();
+ const ok=page.locator('[data-np-ok]');
+ await expect(ok).toContainText('Simulação');
+ await expect(ok).toContainText('00 – Em estruturação');
+ await expect(ok).toContainText('Nada foi gravado');
+ // sem rolagem horizontal em 1280 e 390px
+ for(const width of [1280,390]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${width}px`).toBeTruthy();}
+ // axe claro/escuro
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),theme).toEqual([]);}
+ await page.setViewportSize({width:1280,height:900});
+ // o histórico mostra o registro simulado
+ await ok.getByRole('link',{name:'Ver no Histórico de alterações'}).click();
+ await page.waitForURL(/projetos-log/);
+ await expect(page.getByText('Simulação (não gravado)').first()).toBeVisible();
+ await expect(page.locator('td').getByText('Projeto incluído').first()).toBeVisible();
+});
