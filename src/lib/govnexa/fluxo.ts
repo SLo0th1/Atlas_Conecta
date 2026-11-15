@@ -1,0 +1,212 @@
+// Mapa do fluxo do GovNexa (guia Projetos › Fluxo). Conteúdo escrito a partir das transcrições dos áudios,
+// da reunião de entendimento, das planilhas-base (PIPELINE, BASE_OPERACIONAL, cronogramas do GEPP) e do plano.
+// Desenho: raias na vertical (colunas) e o tempo de cima para baixo (linhas), para caber na largura sem rolagem.
+
+export type Raia = 'integracoes' | 'captacao' | 'projetos' | 'contratacao' | 'execucao' | 'gestao';
+export type TipoNo = 'inicio' | 'tarefa' | 'decisao' | 'fim';
+/** Situação no sistema hoje: disponível, em simulação (regra pronta, gravação depende do banco) ou planejado (fase futura). */
+export type Situacao = 'disponivel' | 'simulacao' | 'planejado';
+
+export interface Tela { rotulo: string; url: string }
+export interface NoFluxo {
+  id: string;
+  raia: Raia;
+  linha: number; // 1 = topo
+  tipo: TipoNo;
+  titulo: string;
+  oQue: string; // o que é feito nesta etapa
+  valida: string[]; // o que é conferido/validado antes de seguir
+  quem: string; // papéis (nunca nomes de pessoas)
+  situacao: Situacao;
+  fase: string; // onde entra no roteiro
+  telas: Tela[];
+}
+export interface Ligacao { de: string; para: string; rotulo?: string; tipo?: 'fluxo' | 'apoio' } // apoio = tracejada (informação/controle)
+
+export const RAIAS: { id: Raia; nome: string; descricao: string }[] = [
+  { id: 'integracoes', nome: 'Fontes e integrações', descricao: 'De onde vêm os dados: planilha, SEI, Transferegov, SIMEC, SISMOB, PNCP.' },
+  { id: 'captacao', nome: 'Captação', descricao: 'Recursos externos: oportunidades, propostas, convênios e cláusula suspensiva.' },
+  { id: 'projetos', nome: 'Projetos', descricao: 'Ciclo do projeto: cadastro, estruturação, planejamento e preparação da contratação.' },
+  { id: 'contratacao', nome: 'Contratação', descricao: 'Licitação pela Lei 14.133: jurídico, publicação, julgamento, habilitação e homologação.' },
+  { id: 'execucao', nome: 'Execução e entrega', descricao: 'Contrato, ordem de serviço, obra, medições e entrega final.' },
+  { id: 'gestao', nome: 'Gestão e controle', descricao: 'Acompanha tudo ao mesmo tempo: pendências, alertas, onde está parado, painel e histórico.' },
+];
+
+const T = {
+  inicio: { rotulo: 'Projetos · Início', url: '/plataforma/projetos/' },
+  carteira: { rotulo: 'Carteira de projetos', url: '/plataforma/projetos-carteira/' },
+  kanban: { rotulo: 'Kanban por macroetapa', url: '/plataforma/projetos-kanban/' },
+  gantt: { rotulo: 'Gantt geral', url: '/plataforma/projetos-gantt/' },
+  orgaos: { rotulo: 'Visão por órgão', url: '/plataforma/projetos-orgaos/' },
+  cronogramas: { rotulo: 'Cronogramas', url: '/plataforma/projetos-cronogramas/' },
+  parado: { rotulo: 'Onde está parado', url: '/plataforma/projetos-parado/' },
+  pendencias: { rotulo: 'Pendências de etapa', url: '/plataforma/projetos-pendencias/' },
+  log: { rotulo: 'Histórico de alterações', url: '/plataforma/projetos-log/' },
+  capPrincipal: { rotulo: 'Captação · Principal', url: '/plataforma/captacao/' },
+  oportunidades: { rotulo: 'Oportunidades', url: '/plataforma/captacao-oportunidades/' },
+  acompanhamento: { rotulo: 'Acompanhamento de convênios', url: '/plataforma/captacao-acompanhamento/' },
+  alertas: { rotulo: 'Alertas da Captação', url: '/plataforma/captacao-alertas/' },
+  parecer: { rotulo: 'Projetos (parecer de elegibilidade)', url: '/plataforma/captacao-projetos/' },
+  processos: { rotulo: 'Processos / Licitações', url: '/plataforma/processos/' },
+  documentos: { rotulo: 'Documentos da licitação', url: '/plataforma/documentos/' },
+  gestao: { rotulo: 'Gestão · Painel', url: '/plataforma/gestao/' },
+} satisfies Record<string, Tela>;
+
+export const NOS: NoFluxo[] = [
+  // ——— Início e cadastro
+  { id: 'inicio', raia: 'projetos', linha: 1, tipo: 'inicio', titulo: 'Início: demanda ou ideia',
+    oQue: 'Uma secretaria, o gabinete ou a equipe técnica traz uma necessidade (ex.: nova UBS, ponte, reforma de escola).',
+    valida: ['Qual secretaria demanda', 'Se já existe projeto parecido na carteira'], quem: 'Secretaria demandante; gestão de portfólio',
+    situacao: 'disponivel', fase: 'Fase 1', telas: [T.carteira] },
+  { id: 'planilha', raia: 'integracoes', linha: 2, tipo: 'tarefa', titulo: 'Planilha geral (carga)',
+    oQue: 'A planilha de obras prioritárias (aba PIPELINE + BASE_OPERACIONAL) e os cronogramas do GEPP entram por importação; cada carga é registrada no histórico com o que mudou.',
+    valida: ['Toda linha classificada', 'Totais conciliados (soma por ano, fontes)', 'Pendências de dado listadas'], quem: 'Gestão de portfólio',
+    situacao: 'disponivel', fase: 'Fase 1', telas: [T.carteira, T.log] },
+  { id: 'cadastro', raia: 'projetos', linha: 2, tipo: 'tarefa', titulo: 'Cadastro do projeto',
+    oQue: 'O projeto passa a existir no sistema com os campos da planilha: órgão, tipo, local, SEI, valor estimado, prioridade e se é decidido ou condicionado a recurso externo.',
+    valida: ['Nome e órgão', 'Compromisso: decidido, condicionado (só com recurso externo) ou ideia', 'Processo SEI quando houver'], quem: 'Gestão de portfólio; responsável',
+    situacao: 'simulacao', fase: 'Etapa 1.5 (cadastro grava com o banco)', telas: [T.carteira] },
+  { id: 'estruturacao', raia: 'projetos', linha: 3, tipo: 'tarefa', titulo: '00 – Em estruturação',
+    oQue: 'Define escopo e local; regulariza a área (uso do solo, matrícula) quando necessário.',
+    valida: ['Escopo e local definidos', 'Data prevista de entrega das peças técnicas'], quem: 'Responsável do projeto; secretaria demandante',
+    situacao: 'disponivel', fase: 'Fase 1 (movimentação em simulação)', telas: [T.kanban, T.carteira] },
+  { id: 'precisaRecurso', raia: 'projetos', linha: 4, tipo: 'decisao', titulo: 'Precisa de recurso externo?',
+    oQue: 'Se o projeto depende (ou se beneficia) de recurso federal ou estadual, segue também pela Captação; os condicionados só são executados se o recurso vier.',
+    valida: ['Saldo sem fonte = orçamento − (repasse + contrapartida + recurso próprio)'], quem: 'Gestão de portfólio; captação',
+    situacao: 'disponivel', fase: 'Fase 1 (saldo na ficha); alerta na Fase 4', telas: [T.carteira] },
+  // ——— Captação
+  { id: 'fontesFederais', raia: 'integracoes', linha: 4, tipo: 'tarefa', titulo: 'Transferegov, SIMEC, SISMOB',
+    oQue: 'Coleta automática de programas abertos e convênios (Transferegov); educação (SIMEC) e saúde (SISMOB) por importação assistida.',
+    valida: ['Dado atualizado e com origem', 'Convênio em uma única fonte'], quem: 'Sistema; captação',
+    situacao: 'disponivel', fase: 'Captação (Transferegov); SIMEC e SISMOB na Fase 4/5', telas: [T.oportunidades, T.acompanhamento] },
+  { id: 'oportunidade', raia: 'captacao', linha: 4, tipo: 'tarefa', titulo: 'Oportunidade × projeto',
+    oQue: 'O sistema sugere programas abertos compatíveis com o projeto (e projetos para cada oportunidade); a equipe confirma ou descarta.',
+    valida: ['Tema e tipo de obra', 'Prazo de envio da proposta', 'Requisitos do programa (parecer)'], quem: 'Captação',
+    situacao: 'planejado', fase: 'Fase 4 (sugestão); oportunidades já disponíveis', telas: [T.oportunidades, T.parecer] },
+  { id: 'convenio', raia: 'captacao', linha: 5, tipo: 'tarefa', titulo: 'Proposta e convênio',
+    oQue: 'Proposta enviada e aprovada vira convênio (ou repasse fundo a fundo) ligado ao projeto: concedente, empenho, repasse, contrapartida, valor global, aditivos.',
+    valida: ['Valores e vigência', 'Contrapartida', 'Saldo a liberar'], quem: 'Captação',
+    situacao: 'disponivel', fase: 'Captação; ligação com o projeto na Fase 4', telas: [T.acompanhamento, T.capPrincipal] },
+  { id: 'clausula', raia: 'captacao', linha: 6, tipo: 'decisao', titulo: 'Cláusula suspensiva cumprida no prazo?',
+    oQue: 'O dinheiro só é liberado depois de cumprir as exigências (projeto executivo, orçamento, licença, titularidade). Cada exigência vira tarefa no cronograma do projeto.',
+    valida: ['Prazo da cláusula (alertas a 90, 60, 30 e 15 dias)', 'Exigências entregues'], quem: 'Captação; responsável do projeto',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.alertas] },
+  // ——— Planejamento e preparação
+  { id: 'planejamento', raia: 'projetos', linha: 5, tipo: 'tarefa', titulo: '01 – Planejamento',
+    oQue: 'Projeto (arquitetônico, complementares), orçamento por tabela oficial (SINAPI/GOINFRA), licenças e aprovações externas; acompanhado pelo cronograma do GEPP.',
+    valida: ['Projeto entregue e aceito (ART)', 'Orçamento com data-base', 'Licenças e aprovações (Bombeiros, SANEAGO, Equatorial)'], quem: 'Engenharia; parceiros externos; órgãos externos',
+    situacao: 'disponivel', fase: 'Fase 2 (cronogramas)', telas: [T.cronogramas, T.gantt] },
+  { id: 'portao', raia: 'projetos', linha: 6, tipo: 'decisao', titulo: 'Portão: pronto para contratar?',
+    oQue: 'O projeto só avança com os requisitos cumpridos; reprovado, volta uma etapa com motivo. Forçar exige motivo e fica no histórico.',
+    valida: ['Tem projeto', 'Origem do recurso definida', 'Termo de compromisso se o recurso for federal'], quem: 'Gestão de portfólio',
+    situacao: 'simulacao', fase: 'Etapa 1.5', telas: [T.pendencias, T.kanban] },
+  { id: 'preparatorio', raia: 'projetos', linha: 7, tipo: 'tarefa', titulo: '02 – Preparatório para contratação',
+    oQue: 'Peças técnicas e fase interna: DFD, ETP, mapa de riscos, TR ou projeto básico, autorização financeira e minuta do edital por modelo (toda escola, toda UPA).',
+    valida: ['Peças completas e assinadas', 'Autorização da despesa', 'Prazos internos menores que os da lei'], quem: 'SECAP; secretaria demandante',
+    situacao: 'planejado', fase: 'Fase 4 (fluxo da Lei 14.133)', telas: [T.documentos, T.cronogramas] },
+  // ——— Contratação
+  { id: 'juridico', raia: 'contratacao', linha: 7, tipo: 'decisao', titulo: 'Parecer jurídico: aprovado?',
+    oQue: 'A PGM faz o controle de legalidade. Com diligência, volta para ajustes (cada ida e volta é um ciclo registrado).',
+    valida: ['Diligências respondidas', 'Tempo com a PGM (onde está parado)'], quem: 'PGM; SECAP',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.parado] },
+  { id: 'sei', raia: 'integracoes', linha: 8, tipo: 'tarefa', titulo: 'SEI (andamentos e documentos)',
+    oQue: 'Lê a página pública de cada processo uma vez por dia (andamentos e documentos públicos); documento restrito entra por PDF. Documento-chave (edital, parecer, homologação, contrato) propõe a mudança de etapa.',
+    valida: ['Link público do processo colado na ficha', 'Nunca contornar captcha'], quem: 'Sistema; responsável',
+    situacao: 'planejado', fase: 'Fase 2', telas: [T.carteira] },
+  { id: 'publicacao', raia: 'contratacao', linha: 8, tipo: 'tarefa', titulo: '03 – Contratação: publicação',
+    oQue: 'Aviso e edital publicados no PNCP, Diário Oficial e jornal; começa o prazo mínimo de publicidade.',
+    valida: ['Prazo mínimo de publicidade (piso legal, art. 55) — não pode ser encurtado'], quem: 'SECAP (agente de contratação)',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.processos] },
+  { id: 'pncp', raia: 'integracoes', linha: 9, tipo: 'tarefa', titulo: 'PNCP',
+    oQue: 'Confere publicações de editais, atas e contratos e traz resultados.', valida: ['Publicação do contrato em até 20 dias úteis (teto legal)'], quem: 'Sistema',
+    situacao: 'planejado', fase: 'Fase 4/5', telas: [T.processos] },
+  { id: 'julgamento', raia: 'contratacao', linha: 9, tipo: 'tarefa', titulo: 'Julgamento e habilitação',
+    oQue: 'Propostas ordenadas; o 1º colocado passa pela habilitação técnica, econômica e fiscal. O prefeito vê a empresa avaliada, a posição e o valor.',
+    valida: ['Ordem completa dos colocados', 'Proposta abaixo de 75% do orçado (possível inexequível)'], quem: 'Comissão / agente de contratação',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.processos] },
+  { id: 'habilitado', raia: 'contratacao', linha: 10, tipo: 'decisao', titulo: 'Colocado habilitado?',
+    oQue: 'Inabilitado: chama o próximo colocado (já houve caso de chegar ao 7º). Cada tentativa fica registrada.',
+    valida: ['Documentos de habilitação'], quem: 'Comissão / agente de contratação',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.processos] },
+  { id: 'homologacao', raia: 'contratacao', linha: 11, tipo: 'tarefa', titulo: 'Recursos e homologação',
+    oQue: 'Prazo recursal, decisão e homologação/adjudicação; economia = estimado − contratado.',
+    valida: ['Prazos de recurso (3 + 3 dias úteis; decisão em até 10)', 'Valor homologado registrado'], quem: 'Autoridade competente; PGM',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.processos] },
+  // ——— Execução e entrega
+  { id: 'mobilizacao', raia: 'execucao', linha: 12, tipo: 'tarefa', titulo: '04 – Mobilização',
+    oQue: 'Garantia (seguro-garantia), assinatura e publicação do contrato, ordem de serviço e mobilização do canteiro.',
+    valida: ['Garantia apresentada', 'Contrato publicado', 'OS emitida (alerta se demorar)'], quem: 'SECAP; empresa contratada',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.kanban] },
+  { id: 'execucao', raia: 'execucao', linha: 13, tipo: 'tarefa', titulo: '05 – Execução',
+    oQue: 'Obra ou serviço em andamento: medições (valor medido e pago), avanço físico × financeiro, aditivos de prazo e valor.',
+    valida: ['Medições pagas', 'Aditivos dentro do limite legal (25%, ou 50% em reforma)', 'Prazo de fim de obra (alertas)'], quem: 'Fiscal do contrato; órgão executor',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.kanban, T.gantt] },
+  { id: 'conclusao', raia: 'execucao', linha: 14, tipo: 'tarefa', titulo: '06 – Conclusão',
+    oQue: 'Recebimento provisório e definitivo, habite-se e AVCB; para unidades de saúde, operacionalização (equipamentos, CNES).',
+    valida: ['Termos de recebimento', 'Valor executado registrado'], quem: 'Fiscal; órgão executor',
+    situacao: 'planejado', fase: 'Fase 4', telas: [T.carteira] },
+  { id: 'fim', raia: 'execucao', linha: 15, tipo: 'fim', titulo: 'Fim: entregue à população',
+    oQue: 'Projeto concluído; todo o caminho fica no histórico, do cadastro à entrega.', valida: ['Histórico completo'], quem: 'Todos',
+    situacao: 'disponivel', fase: 'Fase 1.5 (histórico)', telas: [T.log] },
+  // ——— Gestão e controle (transversal)
+  { id: 'movimentacao', raia: 'gestao', linha: 3, tipo: 'tarefa', titulo: 'Movimentar o projeto',
+    oQue: 'O projeto anda ou volta por qualquer caminho — arrastar no Kanban, novo passo na ficha, aprovar/reprovar na área de pendências ou atualização do SEI — sempre pela mesma regra.',
+    valida: ['Portões de etapa', 'Motivo para voltar ou forçar'], quem: 'Responsável; gestão de portfólio',
+    situacao: 'simulacao', fase: 'Etapa 1.5', telas: [T.kanban, T.pendencias] },
+  { id: 'alertas', raia: 'gestao', linha: 6, tipo: 'tarefa', titulo: 'Alertas e prazos',
+    oQue: 'Cinco alertas principais: cláusula suspensiva, edital na praça, homologação, início e fim de obra; mais saldo sem fonte, etapa parada e dado defasado.',
+    valida: ['Prazo da prefeitura (meta) × prazo da lei (teto): passar do teto é alerta vermelho'], quem: 'Sistema',
+    situacao: 'planejado', fase: 'Fase 4 (Captação já tem alertas)', telas: [T.alertas] },
+  { id: 'parado', raia: 'gestao', linha: 9, tipo: 'tarefa', titulo: 'Onde está parado',
+    oQue: 'Etapas vencidas por unidade e por responsável, com dias acumulados: com quem está cada tarefa e o que precisa ser cobrado.',
+    valida: ['Responsável e unidade de cada etapa', 'Sem punição: serve para redistribuir a carga'], quem: 'Gestão de portfólio',
+    situacao: 'disponivel', fase: 'Fase 2', telas: [T.parado, T.cronogramas] },
+  { id: 'painel', raia: 'gestao', linha: 12, tipo: 'tarefa', titulo: 'Painel do prefeito',
+    oQue: 'Foto atual de todos os módulos: etapa de cada projeto, licitações (empresa, colocação, valor, 2ª colocada), medições e previsões; histórico a um clique; depois, WhatsApp.',
+    valida: ['Somente leitura', 'Totais conciliados'], quem: 'Prefeito; gabinete',
+    situacao: 'planejado', fase: 'Fase 4 (guia Gestão)', telas: [T.gestao, T.orgaos, T.inicio] },
+  { id: 'log', raia: 'gestao', linha: 14, tipo: 'tarefa', titulo: 'Histórico de alterações',
+    oQue: 'Toda alteração do ciclo de vida: o que foi feito, por quem, quando, de onde veio, antes e depois, motivo; com filtros e exportação.',
+    valida: ['Registro imutável'], quem: 'Todos (consulta)',
+    situacao: 'disponivel', fase: 'Etapa 1.5', telas: [T.log] },
+];
+
+export const LIGACOES: Ligacao[] = [
+  { de: 'inicio', para: 'cadastro' },
+  { de: 'planilha', para: 'cadastro', tipo: 'apoio', rotulo: 'carga' },
+  { de: 'cadastro', para: 'estruturacao' },
+  { de: 'estruturacao', para: 'precisaRecurso' },
+  { de: 'precisaRecurso', para: 'oportunidade', rotulo: 'sim' },
+  { de: 'precisaRecurso', para: 'planejamento', rotulo: 'não' },
+  { de: 'fontesFederais', para: 'oportunidade', tipo: 'apoio' },
+  { de: 'oportunidade', para: 'convenio' },
+  { de: 'convenio', para: 'clausula' },
+  { de: 'clausula', para: 'planejamento', rotulo: 'exigências viram tarefas', tipo: 'apoio' },
+  { de: 'planejamento', para: 'portao' },
+  { de: 'portao', para: 'preparatorio', rotulo: 'sim' },
+  { de: 'portao', para: 'planejamento', rotulo: 'não: volta' },
+  { de: 'preparatorio', para: 'juridico' },
+  { de: 'juridico', para: 'preparatorio', rotulo: 'diligência' },
+  { de: 'juridico', para: 'publicacao', rotulo: 'aprovado' },
+  { de: 'sei', para: 'juridico', tipo: 'apoio' },
+  { de: 'publicacao', para: 'julgamento' },
+  { de: 'pncp', para: 'publicacao', tipo: 'apoio' },
+  { de: 'julgamento', para: 'habilitado' },
+  { de: 'habilitado', para: 'julgamento', rotulo: 'não: próximo colocado' },
+  { de: 'habilitado', para: 'homologacao', rotulo: 'sim' },
+  { de: 'homologacao', para: 'mobilizacao' },
+  { de: 'mobilizacao', para: 'execucao' },
+  { de: 'execucao', para: 'conclusao' },
+  { de: 'conclusao', para: 'fim' },
+  { de: 'movimentacao', para: 'estruturacao', tipo: 'apoio' },
+  { de: 'alertas', para: 'clausula', tipo: 'apoio' },
+  { de: 'parado', para: 'julgamento', tipo: 'apoio' },
+  { de: 'painel', para: 'homologacao', tipo: 'apoio' },
+  { de: 'log', para: 'conclusao', tipo: 'apoio' },
+];
+
+export const ROTULO_SITUACAO: Record<Situacao, string> = {
+  disponivel: 'Disponível no sistema',
+  simulacao: 'Em simulação (regra pronta; grava com o banco de dados)',
+  planejado: 'Planejado',
+};
