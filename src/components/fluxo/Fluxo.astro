@@ -1,0 +1,350 @@
+---
+import '../../styles/carteira.css';
+import { LIGACOES, NOS, RAIAS, ROTULO_SITUACAO } from '../../lib/govnexa/fluxo.ts';
+import type { NoFluxo } from '../../lib/govnexa/fluxo.ts';
+
+// ——— Geometria (viewBox em unidades fixas; o SVG ocupa 100% da largura do contêiner)
+const LARGURA = 1000;
+const COL = LARGURA / RAIAS.length;
+const TOPO = 48;
+const LIN = 100;
+const MAX_LINHA = Math.max(...NOS.map((n) => n.linha));
+const ALTURA = TOPO + MAX_LINHA * LIN + 16;
+type Pt = [number, number];
+interface Geo { no: NoFluxo; col: number; cx: number; cy: number; hw: number; hh: number }
+
+const geo = new Map<string, Geo>();
+for (const no of NOS) {
+  const col = RAIAS.findIndex((r) => r.id === no.raia);
+  const [hw, hh] = no.tipo === 'decisao' ? [82, 46] : no.tipo === 'tarefa' ? [62, 33] : [44, 44];
+  geo.set(no.id, { no, col, cx: (col + 0.5) * COL, cy: TOPO + (no.linha - 0.5) * LIN, hw, hh });
+}
+const rotuloSit = { disponivel: 'disponível', simulacao: 'simulação', planejado: 'planejado' } as const;
+
+// Quebra por palavras (no servidor)
+function quebrar(texto: string, max: number): string[] {
+  const linhas: string[] = [];
+  let atual = '';
+  for (const p of texto.split(/\s+/)) {
+    if (atual && (atual + ' ' + p).length > max) { linhas.push(atual); atual = p; }
+    else atual = atual ? atual + ' ' + p : p;
+  }
+  if (atual) linhas.push(atual);
+  return linhas;
+}
+const maxPorTipo = { tarefa: 17, decisao: 18, inicio: 11, fim: 11 } as const;
+const tamFonte = { tarefa: 11.5, decisao: 10.5, inicio: 10.5, fim: 10.5 } as const;
+
+// Borda da forma em uma posição (para as setas encostarem no contorno)
+function bordaY(g: Geo, x: number, lado: 'topo' | 'base'): number {
+  const dx = Math.min(Math.abs(x - g.cx), g.hw);
+  const desl = g.no.tipo === 'decisao' ? g.hh * (1 - dx / g.hw) : g.no.tipo === 'tarefa' ? g.hh : Math.sqrt(Math.max(0, g.hw * g.hw - dx * dx));
+  return lado === 'topo' ? g.cy - desl : g.cy + desl;
+}
+function bordaX(g: Geo, y: number, lado: 'esq' | 'dir'): number {
+  const dy = Math.min(Math.abs(y - g.cy), g.hh);
+  const desl = g.no.tipo === 'decisao' ? g.hw * (1 - dy / g.hh) : g.no.tipo === 'tarefa' ? g.hw : Math.sqrt(Math.max(0, g.hh * g.hh - dy * dy));
+  return lado === 'esq' ? g.cx - desl : g.cx + desl;
+}
+
+// Teste de obstrução: o segmento não pode cruzar outra forma
+function bate(p: Pt, q: Pt, ignorar: string[]): boolean {
+  const x1 = Math.min(p[0], q[0]), x2 = Math.max(p[0], q[0]);
+  const y1 = Math.min(p[1], q[1]), y2 = Math.max(p[1], q[1]);
+  for (const g of geo.values()) {
+    if (ignorar.includes(g.no.id)) continue;
+    if (x2 > g.cx - g.hw - 4 && x1 < g.cx + g.hw + 4 && y2 > g.cy - g.hh - 4 && y1 < g.cy + g.hh + 4) return true;
+  }
+  return false;
+}
+const livre = (pts: Pt[], ign: string[]) => pts.every((p, i) => i === 0 || !bate(pts[i - 1], p, ign));
+
+const canais = new Map<number, number>();
+function canal(y: number): number {
+  const n = canais.get(y) ?? 0;
+  canais.set(y, n + 1);
+  return y - 6 * n;
+}
+const topoLinha = (linha: number) => TOPO + (linha - 1) * LIN;
+
+// Portas laterais: quando duas ligações usam o mesmo lado de uma forma, a segunda desloca um pouco a linha
+const portas = new Map<string, number>();
+const DESL = [0, 14, -14, 28];
+const chave = (id: string, lado: string) => `${id}:${lado}`;
+const desl = (id: string, lado: string) => DESL[Math.min(portas.get(chave(id, lado)) ?? 0, DESL.length - 1)];
+const marcar = (id: string, lado: string) => portas.set(chave(id, lado), (portas.get(chave(id, lado)) ?? 0) + 1);
+
+function rotear(de: string, para: string, indice: number): Pt[] {
+  const A = geo.get(de)!, B = geo.get(para)!;
+  const ign = [de, para];
+  if (A.col === B.col) {
+    if (B.no.linha > A.no.linha) return [[A.cx, bordaY(A, A.cx, 'base')], [B.cx, bordaY(B, B.cx, 'topo')]];
+    const ya = A.cy + desl(de, 'dir'), yb = B.cy + desl(para, 'dir');
+    const xo = Math.max(bordaX(A, ya, 'dir'), bordaX(B, yb, 'dir')) + 12;
+    marcar(de, 'dir'); marcar(para, 'dir');
+    return [[bordaX(A, ya, 'dir'), ya], [xo, ya], [xo, yb], [bordaX(B, yb, 'dir'), yb]];
+  }
+  const dir = B.col > A.col ? 1 : -1;
+  const ladoA = dir > 0 ? 'dir' : 'esq';
+  const ladoB = dir > 0 ? 'esq' : 'dir';
+  const off = 24 * dir;
+  const viaTopo = (linhaTopo: number, sa: 'topo' | 'base', sb: 'topo' | 'base'): Pt[] => {
+    const yc = canal(topoLinha(linhaTopo));
+    return [[A.cx + off, bordaY(A, A.cx + off, sa)], [A.cx + off, yc], [B.cx - off, yc], [B.cx - off, bordaY(B, B.cx - off, sb)]];
+  };
+  if (A.no.linha === B.no.linha) {
+    const volta = LIGACOES.findIndex((l) => l.de === para && l.para === de);
+    if (volta >= 0 && volta < indice) return viaTopo(A.no.linha, 'topo', 'topo'); // ida e volta na mesma linha: a volta passa por cima
+    const y = A.cy + Math.max(desl(de, ladoA), desl(para, ladoB));
+    const reta: Pt[] = [[bordaX(A, y, ladoA), y], [bordaX(B, y, ladoB), y]];
+    if (livre(reta, ign)) { marcar(de, ladoA); marcar(para, ladoB); return reta; }
+    return viaTopo(A.no.linha, 'topo', 'topo');
+  }
+  const abaixo = B.no.linha > A.no.linha;
+  const ya = A.cy + desl(de, ladoA), yb = B.cy + desl(para, ladoB);
+  const candA: Pt[] = [[bordaX(A, ya, ladoA), ya], [B.cx, ya], [B.cx, bordaY(B, B.cx, abaixo ? 'topo' : 'base')]];
+  if (livre(candA, ign)) { marcar(de, ladoA); return candA; }
+  const candB: Pt[] = [[A.cx, bordaY(A, A.cx, abaixo ? 'base' : 'topo')], [A.cx, yb], [bordaX(B, yb, ladoB), yb]];
+  if (livre(candB, ign)) { marcar(para, ladoB); return candB; }
+  return abaixo ? viaTopo(B.no.linha, 'base', 'topo') : viaTopo(A.no.linha, 'topo', 'base');
+}
+
+// Posição do rótulo da ligação: no primeiro trecho com folga
+function posRotulo(pts: Pt[]): { x: number; y: number; ancora: 'start' | 'middle' } {
+  const trechos = pts.slice(1).map((q, i) => ({ p: pts[i], q, len: Math.abs(q[0] - pts[i][0]) + Math.abs(q[1] - pts[i][1]) }));
+  const t = trechos.find((s) => s.len >= 34) ?? trechos.reduce((a, b) => (b.len > a.len ? b : a));
+  if (t.p[1] === t.q[1]) return { x: (t.p[0] + t.q[0]) / 2, y: t.p[1] + (pts.length === 4 ? 11 : -4), ancora: 'middle' };
+  const baixo = t.q[1] > t.p[1];
+  const yAlvo = trechos.length === 3 && t === trechos[1] ? (t.p[1] + t.q[1]) / 2 + 3 : baixo ? t.p[1] + 14 : t.p[1] - 8;
+  return { x: t.p[0] + 8, y: yAlvo, ancora: 'start' };
+}
+
+const ligacoes = LIGACOES.map((l, i) => {
+  const pts = rotear(l.de, l.para, i);
+  const lab = l.rotulo ? posRotulo(pts) : null;
+  return { ...l, tipo: l.tipo ?? 'fluxo', pts, d: pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' '), lab };
+});
+
+// Dados para o detalhe (cliente)
+const titulo = (id: string) => NOS.find((n) => n.id === id)!.titulo;
+const dados = NOS.map((n) => ({
+  id: n.id,
+  titulo: n.titulo,
+  situacao: ROTULO_SITUACAO[n.situacao],
+  fase: n.fase,
+  raia: RAIAS.find((r) => r.id === n.raia)!.nome,
+  oQue: n.oQue,
+  valida: n.valida,
+  quem: n.quem,
+  anteriores: LIGACOES.filter((l) => l.para === n.id).map((l) => ({ id: l.de, titulo: titulo(l.de), rotulo: l.rotulo ?? '' })),
+  proximas: LIGACOES.filter((l) => l.de === n.id).map((l) => ({ id: l.para, titulo: titulo(l.para), rotulo: l.rotulo ?? '' })),
+  telas: n.telas,
+}));
+const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
+---
+<div class="fx" data-fluxo>
+  <section class="fx-legenda" aria-labelledby="fx-leg-t">
+    <h2 id="fx-leg-t">Como ler o diagrama</h2>
+    <div class="fx-leg-grupos">
+      <div>
+        <h3>Formas</h3>
+        <ul>
+          <li><svg viewBox="0 0 28 28" width="26" height="26" aria-hidden="true"><circle cx="14" cy="14" r="11" class="fx-l-forma fx-l-fino"/></svg> Início (borda fina)</li>
+          <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><rect x="3" y="5" width="30" height="18" rx="5" class="fx-l-forma"/></svg> Etapa</li>
+          <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><path d="M18 2 L33 14 L18 26 L3 14 Z" class="fx-l-forma"/></svg> Decisão (sim ou não)</li>
+          <li><svg viewBox="0 0 28 28" width="26" height="26" aria-hidden="true"><circle cx="14" cy="14" r="10" class="fx-l-forma fx-l-grosso"/></svg> Fim (borda grossa)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Situação no sistema</h3>
+        <ul>
+          <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><rect x="3" y="5" width="30" height="18" rx="5" class="fx-l-forma fx-s-disponivel"/></svg> Borda contínua verde: disponível</li>
+          <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><rect x="3" y="5" width="30" height="18" rx="5" class="fx-l-forma fx-s-simulacao"/></svg> Borda tracejada amarela: simulação</li>
+          <li><svg viewBox="0 0 36 28" width="34" height="26" aria-hidden="true"><rect x="3" y="5" width="30" height="18" rx="5" class="fx-l-forma fx-s-planejado"/></svg> Borda pontilhada cinza: planejado</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Linhas</h3>
+        <ul>
+          <li><svg viewBox="0 0 40 14" width="38" height="14" aria-hidden="true"><line x1="2" y1="7" x2="32" y2="7" class="fx-lin fx-lin-fluxo"/><path d="M38 7 L31 3 L31 11 Z" class="fx-seta-fluxo"/></svg> Contínua: caminho do fluxo</li>
+          <li><svg viewBox="0 0 40 14" width="38" height="14" aria-hidden="true"><line x1="2" y1="7" x2="32" y2="7" class="fx-lin fx-lin-apoio"/><path d="M38 7 L31 3 L31 11 Z" class="fx-seta-apoio"/></svg> Tracejada: apoio ou informação</li>
+        </ul>
+      </div>
+    </div>
+    <p class="muted">As colunas são as áreas (raias) e o tempo corre de cima para baixo. Clique em uma caixa, ou use Tab e Enter, para ver o que é feito, processado e validado e abrir a tela correspondente.</p>
+  </section>
+
+  <div class="fx-quadro">
+    <svg class="fx-svg" viewBox={`0 0 ${LARGURA} ${ALTURA}`} role="group" aria-label="Diagrama do fluxo do sistema, do início ao fim, em raias" preserveAspectRatio="xMidYMin meet">
+      <defs>
+        <marker id="fx-m-fluxo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="fx-seta-fluxo"/></marker>
+        <marker id="fx-m-apoio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="fx-seta-apoio"/></marker>
+      </defs>
+      {RAIAS.map((r, i) => (
+        <g>
+          <rect x={i * COL} y="0" width={COL} height={ALTURA} class={`fx-raia ${i % 2 ? 'fx-raia-b' : 'fx-raia-a'}`}/>
+          <text x={(i + 0.5) * COL} y={TOPO / 2 + 5} text-anchor="middle" class="fx-raia-nome">{r.nome}</text>
+        </g>
+      ))}
+      <line x1="0" y1={TOPO} x2={LARGURA} y2={TOPO} class="fx-raia-linha"/>
+      {ligacoes.map((l) => (
+        <path d={l.d} class={`fx-lin fx-lin-${l.tipo}`} marker-end={`url(#fx-m-${l.tipo})`} fill="none"/>
+      ))}
+      {ligacoes.filter((l) => l.lab).map((l) => (
+        <text x={l.lab!.x} y={l.lab!.y} text-anchor={l.lab!.ancora} class="fx-rot-lig">{l.rotulo}</text>
+      ))}
+      {NOS.map((n) => {
+        const g = geo.get(n.id)!;
+        const linhas = quebrar(n.titulo, maxPorTipo[n.tipo]);
+        const fs = tamFonte[n.tipo];
+        const passo = fs + 2;
+        const altBloco = linhas.length * passo + 12;
+        const y0 = g.cy - altBloco / 2 + fs;
+        const yRot = y0 + (linhas.length - 1) * passo + 12;
+        const m = 5;
+        return (
+          <g class="fx-no" role="button" tabindex="0" data-no={n.id} aria-label={`${n.titulo}: ${ROTULO_SITUACAO[n.situacao]}`}>
+            {n.tipo === 'decisao'
+              ? <>
+                  <path d={`M${g.cx} ${g.cy - g.hh - m} L${g.cx + g.hw + m} ${g.cy} L${g.cx} ${g.cy + g.hh + m} L${g.cx - g.hw - m} ${g.cy} Z`} class="fx-foco"/>
+                  <path d={`M${g.cx} ${g.cy - g.hh} L${g.cx + g.hw} ${g.cy} L${g.cx} ${g.cy + g.hh} L${g.cx - g.hw} ${g.cy} Z`} class={`fx-forma fx-s-${n.situacao}`}/>
+                </>
+              : n.tipo === 'tarefa'
+                ? <>
+                    <rect x={g.cx - g.hw - m} y={g.cy - g.hh - m} width={2 * g.hw + 2 * m} height={2 * g.hh + 2 * m} rx="13" class="fx-foco"/>
+                    <rect x={g.cx - g.hw} y={g.cy - g.hh} width={2 * g.hw} height={2 * g.hh} rx="9" class={`fx-forma fx-s-${n.situacao}`}/>
+                  </>
+                : <>
+                    <circle cx={g.cx} cy={g.cy} r={g.hw + m} class="fx-foco"/>
+                    <circle cx={g.cx} cy={g.cy} r={g.hw} class={`fx-forma fx-s-${n.situacao} ${n.tipo === 'fim' ? 'fx-grosso' : 'fx-fino'}`}/>
+                  </>}
+            {linhas.map((t, i) => <text x={g.cx} y={y0 + i * passo} text-anchor="middle" class="fx-tit" style={`font-size:${fs}px`}>{t}</text>)}
+            <text x={g.cx} y={yRot} text-anchor="middle" class="fx-sit">{rotuloSit[n.situacao]}</text>
+          </g>
+        );
+      })}
+    </svg>
+  </div>
+
+  <section class="fx-lista" aria-labelledby="fx-lista-t">
+    <h2 id="fx-lista-t">Lista das etapas</h2>
+    <p class="muted">As mesmas etapas do diagrama, por área e na ordem do tempo. Para leitura, impressão e leitor de tela.</p>
+    {RAIAS.map((r) => (
+      <div class="fx-lista-raia">
+        <h3>{r.nome}</h3>
+        <p class="muted">{r.descricao}</p>
+        <ol>
+          {NOS.filter((n) => n.raia === r.id).sort((a, b) => a.linha - b.linha).map((n) => (
+            <li>
+              <a href="#fluxo-detalhe" role="button" data-abrir={n.id}>{n.titulo}</a>
+              <span class={`fx-pilula fx-p-${n.situacao}`}>{rotuloSit[n.situacao]}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))}
+  </section>
+
+  <dialog id="fluxo-detalhe" class="cart-dialogo fx-dialogo" aria-labelledby="fx-d-titulo">
+    <h2 id="fx-d-titulo" data-fx-titulo></h2>
+    <p data-fx-situacao></p>
+    <p data-fx-raia></p>
+    <h3>O que é feito</h3>
+    <p data-fx-oque></p>
+    <h3>O que é validado</h3>
+    <ul data-fx-valida></ul>
+    <h3>Quem</h3>
+    <p data-fx-quem></p>
+    <h3>Etapas anteriores</h3>
+    <ul data-fx-ant></ul>
+    <h3>Próximas etapas</h3>
+    <ul data-fx-prox></ul>
+    <h3>Telas</h3>
+    <ul data-fx-telas class="fx-telas"></ul>
+    <div class="fx-d-acoes"><button type="button" data-fx-fechar>Fechar</button></div>
+  </dialog>
+  <script type="application/json" id="fluxo-dados" set:html={dadosJson}></script>
+</div>
+
+<script>
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-fluxo]');
+  const dlg = document.querySelector<HTMLDialogElement>('#fluxo-detalhe');
+  const fonte = document.querySelector('#fluxo-dados');
+  if (!raiz || !dlg || !fonte || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  interface Lig { id: string; titulo: string; rotulo: string }
+  interface No { id: string; titulo: string; situacao: string; fase: string; raia: string; oQue: string; valida: string[]; quem: string; anteriores: Lig[]; proximas: Lig[]; telas: { rotulo: string; url: string }[] }
+  const nos: No[] = JSON.parse(fonte.textContent || '[]');
+  const q = <T extends HTMLElement>(s: string) => dlg.querySelector<T>(s)!;
+
+  const itens = (ul: HTMLElement, lista: string[]) => {
+    ul.replaceChildren();
+    if (!lista.length) { const li = document.createElement('li'); li.textContent = 'Nenhuma.'; ul.append(li); return; }
+    for (const t of lista) { const li = document.createElement('li'); li.textContent = t; ul.append(li); }
+  };
+  const vizinhas = (ul: HTMLElement, lista: Lig[]) => {
+    ul.replaceChildren();
+    if (!lista.length) { const li = document.createElement('li'); li.textContent = 'Nenhuma.'; ul.append(li); return; }
+    for (const l of lista) {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'fx-vizinha';
+      b.dataset.irPara = l.id;
+      b.textContent = l.titulo;
+      li.append(b);
+      if (l.rotulo) li.append(document.createTextNode(' (' + l.rotulo + ')'));
+      ul.append(li);
+    }
+  };
+  const preencher = (id: string) => {
+    const n = nos.find((x) => x.id === id);
+    if (!n) return;
+    q('[data-fx-titulo]').textContent = n.titulo;
+    q('[data-fx-situacao]').textContent = 'Situação: ' + n.situacao + ' · ' + n.fase;
+    q('[data-fx-raia]').textContent = 'Raia: ' + n.raia;
+    q('[data-fx-oque]').textContent = n.oQue;
+    itens(q('[data-fx-valida]'), n.valida);
+    q('[data-fx-quem]').textContent = n.quem;
+    vizinhas(q('[data-fx-ant]'), n.anteriores);
+    vizinhas(q('[data-fx-prox]'), n.proximas);
+    const ul = q('[data-fx-telas]');
+    ul.replaceChildren();
+    for (const t of n.telas) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.className = 'button secondary';
+      a.setAttribute('data-astro-reload', '');
+      a.href = t.url;
+      a.textContent = 'Abrir: ' + t.rotulo;
+      li.append(a);
+      ul.append(li);
+    }
+  };
+  const abrir = (id: string) => {
+    preencher(id);
+    if (!dlg.open) dlg.showModal();
+    dlg.scrollTop = 0;
+  };
+
+  raiz.querySelectorAll<SVGGElement>('[data-no]').forEach((g) => {
+    g.addEventListener('click', () => abrir(g.dataset.no!));
+    g.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abrir(g.dataset.no!); }
+    });
+  });
+  raiz.querySelectorAll<HTMLElement>('[data-abrir]').forEach((a) => {
+    a.addEventListener('click', (e) => { e.preventDefault(); abrir(a.dataset.abrir!); });
+    a.addEventListener('keydown', (e) => {
+      if (e.key === ' ') { e.preventDefault(); abrir(a.dataset.abrir!); }
+    });
+  });
+  dlg.addEventListener('click', (e) => {
+    const alvo = e.target as HTMLElement;
+    const ir = alvo.closest<HTMLElement>('[data-ir-para]');
+    if (ir) { preencher(ir.dataset.irPara!); dlg.scrollTop = 0; q('[data-fx-titulo]').setAttribute('tabindex', '-1'); q('[data-fx-titulo]').focus(); return; }
+    if (alvo.closest('[data-fx-fechar]')) dlg.close();
+  });
+});
+</script>

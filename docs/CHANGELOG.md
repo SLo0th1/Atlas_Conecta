@@ -1,5 +1,8 @@
 # Changelog
 
+## GovNexa — Fluxo do sistema
+- 2026-11-15: guia Projetos › Fluxo do sistema: diagrama no estilo BPMN (6 raias, 28 etapas, início ao fim), clique em cada etapa mostra o que é feito, o que é validado, quem, a situação no sistema e os botões para abrir as telas; lista das etapas por raia para leitura e impressão. Conteúdo em src/lib/govnexa/fluxo.ts.
+
 ## GovNexa — Log do ciclo de vida do projeto
 - 2026-11-15: tela "Histórico de alterações" (Projetos): o que foi feito, por quem, data e hora, origem, antes/depois e motivo; filtros por período, projeto, pessoa, ação, origem e texto; exportação CSV protegida contra fórmulas; seção "Histórico" na ficha do projeto.
 - 2026-11-15: o importador da carteira registra cada carga e as diferenças em relação à anterior (incluídos, retirados, campos e etapas alterados) em historico.json (`--autor`).

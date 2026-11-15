@@ -182,3 +182,36 @@ test('govnexa: histórico de alterações',async({page})=>{
  // axe: claro e escuro
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`log ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
+
+test('govnexa: fluxo do sistema',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const resposta=await page.goto('/plataforma/projetos-fluxo/');
+ expect(resposta?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveCount(1);
+ await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(28);
+ // clique no portão: validações e link para as pendências
+ await page.locator('svg.fx-svg [data-no="portao"]').click();
+ const dlg=page.locator('#fluxo-detalhe');
+ await expect(dlg).toBeVisible();
+ await expect(dlg.getByRole('heading',{name:'O que é validado'})).toBeVisible();
+ const link=dlg.getByRole('link',{name:'Abrir: Pendências de etapa'});
+ await expect(link).toHaveAttribute('href','/plataforma/projetos-pendencias/');
+ await link.click();
+ await expect(page).toHaveURL(/\/plataforma\/projetos-pendencias\/$/);
+ // teclado: foco + Enter no início; "Próximas etapas" leva ao cadastro
+ await page.goto('/plataforma/projetos-fluxo/');
+ await page.locator('svg.fx-svg [data-no="inicio"]').focus();
+ await page.keyboard.press('Enter');
+ await expect(dlg).toBeVisible();
+ await expect(dlg.getByRole('heading',{name:'Próximas etapas'})).toBeVisible();
+ await dlg.locator('[data-fx-prox] button').first().click();
+ await expect(dlg.locator('[data-fx-titulo]')).toHaveText('Cadastro do projeto');
+ await page.keyboard.press('Escape');
+ await expect(dlg).toBeHidden();
+ // sem rolagem horizontal em 1280px e 375px
+ for(const width of [1280,375]){await page.setViewportSize({width,height:900});await page.goto('/plataforma/projetos-fluxo/');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`largura ${width}`).toBeTruthy();}
+ // axe: claro e escuro
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/projetos-fluxo/');
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`fluxo ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
