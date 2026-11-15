@@ -81,3 +81,9 @@ test('govnexa: carteira, kanban, gantt e órgãos',async({page})=>{
  await page.setViewportSize({width:1280,height:900});
  for(const theme of ['light','dark'])for(const path of ['/plataforma/projetos-kanban/','/plataforma/projetos-gantt/']){await page.goto(path);await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`${path} ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
+
+test('govnexa: tabelas cabem na largura, sem rolagem horizontal',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ for(const slug of ['projetos','projetos-carteira','gestao','captacao','captacao-oportunidades','captacao-acompanhamento','captacao-alertas','captacao-comparativo','captacao-qualidade','captacao-projetos']){await page.goto(`/plataforma/${slug}/`);const sobra=await page.$$eval('.table-wrap',ws=>Math.max(0,...ws.map(e=>e.scrollWidth-e.clientWidth)));expect(sobra,slug).toBeLessThanOrEqual(1);}
+ await page.goto('/plataforma/projetos/');await expect(page.locator('table')).toContainText('Total da carteira');await expect(page.locator('table')).not.toContainText('Fase 0');
+});

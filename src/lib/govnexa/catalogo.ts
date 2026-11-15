@@ -33,15 +33,9 @@ export const NOVOS_MODULOS = [
     slug: 'projetos',
     title: 'Projetos · Início',
     group: 'Projetos',
-    columns: ['Fase', 'O que entrega', 'Situação'],
-    rows: [
-      ['Fase 0 · Base e identidade', 'Nome GovNexa, menu por módulos e modelo de dados', 'Em andamento'],
-      ['Fase 1 · Carteira de Projetos', 'Importação das planilhas, carteira, ficha do projeto, Kanban e Gantt geral', 'Planejada'],
-      ['Fase 2 · Cronograma e equipe', 'Etapas com responsável, dependências, Kanban de tarefas, reunião semanal e SEI', 'Planejada'],
-      ['Fase 3 · Produção com banco de dados', 'PostgreSQL, perfis de acesso, histórico e isolamento por prefeitura', 'Planejada'],
-      ['Fase 4 · Contratação, convênios e Gestão', 'Licitações (Lei 14.133), cláusula suspensiva e painel do prefeito', 'Planejada'],
-      ['Fase 5 · Integrações e inteligência', 'PNCP, SIMEC, SISMOB, tabelas de preço, notificações e IA', 'Planejada'],
-    ],
+    // Conteúdo montado a partir da carteira em src/lib/carteira/modulos.ts (montarInicio).
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
     fields: [] as string[],
     source: 'govnexa-roteiro',
   },

@@ -74,3 +74,13 @@
  .cart-scroll{overflow:visible;border:0}
  @page{size:A4;margin:12mm}
 }
+/* Carteira (tabela): cabe na largura sem rolagem horizontal. O nome do projeto quebra linha; ID, valor e datas não. */
+[data-slug="projetos-carteira"] table{white-space:normal}
+[data-slug="projetos-carteira"] td,[data-slug="projetos-carteira"] th{padding-left:.5rem;padding-right:.5rem}
+[data-slug="projetos-carteira"] td:nth-child(1),[data-slug="projetos-carteira"] td:nth-child(5),[data-slug="projetos-carteira"] td:nth-child(6),[data-slug="projetos-carteira"] td:nth-child(7){white-space:nowrap}
+[data-slug="projetos-carteira"] td:nth-child(2){min-width:11rem}
+/* Regra do GovNexa: tabelas da plataforma cabem na largura (sem rolagem horizontal). Texto quebra linha; botões e números curtos, não. */
+.workspace .table-wrap table{white-space:normal}
+.workspace .table-wrap td,.workspace .table-wrap th{overflow-wrap:break-word;word-break:normal}
+.workspace .table-wrap td:last-child,.workspace .table-wrap th:last-child{white-space:nowrap}
+.workspace .table-wrap td,.workspace .table-wrap th{padding-left:.55rem;padding-right:.55rem}

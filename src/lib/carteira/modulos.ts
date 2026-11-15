@@ -5,7 +5,7 @@ import type { Modulo } from '../dados/tipos.ts';
 import { carregarCarteira } from './carga.ts';
 import { MACROETAPAS, nomeMacroetapa } from './macroetapas.ts';
 import type { Projeto } from './tipos.ts';
-import { farol, fimDaMacroetapaAtual, saldoSemFonte, valorProjeto } from './visoes.ts';
+import { farol, fimDaMacroetapaAtual, resumoPorMacroetapa, saldoSemFonte, valorProjeto } from './visoes.ts';
 
 const dash = '—';
 const txt = (v: string | null | undefined): string => (v && v.trim() ? v : dash);
@@ -44,6 +44,7 @@ function detalheProjeto(p: Projeto, ficticio: boolean, arquivo: string, importad
         `Tem projeto: ${sim(p.tem_projeto)}`,
         `Status: ${txt(p.status_projeto)}`,
         `Macroetapa: ${nomeMacroetapa(p.macroetapa)}`,
+        `Situação: ${cap(farol(p).cor)} (${farol(p).motivo})`,
         `Tipo de contratação: ${txt(p.tipo_contratacao)}`,
         `Órgão da contratação: ${txt(p.orgao_contratacao)}`,
       ],
@@ -114,10 +115,10 @@ function montarCarteira(): Modulo {
     slug: 'projetos-carteira',
     title: 'Carteira de projetos',
     group: 'Projetos',
-    columns: ['ID', 'Projeto', 'Órgão', 'Macroetapa', 'Valor', 'Entrega prevista', 'Situação'],
+    columns: ['ID', 'Projeto', 'Órgão', 'Macroetapa', 'Valor', 'Entrega', 'Situação'],
     rows: lista.map((p) => {
       const fa = farol(p);
-      return [p.id, p.nome, txt(p.orgao), nomeMacroetapa(p.macroetapa), valorProjeto(p) ?? dash, br(p.datas.encerramento), `${cap(fa.cor)}: ${fa.motivo}`];
+      return [p.id, p.nome, txt(p.orgao), nomeMacroetapa(p.macroetapa), valorProjeto(p) ?? dash, br(p.datas.encerramento), cap(fa.cor)];
     }),
     detalhes: lista.map((p) => detalheProjeto(p, f.ficticio, f.arquivo, f.importado_em)),
     busca: lista.map((p) => [p.nome, p.orgao, p.sei.join(' '), p.regiao, p.bairro, p.detalhamento, nomeMacroetapa(p.macroetapa)].filter(Boolean).join(' ')),
@@ -128,7 +129,27 @@ function montarCarteira(): Modulo {
   };
 }
 
+/** Página inicial do módulo Projetos: resumo real da carteira por macroetapa (quantidade, valor e situação). */
+function montarInicio(): Modulo {
+  const c = carregarCarteira();
+  const grupos = resumoPorMacroetapa(c);
+  const conta = (ps: Projeto[], cor: string) => ps.filter((p) => farol(p).cor === cor).length;
+  const linha = (nome: string, ps: Projeto[], valor: number) => [nome, ps.length, valor || dash, conta(ps, 'verde'), conta(ps, 'amarelo'), conta(ps, 'vermelho')];
+  const total = c.projetos.reduce((s, p) => s + (valorProjeto(p) ?? 0), 0);
+  return {
+    slug: 'projetos',
+    title: 'Projetos · Início',
+    group: 'Projetos',
+    columns: ['Macroetapa', 'Projetos', 'Valor', 'Verde', 'Amarelo', 'Vermelho'],
+    rows: [...grupos.map((g) => linha(g.nome, g.projetos, g.valor)), linha('Total da carteira', c.projetos, total)],
+    fields: [],
+    source: 'govnexa-carteira',
+    ficticio: c.fonte.ficticio,
+    fonte: c.fonte.ficticio ? 'Dados fictícios de exemplo (a carteira real entra pelo repositório privado).' : `Planilha ${c.fonte.arquivo}, importada em ${br(c.fonte.importado_em)}.`,
+  } as Modulo;
+}
+
 /** Troca o item 'projetos-carteira' do catálogo pelo módulo completo montado a partir da Carteira. */
 export function comCarteira<T extends { slug: string }>(lista: T[]): T[] {
-  return lista.map((m) => (m.slug === 'projetos-carteira' ? (montarCarteira() as unknown as T) : m));
+  return lista.map((m) => (m.slug === 'projetos-carteira' ? (montarCarteira() as unknown as T) : m.slug === 'projetos' ? (montarInicio() as unknown as T) : m));
 }

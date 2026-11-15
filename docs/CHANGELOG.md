@@ -1,5 +1,10 @@
 # Changelog
 
+## GovNexa — Fase 1: Carteira de Projetos
+- 2026-11-15: carteira importada da planilha (aba PIPELINE + BASE_OPERACIONAL), telas Carteira, Kanban por macroetapa, Gantt geral e Visão por órgão (PR #20).
+- 2026-11-15: regra de interface: tabelas da plataforma cabem na largura, sem rolagem horizontal (quebra de linha, colunas secundárias na ficha); teste automático em 1280px.
+- 2026-11-15: "Projetos · Início" passa a mostrar o resumo real da carteira por macroetapa (quantidade, valor, verde/amarelo/vermelho); o roteiro de desenvolvimento sai da aplicação. Botão "Novo registro" (protótipo) oculto em Projetos e Gestão até o cadastro real (etapa 1.5).
+
 ## GovNexa — Fase 0: base e identidade (em andamento)
 - 2026-11-15: a plataforma passa a se chamar **GovNexa — Inteligência para a gestão pública** (marca centralizada em `src/lib/marca.ts`; site público e login seguem com a marca anterior até decisão, chave `USAR_NO_SITE_PUBLICO`).
 - 2026-11-15: menu lateral agrupado por módulo (Projetos, Captação, Licitações, Gestão, Conta) via `src/lib/govnexa/catalogo.ts`, sem alterar `src/data/modules.json`; removido o texto "Área do comprador".
