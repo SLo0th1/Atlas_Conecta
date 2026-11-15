@@ -551,7 +551,7 @@ test('govnexa: menu lateral com blocos que abrem e fecham',async({page})=>{
  const corpo=page.locator('#'+await bloco().getAttribute('aria-controls'));
  await expect(corpo).toBeVisible();
  // sub-bloco (Operação, dentro de Licitações)
- const sub=page.locator('.sidebar button[data-sec^="g:"]').first();const subCorpo=page.locator('#'+await sub.getAttribute('aria-controls'));
+ const sub=page.locator('.sidebar button[data-sec^="g:Licitações:"]').first();const subCorpo=page.locator('#'+await sub.getAttribute('aria-controls'));
  await sub.click();await expect(sub).toHaveAttribute('aria-expanded','false');await expect(subCorpo).toBeHidden();
  await sub.click();await expect(subCorpo).toBeVisible();
  // bloco inteiro, lembrado depois de recarregar
@@ -565,4 +565,16 @@ test('govnexa: menu lateral com blocos que abrem e fecham',async({page})=>{
  await expect(bloco()).toHaveAttribute('aria-expanded','true');
  // axe claro e escuro na barra lateral
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).include('.sidebar').withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`menu ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
+test('govnexa: menu no celular com menu recolhido salvo continua reabrindo blocos',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/plataforma/projetos/');
+ await page.evaluate(()=>{localStorage.setItem('atlas-sidebar','true');localStorage.setItem('govnexa-menu-fechado',JSON.stringify(['m:Licitações']))});
+ await page.reload();
+ await page.locator('#drawer-toggle').click();
+ const bloco=page.locator('.sidebar button[data-sec="m:Licitações"]');
+ await expect(bloco).toBeVisible();await expect(bloco).toHaveAttribute('aria-expanded','false');
+ await bloco.click();
+ await expect(page.locator('#'+await bloco.getAttribute('aria-controls')).locator('a').first()).toBeVisible();
 });
