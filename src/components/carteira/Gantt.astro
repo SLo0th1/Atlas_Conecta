@@ -1,0 +1,117 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { MACROETAPAS, nomeMacroetapa } from '../../lib/carteira/macroetapas.ts';
+import { segmentosGantt } from '../../lib/carteira/visoes.ts';
+import { br, curto } from '../../lib/dados/formato.ts';
+
+const carteira = carregarCarteira();
+const LIM_INI = '2026-01-01';
+const LIM_FIM = '2029-12-31';
+const dia = (iso: string) => Date.parse(`${iso.slice(0, 10)}T00:00:00Z`);
+const hojeIso = new Date().toISOString().slice(0, 10);
+
+const linhas = carteira.projetos.map((p) => ({ p, segs: segmentosGantt(p) }));
+const comSegs = linhas.filter((l) => l.segs.length).sort((a, b) => (a.segs[0].inicio < b.segs[0].inicio ? -1 : 1));
+const semDatas = linhas.filter((l) => !l.segs.length);
+
+// Eixo: do menor início ao maior fim, fechado em meses e limitado a jan/2026 - dez/2029.
+const todas = comSegs.flatMap((l) => l.segs);
+let minIso = todas.length ? todas.reduce((m, s) => (s.inicio < m ? s.inicio : m), todas[0].inicio) : LIM_INI;
+let maxIso = todas.length ? todas.reduce((m, s) => (s.fim > m ? s.fim : m), todas[0].fim) : LIM_FIM;
+if (minIso < LIM_INI) minIso = LIM_INI;
+if (maxIso > LIM_FIM) maxIso = LIM_FIM;
+if (maxIso < minIso) maxIso = minIso;
+const anoIni = Number(minIso.slice(0, 4));
+const mesIni = Number(minIso.slice(5, 7)) - 1;
+const anoFim = Number(maxIso.slice(0, 4));
+const mesFim = Number(maxIso.slice(5, 7)) - 1;
+const nMeses = (anoFim - anoIni) * 12 + (mesFim - mesIni) + 1;
+const t0 = Date.UTC(anoIni, mesIni, 1);
+const t1 = Date.UTC(anoFim, mesFim + 1, 1);
+const span = t1 - t0;
+const pct = (t: number) => Math.min(100, Math.max(0, ((t - t0) / span) * 100));
+const nomesMes = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+const passo = nMeses > 30 ? 3 : nMeses > 16 ? 2 : 1;
+const meses = Array.from({ length: nMeses }, (_, i) => {
+  const ano = anoIni + Math.floor((mesIni + i) / 12);
+  const mes = (mesIni + i) % 12;
+  return { ano, mes, esq: pct(Date.UTC(ano, mes, 1)) };
+});
+const hojeT = dia(hojeIso);
+const hojeVisivel = hojeT >= t0 && hojeT <= t1;
+const orgaos = [...new Set(carteira.projetos.map((p) => p.orgao ?? 'Sem órgão'))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const larguraMin = Math.max(900, nMeses * 36 + 220);
+---
+<div data-cart data-gantt>
+  <div class="cart-filtros">
+    <label>Órgão
+      <select data-gt-orgao>
+        <option value="">Todos</option>
+        {orgaos.map((o) => <option value={o}>{o}</option>)}
+      </select>
+    </label>
+    <label>Macroetapa
+      <select data-gt-macro>
+        <option value="">Todas</option>
+        {MACROETAPAS.map((m) => <option value={m.codigo}>{m.rotulo}</option>)}
+      </select>
+    </label>
+  </div>
+  <ul class="gt-legenda" aria-label="Legenda das macroetapas">
+    {MACROETAPAS.filter((m) => m.codigo !== '06').map((m) => (
+      <li style={`--cor:var(--mc-${m.codigo})`}><span class="gt-chave" aria-hidden="true"></span>{m.rotulo}</li>
+    ))}
+    <li><span class="gt-chave" aria-hidden="true" style="background:transparent;border-left:2px dashed var(--cart-vermelho);width:0;height:.9rem;border-radius:0"></span>Linha tracejada: hoje</li>
+  </ul>
+  <p class="cart-resumo" role="status" data-gt-resumo>Mostrando {comSegs.length} de {comSegs.length} projetos com datas.</p>
+  <div class="cart-scroll" tabindex="0" role="region" aria-label="Gantt geral por macroetapa">
+    <div class="gt-quadro" style={`min-width:${larguraMin}px`}>
+      <div class="gt-linha gt-eixo">
+        <div class="gt-rotulo"><strong>Projeto</strong></div>
+        <div class="gt-trilha">
+          {meses.filter((m) => m.mes === 0 || m === meses[0]).map((m) => <span class="gt-ano" style={`left:${m.esq}%`}>{m.ano}</span>)}
+          {meses.filter((_, i) => i % passo === 0).map((m) => <span class="gt-mes" style={`left:${m.esq}%`}>{nomesMes[m.mes]}</span>)}
+        </div>
+      </div>
+      <div class="gt-sobreposto" aria-hidden="true">
+        {meses.filter((_, i) => i % passo === 0).map((m) => <span class="gt-grade" style={`left:${m.esq}%`}></span>)}
+        {hojeVisivel && <span class="gt-hoje" style={`left:${pct(hojeT)}%`}><span>Hoje</span></span>}
+      </div>
+      {comSegs.map(({ p, segs }) => (
+        <div class="gt-linha" data-gt-linha data-orgao={p.orgao ?? 'Sem órgão'} data-macro={p.macroetapa ?? ''}>
+          <div class="gt-rotulo" title={p.nome}>{curto(p.nome, 38)}<small>{p.orgao ?? 'Sem órgão'}</small></div>
+          <div class="gt-trilha">
+            {segs.map((s) => {
+              const rotulo = `${nomeMacroetapa(s.codigo)}: ${br(s.inicio)} a ${br(s.fim)}`;
+              const e = pct(Math.max(dia(s.inicio), t0));
+              const d = pct(Math.min(dia(s.fim), t1));
+              return <span class="gt-bar" role="img" title={rotulo} aria-label={`${p.nome} · ${rotulo}`} style={`left:${e}%;width:${Math.max(d - e, 0.3)}%;--cor:var(--mc-${s.codigo})`}></span>;
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+  {semDatas.length > 0 && <p class="gt-sem">Sem datas previstas: {semDatas.length} projeto{semDatas.length === 1 ? '' : 's'}.</p>}
+</div>
+<script>
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-gantt]');
+  const org = raiz?.querySelector<HTMLSelectElement>('[data-gt-orgao]');
+  const mac = raiz?.querySelector<HTMLSelectElement>('[data-gt-macro]');
+  if (!raiz || !org || !mac) return;
+  const linhas = [...raiz.querySelectorAll<HTMLElement>('[data-gt-linha]')];
+  const aplicar = () => {
+    let n = 0;
+    linhas.forEach((l) => {
+      const ok = (!org.value || l.dataset.orgao === org.value) && (!mac.value || l.dataset.macro === mac.value);
+      l.hidden = !ok;
+      if (ok) n++;
+    });
+    raiz.querySelector('[data-gt-resumo]')!.textContent = `Mostrando ${n} de ${linhas.length} projetos com datas.`;
+  };
+  org.addEventListener('change', aplicar);
+  mac.addEventListener('change', aplicar);
+});
+</script>

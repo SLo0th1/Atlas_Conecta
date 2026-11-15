@@ -1,0 +1,77 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { MACROETAPAS } from '../../lib/carteira/macroetapas.ts';
+import { resumoPorOrgao, valorProjeto } from '../../lib/carteira/visoes.ts';
+import { br, reais } from '../../lib/dados/formato.ts';
+
+const carteira = carregarCarteira();
+const orgaos = resumoPorOrgao(carteira);
+const total = carteira.projetos.reduce((s, p) => s + (valorProjeto(p) ?? 0), 0);
+const grupos = [...MACROETAPAS.map((m) => ({ codigo: m.codigo as string | null, nome: m.rotulo })), { codigo: null, nome: 'Sem macroetapa' }];
+const entrega = (iso: string | null) => iso ?? '9999-99-99';
+const pct = (n: number) => `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`;
+---
+<div data-cart data-orgaos>
+  <p class="cart-nao-imprimir"><button class="primary" type="button" data-vo-imprimir>Imprimir ou salvar em PDF</button></p>
+  <section class="vo-capa" aria-labelledby="vo-capa-titulo">
+    <h2 id="vo-capa-titulo">Resumo da carteira</h2>
+    <p class="vo-total"><span><strong>{carteira.projetos.length}</strong> projetos</span><span>Valor previsto total: <strong>{reais(total)}</strong></span></p>
+    <div class="vo-orgaos">
+      {orgaos.map((o) => (
+        <article class="card">
+          <h3>{o.orgao}</h3>
+          <p>{o.qtd} {o.qtd === 1 ? 'obra' : 'obras'}</p>
+          <p>{reais(o.valor)}</p>
+          <p>{pct(o.percentual)} do valor total</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  {orgaos.map((o, i) => {
+    const doOrgao = carteira.projetos.filter((p) => (p.orgao ?? 'Sem órgão') === o.orgao);
+    return (
+      <section class="vo-secao" aria-labelledby={`vo-${i}`}>
+        <h2 id={`vo-${i}`}>{o.orgao}</h2>
+        <p>{o.qtd} {o.qtd === 1 ? 'obra' : 'obras'} · {reais(o.valor)} · {o.emAndamento} em andamento · {o.emPlanejamento} em planejamento</p>
+        {grupos.map((g) => {
+          const lista = doOrgao.filter((p) => p.macroetapa === g.codigo).sort((a, b) => (entrega(a.datas.encerramento) < entrega(b.datas.encerramento) ? -1 : entrega(a.datas.encerramento) > entrega(b.datas.encerramento) ? 1 : 0));
+          if (!lista.length) return null;
+          return (
+            <div class="vo-macro">
+              <h3>{g.nome} ({lista.length})</h3>
+              <div class="cart-scroll" tabindex="0" role="region" aria-label={`${o.orgao}: ${g.nome}`}>
+                <table>
+                  <thead>
+                    <tr><th scope="col">ID</th><th scope="col">Obra</th><th scope="col" class="num">Valor previsto</th><th scope="col">Fim das peças técnicas</th><th scope="col">Fim da contratação</th><th scope="col" class="num">Dias de obra</th><th scope="col">Entrega</th></tr>
+                  </thead>
+                  <tbody>
+                    {lista.map((p) => {
+                      const v = valorProjeto(p);
+                      return (
+                        <tr>
+                          <td>{p.id}</td>
+                          <td>{p.nome}</td>
+                          <td class="num">{v === null ? '—' : reais(v)}</td>
+                          <td>{br(p.datas.pecas_tecnicas)}</td>
+                          <td>{br(p.datas.contratacao)}</td>
+                          <td class="num">{p.datas.execucao_dias ?? '—'}</td>
+                          <td>{br(p.datas.encerramento)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    );
+  })}
+</div>
+<script>
+document.addEventListener('astro:page-load', () => {
+  document.querySelector('[data-vo-imprimir]')?.addEventListener('click', () => window.print());
+});
+</script>

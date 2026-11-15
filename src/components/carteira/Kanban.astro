@@ -1,0 +1,79 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { resumoPorMacroetapa, valorProjeto, farol } from '../../lib/carteira/visoes.ts';
+import { br, reais } from '../../lib/dados/formato.ts';
+
+const carteira = carregarCarteira();
+const hoje = new Date().toISOString().slice(0, 10);
+const colunas = resumoPorMacroetapa(carteira);
+const orgaos = [...new Set(carteira.projetos.map((p) => p.orgao ?? 'Sem órgão'))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const rotuloFarol = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' } as const;
+const plural = (n: number) => `${n} projeto${n === 1 ? '' : 's'}`;
+---
+<div data-cart data-kanban>
+  <div class="cart-filtros">
+    <label>Órgão
+      <select data-kb-orgao>
+        <option value="">Todos</option>
+        {orgaos.map((o) => <option value={o}>{o}</option>)}
+      </select>
+    </label>
+  </div>
+  <p class="cart-resumo" role="status" data-kb-resumo>Mostrando {carteira.projetos.length} de {carteira.projetos.length} projetos.</p>
+  <div class="cart-scroll" tabindex="0" role="region" aria-label="Quadro Kanban por macroetapa">
+    <div class="kb-quadro">
+      {colunas.map((c) => (
+        <section class="kb-col" data-kb-col style={`--cor:var(--mc-${c.codigo === 'sem' ? '00' : c.codigo})`} aria-labelledby={`kb-${c.codigo}`}>
+          <header>
+            <h2 id={`kb-${c.codigo}`}>{c.nome}</h2>
+            <p><span data-kb-qtd>{plural(c.qtd)}</span> · <span data-kb-valor>{reais(c.valor)}</span></p>
+          </header>
+          <div class="kb-lista">
+            {c.projetos.map((p) => {
+              const f = farol(p, hoje);
+              const v = valorProjeto(p);
+              return (
+                <a class="kb-card" data-kb-card data-orgao={p.orgao ?? 'Sem órgão'} data-valor={v ?? 0} href={`/plataforma/projetos-carteira/?q=${encodeURIComponent(p.id)}`}>
+                  <strong>{p.nome}</strong>
+                  <span>{p.orgao ?? 'Sem órgão'}</span>
+                  <span>{v === null ? 'Valor: —' : reais(v)}</span>
+                  <span>Entrega: {br(p.datas.encerramento)}</span>
+                  <span class="kb-farol"><i class={`cart-ponto ${f.cor}`} aria-hidden="true"></i><span>{rotuloFarol[f.cor]} · {f.motivo}</span></span>
+                </a>
+              );
+            })}
+            <p class="kb-vazio" data-kb-vazio hidden={c.qtd > 0}>Nenhum projeto</p>
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-kanban]');
+  const sel = raiz?.querySelector<HTMLSelectElement>('[data-kb-orgao]');
+  if (!raiz || !sel) return;
+  const fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+  const total = raiz.querySelectorAll('[data-kb-card]').length;
+  const aplicar = () => {
+    let visiveis = 0;
+    raiz.querySelectorAll<HTMLElement>('[data-kb-col]').forEach((col) => {
+      let qtd = 0;
+      let valor = 0;
+      col.querySelectorAll<HTMLElement>('[data-kb-card]').forEach((card) => {
+        const ok = !sel.value || card.dataset.orgao === sel.value;
+        card.hidden = !ok;
+        if (ok) { qtd++; valor += Number(card.dataset.valor) || 0; }
+      });
+      visiveis += qtd;
+      col.querySelector('[data-kb-qtd]')!.textContent = `${qtd} projeto${qtd === 1 ? '' : 's'}`;
+      col.querySelector('[data-kb-valor]')!.textContent = fmt.format(valor);
+      col.querySelector<HTMLElement>('[data-kb-vazio]')!.hidden = qtd > 0;
+    });
+    raiz.querySelector('[data-kb-resumo]')!.textContent = `Mostrando ${visiveis} de ${total} projetos.`;
+  };
+  sel.addEventListener('change', aplicar);
+});
+</script>
