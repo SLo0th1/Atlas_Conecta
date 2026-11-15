@@ -63,3 +63,21 @@ test('govnexa: marca e módulos na plataforma',async({page})=>{
  const side=page.locator('.sidebar');for(const t of ['Projetos','Captação','Licitações','Gestão'])await expect(side).toContainText(t);await expect(side).not.toContainText('Área do comprador');
  await page.goto('/entrar/');await expect(page).toHaveTitle(/Atlas/);
 });
+test('govnexa: carteira, kanban, gantt e órgãos',async({page})=>{
+ const paginas=['/plataforma/projetos-carteira/','/plataforma/projetos-kanban/','/plataforma/projetos-gantt/','/plataforma/projetos-orgaos/'];
+ for(const path of paginas){const response=await page.goto(path);expect(response?.status(),path).toBe(200);await expect(page.locator('h1'),path).toHaveCount(1);}
+ await page.goto('/plataforma/projetos-kanban/');
+ const nomes=['Em estruturação','Planejamento','Preparatório para Contratação','Contratação','Mobilização','Execução','Conclusão'];
+ const cabecalhos=page.locator('.kb-col h2');await expect(cabecalhos).toHaveCount(7);
+ for(let i=0;i<nomes.length;i++)await expect(cabecalhos.nth(i)).toHaveText(nomes[i]);
+ const todos=await page.locator('.kb-card:visible').count();expect(todos).toBeGreaterThan(0);
+ await page.locator('[data-kb-orgao]').selectOption({index:1});
+ expect(await page.locator('.kb-card:visible').count()).toBeLessThan(todos);
+ await page.goto('/plataforma/projetos-gantt/');expect(await page.locator('.gt-bar').count()).toBeGreaterThan(0);
+ await page.goto('/plataforma/projetos-carteira/');
+ await page.getByRole('button',{name:'Ver detalhes'}).first().click();
+ await expect(page.locator('#record-body')).toContainText('Valores e recursos');
+ for(const width of [375,1280]){await page.setViewportSize({width,height:900});for(const path of paginas){await page.goto(path);const sobra=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);expect(sobra,`${path} em ${width}px`).toBeLessThanOrEqual(0);}}
+ await page.setViewportSize({width:1280,height:900});
+ for(const theme of ['light','dark'])for(const path of ['/plataforma/projetos-kanban/','/plataforma/projetos-gantt/']){await page.goto(path);await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`${path} ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});

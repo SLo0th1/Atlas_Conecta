@@ -11,6 +11,8 @@ export type Modulo = {
   fields: string[];
   source: string;
   fonte?: string;
+  /** true quando os dados são fictícios de exemplo (some o selo "dados reais"). */
+  ficticio?: boolean;
   detalhes?: Detalhe[];
   /** Texto de busca oculto por linha (a busca da tabela também olha este texto). */
   busca?: string[];
