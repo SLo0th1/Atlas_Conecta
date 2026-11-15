@@ -188,7 +188,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
  const resposta=await page.goto('/plataforma/projetos-fluxo/');
  expect(resposta?.status()).toBe(200);
  await expect(page.locator('h1')).toHaveCount(1);
- await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(30);
+ await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(31);
  // clique no portão: validações e link para as pendências
  await page.locator('svg.fx-svg [data-no="portao"]').click();
  const dlg=page.locator('#fluxo-detalhe');
@@ -218,7 +218,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
 
 test('govnexa: fluxo exporta em PDF',async({page})=>{
  await page.goto('/plataforma/projetos-fluxo/');await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeVisible();
- await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(30);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
+ await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(31);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
 });
 
 test('govnexa: sala de guerra',async({page})=>{
@@ -494,6 +494,46 @@ test('govnexa: prazos da Lei 14.133',async({page})=>{
  await page.goto('/plataforma/licitacoes-prazos/');
  await page.locator('#pz-inicio').fill('2026-11-13');
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`prazos ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
+test('govnexa: reunião semanal',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const resposta=await page.goto('/plataforma/projetos-reuniao/');
+ expect(resposta?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveCount(1);
+ await expect(page.locator('[data-ru-lista] .ru-item').first()).toBeVisible();
+ const total=async()=>page.locator('[data-ru-lista] .ru-item').count();
+ const antes=await total();
+ expect(antes).toBeGreaterThan(0);
+ // mudar a data da última reunião recalcula a pauta
+ await page.locator('[data-ru-desde]').fill('2000-01-01');
+ await expect.poll(total).toBeGreaterThanOrEqual(antes);
+ const comTudo=await total();
+ await page.locator('[data-ru-desde]').fill('2099-01-01');
+ await expect.poll(total).toBeLessThanOrEqual(comTudo);
+ await page.locator('[data-ru-desde]').fill('2000-01-01');
+ await expect.poll(total).toBe(comTudo);
+ // acrescentar ação e registrar
+ const item=page.locator('[data-ru-lista] .ru-item').first();
+ await item.getByLabel('Discussão').fill('Conversamos sobre o prazo.');
+ await item.getByLabel('Decisão').fill('Cobrar o responsável.');
+ await item.getByRole('button',{name:/Acrescentar ação/}).click();
+ await item.getByLabel(/Descrição da ação/).fill('Enviar ofício');
+ await item.getByLabel(/Responsável da ação/).fill('Responsável 1');
+ await item.getByLabel(/Prazo da ação/).fill('2026-12-01');
+ await item.getByLabel('Discutido').check();
+ await page.getByRole('button',{name:'Registrar reunião (simulação)'}).click();
+ await expect(page.locator('[data-ru-ok]')).toContainText('Nada foi gravado');
+ await page.goto('/plataforma/projetos-log/');
+ await expect(page.locator('[data-lg-corpo]')).toContainText('Reunião semanal registrada');
+ await expect(page.locator('[data-lg-corpo]')).toContainText('Ação criada na reunião');
+ // sem rolagem horizontal em 1280 e 390px
+ for(const width of [1280,390]){await page.setViewportSize({width,height:900});await page.goto('/plataforma/projetos-reuniao/');await expect(page.locator('[data-ru-lista] .ru-item').first()).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`reunião ${width}px`).toBeTruthy();}
+ // axe claro e escuro
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/projetos-reuniao/');
+ await expect(page.locator('[data-ru-lista] .ru-item').first()).toBeVisible();
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`reunião ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
 
 test('govnexa: Novo projeto fora do menu, aberto pelo botão',async({page})=>{

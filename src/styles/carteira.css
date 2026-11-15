@@ -428,3 +428,41 @@
 .pz-tabela td::before{content:attr(data-rotulo) ": ";font-weight:700}
 .pz-feriados{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Reunião semanal: pauta, cartões de projeto, ações e ata (impressão). */
+.ru-h2{font-size:1.2rem;margin:0 0 .5rem}
+.ru-filtros input[type=date]{min-width:11rem}
+.ru-resumo{list-style:none;margin:0 0 .5rem;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem}
+.ru-cartao-resumo{display:grid;gap:.15rem;padding:.6rem .75rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);font-size:.9rem}
+.ru-numero{font-size:1.5rem;line-height:1.1}
+.ru-lista{list-style:none;margin:0 0 1.5rem;padding:0;display:grid;gap:.75rem}
+.ru-item{margin:0;padding:1rem;display:grid;gap:.5rem;min-width:0;overflow-wrap:anywhere}
+.ru-item h3{margin:0;font-size:1.05rem}
+.ru-item h4{margin:0 0 .15rem;font-size:.9rem}
+.ru-item p,.ru-item ul{margin:0;max-width:none}
+.ru-item ul{padding-left:1.2rem}
+.ru-meta{color:var(--muted)}
+.ru-farol{display:flex;gap:.4rem;align-items:flex-start}
+.ru-farol .cart-ponto{margin-top:.35rem}
+.ru-edicao{display:grid;gap:.6rem;padding-top:.5rem;border-top:1px solid var(--line)}
+.ru-edicao label{display:grid;gap:.25rem;font-size:.9rem}
+.ru-edicao textarea{width:100%}
+.ru-acoes-campo{border:1px solid var(--line);border-radius:8px;padding:.6rem;margin:0;min-width:0}
+.ru-acoes{list-style:none;margin:0 0 .5rem;padding:0!important;display:grid;gap:.5rem}
+.ru-acao{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:.5rem;align-items:end}
+.ru-acao label{min-width:0}
+.ru-acao input{width:100%;min-width:0}
+.ru-edicao .ru-discutido{display:flex;gap:.4rem;align-items:center;font-weight:600}
+.ru-edicao .ru-discutido input{width:auto}
+.ru-rodape{margin:1rem 0}
+.ru-ok{margin:.5rem 0;font-weight:600}
+.ru-impressao,.ru-impressao-cab{display:none}
+@media (max-width:900px){.ru-acao{grid-template-columns:minmax(0,1fr)}}
+@media print{
+ .ru-impressao-cab{display:block!important;margin:0 0 4mm;font-size:12pt;font-weight:700}
+ .ru-item[data-discutido=nao],.ru-resumo,#ru-resumo-titulo,.ru-edicao,.ru-item .ru-bloco,.ru-farol,.ru-meta,[data-ru-contador],[data-ru-vazio],[data-ru-form],#ru-pauta-titulo{display:none!important}
+ .ru-item[data-discutido=sim]{break-inside:avoid;border:0;border-top:1px solid #888;padding:2mm 0;display:block}
+ .ru-item .ru-impressao{display:block!important;font-size:10pt}
+ .ru-impressao table{width:100%;border-collapse:collapse;margin-top:2mm}
+ .ru-impressao th,.ru-impressao td{border:1px solid #888;padding:1mm 2mm;text-align:left;color:#000}
+}
