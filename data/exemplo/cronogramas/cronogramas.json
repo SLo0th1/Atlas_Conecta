@@ -1,0 +1,715 @@
+{
+ "prefeitura_id": 5208707,
+ "fonte": {
+  "arquivo": "exemplo-ficticio",
+  "hash": "-",
+  "importado_em": "2026-11-15T00:00:00Z",
+  "ficticio": true
+ },
+ "cronogramas": [
+  {
+   "id": "C-exemplo-001",
+   "aba": "Unidade de Saúde Exemplo A",
+   "titulo": "Unidade de Saúde Exemplo A",
+   "endereco": "Endereço fictício",
+   "sei": [
+    "26.18.000009001-1"
+   ],
+   "projeto_id": "P-900",
+   "casamento": "nome",
+   "fases": [
+    {
+     "nome": "Planejamento",
+     "ordem": 1,
+     "etapas": [
+      {
+       "ordem": 1,
+       "nome": "Uso do solo",
+       "fase": "Planejamento",
+       "unidade": "SECAP/GEPP",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-03-02",
+       "fim_previsto": "2026-03-07",
+       "inicio_real": "2026-03-04",
+       "fim_real": "2026-03-10",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 6
+       }
+      },
+      {
+       "ordem": 2,
+       "nome": "Projeto arquitetônico",
+       "fase": "Planejamento",
+       "unidade": "SMS",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 30,
+       "inicio_previsto": "2026-03-07",
+       "fim_previsto": "2026-04-06",
+       "inicio_real": "2026-03-09",
+       "fim_real": "2026-04-09",
+       "status": "concluida",
+       "ciclo": 2,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 7
+       }
+      },
+      {
+       "ordem": 3,
+       "nome": "Licença ambiental prévia",
+       "fase": "Planejamento",
+       "unidade": "AMMA",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 15,
+       "inicio_previsto": "2026-04-06",
+       "fim_previsto": "2026-04-21",
+       "inicio_real": "2026-04-08",
+       "fim_real": "2026-04-24",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 8
+       }
+      },
+      {
+       "ordem": 4,
+       "nome": "Projetos complementares",
+       "fase": "Planejamento",
+       "unidade": "Parceiro Externo",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 30,
+       "inicio_previsto": "2026-04-21",
+       "fim_previsto": "2026-05-21",
+       "inicio_real": "2026-04-23",
+       "fim_real": "2026-05-21",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 9
+       }
+      },
+      {
+       "ordem": 5,
+       "nome": "Aprovação Bombeiros",
+       "fase": "Planejamento",
+       "unidade": "BOMBEIROS",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 20,
+       "inicio_previsto": "2026-05-21",
+       "fim_previsto": "2026-06-10",
+       "inicio_real": "2026-05-23",
+       "fim_real": "2026-06-13",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 10
+       }
+      },
+      {
+       "ordem": 6,
+       "nome": "Orçamento",
+       "fase": "Planejamento",
+       "unidade": "SECAP/GERCES",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 20,
+       "inicio_previsto": "2026-06-10",
+       "fim_previsto": "2026-06-30",
+       "inicio_real": "2026-06-12",
+       "fim_real": "2026-07-03",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 11
+       }
+      }
+     ]
+    },
+    {
+     "nome": "Preparação da contratação",
+     "ordem": 2,
+     "etapas": [
+      {
+       "ordem": 7,
+       "nome": "DFD",
+       "fase": "Preparação da contratação",
+       "unidade": "SMS",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 3,
+       "inicio_previsto": "2026-06-30",
+       "fim_previsto": "2026-07-03",
+       "inicio_real": "2026-07-02",
+       "fim_real": "2026-07-06",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 12
+       }
+      },
+      {
+       "ordem": 8,
+       "nome": "ETP",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GEPP",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 10,
+       "inicio_previsto": "2026-07-03",
+       "fim_previsto": "2026-07-13",
+       "inicio_real": "2026-07-05",
+       "fim_real": "2026-07-13",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 13
+       }
+      },
+      {
+       "ordem": 9,
+       "nome": "Termo de referência",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GEPP",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 10,
+       "inicio_previsto": "2026-07-13",
+       "fim_previsto": "2026-07-23",
+       "inicio_real": "2026-07-15",
+       "fim_real": "2026-07-26",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 14
+       }
+      },
+      {
+       "ordem": 10,
+       "nome": "Minuta do edital",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Em andamento",
+       "duracao_prevista": 7,
+       "inicio_previsto": "2026-07-23",
+       "fim_previsto": "2026-07-30",
+       "inicio_real": "2026-07-25",
+       "fim_real": null,
+       "status": "em_andamento",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 15
+       }
+      },
+      {
+       "ordem": 11,
+       "nome": "Parecer jurídico",
+       "fase": "Preparação da contratação",
+       "unidade": "PGM",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 15,
+       "inicio_previsto": "2026-07-30",
+       "fim_previsto": "2026-08-14",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 16
+       }
+      },
+      {
+       "ordem": 12,
+       "nome": "Ajustes pós-parecer",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-08-14",
+       "fim_previsto": "2026-08-19",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 17
+       }
+      }
+     ]
+    },
+    {
+     "nome": "Contratação",
+     "ordem": 3,
+     "etapas": [
+      {
+       "ordem": 13,
+       "nome": "Publicação do aviso",
+       "fase": "Contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 2,
+       "inicio_previsto": "2026-08-19",
+       "fim_previsto": "2026-08-21",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 18
+       }
+      },
+      {
+       "ordem": 14,
+       "nome": "Sessão e julgamento",
+       "fase": "Contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 20,
+       "inicio_previsto": "2026-08-21",
+       "fim_previsto": "2026-09-10",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 19
+       }
+      },
+      {
+       "ordem": 15,
+       "nome": "Homologação",
+       "fase": "Contratação",
+       "unidade": "SECAP",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-09-10",
+       "fim_previsto": "2026-09-15",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 20
+       }
+      },
+      {
+       "ordem": 16,
+       "nome": "Ordem de serviço",
+       "fase": "Contratação",
+       "unidade": "SECAP",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-09-15",
+       "fim_previsto": "2026-09-20",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Unidade de Saúde Exemplo A",
+        "linha": 21
+       }
+      }
+     ]
+    }
+   ],
+   "pendencias": []
+  },
+  {
+   "id": "C-exemplo-002",
+   "aba": "Reforma de Escola Exemplo D",
+   "titulo": "Reforma de Escola Exemplo D",
+   "endereco": "Endereço fictício",
+   "sei": [
+    "26.18.000009002-1"
+   ],
+   "projeto_id": "P-903",
+   "casamento": "nome",
+   "fases": [
+    {
+     "nome": "Planejamento",
+     "ordem": 1,
+     "etapas": [
+      {
+       "ordem": 1,
+       "nome": "Uso do solo",
+       "fase": "Planejamento",
+       "unidade": "SECAP/GEPP",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-05-04",
+       "fim_previsto": "2026-05-09",
+       "inicio_real": "2026-05-06",
+       "fim_real": "2026-05-12",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 6
+       }
+      },
+      {
+       "ordem": 2,
+       "nome": "Projeto arquitetônico",
+       "fase": "Planejamento",
+       "unidade": "SMS",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 30,
+       "inicio_previsto": "2026-05-09",
+       "fim_previsto": "2026-06-08",
+       "inicio_real": "2026-05-11",
+       "fim_real": "2026-06-11",
+       "status": "concluida",
+       "ciclo": 2,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 7
+       }
+      },
+      {
+       "ordem": 3,
+       "nome": "Licença ambiental prévia",
+       "fase": "Planejamento",
+       "unidade": "AMMA",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 15,
+       "inicio_previsto": "2026-06-08",
+       "fim_previsto": "2026-06-23",
+       "inicio_real": "2026-06-10",
+       "fim_real": "2026-06-26",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 8
+       }
+      },
+      {
+       "ordem": 4,
+       "nome": "Projetos complementares",
+       "fase": "Planejamento",
+       "unidade": "Parceiro Externo",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Concluído",
+       "duracao_prevista": 30,
+       "inicio_previsto": "2026-06-23",
+       "fim_previsto": "2026-07-23",
+       "inicio_real": "2026-06-25",
+       "fim_real": "2026-07-23",
+       "status": "concluida",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 9
+       }
+      },
+      {
+       "ordem": 5,
+       "nome": "Aprovação Bombeiros",
+       "fase": "Planejamento",
+       "unidade": "BOMBEIROS",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Em andamento",
+       "duracao_prevista": 20,
+       "inicio_previsto": "2026-07-23",
+       "fim_previsto": "2026-08-12",
+       "inicio_real": "2026-07-25",
+       "fim_real": null,
+       "status": "em_andamento",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 10
+       }
+      },
+      {
+       "ordem": 6,
+       "nome": "Orçamento",
+       "fase": "Planejamento",
+       "unidade": "SECAP/GERCES",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 20,
+       "inicio_previsto": "2026-08-12",
+       "fim_previsto": "2026-09-01",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 11
+       }
+      }
+     ]
+    },
+    {
+     "nome": "Preparação da contratação",
+     "ordem": 2,
+     "etapas": [
+      {
+       "ordem": 7,
+       "nome": "DFD",
+       "fase": "Preparação da contratação",
+       "unidade": "SMS",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 3,
+       "inicio_previsto": "2026-09-01",
+       "fim_previsto": "2026-09-04",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 12
+       }
+      },
+      {
+       "ordem": 8,
+       "nome": "ETP",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GEPP",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 10,
+       "inicio_previsto": "2026-09-04",
+       "fim_previsto": "2026-09-14",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 13
+       }
+      },
+      {
+       "ordem": 9,
+       "nome": "Termo de referência",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GEPP",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 10,
+       "inicio_previsto": "2026-09-14",
+       "fim_previsto": "2026-09-24",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 14
+       }
+      },
+      {
+       "ordem": 10,
+       "nome": "Minuta do edital",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 7,
+       "inicio_previsto": "2026-09-24",
+       "fim_previsto": "2026-10-01",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 15
+       }
+      },
+      {
+       "ordem": 11,
+       "nome": "Parecer jurídico",
+       "fase": "Preparação da contratação",
+       "unidade": "PGM",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 15,
+       "inicio_previsto": "2026-10-01",
+       "fim_previsto": "2026-10-16",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 16
+       }
+      },
+      {
+       "ordem": 12,
+       "nome": "Ajustes pós-parecer",
+       "fase": "Preparação da contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-10-16",
+       "fim_previsto": "2026-10-21",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 17
+       }
+      }
+     ]
+    },
+    {
+     "nome": "Contratação",
+     "ordem": 3,
+     "etapas": [
+      {
+       "ordem": 13,
+       "nome": "Publicação do aviso",
+       "fase": "Contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 2,
+       "inicio_previsto": "2026-10-21",
+       "fim_previsto": "2026-10-23",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 18
+       }
+      },
+      {
+       "ordem": 14,
+       "nome": "Sessão e julgamento",
+       "fase": "Contratação",
+       "unidade": "SECAP/GERCEST",
+       "responsavel": "Responsável 3",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 20,
+       "inicio_previsto": "2026-10-23",
+       "fim_previsto": "2026-11-12",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 19
+       }
+      },
+      {
+       "ordem": 15,
+       "nome": "Homologação",
+       "fase": "Contratação",
+       "unidade": "SECAP",
+       "responsavel": "Responsável 1",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-11-12",
+       "fim_previsto": "2026-11-17",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 20
+       }
+      },
+      {
+       "ordem": 16,
+       "nome": "Ordem de serviço",
+       "fase": "Contratação",
+       "unidade": "SECAP",
+       "responsavel": "Responsável 2",
+       "situacao_planilha": "Não iniciado",
+       "duracao_prevista": 5,
+       "inicio_previsto": "2026-11-17",
+       "fim_previsto": "2026-11-22",
+       "inicio_real": null,
+       "fim_real": null,
+       "status": "a_fazer",
+       "ciclo": null,
+       "pendencias": [],
+       "origem": {
+        "aba": "Reforma de Escola Exemplo D",
+        "linha": 21
+       }
+      }
+     ]
+    }
+   ],
+   "pendencias": []
+  }
+ ]
+}
