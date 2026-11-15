@@ -458,3 +458,22 @@ test('govnexa: paginação compacta com reticências',async({page})=>{
  if(total<=7){await expect(n.locator('.pag-reticencias')).toHaveCount(0);return;}
  await expect(n.locator('button').first()).toHaveText('1');await expect(n.locator('.pag-reticencias')).toHaveCount(1);expect(total).toBeLessThanOrEqual(7);
 });
+
+test('govnexa: painel do prefeito',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const resposta=await page.goto('/plataforma/gestao/');
+ expect(resposta?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveCount(1);
+ await expect(page.locator('h1')).toHaveText('Gestão · Painel');
+ const cartoes=page.locator('[data-painel] .pn-cartao');
+ await expect(cartoes).toHaveCount(6);
+ const destinos=await cartoes.evaluateAll(els=>els.map(e=>(e as HTMLAnchorElement).getAttribute('href')||''));
+ for(const href of destinos){expect(href.startsWith('/plataforma/'),href).toBeTruthy();const r=await page.request.get(href);expect(r.status(),href).toBe(200);}
+ await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeVisible();
+ await expect(page.getByText('Licitações em detalhe',{exact:false})).toBeVisible();
+ await expect(page.getByRole('link',{name:'Histórico de alterações',exact:false}).first()).toHaveAttribute('href','/plataforma/projetos-log/');
+ for(const width of [1280,390]){await page.setViewportSize({width,height:900});await page.goto('/plataforma/gestao/');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`painel ${width}px`).toBeTruthy();}
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/gestao/');
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`painel ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});

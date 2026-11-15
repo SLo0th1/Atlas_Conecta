@@ -1,0 +1,185 @@
+---
+import '../../styles/gestao.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
+import { carregarSalas } from '../../lib/sala/carga.ts';
+import { br, reais } from '../../lib/dados/formato.ts';
+import { montarPainel, reaisAbreviado, resumoCaptacao } from '../../lib/gestao/painel.ts';
+
+const carteira = carregarCarteira();
+const hoje = new Date().toISOString().slice(0, 10);
+const p = montarPainel(carteira, carregarCronogramas().cronogramas, carregarSalas().salas, resumoCaptacao(), hoje);
+
+const URL = {
+  carteira: '/plataforma/projetos-carteira/',
+  kanban: '/plataforma/projetos-kanban/',
+  orgaos: '/plataforma/projetos-orgaos/',
+  gantt: '/plataforma/projetos-gantt/',
+  parado: '/plataforma/projetos-parado/',
+  sala: '/plataforma/projetos-sala/',
+  log: '/plataforma/projetos-log/',
+  captacao: '/plataforma/captacao-acompanhamento/',
+};
+const busca = (nome: string) => `${URL.carteira}?q=${encodeURIComponent(nome)}`;
+const pct = (n: number) => `${Math.round(n).toLocaleString('pt-BR')}%`;
+const projetos = (n: number) => `${n} ${n === 1 ? 'projeto' : 'projetos'}`;
+const maior = Math.max(1, ...p.carteira.porMacroetapa.map((g) => g.valor));
+const MAX = 5;
+
+const cartoes = [
+  { rotulo: 'Projetos', valor: String(p.carteira.total), nota: `${p.carteira.prioridadeMuitoAlta} com prioridade muito alta`, href: URL.carteira },
+  { rotulo: 'Valor total', valor: reaisAbreviado(p.carteira.valor), nota: reais(p.carteira.valor), href: URL.orgaos },
+  { rotulo: 'Em contratação', valor: String(p.contratacao.qtd), nota: reaisAbreviado(p.contratacao.valor), href: URL.kanban },
+  { rotulo: 'Em execução', valor: String(p.execucao.qtd), nota: reaisAbreviado(p.execucao.valor), href: URL.kanban },
+  { rotulo: 'Em atenção', valor: String(p.atencao.vermelhos.qtd), nota: 'com prazo vencido', href: URL.parado },
+  { rotulo: 'Entregas em 90 dias', valor: String(p.entregas.qtd), nota: 'previstas até 3 meses', href: URL.gantt },
+];
+const r = p.recursos;
+---
+<div class="pn" data-painel>
+  <p class="pn-linha">Dados de {br(carteira.fonte.importado_em)} · <a href={URL.log}>Histórico de alterações →</a></p>
+  <p class="pn-nao-imprimir"><button class="primary" type="button" data-pn-imprimir>Exportar em PDF</button></p>
+
+  <ul class="pn-cartoes" aria-label="Números principais">
+    {cartoes.map((c) => (
+      <li>
+        <a class="pn-cartao" href={c.href}>
+          <span class="pn-rotulo">{c.rotulo}</span>
+          <strong class="pn-numero">{c.valor}</strong>
+          <span class="pn-nota">{c.nota}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <section class="pn-bloco" aria-labelledby="pn-fase">
+    <h2 id="pn-fase">Por fase</h2>
+    <ul class="pn-fases">
+      {p.carteira.porMacroetapa.map((g) => (
+        <li>
+          <a class="pn-fase" href={URL.kanban} style={`--cor:var(--mc-${g.codigo === 'sem' ? '00' : g.codigo})`}>
+            <span class="pn-fase-nome">{g.nome}</span>
+            <span class="pn-fase-texto">{projetos(g.qtd)} · {reaisAbreviado(g.valor)}</span>
+            <span class="pn-barra" aria-hidden="true"><span style={`width:${Math.max(g.valor > 0 ? 2 : 0, Math.round((g.valor / maior) * 100))}%`}></span></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <div class="pn-blocos">
+    <section class="pn-bloco" aria-labelledby="pn-contratacao">
+      <h2 id="pn-contratacao">Em contratação</h2>
+      <p class="pn-total"><a href={URL.kanban}>{projetos(p.contratacao.qtd)} · {reaisAbreviado(p.contratacao.valor)}</a></p>
+      {p.contratacao.lista.length === 0 ? <p class="pn-vazio">Nenhum projeto em contratação.</p> : (
+        <ul class="pn-lista">
+          {p.contratacao.lista.slice(0, MAX).map((i) => (
+            <li>
+              <a href={busca(i.nome)}>{i.nome}</a>
+              <span>{i.orgao ?? 'Sem órgão'} · {i.valor === null ? 'valor —' : reaisAbreviado(i.valor)} · contratação até {br(i.data)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {p.contratacao.lista.length > MAX && <p class="pn-todos"><a href={URL.kanban}>Ver todos →</a></p>}
+    </section>
+
+    <section class="pn-bloco" aria-labelledby="pn-execucao">
+      <h2 id="pn-execucao">Obras em execução</h2>
+      <p class="pn-total"><a href={URL.kanban}>{projetos(p.execucao.qtd)} · {reaisAbreviado(p.execucao.valor)}</a></p>
+      {p.execucao.lista.length === 0 ? <p class="pn-vazio">Nenhuma obra em execução.</p> : (
+        <ul class="pn-lista">
+          {p.execucao.lista.slice(0, MAX).map((i) => (
+            <li>
+              <a href={busca(i.nome)}>{i.nome}</a>
+              <span>
+                {i.valor === null ? 'Valor total —' : `Total ${reaisAbreviado(i.valor)}`} · executado {i.executado === null ? '—' : reaisAbreviado(i.executado)} · {i.percentual === null ? '—' : `${pct(i.percentual)} executado`} · entrega {br(i.data)}
+              </span>
+              {i.percentual !== null && <span class="pn-barra" aria-hidden="true"><span style={`width:${Math.min(100, Math.round(i.percentual))}%`}></span></span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {p.execucao.lista.length > MAX && <p class="pn-todos"><a href={URL.kanban}>Ver todos →</a></p>}
+    </section>
+
+    <section class="pn-bloco" aria-labelledby="pn-parado">
+      <h2 id="pn-parado">Onde está parado</h2>
+      {p.parado.length === 0 ? <p class="pn-vazio">Nenhuma etapa com prazo vencido.</p> : (
+        <ul class="pn-lista">
+          {p.parado.map((u) => (
+            <li>
+              <a href={URL.parado}>{u.unidade}</a>
+              <span>{u.itens} {u.itens === 1 ? 'etapa atrasada' : 'etapas atrasadas'} · a mais antiga há {u.dias} {u.dias === 1 ? 'dia' : 'dias'}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p class="pn-todos"><a href={URL.parado}>Ver todos →</a></p>
+    </section>
+
+    <section class="pn-bloco" aria-labelledby="pn-atencao">
+      <h2 id="pn-atencao">Atenção</h2>
+      <p class="pn-total"><a href={URL.parado}>{p.atencao.vermelhos.qtd} {p.atencao.vermelhos.qtd === 1 ? 'projeto atrasado' : 'projetos atrasados'}</a> · <a href={URL.sala}>{p.atencao.salasAbertas} {p.atencao.salasAbertas === 1 ? 'sala de guerra aberta' : 'salas de guerra abertas'}</a></p>
+      {p.atencao.vermelhos.top.length === 0 ? <p class="pn-vazio">Nenhum projeto com prazo vencido.</p> : (
+        <ul class="pn-lista">
+          {p.atencao.vermelhos.top.map((i) => (
+            <li>
+              <a href={busca(i.nome)}>{i.nome}</a>
+              <span>Atrasado: {i.motivo}{i.prioridade ? ` · prioridade ${i.prioridade.toLowerCase()}` : ''}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <h3 class="pn-sub"><a href={URL.sala}>{p.atencao.candidatosSala.qtd} {p.atencao.candidatosSala.qtd === 1 ? 'sugestão de sala de guerra' : 'sugestões de sala de guerra'}</a></h3>
+      {p.atencao.candidatosSala.top.length > 0 && (
+        <ul class="pn-lista">
+          {p.atencao.candidatosSala.top.map((c) => (
+            <li>
+              <a href={busca(c.nome)}>{c.nome}</a>
+              <span>{c.porque}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p class="pn-todos"><a href={URL.sala}>Ver todos →</a></p>
+    </section>
+
+    <section class="pn-bloco" aria-labelledby="pn-entregas">
+      <h2 id="pn-entregas">Próximas entregas</h2>
+      <p class="pn-total"><a href={URL.gantt}>{projetos(p.entregas.qtd)} em 90 dias</a></p>
+      {p.entregas.lista.length === 0 ? <p class="pn-vazio">Nenhuma entrega prevista nos próximos 90 dias.</p> : (
+        <ul class="pn-lista">
+          {p.entregas.lista.slice(0, MAX).map((i) => (
+            <li>
+              <a href={busca(i.nome)}>{i.nome}</a>
+              <span>{br(i.data)} · {i.dias === 0 ? 'hoje' : i.dias === 1 ? 'em 1 dia' : `em ${i.dias} dias`}{i.valor === null ? '' : ` · ${reaisAbreviado(i.valor)}`}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {p.entregas.lista.length > MAX && <p class="pn-todos"><a href={URL.gantt}>Ver todos →</a></p>}
+    </section>
+
+    <section class="pn-bloco" aria-labelledby="pn-recursos">
+      <h2 id="pn-recursos">Recursos federais</h2>
+      {r === null ? <p class="pn-vazio">Dados de convênios ainda não coletados.</p> : (
+        <ul class="pn-lista pn-recursos">
+          <li><a href={URL.captacao}>{r.emExecucao} {r.emExecucao === 1 ? 'convênio em execução' : 'convênios em execução'}</a></li>
+          <li><span>Pactuado</span><a href={URL.captacao}>{reaisAbreviado(r.pactuado)}</a></li>
+          <li><span>Já liberado</span><a href={URL.captacao}>{reaisAbreviado(r.liberado)}</a></li>
+          <li><span>Saldo a liberar</span><a href={URL.captacao}>{reaisAbreviado(r.saldoALiberar)}</a></li>
+          <li><span>Sem nenhum desembolso</span><a href={URL.captacao}>{r.semDesembolso} {r.semDesembolso === 1 ? 'convênio' : 'convênios'}</a></li>
+        </ul>
+      )}
+      <p class="pn-todos"><a href={URL.captacao}>Ver todos →</a></p>
+    </section>
+  </div>
+
+  <p class="pn-aviso">Licitações em detalhe (empresa, colocação, valor da proposta) entram com o módulo de Contratação (Fase 4).</p>
+</div>
+<script>
+document.addEventListener('astro:page-load', () => {
+  document.querySelector('[data-pn-imprimir]')?.addEventListener('click', () => window.print());
+});
+</script>

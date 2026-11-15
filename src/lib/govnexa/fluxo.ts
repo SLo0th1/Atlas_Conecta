@@ -176,7 +176,7 @@ export const NOS: NoFluxo[] = [
   { id: 'painel', raia: 'gestao', linha: 12, tipo: 'tarefa', titulo: 'Painel do prefeito',
     oQue: 'Foto atual de todos os módulos: etapa de cada projeto, licitações (empresa, colocação, valor, 2ª colocada), medições e previsões; histórico a um clique; depois, WhatsApp.',
     valida: ['Somente leitura', 'Totais conciliados'], quem: 'Prefeito; gabinete',
-    situacao: 'planejado', fase: 'Fase 4 (guia Gestão)', telas: [T.gestao, T.orgaos, T.inicio] },
+    situacao: 'disponivel', fase: 'Fase 4 (foto atual com os dados de hoje; licitações em detalhe na Fase 4)', telas: [T.gestao, T.orgaos, T.inicio] },
   { id: 'log', raia: 'gestao', linha: 14, tipo: 'tarefa', titulo: 'Histórico de alterações',
     oQue: 'Toda alteração do ciclo de vida: o que foi feito, por quem, quando, de onde veio, antes e depois, motivo; com filtros e exportação.',
     valida: ['Registro imutável'], quem: 'Todos (consulta)',
