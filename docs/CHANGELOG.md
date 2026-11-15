@@ -1,5 +1,10 @@
 # Changelog
 
+## GovNexa — Log do ciclo de vida do projeto
+- 2026-11-15: tela "Histórico de alterações" (Projetos): o que foi feito, por quem, data e hora, origem, antes/depois e motivo; filtros por período, projeto, pessoa, ação, origem e texto; exportação CSV protegida contra fórmulas; seção "Histórico" na ficha do projeto.
+- 2026-11-15: o importador da carteira registra cada carga e as diferenças em relação à anterior (incluídos, retirados, campos e etapas alterados) em historico.json (`--autor`).
+- 2026-11-15: banco preparado: `db/migracoes/002_govnexa_log.sql` (evento_sistema e visão log_alteracoes, RLS, sem UPDATE/DELETE); validado em postgres:16.
+
 ## GovNexa — Fase 2 (cronograma e equipe) e etapa 1.5 (movimentação)
 - 2026-11-15: importador dos cronogramas do GEPP (`npm run importar:cronogramas`): fases, etapas, status calculado, ciclos de retrabalho, pendências de dado, casamento com a carteira, anonimização.
 - 2026-11-15: telas Cronogramas, página de cada cronograma (linha do tempo, quadro de tarefas, pendências), Onde está parado (por unidade e responsável).

@@ -1,7 +1,7 @@
 // Ajudantes do MODO SIMULAÇÃO da movimentação (1.5): as regras reais (aplicarEvento) são aplicadas na página,
 // mas nada é gravado até o banco de dados ser configurado. Usado pelo Kanban e pelas Pendências de etapa.
 import { MACROETAPAS } from './macroetapas.ts';
-import { aplicarEvento, type OrigemEvento, type ResultadoMovimentacao } from './movimentacao.ts';
+import { aplicarEvento, type OrigemEvento, type RegistroHistorico, type ResultadoMovimentacao } from './movimentacao.ts';
 import type { CodigoMacroetapa, Projeto } from './tipos.ts';
 
 export const AVISO_SIMULACAO = 'Modo simulação: as regras são aplicadas, mas nada é gravado até o banco de dados ser configurado.';
@@ -21,7 +21,7 @@ export function etapaAnterior(c: CodigoMacroetapa | null): CodigoMacroetapa | nu
 
 /** Aplica a movimentação pela regra única do sistema, com autor "Simulação". */
 export function simularMovimento(p: Projeto, para: CodigoMacroetapa, origem: OrigemEvento, motivo = '', forcar = false): ResultadoMovimentacao {
-  return aplicarEvento(p, {
+  const r = aplicarEvento(p, {
     tipo: 'mover_macroetapa',
     projeto_id: p.id,
     origem,
@@ -31,6 +31,23 @@ export function simularMovimento(p: Projeto, para: CodigoMacroetapa, origem: Ori
     ...(motivo.trim() ? { motivo: motivo.trim() } : {}),
     ...(forcar ? { forcar: true } : {}),
   });
+  if (r.ok && typeof sessionStorage !== 'undefined') guardarLogSimulacao(r.historico, p.nome);
+  return r;
+}
+
+export const CHAVE_LOG_SIMULACAO = 'govnexa-log-simulacao';
+const LIMITE_LOG_SIMULACAO = 200;
+
+/** Guarda na sessão do navegador os registros gerados pela simulação, para a tela de histórico mostrá-los (nada vai ao servidor). */
+export function guardarLogSimulacao(historico: RegistroHistorico[], projetoNome: string | null): void {
+  try {
+    const atual = JSON.parse(sessionStorage.getItem(CHAVE_LOG_SIMULACAO) || '[]');
+    const lista: unknown[] = Array.isArray(atual) ? atual : [];
+    const novos = historico.map((h) => ({ ...h, projeto_nome: projetoNome, simulado: true }));
+    sessionStorage.setItem(CHAVE_LOG_SIMULACAO, JSON.stringify([...lista, ...novos].slice(-LIMITE_LOG_SIMULACAO)));
+  } catch {
+    /* sessionStorage indisponível: a simulação continua, só não aparece no histórico */
+  }
 }
 
 let temporizador: ReturnType<typeof setTimeout> | undefined;

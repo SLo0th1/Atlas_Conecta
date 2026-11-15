@@ -186,3 +186,44 @@ test('anonimizar: responsáveis viram rótulos e textos livres somem', async () 
   assert.equal((r.carteira.fonte as any).anonimizado, true);
   assert.equal((r.relatorio as any).anonimizado, true);
 });
+
+test('duas importações seguidas registram carga, criado, removido, campos e etapa no historico.json, sem apagar o anterior', async () => {
+  const s3 = join(dir, 'historico');
+  await importarCarteira({ planilha, saida: s3, agora: new Date('2026-02-01T12:00:00Z') });
+  const h1 = JSON.parse(readFileSync(join(s3, 'historico.json'), 'utf8')).registros;
+  assert.equal(h1.length, 1);
+  assert.equal(h1[0].tipo, 'carga');
+  assert.equal(h1[0].projeto_id, '*');
+  assert.equal(h1[0].origem, 'importacao');
+  assert.equal(h1[0].autor, 'Importação da planilha');
+  assert.match(h1[0].descricao, /sintetica\.xlsx: 3 projetos \(carga inicial\)/);
+
+  // segunda planilha: P-1 muda o valor da obra, P-2 só avança de macroetapa, P-3 sai e P-4 entra
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.readFile(planilha);
+  const ws = wb.getWorksheet('PIPELINE')!;
+  const coluna = (nome: string) => (ws.getRow(1).values as unknown[]).indexOf(nome);
+  ws.getRow(2).getCell(coluna('Valor Estimado Execução Obra')).value = 8000000;
+  ws.getRow(3).getCell(coluna('Macroetapa')).value = '02 – Preparatório para Contratação';
+  ws.getRow(4).getCell(coluna('ID')).value = 4;
+  const planilha2 = join(dir, 'sintetica.xlsx.nova.xlsx');
+  await wb.xlsx.writeFile(planilha2);
+  await importarCarteira({ planilha: planilha2, saida: s3, agora: new Date('2026-02-02T12:00:00Z'), autor: 'Pessoa Fictícia 9' });
+
+  const h2 = JSON.parse(readFileSync(join(s3, 'historico.json'), 'utf8')).registros as any[];
+  assert.deepEqual(h2[0], h1[0]); // o anterior continua igual e no mesmo lugar
+  const novos = h2.slice(1);
+  assert.deepEqual(novos.map((r) => r.tipo).sort(), ['atualizar_campos', 'carga', 'criado', 'mover_macroetapa', 'removido']);
+  assert.ok(novos.every((r) => r.autor === 'Pessoa Fictícia 9' && r.origem === 'importacao' && r.em === '2026-02-02T12:00:00.000Z'));
+  const por = (t: string) => novos.find((r) => r.tipo === t);
+  assert.equal(por('criado').projeto_id, 'P-4');
+  assert.equal(por('removido').projeto_id, 'P-3');
+  assert.equal(por('mover_macroetapa').projeto_id, 'P-2');
+  assert.equal(por('mover_macroetapa').de, '01');
+  assert.equal(por('mover_macroetapa').para, '02');
+  assert.equal(por('atualizar_campos').projeto_id, 'P-1');
+  assert.deepEqual(por('atualizar_campos').campos, [{ campo: 'valores.obra', antes: 7740474.25, depois: 8000000 }]);
+  assert.equal(por('carga').projeto_id, '*');
+  assert.match(por('carga').descricao, /nova\.xlsx: 3 projetos \(1 incluídos, 2 alterados, 1 retirados\)/);
+  assert.equal(new Set(h2.map((r) => r.id)).size, h2.length);
+});

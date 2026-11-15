@@ -2,6 +2,8 @@
 import { aplicarEvento } from '../carteira/movimentacao.ts';
 import { carregarCarteira } from '../carteira/carga.ts';
 import { carregarCronogramas } from '../cronograma/carga.ts';
+import { carregarHistorico } from '../log/carga.ts';
+import { maisRecentes } from '../log/visoes.ts';
 import type { RepositorioProjetos } from './tipos.ts';
 
 export function criarRepositorioJson(): RepositorioProjetos {
@@ -15,6 +17,9 @@ export function criarRepositorioJson(): RepositorioProjetos {
     },
     async historico() {
       return [];
+    },
+    async listarHistorico() {
+      return maisRecentes(carregarHistorico().registros);
     },
     async aplicar(e) {
       const p = carregarCarteira().projetos.find((x) => x.id === e.projeto_id);

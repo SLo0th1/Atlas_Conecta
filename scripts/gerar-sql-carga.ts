@@ -1,7 +1,9 @@
-// Gera o SQL da carga inicial (carteira + cronogramas) para o PostgreSQL. Uso apenas local;
+// Gera o SQL da carga inicial (carteira + cronogramas + histórico de alterações) para o PostgreSQL. Uso apenas local;
 // o arquivo gerado contém dados da prefeitura e NÃO vai para o repositório.
 //   node scripts/gerar-sql-carga.ts --dados <pasta> --saida <arquivo.sql> [--nome "Goiânia"] [--uf GO]
-// A pasta pode ter carteira.json (e cronogramas.json) direto nela ou em carteira/ e cronogramas/.
+// A pasta pode ter carteira.json (e cronogramas.json, historico.json) direto nela ou em carteira/, cronogramas/ e historico/.
+// Histórico: registros de projeto presentes na carteira vão para evento_projeto; os demais (carga da planilha, projetos
+// retirados) vão para evento_sistema. Os dois são imutáveis: ON CONFLICT (id) DO NOTHING (rodar de novo não duplica).
 // Escape: texto entre aspas simples DUPLICANDO as aspas simples (padrão SQL; com standard_conforming_strings=on,
 // que é o padrão do PostgreSQL, a barra invertida é literal). Caractere NUL é recusado. jsonb = literal escapado + ::jsonb;
 // arrays = ARRAY[...]::text[]. Tudo em uma transação, idempotente (ON CONFLICT ... DO UPDATE).
@@ -9,6 +11,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Carteira } from '../src/lib/carteira/tipos.ts';
 import type { Cronogramas } from '../src/lib/cronograma/tipos.ts';
+import type { RegistroLog } from '../src/lib/log/tipos.ts';
 
 function arg(nome: string): string | undefined {
   const i = process.argv.indexOf(`--${nome}`);
@@ -31,9 +34,11 @@ if (!caminhoCarteira) {
   process.exit(1);
 }
 const caminhoCrono = achar('cronogramas.json');
+const caminhoHist = achar('historico.json');
 
 const carteira = JSON.parse(readFileSync(caminhoCarteira, 'utf8')) as Carteira;
 const cronogramas = caminhoCrono ? (JSON.parse(readFileSync(caminhoCrono, 'utf8')) as Cronogramas) : null;
+const historico = caminhoHist ? (JSON.parse(readFileSync(caminhoHist, 'utf8')) as { registros: RegistroLog[] }).registros : [];
 const ibge = carteira.prefeitura_id;
 if (!Number.isInteger(ibge)) throw new Error('prefeitura_id inválido.');
 
@@ -100,6 +105,32 @@ for (const c of cronogramas?.cronogramas ?? []) {
     }
   }
 }
+const idsProjetos = new Set(carteira.projetos.map((p) => p.id));
+let nEventoProjeto = 0;
+let nEventoSistema = 0;
+for (const h of historico) {
+  if (idsProjetos.has(h.projeto_id)) {
+    nEventoProjeto++;
+    linhas.push(
+      `INSERT INTO evento_projeto (id, prefeitura_id, projeto_id, tipo, origem, autor, em, de, para, campos, motivo, forcado, descricao) VALUES (` +
+        [txt(h.id), num(ibge), txt(h.projeto_id), txt(h.tipo), txt(h.origem), txt(h.autor), txt(h.em), txt(h.de), txt(h.para), json(h.campos), txt(h.motivo), bool(h.forcado ?? false), txt(h.descricao)].join(', ') +
+        `)
+  ON CONFLICT (id) DO NOTHING;`,
+    );
+  } else {
+    nEventoSistema++;
+    const detalhes: Record<string, unknown> = {};
+    if (h.projeto_id !== '*') detalhes.projeto_id = h.projeto_id;
+    for (const k of ['de', 'para', 'campos', 'motivo'] as const) if (h[k] != null) detalhes[k] = h[k];
+    if (h.forcado) detalhes.forcado = true;
+    linhas.push(
+      `INSERT INTO evento_sistema (id, prefeitura_id, tipo, origem, autor, em, descricao, detalhes) VALUES (` +
+        [txt(h.id), num(ibge), txt(h.tipo), txt(h.origem), txt(h.autor), txt(h.em), txt(h.descricao), Object.keys(detalhes).length ? json(detalhes) : 'NULL'].join(', ') +
+        `)
+  ON CONFLICT (id) DO NOTHING;`,
+    );
+  }
+}
 linhas.push('COMMIT;', '');
 writeFileSync(saida, linhas.join('\n'), 'utf8');
-console.log(`SQL gerado em ${saida}: ${carteira.projetos.length} projetos, ${cronogramas?.cronogramas.length ?? 0} cronogramas.`);
+console.log(`SQL gerado em ${saida}: ${carteira.projetos.length} projetos, ${cronogramas?.cronogramas.length ?? 0} cronogramas, ${nEventoProjeto} eventos de projeto, ${nEventoSistema} eventos de sistema.`);

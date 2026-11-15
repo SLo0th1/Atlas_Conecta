@@ -103,6 +103,15 @@ export const NOVOS_MODULOS = [
     source: 'govnexa-carteira',
   },
   {
+    slug: 'projetos-log',
+    title: 'Histórico de alterações',
+    group: 'Projetos',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-log',
+  },
+  {
     slug: 'gestao',
     title: 'Gestão · Painel',
     group: 'Gestão',
