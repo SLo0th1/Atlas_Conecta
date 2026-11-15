@@ -1,0 +1,76 @@
+/* Telas da Carteira de Projetos (Kanban, Gantt, Visão por órgão). Prefixo cart-/kb-/gt-/vo- para não colidir com o restante. */
+:root{--mc-00:#4B5563;--mc-01:#1D4ED8;--mc-02:#6D28D9;--mc-03:#B45309;--mc-04:#0E7490;--mc-05:#15803D;--mc-06:#334155;--cart-vermelho:#B91C1C;--cart-amarelo:#B45309;--cart-verde:#15803D}
+:root[data-theme=dark]{--mc-00:#9CA3AF;--mc-01:#60A5FA;--mc-02:#A78BFA;--mc-03:#FBBF24;--mc-04:#22D3EE;--mc-05:#4ADE80;--mc-06:#94A3B8;--cart-vermelho:#F87171;--cart-amarelo:#FBBF24;--cart-verde:#4ADE80}
+[data-cart] [hidden]{display:none!important}
+.cart-filtros{display:flex;flex-wrap:wrap;gap:1rem;align-items:end;margin:0 0 1rem}
+.cart-filtros label{display:grid;gap:.25rem;font-size:.9rem}
+.cart-filtros select{min-width:200px;max-width:100%}
+.cart-resumo{margin:.25rem 0 1rem;color:var(--muted)}
+.cart-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
+.cart-scroll:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* As seções das telas da carteira não herdam o espaçamento das seções do site público (section{padding:4rem 6%}). */
+[data-cart] section{padding:0;margin:0;max-width:none}
+/* Kanban */
+.kb-quadro{display:flex;gap:.75rem;padding:.75rem;align-items:flex-start}
+.kb-col{flex:0 0 250px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;border-top:5px solid var(--cor)}
+.kb-col>header{padding:.75rem;border-bottom:1px solid var(--line)}
+.kb-col h2{font-size:1rem;margin:0 0 .25rem;color:var(--text)}
+.kb-col header p{margin:0;font-size:.85rem;color:var(--muted)}
+.kb-lista{display:grid;gap:.6rem;padding:.6rem;max-height:70vh;overflow-y:auto;overscroll-behavior:contain}
+.kb-card{display:grid;gap:.25rem;padding:.65rem;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--text);text-decoration:none;font-size:.85rem}
+.kb-card:hover,.kb-card:focus-visible{border-color:var(--accent);outline:2px solid var(--accent);outline-offset:1px}
+.kb-card strong{font-size:.9rem;overflow-wrap:anywhere}
+.kb-card span{color:var(--muted)}
+.kb-farol{display:flex;gap:.4rem;align-items:flex-start}
+.kb-farol span{color:var(--text)}
+.cart-ponto{flex:0 0 .75rem;width:.75rem;height:.75rem;border-radius:50%;margin-top:.2rem;background:var(--cart-verde)}
+.cart-ponto.vermelho{background:var(--cart-vermelho)}
+.cart-ponto.amarelo{background:var(--cart-amarelo)}
+.kb-vazio{margin:0;padding:.6rem;color:var(--muted);font-size:.85rem}
+/* Gantt */
+.gt-legenda{display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin:0 0 1rem;padding:0;list-style:none;font-size:.85rem}
+.gt-legenda li{display:flex;align-items:center;gap:.4rem}
+.gt-chave{width:1rem;height:.6rem;border-radius:3px;background:var(--cor);display:inline-block}
+.gt-quadro{position:relative;background:var(--surface)}
+.gt-linha{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--line);min-height:2.4rem;align-items:center}
+.gt-rotulo{padding:.3rem .6rem;font-size:.8rem;line-height:1.25;color:var(--text);position:sticky;left:0;background:var(--surface);z-index:2;border-right:1px solid var(--line);align-self:stretch;display:grid;align-content:center}
+.gt-rotulo small{color:var(--muted)}
+.gt-trilha{position:relative;height:1.4rem}
+.gt-bar{position:absolute;top:.2rem;height:1rem;border-radius:3px;background:var(--cor);min-width:4px}
+.gt-eixo{background:var(--soft)}
+.gt-eixo .gt-rotulo{background:var(--soft)}
+.gt-eixo .gt-trilha{height:3rem}
+.gt-ano{position:absolute;top:.15rem;font-size:.8rem;font-weight:700;color:var(--text);padding-left:.25rem}
+.gt-mes{position:absolute;top:1.7rem;font-size:.7rem;color:var(--muted);padding-left:.2rem}
+.gt-sobreposto{position:absolute;top:0;bottom:0;left:220px;right:0;pointer-events:none;z-index:1}
+.gt-grade{position:absolute;top:0;bottom:0;border-left:1px solid var(--line);opacity:.6}
+.gt-hoje{position:absolute;top:0;bottom:0;border-left:2px dashed var(--cart-vermelho)}
+.gt-hoje span{position:absolute;top:.15rem;left:.25rem;font-size:.7rem;font-weight:700;color:var(--text);background:var(--surface);padding:0 .2rem;border-radius:3px}
+.gt-sem{margin:1rem 0 0}
+/* Visão por órgão */
+.vo-capa{display:grid;gap:1rem;margin:0 0 1.5rem}
+.vo-total{display:flex;flex-wrap:wrap;gap:1.5rem;font-size:1.1rem}
+.vo-orgaos{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.75rem}
+.vo-orgaos .card{margin:0;padding:1rem}
+.vo-orgaos h3{margin:0 0 .35rem}
+.vo-orgaos p{margin:.15rem 0}
+.vo-secao{margin:2rem 0}
+.vo-secao h2{margin-bottom:.25rem}
+.vo-macro{margin:1.25rem 0}
+.vo-macro h3{font-size:1rem;margin:0 0 .4rem}
+.vo-macro table{width:100%;border-collapse:collapse;font-size:.85rem;background:var(--surface)}
+.vo-macro th,.vo-macro td{border-bottom:1px solid var(--line);padding:.4rem .5rem;text-align:left;vertical-align:top;color:var(--text)}
+.vo-macro th{background:var(--soft)}
+.vo-macro td.num,.vo-macro th.num{text-align:right;white-space:nowrap}
+@media print{
+ :root,:root[data-theme=dark]{--bg:#fff;--surface:#fff;--soft:#eee;--text:#000;--muted:#222;--line:#888}
+ .sidebar,.appbar,.app-footer,.notice,.skip,#toast,button,.cart-filtros,.cart-nao-imprimir{display:none!important}
+ .platform{display:block!important}
+ .workspace{padding:0!important}
+ body{background:#fff;color:#000}
+ .vo-secao{break-before:page;margin:0}
+ .vo-macro{break-inside:avoid}
+ .vo-macro table{font-size:10pt}
+ .cart-scroll{overflow:visible;border:0}
+ @page{size:A4;margin:12mm}
+}

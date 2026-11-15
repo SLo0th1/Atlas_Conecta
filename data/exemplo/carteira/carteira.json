@@ -1,0 +1,1195 @@
+{
+ "prefeitura_id": 5208707,
+ "fonte": {
+  "arquivo": "exemplo-ficticio",
+  "hash": "-",
+  "importado_em": "2026-11-15T00:00:00Z",
+  "ficticio": true
+ },
+ "projetos": [
+  {
+   "id": "P-900",
+   "codigo_legado": 900,
+   "nome": "Unidade de Saúde Exemplo A",
+   "orgao": "SEINFRA",
+   "responsavel": "Pessoa Fictícia 1",
+   "tipo": "OBRA CIVIL",
+   "detalhamento": "EDIFICAÇÃO",
+   "sei": [],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "00",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Centro",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": null,
+   "tem_projeto": true,
+   "prioridade": "Muito Alta",
+   "tipo_contratacao": "Execução Própria",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 24000,
+    "obra": 1200000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 1200000,
+    "total": 1200000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-02-01",
+    "pecas_tecnicas": "2026-04-02",
+    "planejamento": "2026-05-02",
+    "preparatorio": "2026-06-01",
+    "contratacao": "2026-08-30",
+    "mobilizacao": "2026-09-29",
+    "execucao_dias": 180,
+    "encerramento": "2027-03-28"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 600000,
+     "federal": null,
+     "municipal": 600000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 600000,
+     "federal": null,
+     "municipal": 600000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 2
+   }
+  },
+  {
+   "id": "P-901",
+   "codigo_legado": 901,
+   "nome": "Ponte Exemplo B",
+   "orgao": "SMS",
+   "responsavel": "Pessoa Fictícia 2",
+   "tipo": "OBRA INFRA",
+   "detalhamento": "OAE",
+   "sei": [
+    "26.18.000001001-1"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "01",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Leste",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": false,
+   "prioridade": "Alta",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 90000,
+    "obra": 4500000,
+    "executado": null,
+    "em_captacao": 2250000,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 4500000,
+    "total": 4500000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-02-10",
+    "pecas_tecnicas": "2026-04-11",
+    "planejamento": "2026-05-11",
+    "preparatorio": "2026-06-10",
+    "contratacao": "2026-09-08",
+    "mobilizacao": "2026-10-08",
+    "execucao_dias": 240,
+    "encerramento": "2027-06-05"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 2250000,
+     "federal": null,
+     "municipal": 2250000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 2250000,
+     "federal": null,
+     "municipal": 2250000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 3
+   }
+  },
+  {
+   "id": "P-902",
+   "codigo_legado": 902,
+   "nome": "Corredor Exemplo C",
+   "orgao": "SME",
+   "responsavel": "Pessoa Fictícia 3",
+   "tipo": "OBRA INFRA",
+   "detalhamento": "CORREDOR",
+   "sei": [
+    "26.18.000001002-2"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "02",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Norte",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": true,
+   "prioridade": "Média",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 178000,
+    "obra": 8900000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": 5340000,
+    "contrapartida": 445000,
+    "custeio_municipio": null,
+    "total": 8900000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Federal",
+    "tipo": "Transferência",
+    "situacao": "Contratado",
+    "fonte_programa": "Programa Federal Exemplo",
+    "unidade_financiadora": "Ministério Exemplo",
+    "sugestao_financiar": "Não",
+    "termo_compromisso": true,
+    "numero_termo": "TC-000/26"
+   },
+   "datas": {
+    "inicio": "2026-02-19",
+    "pecas_tecnicas": "2026-04-20",
+    "planejamento": "2026-05-20",
+    "preparatorio": "2026-06-19",
+    "contratacao": "2026-09-17",
+    "mobilizacao": "2026-10-17",
+    "execucao_dias": 365,
+    "encerramento": "2027-10-17"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 4450000,
+     "federal": null,
+     "municipal": 4450000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 4450000,
+     "federal": null,
+     "municipal": 4450000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 4
+   }
+  },
+  {
+   "id": "P-903",
+   "codigo_legado": 903,
+   "nome": "Reforma de Escola Exemplo D",
+   "orgao": "SEMASDH",
+   "responsavel": "Pessoa Fictícia 4",
+   "tipo": "REFORMA",
+   "detalhamento": "EDIFICAÇÃO",
+   "sei": [],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "03",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Sul",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": false,
+   "prioridade": "Baixa",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 340000,
+    "obra": 17000000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 17000000,
+    "total": 17000000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-02-28",
+    "pecas_tecnicas": "2026-04-29",
+    "planejamento": "2026-05-29",
+    "preparatorio": "2026-06-28",
+    "contratacao": "2026-09-26",
+    "mobilizacao": "2026-10-26",
+    "execucao_dias": 425,
+    "encerramento": "2027-12-25"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 8500000,
+     "federal": null,
+     "municipal": 8500000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 8500000,
+     "federal": null,
+     "municipal": 8500000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 5
+   }
+  },
+  {
+   "id": "P-904",
+   "codigo_legado": 904,
+   "nome": "Drenagem Exemplo E",
+   "orgao": "SECULT",
+   "responsavel": "Pessoa Fictícia 1",
+   "tipo": "OBRA INFRA",
+   "detalhamento": "ALAGAMENTO",
+   "sei": [
+    "26.18.000001004-4"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "04",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Oeste",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": null,
+   "tem_projeto": true,
+   "prioridade": "Muito Alta",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 12000,
+    "obra": 600000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 600000,
+    "total": 600000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-03-09",
+    "pecas_tecnicas": "2026-05-08",
+    "planejamento": "2026-06-07",
+    "preparatorio": "2026-07-07",
+    "contratacao": "2026-10-05",
+    "mobilizacao": "2026-11-04",
+    "execucao_dias": 180,
+    "encerramento": "2027-05-03"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 300000,
+     "federal": null,
+     "municipal": 300000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 300000,
+     "federal": null,
+     "municipal": 300000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 6
+   }
+  },
+  {
+   "id": "P-905",
+   "codigo_legado": 905,
+   "nome": "Aquisição de Equipamentos Exemplo F",
+   "orgao": "SEINFRA",
+   "responsavel": "Pessoa Fictícia 2",
+   "tipo": "SERVIÇO",
+   "detalhamento": "AQUISIÇÃO DE PRODUTO",
+   "sei": [
+    "26.18.000001005-5"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "05",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Noroeste",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": false,
+   "prioridade": "Alta",
+   "tipo_contratacao": "Execução Própria",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 446000,
+    "obra": 22300000,
+    "executado": 8920000,
+    "em_captacao": 11150000,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 22300000,
+    "total": 22300000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-03-18",
+    "pecas_tecnicas": "2026-05-17",
+    "planejamento": "2026-06-16",
+    "preparatorio": "2026-07-16",
+    "contratacao": "2026-10-14",
+    "mobilizacao": "2026-11-13",
+    "execucao_dias": 240,
+    "encerramento": "2027-07-11"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 11150000,
+     "federal": null,
+     "municipal": 11150000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 11150000,
+     "federal": null,
+     "municipal": 11150000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 7
+   }
+  },
+  {
+   "id": "P-906",
+   "codigo_legado": 906,
+   "nome": "Centro Comunitário Exemplo G",
+   "orgao": "SMS",
+   "responsavel": "Pessoa Fictícia 3",
+   "tipo": "OBRA CIVIL",
+   "detalhamento": "EDIFICAÇÃO",
+   "sei": [],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "06",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": null,
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": true,
+   "prioridade": "Média",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 62000,
+    "obra": 3100000,
+    "executado": 1240000,
+    "em_captacao": null,
+    "captado": 1860000,
+    "contrapartida": 155000,
+    "custeio_municipio": null,
+    "total": 3100000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Federal",
+    "tipo": "Transferência",
+    "situacao": "Contratado",
+    "fonte_programa": "Programa Federal Exemplo",
+    "unidade_financiadora": "Ministério Exemplo",
+    "sugestao_financiar": "Não",
+    "termo_compromisso": true,
+    "numero_termo": "TC-000/26"
+   },
+   "datas": {
+    "inicio": "2026-03-27",
+    "pecas_tecnicas": "2026-05-26",
+    "planejamento": "2026-06-25",
+    "preparatorio": "2026-07-25",
+    "contratacao": "2026-10-23",
+    "mobilizacao": "2026-11-22",
+    "execucao_dias": 365,
+    "encerramento": "2027-11-22"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 1550000,
+     "federal": null,
+     "municipal": 1550000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 1550000,
+     "federal": null,
+     "municipal": 1550000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [
+    "Sem região informada"
+   ],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 8
+   }
+  },
+  {
+   "id": "P-907",
+   "codigo_legado": 907,
+   "nome": "Praça Exemplo H",
+   "orgao": "SME",
+   "responsavel": "Pessoa Fictícia 4",
+   "tipo": "OBRA INFRA",
+   "detalhamento": "OAE",
+   "sei": [
+    "26.18.000001007-7"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "00",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Centro",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": false,
+   "prioridade": "Baixa",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 24000,
+    "obra": 1200000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 1200000,
+    "total": 1200000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-04-05",
+    "pecas_tecnicas": "2026-06-04",
+    "planejamento": "2026-07-04",
+    "preparatorio": "2026-08-03",
+    "contratacao": "2026-11-01",
+    "mobilizacao": "2026-12-01",
+    "execucao_dias": 425,
+    "encerramento": "2028-01-30"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 600000,
+     "federal": null,
+     "municipal": 600000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 600000,
+     "federal": null,
+     "municipal": 600000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 9
+   }
+  },
+  {
+   "id": "P-908",
+   "codigo_legado": 908,
+   "nome": "Unidade de Saúde Exemplo I",
+   "orgao": "SEMASDH",
+   "responsavel": "Pessoa Fictícia 1",
+   "tipo": "OBRA INFRA",
+   "detalhamento": "CORREDOR",
+   "sei": [
+    "26.18.000001008-8"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "01",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Leste",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": null,
+   "tem_projeto": true,
+   "prioridade": "Muito Alta",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 90000,
+    "obra": 4500000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 4500000,
+    "total": 4500000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-04-14",
+    "pecas_tecnicas": "2026-06-13",
+    "planejamento": "2026-07-13",
+    "preparatorio": "2026-08-12",
+    "contratacao": "2026-11-10",
+    "mobilizacao": "2026-12-10",
+    "execucao_dias": 180,
+    "encerramento": "2027-06-08"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 2250000,
+     "federal": null,
+     "municipal": 2250000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 2250000,
+     "federal": null,
+     "municipal": 2250000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 10
+   }
+  },
+  {
+   "id": "P-909",
+   "codigo_legado": 909,
+   "nome": "Ponte Exemplo J",
+   "orgao": "SECULT",
+   "responsavel": "Pessoa Fictícia 2",
+   "tipo": "REFORMA",
+   "detalhamento": "EDIFICAÇÃO",
+   "sei": [],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "02",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Norte",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": false,
+   "prioridade": "Alta",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 178000,
+    "obra": 8900000,
+    "executado": null,
+    "em_captacao": 4450000,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 8900000,
+    "total": 8900000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-04-23",
+    "pecas_tecnicas": "2026-06-22",
+    "planejamento": "2026-07-22",
+    "preparatorio": "2026-08-21",
+    "contratacao": "2026-11-19",
+    "mobilizacao": "2026-12-19",
+    "execucao_dias": 240,
+    "encerramento": "2027-08-16"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 4450000,
+     "federal": null,
+     "municipal": 4450000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 4450000,
+     "federal": null,
+     "municipal": 4450000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 11
+   }
+  },
+  {
+   "id": "P-910",
+   "codigo_legado": 910,
+   "nome": "Corredor Exemplo K",
+   "orgao": "SEINFRA",
+   "responsavel": "Pessoa Fictícia 3",
+   "tipo": "OBRA INFRA",
+   "detalhamento": "ALAGAMENTO",
+   "sei": [
+    "26.18.000001010-0"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "03",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Sul",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": true,
+   "prioridade": "Média",
+   "tipo_contratacao": "Execução Própria",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 340000,
+    "obra": 17000000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": 10200000,
+    "contrapartida": 850000,
+    "custeio_municipio": null,
+    "total": 17000000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Federal",
+    "tipo": "Transferência",
+    "situacao": "Contratado",
+    "fonte_programa": "Programa Federal Exemplo",
+    "unidade_financiadora": "Ministério Exemplo",
+    "sugestao_financiar": "Não",
+    "termo_compromisso": true,
+    "numero_termo": "TC-000/26"
+   },
+   "datas": {
+    "inicio": "2026-05-02",
+    "pecas_tecnicas": "2026-07-01",
+    "planejamento": "2026-07-31",
+    "preparatorio": "2026-08-30",
+    "contratacao": "2026-11-28",
+    "mobilizacao": "2026-12-28",
+    "execucao_dias": 365,
+    "encerramento": "2027-12-28"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 8500000,
+     "federal": null,
+     "municipal": 8500000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 8500000,
+     "federal": null,
+     "municipal": 8500000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 12
+   }
+  },
+  {
+   "id": "P-911",
+   "codigo_legado": 911,
+   "nome": "Reforma de Escola Exemplo L",
+   "orgao": "SMS",
+   "responsavel": "Pessoa Fictícia 4",
+   "tipo": "SERVIÇO",
+   "detalhamento": "AQUISIÇÃO DE PRODUTO",
+   "sei": [
+    "26.18.000001011-1"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "04",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Oeste",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": false,
+   "prioridade": "Baixa",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 12000,
+    "obra": 600000,
+    "executado": null,
+    "em_captacao": null,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 600000,
+    "total": 600000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-05-11",
+    "pecas_tecnicas": "2026-07-10",
+    "planejamento": "2026-08-09",
+    "preparatorio": "2026-09-08",
+    "contratacao": "2026-12-07",
+    "mobilizacao": "2027-01-06",
+    "execucao_dias": 425,
+    "encerramento": "2028-03-06"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 300000,
+     "federal": null,
+     "municipal": 300000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 300000,
+     "federal": null,
+     "municipal": 300000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 13
+   }
+  },
+  {
+   "id": "P-912",
+   "codigo_legado": 912,
+   "nome": "Drenagem Exemplo M",
+   "orgao": "SME",
+   "responsavel": "Pessoa Fictícia 1",
+   "tipo": "OBRA CIVIL",
+   "detalhamento": "EDIFICAÇÃO",
+   "sei": [],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "05",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": "Noroeste",
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": null,
+   "tem_projeto": true,
+   "prioridade": "Muito Alta",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 446000,
+    "obra": 22300000,
+    "executado": 8920000,
+    "em_captacao": null,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 22300000,
+    "total": 22300000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-05-20",
+    "pecas_tecnicas": "2026-07-19",
+    "planejamento": "2026-08-18",
+    "preparatorio": "2026-09-17",
+    "contratacao": "2026-12-16",
+    "mobilizacao": "2027-01-15",
+    "execucao_dias": 180,
+    "encerramento": "2027-07-14"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 11150000,
+     "federal": null,
+     "municipal": 11150000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 11150000,
+     "federal": null,
+     "municipal": 11150000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 14
+   }
+  },
+  {
+   "id": "P-913",
+   "codigo_legado": 913,
+   "nome": "Aquisição de Equipamentos Exemplo N",
+   "orgao": "SEMASDH",
+   "responsavel": "Pessoa Fictícia 2",
+   "tipo": "OBRA INFRA",
+   "detalhamento": "OAE",
+   "sei": [
+    "26.18.000001013-3"
+   ],
+   "observacao": "Registro fictício para demonstração.",
+   "macroetapa": "06",
+   "status_projeto": "02 – Em Andamento",
+   "regiao": null,
+   "bairro": "Bairro Exemplo",
+   "corredor": null,
+   "origem_valor": "Orçamento",
+   "tem_projeto": false,
+   "prioridade": "Alta",
+   "tipo_contratacao": "LICITAÇÃO",
+   "orgao_contratacao": "SECAP",
+   "solicitacoes_financeiras": null,
+   "valores": {
+    "projeto": 62000,
+    "obra": 3100000,
+    "executado": 1240000,
+    "em_captacao": 1550000,
+    "captado": null,
+    "contrapartida": null,
+    "custeio_municipio": 3100000,
+    "total": 3100000,
+    "com_solicitacao_financeira": null
+   },
+   "recurso": {
+    "origem": "Municipal",
+    "tipo": "Tesouro",
+    "situacao": "Não se Aplica",
+    "fonte_programa": null,
+    "unidade_financiadora": null,
+    "sugestao_financiar": "Não",
+    "termo_compromisso": false,
+    "numero_termo": null
+   },
+   "datas": {
+    "inicio": "2026-05-29",
+    "pecas_tecnicas": "2026-07-28",
+    "planejamento": "2026-08-27",
+    "preparatorio": "2026-09-26",
+    "contratacao": "2026-12-25",
+    "mobilizacao": "2027-01-24",
+    "execucao_dias": 240,
+    "encerramento": "2027-09-21"
+   },
+   "por_ano": {
+    "2026": {
+     "subtotal": 1550000,
+     "federal": null,
+     "municipal": 1550000,
+     "outros": null
+    },
+    "2027": {
+     "subtotal": 1550000,
+     "federal": null,
+     "municipal": 1550000,
+     "outros": null
+    },
+    "2028": {
+     "subtotal": null,
+     "federal": null,
+     "municipal": null,
+     "outros": null
+    }
+   },
+   "atualizacao": {
+    "responsavel": "Pessoa Fictícia 1",
+    "data": "2026-11-10"
+   },
+   "operacional": null,
+   "pendencias": [
+    "Sem região informada"
+   ],
+   "origem": {
+    "aba": "EXEMPLO",
+    "linha": 15
+   }
+  }
+ ]
+}
