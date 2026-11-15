@@ -1,0 +1,65 @@
+# Rede de segurança da publicação na Vercel.
+# Depois de cada atualização da main, espera alguns minutos e confere se a Vercel publicou o commit
+# (status "Vercel" no commit). Se não publicou, aciona o gancho de publicação (Deploy Hook) guardado
+# no segredo VERCEL_DEPLOY_HOOK. Sem o segredo, só avisa (o job falha e o GitHub manda e-mail).
+# SEGURANÇA: a URL do gancho fica só no segredo; nunca é impressa no log. Permissões mínimas (leitura).
+name: Garantir publicação na Vercel
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  statuses: read
+concurrency:
+  group: garantir-publicacao
+  cancel-in-progress: true
+jobs:
+  conferir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Conferir se a Vercel publicou e acionar o gancho se preciso
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GANCHO: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          estado() {
+            gh api "repos/$REPO/commits/$SHA/status" --jq '[.statuses[] | select(.context | test("^Vercel")) | .state] | first // "ausente"'
+          }
+          # Até 6 minutos esperando a Vercel aparecer no commit (ela costuma marcar "pending" em segundos).
+          s="ausente"
+          for i in $(seq 1 12); do
+            s="$(estado)"
+            echo "Tentativa $i: status da Vercel = $s"
+            if [ "$s" != "ausente" ]; then break; fi
+            sleep 30
+          done
+          if [ "$s" = "pending" ]; then
+            # Publicação em andamento: espera terminar (até 8 minutos).
+            for i in $(seq 1 16); do
+              sleep 30
+              s="$(estado)"
+              if [ "$s" != "pending" ]; then break; fi
+            done
+            echo "Status final da Vercel: $s"
+          fi
+          if [ "$s" = "success" ]; then
+            echo "### Publicação conferida: a Vercel publicou ${SHA:0:7}." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if [ -z "${GANCHO:-}" ]; then
+            echo "### A Vercel não publicou ${SHA:0:7} (status: $s) e o segredo VERCEL_DEPLOY_HOOK não existe." >> "$GITHUB_STEP_SUMMARY"
+            echo "Peça ao dono da conta da Vercel para fazer o Redeploy da main e criar o gancho." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          codigo="$(curl -s -o /dev/null -w '%{http_code}' -X POST "$GANCHO")"
+          if [ "$codigo" -ge 200 ] && [ "$codigo" -lt 300 ]; then
+            echo "### A Vercel não tinha publicado ${SHA:0:7} (status: $s); publicação acionada pelo gancho (HTTP $codigo)." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### Falha ao acionar o gancho de publicação (HTTP $codigo). Conferir o segredo VERCEL_DEPLOY_HOOK." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
