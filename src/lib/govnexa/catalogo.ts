@@ -121,6 +121,15 @@ export const NOVOS_MODULOS = [
     source: 'govnexa-carteira',
   },
   {
+    slug: 'projetos-reuniao',
+    title: 'Reunião semanal',
+    group: 'Projetos',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-reuniao',
+  },
+  {
     slug: 'projetos-sala',
     title: 'Sala de guerra',
     group: 'Projetos',
