@@ -333,4 +333,17 @@
  .sl-raid{break-inside:auto}
  .sl-coluna,.sl-item,.sl-reuniao{break-inside:avoid}
  .sl-indicadores li,.sl-cabeca{break-inside:avoid}
+/* Celular: cada linha da tabela vira um cartão empilhado, com o rótulo de cada campo (sem rolagem horizontal). */
+@media (max-width:700px){
+ .workspace .table-wrap{border:0;overflow:visible}
+ .workspace .table-wrap table,.workspace .table-wrap tbody,.workspace .table-wrap tr,.workspace .table-wrap td{display:block;width:100%}
+ .workspace .table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ .workspace .table-wrap tr{border:1px solid var(--line);border-radius:10px;margin:0 0 .75rem;padding:.5rem .75rem;background:var(--surface)}
+ .workspace .table-wrap td{display:grid;grid-template-columns:minmax(6.5rem,38%) 1fr;gap:.5rem;padding:.35rem 0!important;border:0;white-space:normal;text-align:left}
+ .workspace .table-wrap td::before{content:attr(data-label);font-weight:600;color:var(--muted)}
+ .workspace .table-wrap td.td-acao{display:block;width:100%}
+ .workspace .table-wrap td.td-acao::before{content:none}
+ .workspace .table-wrap td.td-acao button{width:100%}
+ .workspace .table-wrap td:first-child,.workspace .table-wrap th:first-child{position:static!important;left:auto!important;width:100%!important;min-width:0!important;max-width:none!important;border:0!important;box-shadow:none!important;background:transparent!important}
+ .workspace .table-wrap td>*{justify-self:start}
 }

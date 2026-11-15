@@ -1,0 +1,14 @@
+{
+  "registros": [
+    {
+      "id": "carga-2026-11-15T19:57:29.361Z-1",
+      "projeto_id": "*",
+      "projeto_nome": null,
+      "origem": "importacao",
+      "autor": "Carga inicial da planilha",
+      "em": "2026-11-15T19:57:29.361Z",
+      "tipo": "carga",
+      "descricao": "Carga da planilha Projeto_obras_prioritarias.xlsx: 334 projetos (carga inicial)"
+    }
+  ]
+}

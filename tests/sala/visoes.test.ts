@@ -1,3 +1,4 @@
+process.env.GOVNEXA_EXEMPLO = '1'; // usa os dados fictícios de data/exemplo
 // Testes das regras da Sala de guerra: candidatos, indicadores/farol e pauta da reunião (data de referência fixa).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';

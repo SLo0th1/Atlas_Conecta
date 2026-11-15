@@ -273,3 +273,14 @@ test('govnexa: sala de guerra',async({page})=>{
  // axe na página da sala, claro e escuro
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`sala ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
+
+test('govnexa: tema escolhido se mantém ao trocar de guia',async({page})=>{
+ for(const [esquema,escolhido] of [['light','dark'],['dark','light']] as const){
+  await page.emulateMedia({colorScheme:esquema});await page.goto('/plataforma/projetos/');
+  await page.evaluate(t=>{localStorage.setItem('atlas-theme',t);document.documentElement.dataset.theme=t},escolhido);
+  for(const nome of ['Carteira de projetos','Kanban por macroetapa','Fluxo do sistema','Histórico de alterações','Projetos · Início']){
+   await page.locator('.sidebar').getByRole('link',{name:nome,exact:true}).click();await page.waitForLoadState('domcontentloaded');
+   await expect(page.locator('html'),nome).toHaveAttribute('data-theme',escolhido);
+  }
+ }
+});
