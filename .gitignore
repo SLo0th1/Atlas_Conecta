@@ -18,3 +18,6 @@ data/core/portal-transparencia-*.json
 
 # Insumos internos (reunioes, planilhas, PDFs): nunca publicar
 Doc Referencia/
+
+# GovNexa: dados reais da carteira (baixados do repositorio privado no build ou gerados pelo importador). Nunca publicar.
+.govnexa-dados/
