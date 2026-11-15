@@ -33,7 +33,6 @@ function oportunidades(): Modulo | null {
       p.codigo,
       curto(p.nome, 80),
       curto(String(p.orgao_superior).replace(/^MINIST[ÉE]RIO (DA|DO|DE) /i, 'Min. '), 40),
-      String(p.modalidade ?? '—'),
       `${br(prazo)} (${tipoPrazo})`,
       (p.temas as string[]).map(nomeTema).join(', ') || 'A classificar',
       dias !== null && dias <= DIAS_PRAZO_PROGRAMA ? 'Atenção: prazo curto' : 'Aberto',
@@ -41,7 +40,7 @@ function oportunidades(): Modulo | null {
   });
   return {
     slug: 'captacao-oportunidades', title: 'Oportunidades', group: 'Captação',
-    columns: ['Código', 'Programa', 'Concedente', 'Modalidade', 'Prazo', 'Tema', 'Status'], rows, detalhes: (d.programas as Documento[]).map(detalheOportunidade), busca: (d.programas as Documento[]).map(textoDeBusca), fields: [], source: 'captacao-oportunidades',
+    columns: ['Código', 'Programa', 'Concedente', 'Prazo', 'Tema', 'Status'], rows, detalhes: (d.programas as Documento[]).map(detalheOportunidade), busca: (d.programas as Documento[]).map(textoDeBusca), fields: [], source: 'captacao-oportunidades',
     fonte: `Programas do Transferegov abertos e elegíveis a prefeituras de GO (${rows.length}). Fonte: Transferegov, arquivo siconv_programa; coleta em ${dataColeta(d)}. Temas por palavras-chave (rascunho). Dica: digite a necessidade (ex.: drenagem, creche, quadra, ônibus); a busca olha também os temas e o texto oficial do programa.`,
   };
 }
@@ -58,7 +57,6 @@ function acompanhamento(): Modulo | null {
         curto(c.objeto, 80),
         curto(c.orgao_superior ?? c.orgao, 35),
         Number(c.valor_repasse ?? 0),
-        Number(c.valor_desembolsado ?? 0),
         Number(c.saldo_a_liberar ?? 0),
         br(c.vigencia_fim),
         dias !== null && dias <= 90 ? 'Atenção: vigência curta' : c.valor_desembolsado === 0 ? 'Atenção: sem desembolso' : 'Em execução',
@@ -67,7 +65,7 @@ function acompanhamento(): Modulo | null {
   const r = d.resumo;
   return {
     slug: 'captacao-acompanhamento', title: 'Acompanhamento', group: 'Captação',
-    columns: ['Convênio', 'Objeto', 'Concedente', 'Valor pactuado', 'Valor liberado', 'Valor a liberar', 'Vigência', 'Situação'], rows, detalhes: ativos.map(detalheConvenio), fields: [], source: 'captacao-acompanhamento',
+    columns: ['Convênio', 'Objeto', 'Concedente', 'Pactuado', 'A liberar', 'Vigência', 'Situação'], rows, detalhes: ativos.map(detalheConvenio), fields: [], source: 'captacao-acompanhamento',
     fonte: `Convênios municipais em execução: ${r.em_execucao}; pactuado ${reais(r.valor_repasse_pactuado_em_execucao)}, liberado ${reais(r.valor_desembolsado_em_execucao)}, saldo a liberar ${reais(r.saldo_a_liberar_em_execucao)}; ${r.assinados_sem_nenhum_desembolso} sem nenhum desembolso. Fonte: Transferegov (arquivos abertos); coleta em ${dataColeta(d)}. Saldo = repasse pactuado − desembolsado.`,
   };
 }
