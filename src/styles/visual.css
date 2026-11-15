@@ -31,3 +31,11 @@ td button[data-detail]{white-space:nowrap;min-width:max-content}.table-wrap td:l
 @media(min-width:1050px){.platform>.sidebar{position:fixed;top:96px;left:16px;margin:0;width:250px;height:calc(100dvh - 112px);max-height:none;z-index:15}.platform>.workspace{grid-column:2}}
 @media(min-width:1050px){.platform.collapsed>.sidebar{width:88px}}
 :root{--series-1:#0B5155}:root[data-theme=dark]{--series-1:#7CC8D8}@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--series-1:#7CC8D8}}
+/* Menu lateral: títulos de bloco e sub-bloco que abrem e fecham as guias. */
+.sidebar .side-sec{display:flex;width:100%;align-items:center;justify-content:space-between;gap:.5rem;margin:0;padding:.3rem .35rem;min-height:36px;background:transparent;border:0;border-radius:8px;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;text-align:left;box-shadow:none;transform:none;cursor:pointer}
+.sidebar .side-sec:hover{background:#ffffff14;transform:none;box-shadow:none}
+.sidebar .side-seta{flex-shrink:0;width:7px;height:7px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-2px,-2px);transition:transform 160ms}
+.sidebar .side-sec[aria-expanded=false] .side-seta{transform:rotate(-45deg)}
+.sidebar .eyebrow:has(.side-sec){margin:1rem 0 .2rem}.sidebar h2:has(.side-sec){margin:.8rem 0 .2rem}
+@media(min-width:701px){.collapsed .side-sec-corpo[hidden]{display:block!important}}
+@media(prefers-reduced-motion:reduce){.sidebar .side-seta{transition:none}}

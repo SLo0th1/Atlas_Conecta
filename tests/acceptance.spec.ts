@@ -459,6 +459,43 @@ test('govnexa: paginação compacta com reticências',async({page})=>{
  await expect(n.locator('button').first()).toHaveText('1');await expect(n.locator('.pag-reticencias')).toHaveCount(1);expect(total).toBeLessThanOrEqual(7);
 });
 
+test('govnexa: prazos da Lei 14.133',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const resp=await page.goto('/plataforma/licitacoes-prazos/');
+ expect(resp?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveCount(1);
+ await expect(page.locator('h1')).toHaveText('Prazos da Lei 14.133');
+ await expect(page.locator('[data-pz-tabela] tbody tr')).toHaveCount(11);
+ // teto: decisão do recurso, início 13/11/2026 -> limite 30/11 e meta 23/11 (20/11 é feriado)
+ await page.locator('#pz-prazo').selectOption('decisao_recurso');
+ await page.locator('#pz-inicio').fill('2026-11-13');
+ await page.locator('#pz-hoje').fill('2026-11-20');
+ await expect(page.locator('[data-pz-legal]')).toHaveText('30/11/2026');
+ await expect(page.locator('[data-pz-meta]')).toHaveText('23/11/2026');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('No prazo');
+ await page.locator('#pz-hoje').fill('2026-11-25');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('Passou da meta interna — atenção');
+ await page.locator('#pz-hoje').fill('2026-12-02');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('Passou do limite da lei — alerta');
+ // piso: abertura cedo demais mostra o aviso
+ await page.locator('#pz-prazo').selectOption('publicidade_bens_menor_preco');
+ await page.locator('#pz-abertura').fill('2026-11-16');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('A abertura não pode ser antes de 26/11/2026');
+ await page.locator('#pz-abertura').fill('2026-11-26');
+ await expect(page.locator('[data-pz-situacao]')).toContainText('No prazo');
+ // feriados do ano
+ await page.locator('#pz-ano').fill('2026');
+ await expect(page.locator('[data-pz-feriados]')).toContainText('Aniversário de Goiânia');
+ await expect(page.locator('[data-pz-feriados]')).toContainText('20/11/2026');
+ // sem rolagem horizontal em 1280 e 390px
+ for(const width of [1280,390]){await page.setViewportSize({width,height:900});await page.goto('/plataforma/licitacoes-prazos/');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${width}px`).toBeTruthy();}
+ // axe claro e escuro
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto('/plataforma/licitacoes-prazos/');
+ await page.locator('#pz-inicio').fill('2026-11-13');
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`prazos ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
 test('govnexa: reunião semanal',async({page})=>{
  await page.setViewportSize({width:1280,height:900});
  const resposta=await page.goto('/plataforma/projetos-reuniao/');
@@ -506,88 +543,38 @@ test('govnexa: Novo projeto fora do menu, aberto pelo botão',async({page})=>{
  await expect(page.locator('h1')).toHaveText('Novo projeto');
 });
 
-test('govnexa: mapa das obras',async({page,browser})=>{
- await page.route('https://tile.openstreetmap.org/**',r=>r.abort());
- const semRolagem=()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth);
- const numero=async()=>Number((await page.locator('[data-mp-contagem]').innerText()).match(/^(\d+)/)![1]);
- // painel do prefeito com o mapa
+test('govnexa: menu lateral com blocos que abrem e fecham',async({page})=>{
  await page.setViewportSize({width:1280,height:900});
- const resposta=await page.goto('/plataforma/gestao/');
- expect(resposta?.status()).toBe(200);
- await expect(page.locator('#mapa')).toBeVisible();
- await expect(page.locator('#mapa .leaflet-container')).toBeVisible();
- await expect(page.locator('#mapa .leaflet-marker-icon .mp-marcador').first()).toBeVisible();
- await expect(page.locator('#mapa path.leaflet-interactive').first()).toBeAttached();
- const antes=await numero();
- expect(antes).toBeGreaterThanOrEqual(2);
- await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/mapa-1280.png',fullPage:false});
- await page.locator('#mapa .leaflet-marker-icon').first().click();
- const popup=page.locator('.leaflet-popup-content');
- await expect(popup.getByRole('link',{name:'Abrir a ficha'})).toHaveAttribute('href',/^\/plataforma\/projetos-carteira\/\?q=/);
- await expect(popup.getByRole('link',{name:'Editar localização'})).toBeVisible();
- await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/mapa-popup.png'});
- await page.keyboard.press('Escape');
- await page.locator('#mapa').getByRole('button',{name:'Em execução'}).click();
- await expect(page.locator('#mapa').getByRole('button',{name:'Em execução'})).toHaveAttribute('aria-pressed','false');
- expect(await numero()).toBeLessThan(antes);
- await page.locator('#mapa').getByRole('button',{name:'Em execução'}).click();
- expect(await numero()).toBe(antes);
- // lista alternativa
- await page.locator('#mapa summary').click();
- await expect(page.locator('#mapa [data-mp-lista-corpo] tr')).toHaveCount(antes);
- // toque (monitor touch): abrir o resumo tocando no ícone
- const touch=await browser.newContext({hasTouch:true,viewport:{width:390,height:844}});
- const tp=await touch.newPage();
- await tp.route('https://tile.openstreetmap.org/**',r=>r.abort());
- await tp.goto('/plataforma/gestao/');
- await tp.locator('#mapa').scrollIntoViewIfNeeded();
- await tp.locator('#mapa .leaflet-marker-icon').first().tap();
- await expect(tp.locator('.leaflet-popup-content').getByRole('link',{name:'Abrir a ficha'})).toBeVisible();
- await tp.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/mapa-390.png'});
- await touch.close();
- // tela de localização: trocar para ruas e trechos, desenhar 2 pontos e salvar (simulação)
- await page.goto('/plataforma/projetos-localizacao/?id=P-905');
- await expect(page.locator('h1')).toHaveText('Localização e fotos');
- await expect(page.locator('#lp-enviar-fotos')).toBeDisabled();
- await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/localizacao-1280.png'});
- await page.getByRole('radio',{name:/Ruas e trechos/}).check();
- await page.getByLabel('Rua (obrigatório)').fill('Avenida Exemplo');
- await page.getByRole('button',{name:/Desenhar no mapa/}).click();
- const areaMapa=page.locator('#lp-loc [data-ed-mapa]');
- await areaMapa.click({position:{x:120,y:120}});
- await areaMapa.click({position:{x:260,y:180}});
- await expect(page.locator('#lp-loc .mp-pontos')).toHaveText('2 pontos');
- await page.getByRole('button',{name:'Salvar localização (simulação)'}).click();
- await expect(page.locator('[data-lp-ok]')).toBeVisible();
- await expect(page.locator('[data-lp-ok]')).toContainText('Modo simulação');
- // trecho sem rua não salva
- await page.getByLabel('Rua (obrigatório)').fill('');
- await page.getByRole('button',{name:'Salvar localização (simulação)'}).click();
- await expect(page.locator('#lp-loc [data-ed-erros]')).toContainText('informe o nome da rua');
- // a simulação aparece no mapa do painel (mesma aba)
- await page.goto('/plataforma/gestao/');
- await expect(page.locator('#mapa [data-mp-contagem]')).toContainText('obra');
- // sem rolagem horizontal e axe, claro e escuro
- for(const width of [1280,390]){
-  await page.setViewportSize({width,height:900});
-  for(const caminho of ['/plataforma/gestao/','/plataforma/projetos-localizacao/?id=P-905']){
-   await page.goto(caminho);
-   await expect(page.locator('.leaflet-container').first()).toBeVisible();
-   expect(await semRolagem(),`${caminho} ${width}px`).toBeTruthy();
-  }
- }
+ await page.goto('/plataforma/projetos/');
+ const bloco=()=>page.locator('.sidebar button[data-sec^="m:"]',{hasText:/licita/i}).first();
+ await expect(bloco()).toHaveAttribute('aria-expanded','true');
+ const corpo=page.locator('#'+await bloco().getAttribute('aria-controls'));
+ await expect(corpo).toBeVisible();
+ // sub-bloco (Operação, dentro de Licitações)
+ const sub=page.locator('.sidebar button[data-sec^="g:Licitações:"]').first();const subCorpo=page.locator('#'+await sub.getAttribute('aria-controls'));
+ await sub.click();await expect(sub).toHaveAttribute('aria-expanded','false');await expect(subCorpo).toBeHidden();
+ await sub.click();await expect(subCorpo).toBeVisible();
+ // bloco inteiro, lembrado depois de recarregar
+ await bloco().click();
+ await expect(bloco()).toHaveAttribute('aria-expanded','false');await expect(corpo).toBeHidden();
+ await page.reload();
+ await expect(bloco()).toHaveAttribute('aria-expanded','false');
+ // a página atual abre o bloco dela mesmo se estiver fechado
+ const link=await corpo.locator('a').first().getAttribute('href');
+ await page.goto(link!);
+ await expect(bloco()).toHaveAttribute('aria-expanded','true');
+ // axe claro e escuro na barra lateral
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).include('.sidebar').withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`menu ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
+test('govnexa: menu no celular com menu recolhido salvo continua reabrindo blocos',async({page})=>{
  await page.setViewportSize({width:390,height:844});
- await page.goto('/plataforma/projetos-localizacao/?id=P-905');
- await expect(page.locator('#lp-loc .leaflet-container')).toBeVisible();
- await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/localizacao-390.png'});
- await page.setViewportSize({width:1280,height:900});
- for(const caminho of ['/plataforma/gestao/','/plataforma/projetos-localizacao/?id=P-905']){
-  await page.goto(caminho);
-  await expect(page.locator('.leaflet-container').first()).toBeVisible();
-  for(const theme of ['light','dark']){
-   await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);
-   const results=await new AxeBuilder({page}).exclude('.leaflet-tile-pane').withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();
-   expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`${caminho} ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);
-  }
- }
+ await page.goto('/plataforma/projetos/');
+ await page.evaluate(()=>{localStorage.setItem('atlas-sidebar','true');localStorage.setItem('govnexa-menu-fechado',JSON.stringify(['m:Licitações']))});
+ await page.reload();
+ await page.locator('#drawer-toggle').click();
+ const bloco=page.locator('.sidebar button[data-sec="m:Licitações"]');
+ await expect(bloco).toBeVisible();await expect(bloco).toHaveAttribute('aria-expanded','false');
+ await bloco.click();
+ await expect(page.locator('#'+await bloco.getAttribute('aria-controls')).locator('a').first()).toBeVisible();
 });

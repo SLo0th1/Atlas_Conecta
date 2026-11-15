@@ -16,6 +16,7 @@ export const GRUPO_PARA_MODULO: Record<string, ModuloId> = {
   Automação: 'licitacoes',
   Mercado: 'licitacoes',
   Cadastros: 'licitacoes',
+  Prazos: 'licitacoes',
   Captação: 'captacao',
   Conta: 'conta',
   Projetos: 'projetos',
@@ -155,6 +156,15 @@ export const NOVOS_MODULOS = [
     rows: [] as (string | number)[][],
     fields: [] as string[],
     source: 'govnexa-log',
+  },
+  {
+    slug: 'licitacoes-prazos',
+    title: 'Prazos da Lei 14.133',
+    group: 'Prazos',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-prazos',
   },
   {
     slug: 'gestao',
