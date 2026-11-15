@@ -476,6 +476,8 @@ test('govnexa: painel do prefeito',async({page})=>{
  await page.setViewportSize({width:1280,height:900});
  await page.goto('/plataforma/gestao/');
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`painel ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});
+
 test('govnexa: Novo projeto fora do menu, aberto pelo botão',async({page})=>{
  await page.goto('/plataforma/projetos/');
  await expect(page.locator('.sidebar').getByRole('link',{name:'Novo projeto',exact:true})).toHaveCount(0);
