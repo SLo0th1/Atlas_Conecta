@@ -2,6 +2,8 @@
 import '../../styles/carteira.css';
 import { LIGACOES, NOS, RAIAS, ROTULO_SITUACAO } from '../../lib/govnexa/fluxo.ts';
 import type { NoFluxo } from '../../lib/govnexa/fluxo.ts';
+import { municipioAtivo } from '../../lib/municipio-ativo.ts';
+import { MARCA } from '../../lib/marca.ts';
 
 // ——— Geometria (viewBox em unidades fixas; o SVG ocupa 100% da largura do contêiner)
 const LARGURA = 1000;
@@ -143,6 +145,11 @@ const dados = NOS.map((n) => ({
 const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
 ---
 <div class="fx" data-fluxo>
+  <div class="fx-exportar cart-nao-imprimir">
+    <button type="button" class="primary" data-fx-pdf>Exportar em PDF</button>
+    <span class="muted">Abre a impressão do navegador: em Destino, escolha <strong>Salvar como PDF</strong>. O PDF traz o diagrama e o detalhe de cada etapa.</span>
+  </div>
+  <p class="fx-so-impressao fx-cab-impressao"><strong>{MARCA.nome} — Fluxo do sistema</strong> · {municipioAtivo().nomeExibicao} · <span data-fx-data-impressao></span></p>
   <section class="fx-legenda" aria-labelledby="fx-leg-t">
     <h2 id="fx-leg-t">Como ler o diagrama</h2>
     <div class="fx-leg-grupos">
@@ -245,6 +252,27 @@ const dadosJson = JSON.stringify(dados).replace(/<\//g, '<\\/');
     ))}
   </section>
 
+  <section class="fx-so-impressao fx-anexo" aria-hidden="true">
+    <h2>Detalhe das etapas</h2>
+    {RAIAS.map((r) => (
+      <div class="fx-anexo-raia">
+        <h3>{r.nome}</h3>
+        <p>{r.descricao}</p>
+        {NOS.filter((n) => n.raia === r.id).sort((a, b) => a.linha - b.linha).map((n) => (
+          <article class="fx-anexo-no">
+            <h4>{n.titulo}</h4>
+            <p><strong>Situação:</strong> {ROTULO_SITUACAO[n.situacao]} · {n.fase}</p>
+            <p><strong>O que é feito:</strong> {n.oQue}</p>
+            <p><strong>O que é validado:</strong> {n.valida.join('; ')}.</p>
+            <p><strong>Quem:</strong> {n.quem}</p>
+            <p><strong>Próximas etapas:</strong> {LIGACOES.filter((l) => l.de === n.id).map((l) => (NOS.find((x) => x.id === l.para)?.titulo ?? l.para) + (l.rotulo ? ' (' + l.rotulo + ')' : '')).join('; ') || '—'}</p>
+            <p><strong>Telas:</strong> {n.telas.map((t) => t.rotulo).join('; ')}</p>
+          </article>
+        ))}
+      </div>
+    ))}
+  </section>
+
   <dialog id="fluxo-detalhe" class="cart-dialogo fx-dialogo" aria-labelledby="fx-d-titulo">
     <h2 id="fx-d-titulo" data-fx-titulo></h2>
     <p data-fx-situacao></p>
@@ -272,6 +300,15 @@ document.addEventListener('astro:page-load', () => {
   const dlg = document.querySelector<HTMLDialogElement>('#fluxo-detalhe');
   const fonte = document.querySelector('#fluxo-dados');
   if (!raiz || !dlg || !fonte || raiz.dataset.pronto) return;
+  raiz.querySelector<HTMLButtonElement>('[data-fx-pdf]')?.addEventListener('click', () => {
+    const hoje = new Date();
+    const alvo = raiz.querySelector('[data-fx-data-impressao]');
+    if (alvo) alvo.textContent = 'gerado em ' + hoje.toLocaleDateString('pt-BR');
+    const tituloAntes = document.title;
+    document.title = 'Fluxo do sistema - GovNexa - ' + hoje.toISOString().slice(0, 10);
+    window.addEventListener('afterprint', () => { document.title = tituloAntes; }, { once: true });
+    window.print();
+  });
   raiz.dataset.pronto = 'sim';
   interface Lig { id: string; titulo: string; rotulo: string }
   interface No { id: string; titulo: string; situacao: string; fase: string; raia: string; oQue: string; valida: string[]; quem: string; anteriores: Lig[]; proximas: Lig[]; telas: { rotulo: string; url: string }[] }
