@@ -220,3 +220,14 @@ test('govnexa: fluxo exporta em PDF',async({page})=>{
  await page.goto('/plataforma/projetos-fluxo/');await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeVisible();
  await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(28);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
 });
+
+test('govnexa: tema escolhido se mantém ao trocar de guia',async({page})=>{
+ for(const [esquema,escolhido] of [['light','dark'],['dark','light']] as const){
+  await page.emulateMedia({colorScheme:esquema});await page.goto('/plataforma/projetos/');
+  await page.evaluate(t=>{localStorage.setItem('atlas-theme',t);document.documentElement.dataset.theme=t},escolhido);
+  for(const nome of ['Carteira de projetos','Kanban por macroetapa','Fluxo do sistema','Histórico de alterações','Projetos · Início']){
+   await page.locator('.sidebar').getByRole('link',{name:nome,exact:true}).click();await page.waitForLoadState('domcontentloaded');
+   await expect(page.locator('html'),nome).toHaveAttribute('data-theme',escolhido);
+  }
+ }
+});

@@ -11,8 +11,10 @@ export function caminhoCarteira(): string {
   const candidatos = [
     process.env.GOVNEXA_DADOS_DIR ? join(process.env.GOVNEXA_DADOS_DIR, 'carteira.json') : null,
     join(process.cwd(), '.govnexa-dados', ibge, 'carteira.json'),
+    join(process.cwd(), 'data', 'carga-real', ibge, 'carteira.json'),
     join(process.cwd(), 'data', 'exemplo', 'carteira', 'carteira.json'),
   ].filter((c): c is string => !!c);
+  if (process.env.GOVNEXA_EXEMPLO === '1') candidatos.splice(0, candidatos.length - 1);
   const achado = candidatos.find((c) => existsSync(c));
   if (!achado) throw new Error('Carteira não encontrada (nem dados reais nem exemplo).');
   return achado;

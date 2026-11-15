@@ -1,3 +1,4 @@
+process.env.GOVNEXA_EXEMPLO = '1'; // usa os dados fictícios de data/exemplo, não a carga real
 // Testes das visões dos Cronogramas (status na data, resumo, SPI e "onde está parado"). Data fixa: nada depende do relógio.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
