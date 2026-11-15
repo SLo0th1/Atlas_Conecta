@@ -495,3 +495,10 @@ test('govnexa: prazos da Lei 14.133',async({page})=>{
  await page.locator('#pz-inicio').fill('2026-11-13');
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`prazos ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
+
+test('govnexa: Novo projeto fora do menu, aberto pelo botão',async({page})=>{
+ await page.goto('/plataforma/projetos/');
+ await expect(page.locator('.sidebar').getByRole('link',{name:'Novo projeto',exact:true})).toHaveCount(0);
+ await page.locator('.workspace').getByRole('link',{name:'Novo projeto',exact:true}).click();await page.waitForURL(/projetos-novo/);
+ await expect(page.locator('h1')).toHaveText('Novo projeto');
+});
