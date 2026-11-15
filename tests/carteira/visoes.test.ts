@@ -1,3 +1,4 @@
+process.env.GOVNEXA_EXEMPLO = '1'; // usa os dados fictícios de data/exemplo, não a carga real
 // Testes das visões da Carteira de Projetos (Kanban, órgãos, farol, saldo, Gantt).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';

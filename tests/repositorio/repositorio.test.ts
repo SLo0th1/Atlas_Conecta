@@ -1,3 +1,4 @@
+process.env.GOVNEXA_EXEMPLO = '1'; // usa os dados fictícios de data/exemplo, não a carga real
 // Testes do repositório: JSON (somente leitura) e PostgreSQL com cliente falso (sem banco).
 import assert from 'node:assert/strict';
 import { test } from 'node:test';

@@ -1,0 +1,102 @@
+{
+  "prefeitura_id": 5208707,
+  "fonte": { "ficticio": true, "importado_em": "2026-11-15T00:00:00Z" },
+  "salas": [
+    {
+      "id": "S-1",
+      "tipo": "crise",
+      "titulo": "Licitação travada no jurídico",
+      "objetivo": "Liberar o parecer jurídico e publicar o edital da reforma da escola até o fim de dezembro, sem perder o recurso do convênio.",
+      "projetos": ["P-903"],
+      "dono": "Responsável 1",
+      "equipe": ["Responsável 2", "Responsável 3", "Jurídico (PGM)", "Compras (SECAP)"],
+      "aberta_em": "2026-11-02",
+      "prazo": "2026-12-20",
+      "cadencia": "diaria",
+      "escalonamento": 2,
+      "situacao": "aberta",
+      "motivo_abertura": "Processo parado há mais de 30 dias no jurídico, com prazo do convênio correndo.",
+      "raid": [
+        { "id": "R-1", "tipo": "risco", "descricao": "Perder o recurso do convênio se o edital não for publicado no prazo.", "responsavel": "Responsável 1", "prazo": null, "situacao": "aberto", "criado_em": "2026-11-02", "impacto": "alto", "probabilidade": "media" },
+        { "id": "R-2", "tipo": "risco", "descricao": "Nova diligência do jurídico reabrir o prazo de ajustes.", "responsavel": "Responsável 2", "prazo": null, "situacao": "aberto", "criado_em": "2026-11-04", "impacto": "medio", "probabilidade": "alta" },
+        { "id": "A-1", "tipo": "acao", "descricao": "Responder a diligência do jurídico com o orçamento atualizado.", "responsavel": "Responsável 2", "prazo": "2026-11-05", "situacao": "em_andamento", "criado_em": "2026-11-02" },
+        { "id": "A-2", "tipo": "acao", "descricao": "Reunir com o jurídico para alinhar o que falta no parecer.", "responsavel": "Responsável 1", "prazo": "2026-11-20", "situacao": "aberto", "criado_em": "2026-11-04" },
+        { "id": "A-3", "tipo": "acao", "descricao": "Revisar a minuta do edital com a equipe de compras.", "responsavel": "Responsável 3", "prazo": "2026-11-25", "situacao": "aberto", "criado_em": "2026-11-09" },
+        { "id": "P-1", "tipo": "problema", "descricao": "Documento da titularidade do terreno sem assinatura do cartório.", "responsavel": "Responsável 3", "prazo": "2026-11-22", "situacao": "aberto", "criado_em": "2026-11-06" },
+        { "id": "D-1", "tipo": "decisao", "descricao": "Dividir a obra em dois lotes para acelerar a licitação?", "responsavel": "Secretário(a) da pasta", "prazo": "2026-11-18", "situacao": "aberto", "criado_em": "2026-11-09" }
+      ],
+      "reunioes": [
+        { "data": "2026-11-09", "pauta": ["Objetivo e prazo", "Diligência do jurídico", "Documento da titularidade"], "decisoes": ["Manter um único lote por enquanto."], "encaminhamentos": ["Responsável 2 responde a diligência.", "Responsável 3 busca a assinatura no cartório."] },
+        { "data": "2026-11-12", "pauta": ["Ações vencidas", "Pedido de decisão sobre os lotes"], "decisoes": ["Levar a decisão sobre os lotes ao secretário(a)."], "encaminhamentos": ["Responsável 1 marca reunião com o jurídico."] }
+      ],
+      "marcos": [
+        { "data": "2026-11-20", "descricao": "Reunião de alinhamento com o jurídico", "feito": false },
+        { "data": "2026-12-05", "descricao": "Parecer jurídico emitido", "feito": false },
+        { "data": "2026-12-20", "descricao": "Edital publicado", "feito": false }
+      ]
+    },
+    {
+      "id": "S-2",
+      "tipo": "missao",
+      "titulo": "Cumprir cláusula suspensiva do convênio",
+      "objetivo": "Entregar todas as exigências da cláusula suspensiva para liberar o repasse do corredor.",
+      "projetos": ["P-902"],
+      "dono": "Responsável 4",
+      "equipe": ["Responsável 1", "Captação", "Engenharia"],
+      "aberta_em": "2026-10-19",
+      "prazo": "2027-01-29",
+      "cadencia": "semanal",
+      "escalonamento": 1,
+      "situacao": "em_andamento",
+      "motivo_abertura": "Convênio assinado com exigências pendentes e prazo para liberar o repasse.",
+      "raid": [
+        { "id": "R-1", "tipo": "risco", "descricao": "Licença ambiental atrasar além do prazo da cláusula.", "responsavel": "Engenharia", "prazo": null, "situacao": "aberto", "criado_em": "2026-10-19", "impacto": "medio", "probabilidade": "media" },
+        { "id": "A-1", "tipo": "acao", "descricao": "Entregar o projeto executivo ao concedente.", "responsavel": "Engenharia", "prazo": "2026-12-10", "situacao": "em_andamento", "criado_em": "2026-10-19" },
+        { "id": "A-2", "tipo": "acao", "descricao": "Protocolar o pedido de licença ambiental.", "responsavel": "Responsável 1", "prazo": "2026-11-30", "situacao": "aberto", "criado_em": "2026-10-26" },
+        { "id": "A-3", "tipo": "acao", "descricao": "Enviar a planilha orçamentária revisada.", "responsavel": "Captação", "prazo": "2026-10-30", "situacao": "concluido", "criado_em": "2026-10-19" }
+      ],
+      "reunioes": [
+        { "data": "2026-11-02", "pauta": ["Exigências da cláusula", "Prazos de cada entrega"], "decisoes": [], "encaminhamentos": ["Engenharia fecha o projeto executivo até 10/12."] },
+        { "data": "2026-11-09", "pauta": ["Licença ambiental", "Planilha orçamentária"], "decisoes": ["Protocolar a licença até o fim de novembro."], "encaminhamentos": ["Responsável 1 prepara o protocolo."] }
+      ],
+      "marcos": [
+        { "data": "2026-10-30", "descricao": "Planilha orçamentária enviada", "feito": true },
+        { "data": "2026-11-30", "descricao": "Licença ambiental protocolada", "feito": false },
+        { "data": "2026-12-10", "descricao": "Projeto executivo entregue", "feito": false },
+        { "data": "2027-01-29", "descricao": "Cláusula cumprida e repasse liberado", "feito": false }
+      ]
+    },
+    {
+      "id": "S-3",
+      "tipo": "missao",
+      "titulo": "Entregar o centro comunitário antes da inauguração",
+      "objetivo": "Concluir a obra, o recebimento e a mobília do centro comunitário até a data marcada.",
+      "projetos": ["P-906"],
+      "dono": "Responsável 2",
+      "equipe": ["Responsável 3", "Gabinete", "Fiscal do contrato"],
+      "aberta_em": "2026-08-03",
+      "prazo": "2026-10-23",
+      "cadencia": "duas_por_semana",
+      "escalonamento": 3,
+      "situacao": "encerrada",
+      "motivo_abertura": "Entrega prometida pelo gabinete, com prazo curto e várias equipes envolvidas.",
+      "raid": [
+        { "id": "R-1", "tipo": "risco", "descricao": "Atraso na entrega da mobília.", "responsavel": "Responsável 3", "prazo": null, "situacao": "concluido", "criado_em": "2026-08-03", "impacto": "baixo", "probabilidade": "media" },
+        { "id": "A-1", "tipo": "acao", "descricao": "Emitir o termo de recebimento provisório.", "responsavel": "Fiscal do contrato", "prazo": "2026-10-10", "situacao": "concluido", "criado_em": "2026-09-14" }
+      ],
+      "reunioes": [
+        { "data": "2026-09-14", "pauta": ["Objetivo e prazo", "Mobília"], "decisoes": ["Comprar a mobília por ata de registro de preços."], "encaminhamentos": ["Responsável 3 abre o pedido de compra."] }
+      ],
+      "marcos": [
+        { "data": "2026-10-10", "descricao": "Recebimento provisório", "feito": true },
+        { "data": "2026-10-23", "descricao": "Inauguração", "feito": true }
+      ],
+      "resultado": "Obra entregue e inaugurada na data marcada, com a mobília instalada dois dias antes.",
+      "licoes": [
+        "Abrir o pedido de mobília junto com o início da obra evita a corrida no final.",
+        "Reunião curta duas vezes por semana, com ações que têm responsável e prazo, manteve todas as equipes alinhadas.",
+        "Levar cedo ao gabinete o que depende de decisão dele reduziu o tempo de espera."
+      ]
+    }
+  ]
+}

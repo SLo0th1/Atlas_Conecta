@@ -1,5 +1,11 @@
 # Changelog
 
+## GovNexa — Carga real, responsividade e tema
+- 2026-11-15: carga real da planilha de obras prioritárias e dos cronogramas do GEPP publicada TEMPORARIAMENTE em data/carga-real/ (decisão do dono; será retirada quando houver banco); aviso fixo na plataforma.
+- 2026-11-15: testes de interface montam o site com os dados fictícios (scripts/build-exemplo.mjs, GOVNEXA_EXEMPLO=1).
+- 2026-11-15: celular: tabelas viram cartões empilhados com o rótulo de cada campo (sem rolagem horizontal).
+- 2026-11-15: corrigido: ao trocar de guia, o tema claro/escuro voltava ao do sistema; o tema escolhido agora se mantém (teste automático).
+
 ## GovNexa — Fluxo do sistema
 - 2026-11-15: guia Projetos › Fluxo do sistema: diagrama no estilo BPMN (6 raias, 28 etapas, início ao fim), clique em cada etapa mostra o que é feito, o que é validado, quem, a situação no sistema e os botões para abrir as telas; lista das etapas por raia para leitura e impressão. Conteúdo em src/lib/govnexa/fluxo.ts.
 

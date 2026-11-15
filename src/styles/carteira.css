@@ -272,3 +272,78 @@
  h1{margin:0 0 1mm!important;font-size:16pt!important}
  .section-head p{display:none}
 }
+/* Sala de guerra (guia Projetos › Sala de guerra): tudo cabe em 1280px sem rolagem horizontal; cor nunca é a única informação */
+[data-cart] .sl-secao{margin:0 0 1.75rem}
+.sl-secao h2,.sl-cabeca h2{font-size:1.2rem;margin:0 0 .5rem}
+.sl-secao p,.sl-cabeca p{max-width:none}
+.sl-cartoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.75rem}
+.sl-cartao{margin:0;padding:1rem;display:grid;gap:.35rem;align-content:start}
+.sl-cartao h3{margin:0;font-size:1.05rem}
+.sl-cartao p{margin:0;overflow-wrap:anywhere}
+.sl-projetos{color:var(--muted)}
+.sl-contagem{font-size:.9rem}
+.sl-farol{display:flex;gap:.4rem;align-items:flex-start}
+.sl-farol .cart-ponto{margin-top:.35rem}
+.sl-selo{display:inline-block;padding:0 .5rem;border:2px solid var(--text);border-radius:30px;font-size:.75rem;font-weight:700;color:var(--text);background:var(--surface)}
+.sl-selo-crise{border-style:solid}
+.sl-selo-missao{border-style:dashed}
+.sl-candidatos{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.sl-candidato{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem 1rem;align-items:start;padding:.7rem .8rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow-wrap:anywhere}
+.sl-motivos{margin:.3rem 0 0;padding-left:1.2rem;font-size:.9rem}
+.sl-resultado{margin:.4rem 0 0;font-weight:600}
+.sl-enc{padding:.75rem 1rem;margin:0 0 .5rem}
+.sl-enc summary{cursor:pointer;font-weight:600}
+.sl-enc h3{font-size:1rem;margin:.75rem 0 .25rem}
+[data-cart] .sl-cabeca{margin:0 0 1.5rem;padding:.9rem 1rem;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
+.sl-dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.3rem 1rem;margin:0}
+.sl-dl dt{font-weight:700}
+.sl-dl dd{margin:0;overflow-wrap:anywhere}
+.sl-lista-simples{list-style:none;margin:0;padding:0}
+.sl-indicadores{list-style:none;margin:.5rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.5rem}
+.sl-indicadores li{padding:.6rem .75rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:.9rem}
+.sl-indicadores strong{display:block;font-size:1.4rem}
+.sl-raid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+.sl-coluna{border:1px solid var(--line);border-radius:10px;background:var(--surface);min-width:0}
+.sl-coluna>header{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between;padding:.6rem .75rem;border-bottom:1px solid var(--line)}
+.sl-coluna h3{margin:0;font-size:1rem}
+.sl-itens{list-style:none;margin:0;padding:.5rem;display:grid;gap:.5rem;max-height:20rem;overflow-y:auto;overscroll-behavior:contain;align-content:start}
+.sl-itens:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.sl-item{padding:.55rem .65rem;border:1px solid var(--line);border-radius:8px;background:var(--soft);overflow-wrap:anywhere}
+.sl-item p{margin:0}
+.sl-item-meta{font-size:.85rem;color:var(--muted)}
+.sl-vencida{border-left:6px solid var(--cart-vermelho)}
+.sl-selo-venc{display:inline-block;padding:0 .4rem;border:2px solid var(--cart-vermelho);border-radius:4px;font-size:.75rem;font-weight:700;color:var(--text);background:var(--surface)}
+.sl-vazio{color:var(--muted);font-size:.9rem;padding:.3rem}
+.sl-pauta{margin:.5rem 0 1rem;padding-left:1.5rem;display:grid;gap:.4rem}
+.sl-pauta label{display:flex;gap:.5rem;align-items:flex-start;font-weight:400}
+.sl-pauta input{width:auto;flex:none;margin-top:.25rem}
+.sl-notas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;margin:0 0 .75rem}
+.sl-notas label{display:grid;gap:.25rem}
+.sl-notas textarea{width:100%}
+.sl-reunioes{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.75rem}
+.sl-reuniao{margin:0;padding:.9rem 1rem}
+.sl-reuniao h3{margin:0 0 .3rem;font-size:1rem}
+.sl-reuniao p{margin:.2rem 0;overflow-wrap:anywhere}
+.sl-marcos{margin:0;padding-left:1.2rem}
+@media (max-width:900px){.sl-raid,.sl-notas{grid-template-columns:minmax(0,1fr)}.sl-candidato{grid-template-columns:minmax(0,1fr)}.sl-dl{grid-template-columns:minmax(0,1fr)}}
+@media print{
+ .sl-nao-imprimir{display:none!important}
+ [data-cart] [data-sl-reuniao][hidden]{display:block!important}
+ .sl-itens{max-height:none;overflow:visible}
+ .sl-raid{break-inside:auto}
+ .sl-coluna,.sl-item,.sl-reuniao{break-inside:avoid}
+ .sl-indicadores li,.sl-cabeca{break-inside:avoid}
+/* Celular: cada linha da tabela vira um cartão empilhado, com o rótulo de cada campo (sem rolagem horizontal). */
+@media (max-width:700px){
+ .workspace .table-wrap{border:0;overflow:visible}
+ .workspace .table-wrap table,.workspace .table-wrap tbody,.workspace .table-wrap tr,.workspace .table-wrap td{display:block;width:100%}
+ .workspace .table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+ .workspace .table-wrap tr{border:1px solid var(--line);border-radius:10px;margin:0 0 .75rem;padding:.5rem .75rem;background:var(--surface)}
+ .workspace .table-wrap td{display:grid;grid-template-columns:minmax(6.5rem,38%) 1fr;gap:.5rem;padding:.35rem 0!important;border:0;white-space:normal;text-align:left}
+ .workspace .table-wrap td::before{content:attr(data-label);font-weight:600;color:var(--muted)}
+ .workspace .table-wrap td.td-acao{display:block;width:100%}
+ .workspace .table-wrap td.td-acao::before{content:none}
+ .workspace .table-wrap td.td-acao button{width:100%}
+ .workspace .table-wrap td:first-child,.workspace .table-wrap th:first-child{position:static!important;left:auto!important;width:100%!important;min-width:0!important;max-width:none!important;border:0!important;box-shadow:none!important;background:transparent!important}
+ .workspace .table-wrap td>*{justify-self:start}
+}

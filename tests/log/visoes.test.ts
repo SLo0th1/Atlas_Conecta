@@ -1,3 +1,4 @@
+process.env.GOVNEXA_EXEMPLO = '1'; // usa os dados fictícios de data/exemplo, não a carga real
 // Testes das visões puras do histórico de alterações (filtro, resumo e CSV). Dados fictícios.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
