@@ -8,13 +8,15 @@
 .cart-resumo{margin:.25rem 0 1rem;color:var(--muted)}
 .cart-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--soft)}
 .cart-scroll:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* As seções das telas da carteira não herdam o espaçamento das seções do site público (section{padding:4rem 6%}). */
+[data-cart] section{padding:0;margin:0;max-width:none}
 /* Kanban */
 .kb-quadro{display:flex;gap:.75rem;padding:.75rem;align-items:flex-start}
 .kb-col{flex:0 0 250px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;border-top:5px solid var(--cor)}
 .kb-col>header{padding:.75rem;border-bottom:1px solid var(--line)}
 .kb-col h2{font-size:1rem;margin:0 0 .25rem;color:var(--text)}
 .kb-col header p{margin:0;font-size:.85rem;color:var(--muted)}
-.kb-lista{display:grid;gap:.6rem;padding:.6rem}
+.kb-lista{display:grid;gap:.6rem;padding:.6rem;max-height:70vh;overflow-y:auto;overscroll-behavior:contain}
 .kb-card{display:grid;gap:.25rem;padding:.65rem;border:1px solid var(--line);border-radius:8px;background:var(--soft);color:var(--text);text-decoration:none;font-size:.85rem}
 .kb-card:hover,.kb-card:focus-visible{border-color:var(--accent);outline:2px solid var(--accent);outline-offset:1px}
 .kb-card strong{font-size:.9rem;overflow-wrap:anywhere}
