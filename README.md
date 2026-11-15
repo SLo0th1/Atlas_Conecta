@@ -1,70 +1,116 @@
-# Atlas Goiânia Conecta
+# Atlas Goiânia Conecta · GovNexa
 
-Projeto local em Astro 7.4.7 + TypeScript e CSS próprio. Site estático e protótipo navegável, com login da plataforma por Functions e Routing Middleware da Vercel. Identidade, SVGs e textos próprios; a referência foi utilizada para a estrutura dos módulos, colunas e campos.
+Portal público **Atlas Goiânia Conecta** e plataforma de gestão pública **GovNexa** (piloto: Prefeitura de Goiânia).
 
-## Como rodar
+- Produção: https://atlas.gestaonexus.com.br (Vercel, publica sozinho a cada atualização do `main`)
+- Repositório: público. Só entram código, dados públicos e dados fictícios.
 
-Requer Node.js >=22.23.4 (validado com Node 24.22.2) e npm.
+## O que tem aqui
+
+| Parte | Onde | Situação |
+| --- | --- | --- |
+| Site público (início, setor público, fornecedores, compradores, Insights, demonstração) | `src/pages/` | No ar |
+| Login da plataforma | `api/login.ts`, `api/logout.ts`, `middleware.ts`, `lib/` | No ar (um usuário, sessão de 8 h, limite de tentativas) |
+| **Projetos** (núcleo GovNexa): início, Carteira com ficha, Kanban por macroetapa, Gantt geral, Visão por órgão | `src/lib/carteira/`, `src/components/carteira/` | Fase 1 entregue (dados de exemplo ou carteira real baixada no build) |
+| **Captação**: Principal, Oportunidades, Acompanhamento, Alertas, Comparativo, Qualidade dos dados, Projetos (parecer automático) | `src/lib/dados/`, `src/lib/projetos/`, `coletores/` | Em uso, com dados públicos reais |
+| **Licitações**: operação, planejamento, preços, automação, mercado e cadastros | `src/data/modules.json` | Protótipo demonstrativo (nada é gravado) |
+| **Gestão** (painel do prefeito) e **Conta** | `src/lib/govnexa/catalogo.ts` | Página inicial; conteúdo nas próximas fases |
+
+O roteiro por fases, as macroetapas do projeto e as regras de código do GovNexa estão em [docs/govnexa/visao-geral.md](docs/govnexa/visao-geral.md).
+
+## Como rodar no computador
+
+Requer Node.js 22.23.4 ou mais novo (validado com Node 24) e npm.
 
 ```sh
-cd app
 npm install
-npm run dev
-npm run check
-npm run build
-npm run preview
+npm run dev          # http://localhost:4321
 ```
 
-Neste ambiente, o cache global do npm e a pasta de preferências do Astro não permitem escrita. As verificações foram feitas com:
+No modo local, `/plataforma/` abre **sem login**: a autenticação só roda nas funções da Vercel. Sem as variáveis `GOVNEXA_DADOS_*`, a carteira usa os dados de exemplo de `data/exemplo/carteira/`.
 
-```sh
-npm install --cache /tmp/atlas-npm-cache
-ASTRO_TELEMETRY_DISABLED=1 npm run check
-ASTRO_TELEMETRY_DISABLED=1 npm run build
-```
+Outros comandos:
 
-`dist/` contém a saída estática. Configure o servidor para servir `404.html` com status 404. Antes de publicar, substitua `site` em `astro.config.mjs` pelo domínio definitivo: canonical, Open Graph, robots e sitemap usam esse valor. Contatos `.example` e WhatsApp são ilustrativos.
+| Comando | Para quê |
+| --- | --- |
+| `npm run build` | Baixa a carteira real (se configurada) e gera o site em `dist/` |
+| `npm run preview` | Serve o `dist/` como em produção |
+| `npm run check` | Verificação de tipos do Astro |
+| `npm run test:dados` | Testes rápidos (Node): contratos dos dados, qualidade, catálogo de módulos, limite de login, importador e visões da carteira |
+| `npm test` | Testes de interface (Playwright, Chromium e WebKit; faz build e preview antes). Primeira vez: `npx playwright install chromium webkit` |
+| `npm run importar:carteira` | Importa a planilha da carteira, com conciliação (detalhes em [docs/govnexa/modelo-dados.md](docs/govnexa/modelo-dados.md)) |
+
+## Como colaborar
+
+1. Crie um ramo a partir do `main` atualizado (`git switch -c nome-do-ramo`).
+2. Faça as alterações e rode `npm run test:dados` e `npm run build`.
+3. Envie o ramo e abra um Pull Request para o `main`. A Vercel gera uma prévia do PR.
+4. Depois do merge, a Vercel publica o `main`. A rotina **Garantir publicação na Vercel** confere a publicação e, se ela não acontecer, aciona o gancho de publicação.
+5. Registre a mudança em [docs/CHANGELOG.md](docs/CHANGELOG.md).
+
+Não suba planilhas internas, documentos de reunião, nomes de pessoas, CPFs ou credenciais. As pastas `Doc Referencia/` e `.govnexa-dados/` já ficam fora do Git.
 
 ## Estrutura
 
-- `src/layouts/`: layout público e estrutura da plataforma.
-- `src/pages/`: páginas públicas, categorias, artigos e rotas estáticas da plataforma.
-- `src/content/insights/`: oito textos Markdown, dois por tipo, validados por content collection.
-- `src/data/modules.json`: 24 módulos, colunas, campos e registros fictícios. `source` identifica o número correspondente no mapa original.
-- `src/data/offers.json`: 12 ofertas fictícias.
-- `src/components/`: listagem de Insights, tabelas, marketplace e gráfico SVG.
-- `src/scripts/`: menu, tema e comportamento das tabelas.
-- `src/styles/global.css`: estilos, responsividade e temas.
-- `public/`: SVGs originais; `robots.txt` é gerado por endpoint estático.
-- `tests/`: aceitação Playwright e axe; configuração para Chromium e WebKit.
-
-## O que é exemplo
-
-Todos os processos, valores, CNPJs, pessoas, fornecedores, secretarias associadas a registros, indicadores, SLAs e ofertas são inventados. O projeto não representa a Prefeitura de Goiânia e não utiliza dados operacionais dela. Diligências, embarcações e fluxos de marketplace do mapa também foram mantidos como demonstração; locais de entrega adaptam o módulo de portos ao contexto municipal.
-
-Busca, filtros, ordenação, paginação, visualização de registros, rascunhos de documentos e cesta funcionam no navegador. Ações de cadastro, exportação, configuração, negociação, envio e IA são simuladas e exibem **“protótipo: nada é gravado”**. As APIs de login/logout autenticam o acesso à plataforma na Vercel; não há geração real por IA ou transação. Os campos da referência são controles demonstrativos; valores e opções são exemplos, e não regras do sistema real.
-
-A preferência de tema fica no `localStorage`. A cesta usa `sessionStorage` apenas para permitir a navegação entre catálogo, oferta e cotação e desaparece ao encerrar a sessão da aba. Nenhum dado é enviado a um servidor. O formulário público valida os campos e prepara um link `mailto:`, sem envio automático. A abertura de um aplicativo de e-mail depende da configuração do dispositivo.
-
-## Testes e validação
-
-Somente Chromium e WebKit estão configurados. O Playwright executa build e preview da produção antes dos testes, sem reutilizar servidores. Para executar:
-
-```sh
-npx playwright install chromium webkit
-npm test
+```
+api/, lib/, middleware.ts   Login (funções e middleware da Vercel)
+coletores/                  Coletores de dados públicos (IBGE, CAUC, FNS, SICONFI, Transferegov, DOU, INEP, CNES, SINISA…)
+data/config/municipio.json  Município ativo (nome, logo, código IBGE): nada fica fixo em Goiânia
+data/core/                  Dados tratados, com proveniência em cada valor
+data/exemplo/               Dados fictícios (carteira de exemplo)
+scripts/                    Baixa da carteira real no build e importador da planilha
+src/pages/                  Site público e rotas da plataforma ([...module].astro, agenda.ics)
+src/lib/                    Regras e leitura de dados (carteira, dados, projetos, govnexa, marca, município)
+src/components/             Tabelas, Kanban, Gantt, visão por órgão, gráficos
+src/data/modules.json       Módulos demonstrativos de Licitações e Conta
+docs/                       Documentação (abaixo)
+tests/                      Testes Node (*.test.ts) e Playwright (*.spec.ts)
 ```
 
-A suíte cobre páginas públicas e módulos em 1280/375 px, cabeçalho, submenu, menu móvel e foco, busca/tipo/tag/paginação dos Insights, páginas de tipo, artigos, tabelas, cesta, validação do formulário, tema, 404 e axe nos temas claro/escuro. Lighthouse e conformidade visual/WCAG precisam de verificação posterior em navegador; não se afirma nota ≥95 sem medição.
+## Dados e rotinas automáticas (GitHub Actions)
 
-Rodada 1: build aprovado (58 páginas); Astro Check com zero erros, avisos e sugestões; `npm audit --omit=dev`: `found 0 vulnerabilities`. Schema adaptado para `astro/zod`. Sharp 0.35.5 é dependência transitiva do Astro, sem dependência direta ou uso no código da aplicação.
+| Rotina | Quando | O que faz |
+| --- | --- | --- |
+| Atualizar dados do bloco Captação | Todo dia, 09h30 (Brasília) | Roda os coletores e abre PR do ramo `dados-atualizados` |
+| Atualizar dados mensais | Dia 5 de cada mês | INEP, SINISA e CNES, PR do ramo `dados-mensais-atualizados` |
+| Garantir publicação na Vercel | A cada atualização do `main` | Confere se a Vercel publicou; se não, aciona o gancho |
+| Portal da Transparência (coletar, explorar, testar) | Manual | Convênios pela API (chave em segredo do GitHub) |
 
-Playwright foi executado: Chromium 0 passaram/17 falharam ao iniciar (`bootstrap_check_in ... Permission denied (1100)`); WebKit 0 passaram/17 falharam ao iniciar (`Abort trap: 6`, saída 134). Nenhuma asserção da aplicação ou axe foi alcançada. Evidências em `test-results/*/error-context.md`. É necessário repetir em terminal com permissão para iniciar navegadores.
+Os PRs de dados automáticos precisam de revisão e merge, como qualquer outro.
 
-O preview padrão usa 4321. `--ignore-lock` mantém Astro 7 em primeiro plano, evitando o modo automático de segundo plano em agentes. Para porta ocupada: `PLAYWRIGHT_PORT=4322 npm test` (porta da execução registrada). A primeira tentativa deixou um preview em segundo plano em 4321, PID 52487; o ambiente recusou encerrá-lo com EPERM. Encerrar pelo terminal do usuário com `npx astro preview stop`.
+## Configuração (variáveis e segredos)
 
-A plataforma tem barra própria, busca global nos registros do painel, notificações ilustrativas, menu da conta e gaveta móvel com Escape e ciclo de foco. Tabelas têm etiquetas de status e primeira coluna fixa na rolagem móvel. Insights têm resumos e corpos distintos.
+Nenhum valor fica no código. Só os nomes:
 
-## Login da plataforma
+| Nome | Onde | Uso |
+| --- | --- | --- |
+| `AUTH_EMAIL`, `AUTH_PASSWORD_SHA256`, `AUTH_SECRET` | Vercel | Login da plataforma. Sem elas, o login fica bloqueado |
+| `GOVNEXA_DADOS_REPO`, `GOVNEXA_DADOS_TOKEN`, `GOVNEXA_DADOS_REF` | Vercel | Baixar a carteira real de um repositório privado no build |
+| `VERCEL_DEPLOY_HOOK` | GitHub (segredo) | Gancho usado pela rotina de publicação |
+| Chave do Portal da Transparência | GitHub (segredo) | Coletor de convênios |
 
-Configurar `AUTH_EMAIL`, `AUTH_PASSWORD_SHA256` (SHA-256 hexadecimal minúsculo da senha) e `AUTH_SECRET` na Vercel. Nenhuma credencial deve ser incluída no código. Configuração ausente bloqueia o login. Sessão de 8 horas em cookie HttpOnly e Secure; logout em `/api/logout`. O preview estático local não executa a autenticação da Vercel. Instruções para trocar a senha em `../ENTREGA-CODEX.md`, seção Rodada 3.
+A troca de senha está em `../ENTREGA-CODEX.md`, seção Rodada 3. Colaboradores não recebem esses valores.
+
+## Segurança
+
+Revisão dos 9 vetores em [docs/seguranca.md](docs/seguranca.md). Em resumo: `/plataforma/` exige sessão válida, o login bloqueia após 5 falhas, cabeçalhos de segurança e CSP ficam no `vercel.json`, os segredos ficam só na Vercel e no GitHub, e os CPFs de terceiros vindos do DOU são mascarados. O teste de contrato falha se aparecer CPF ou dado bancário em `data/core`.
+
+## Documentação
+
+| Arquivo | Conteúdo |
+| --- | --- |
+| [docs/govnexa/visao-geral.md](docs/govnexa/visao-geral.md) | GovNexa: módulos, macroetapas, roteiro e regras de código |
+| [docs/govnexa/modelo-dados.md](docs/govnexa/modelo-dados.md) | Modelo de dados da carteira |
+| [docs/arquitetura.md](docs/arquitetura.md) | Arquitetura do bloco Captação |
+| [docs/plano-execucao.md](docs/plano-execucao.md) | Plano e decisões do bloco Captação |
+| [docs/manual-usuario.md](docs/manual-usuario.md) | Manual do usuário |
+| [docs/projetos-ia.md](docs/projetos-ia.md) | Guia Projetos: parecer, regras R01–R21 e IA com revisão humana |
+| [docs/regras-alertas.md](docs/regras-alertas.md) | Regras dos alertas |
+| [docs/fontes/](docs/fontes/) | Fontes de dados |
+| [docs/seguranca.md](docs/seguranca.md) | Revisão de segurança |
+| [docs/esquema-postgres.sql](docs/esquema-postgres.sql) | Esquema para a futura etapa com PostgreSQL |
+| [docs/CHANGELOG.md](docs/CHANGELOG.md) | Histórico de mudanças |
+
+## Aviso
+
+Registros dos módulos demonstrativos (processos, valores, CNPJs, fornecedores, ofertas) são fictícios. Os dados do bloco Captação vêm de fontes públicas oficiais, com a origem indicada. O projeto não é um canal oficial da Prefeitura de Goiânia.
