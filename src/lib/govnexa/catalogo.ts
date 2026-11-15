@@ -40,6 +40,15 @@ export const NOVOS_MODULOS = [
     source: 'govnexa-roteiro',
   },
   {
+    slug: 'projetos-fluxo',
+    title: 'Fluxo do sistema',
+    group: 'Projetos',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-fluxo',
+  },
+  {
     slug: 'projetos-carteira',
     title: 'Carteira de projetos',
     group: 'Projetos',
