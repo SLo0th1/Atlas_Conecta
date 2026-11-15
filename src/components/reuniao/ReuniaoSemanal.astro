@@ -1,0 +1,292 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
+import { carregarSalas } from '../../lib/sala/carga.ts';
+import { candidatosSala } from '../../lib/sala/visoes.ts';
+import { carregarHistorico } from '../../lib/log/carga.ts';
+import { municipioAtivo } from '../../lib/municipio-ativo.ts';
+import { baseDaPauta, MOTIVOS_PAUTA } from '../../lib/reuniao/visoes.ts';
+import { AVISO_SIMULACAO_REUNIAO } from '../../lib/reuniao/simulacao.ts';
+
+const hoje = new Date().toISOString().slice(0, 10);
+const desdePadrao = new Date(Date.parse(`${hoje}T00:00:00Z`) - 7 * 86400000).toISOString().slice(0, 10);
+const carteira = carregarCarteira();
+const candidatos = candidatosSala(carteira, carregarCronogramas().cronogramas, hoje, carregarSalas().salas).map((c) => c.projeto.id);
+const base = baseDaPauta(carteira, carregarHistorico().registros, candidatos, hoje);
+const orgaos = [...new Set(base.map((b) => b.orgao ?? 'Sem órgão'))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const dados = JSON.stringify({ base, hoje, desdePadrao, prefeitura: municipioAtivo().nomeExibicao }).replaceAll('<', '\\u003c');
+---
+<div data-cart data-reuniao>
+  <p class="cart-aviso" role="note">{AVISO_SIMULACAO_REUNIAO}</p>
+
+  <form class="cart-filtros ru-filtros" data-ru-form aria-label="Filtros da pauta" onsubmit="return false">
+    <label>Última reunião em
+      <input type="date" data-ru-desde value={desdePadrao} />
+    </label>
+    <label>Órgão
+      <select data-ru-orgao>
+        <option value="">Todos</option>
+        {orgaos.map((o) => <option value={o}>{o}</option>)}
+      </select>
+    </label>
+    <label>Motivo na pauta
+      <select data-ru-motivo>
+        <option value="">Todos</option>
+        {MOTIVOS_PAUTA.map((m) => <option value={m}>{m}</option>)}
+      </select>
+    </label>
+  </form>
+
+  <section aria-labelledby="ru-resumo-titulo">
+    <h2 id="ru-resumo-titulo" class="ru-h2">Resumo da pauta</h2>
+    <ul class="ru-resumo" data-ru-resumo></ul>
+    <p class="cart-resumo" role="status" aria-live="polite" data-ru-contador></p>
+  </section>
+
+  <section aria-labelledby="ru-pauta-titulo">
+    <h2 id="ru-pauta-titulo" class="ru-h2">Projetos da pauta</h2>
+    <ul class="ru-lista" data-ru-lista></ul>
+    <p data-ru-vazio hidden>Nenhum projeto na pauta com estes filtros.</p>
+  </section>
+
+  <div class="ru-rodape cart-nao-imprimir">
+    <div class="cart-erro" role="alert" data-ru-erro hidden></div>
+    <p class="ru-ok" role="status" data-ru-ok hidden></p>
+    <div class="actions">
+      <button type="button" class="primary" data-ru-registrar>Registrar reunião (simulação)</button>
+      <button type="button" class="secondary" data-ru-ata>Gerar ata em PDF</button>
+    </div>
+  </div>
+
+  <div class="ru-impressao-cab" data-ru-cab-impressao></div>
+  <script is:inline type="application/json" id="ru-dados" set:html={dados}></script>
+</div>
+<script>
+import { avisar, mostrarErro } from '../../lib/carteira/simulacao.ts';
+import { pautaDaBase, type ItemBase, type ItemPauta } from '../../lib/reuniao/visoes.ts';
+import { dataBr, faltandoNaReuniao, guardarRegistrosReuniao, montarRegistrosReuniao, type AcaoReuniao, type ItemDiscutido } from '../../lib/reuniao/simulacao.ts';
+
+interface Estado { discutido: boolean; discussao: string; decisao: string; acoes: AcaoReuniao[] }
+const ROTULO_FAROL = { vermelho: 'Vermelho', amarelo: 'Amarelo', verde: 'Verde' } as const;
+
+function el<K extends keyof HTMLElementTagNameMap>(tag: K, texto?: string, classe?: string): HTMLElementTagNameMap[K] {
+  const e = document.createElement(tag);
+  if (texto !== undefined) e.textContent = texto;
+  if (classe) e.className = classe;
+  return e;
+}
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-reuniao]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  let dados: { base: ItemBase[]; hoje: string; desdePadrao: string; prefeitura: string };
+  try {
+    dados = JSON.parse(raiz.querySelector('#ru-dados')?.textContent || '{}');
+  } catch {
+    dados = { base: [], hoje: '', desdePadrao: '', prefeitura: '' };
+  }
+  const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+  const campoDesde = q<HTMLInputElement>('[data-ru-desde]');
+  const campoOrgao = q<HTMLSelectElement>('[data-ru-orgao]');
+  const campoMotivo = q<HTMLSelectElement>('[data-ru-motivo]');
+  const resumo = q<HTMLElement>('[data-ru-resumo]');
+  const contador = q<HTMLElement>('[data-ru-contador]');
+  const lista = q<HTMLElement>('[data-ru-lista]');
+  const vazio = q<HTMLElement>('[data-ru-vazio]');
+  const erro = q<HTMLElement>('[data-ru-erro]');
+  const ok = q<HTMLElement>('[data-ru-ok]');
+  const cabImpressao = q<HTMLElement>('[data-ru-cab-impressao]');
+  const estados = new Map<string, Estado>();
+  const estadoDe = (id: string): Estado => {
+    let e = estados.get(id);
+    if (!e) estados.set(id, (e = { discutido: false, discussao: '', decisao: '', acoes: [] }));
+    return e;
+  };
+
+  function cartaoResumo(valor: number, rotulo: string): HTMLLIElement {
+    const li = el('li', undefined, 'ru-cartao-resumo');
+    li.append(el('strong', String(valor), 'ru-numero'), el('span', rotulo));
+    return li;
+  }
+
+  function linhaAcao(estado: Estado, acao: AcaoReuniao, nome: string, remover: () => void): HTMLLIElement {
+    const li = el('li', undefined, 'ru-acao');
+    const campo = (rotulo: string, tipo: string, chave: keyof AcaoReuniao) => {
+      const l = el('label', rotulo);
+      const i = el('input');
+      i.type = tipo;
+      i.value = acao[chave];
+      i.setAttribute('aria-label', `${rotulo} da ação de ${nome}`);
+      i.addEventListener('input', () => { acao[chave] = i.value; });
+      l.append(i);
+      return l;
+    };
+    const rem = el('button', 'Remover ação', 'secondary ru-remover');
+    rem.type = 'button';
+    rem.addEventListener('click', () => { estado.acoes.splice(estado.acoes.indexOf(acao), 1); remover(); });
+    li.append(campo('Descrição', 'text', 'descricao'), campo('Responsável', 'text', 'responsavel'), campo('Prazo', 'date', 'prazo'), rem);
+    return li;
+  }
+
+  /** Bloco que só aparece na impressão (ata): texto puro do que foi registrado. */
+  function atualizarImpressao(bloco: HTMLElement, estado: Estado): void {
+    bloco.replaceChildren();
+    const par = (rotulo: string, texto: string) => {
+      const p = el('p');
+      p.append(el('strong', `${rotulo}: `), document.createTextNode(texto.trim() || 'Não registrado.'));
+      bloco.append(p);
+    };
+    par('Discussão', estado.discussao);
+    par('Decisão', estado.decisao);
+    if (estado.acoes.length) {
+      const t = el('table');
+      const cab = el('tr');
+      for (const c of ['Ação', 'Responsável', 'Prazo']) cab.append(el('th', c));
+      t.append(cab);
+      for (const a of estado.acoes) {
+        const tr = el('tr');
+        tr.append(el('td', a.descricao), el('td', a.responsavel), el('td', a.prazo ? dataBr(a.prazo) : ''));
+        t.append(tr);
+      }
+      bloco.append(t);
+    } else bloco.append(el('p', 'Nenhuma ação.'));
+  }
+
+  function cartao(item: ItemPauta): HTMLLIElement {
+    const estado = estadoDe(item.projeto_id);
+    const li = el('li', undefined, 'card ru-item');
+    li.dataset.projetoId = item.projeto_id;
+    li.dataset.discutido = estado.discutido ? 'sim' : 'nao';
+    const h3 = el('h3');
+    const a = el('a', item.nome);
+    a.href = `/plataforma/projetos-carteira/?q=${encodeURIComponent(item.projeto_id)}`;
+    h3.append(a, document.createTextNode(' '), el('span', `(${item.projeto_id})`, 'muted'));
+    const meta = el('p', `${item.orgao ?? 'Sem órgão'} · ${item.macroetapa}${item.prioridade ? ` · Prioridade ${item.prioridade}` : ''}`, 'ru-meta');
+    const farol = el('p', undefined, 'ru-farol');
+    const ponto = el('span', undefined, `cart-ponto ${item.farol.cor}`);
+    ponto.setAttribute('aria-hidden', 'true');
+    const textoFarol = el('span');
+    textoFarol.append(el('strong', `Farol ${ROTULO_FAROL[item.farol.cor]}: `), document.createTextNode(item.farol.motivo));
+    farol.append(ponto, textoFarol);
+
+    const motivos = el('div', undefined, 'ru-bloco');
+    motivos.append(el('h4', 'Na pauta porque'));
+    const ulm = el('ul');
+    for (const m of item.motivosNaPauta) ulm.append(el('li', m));
+    motivos.append(ulm);
+
+    const mudou = el('div', undefined, 'ru-bloco');
+    mudou.append(el('h4', 'O que mudou'));
+    if (item.mudancas.length) {
+      const ul = el('ul');
+      for (const m of item.mudancas) ul.append(el('li', m));
+      mudou.append(ul);
+    } else mudou.append(el('p', 'Nada registrado desde a última reunião.'));
+
+    const planilha = el('div', undefined, 'ru-bloco');
+    if (item.ultimaReuniaoPlanilha) {
+      const p = el('p');
+      p.append(el('strong', 'Última reunião (planilha): '), document.createTextNode(item.ultimaReuniaoPlanilha));
+      planilha.append(p);
+    }
+    if (item.providenciasPlanilha) {
+      const p = el('p');
+      p.append(el('strong', 'Providências (planilha): '), document.createTextNode(item.providenciasPlanilha));
+      planilha.append(p);
+    }
+
+    const edicao = el('div', undefined, 'ru-edicao cart-nao-imprimir');
+    const impressao = el('div', undefined, 'ru-impressao');
+    const area = (rotulo: string, chave: 'discussao' | 'decisao') => {
+      const l = el('label', rotulo);
+      const t = el('textarea');
+      t.rows = 3;
+      t.value = estado[chave];
+      t.addEventListener('input', () => { estado[chave] = t.value; });
+      l.append(t);
+      return l;
+    };
+    const acoes = el('fieldset', undefined, 'ru-acoes-campo');
+    acoes.append(el('legend', 'Ações'));
+    const ula = el('ul', undefined, 'ru-acoes');
+    const desenharAcoes = () => {
+      ula.replaceChildren();
+      for (const ac of estado.acoes) ula.append(linhaAcao(estado, ac, item.nome, desenharAcoes));
+    };
+    desenharAcoes();
+    const mais = el('button', 'Acrescentar ação', 'secondary');
+    mais.type = 'button';
+    mais.setAttribute('aria-label', `Acrescentar ação para ${item.nome}`);
+    mais.addEventListener('click', () => {
+      estado.acoes.push({ descricao: '', responsavel: '', prazo: '' });
+      desenharAcoes();
+      ula.querySelector<HTMLInputElement>('li:last-child input')?.focus();
+    });
+    acoes.append(ula, mais);
+    const marca = el('label', undefined, 'ru-discutido');
+    const cx = el('input');
+    cx.type = 'checkbox';
+    cx.checked = estado.discutido;
+    cx.addEventListener('change', () => { estado.discutido = cx.checked; li.dataset.discutido = cx.checked ? 'sim' : 'nao'; });
+    marca.append(cx, document.createTextNode(' Discutido'));
+    edicao.append(area('Discussão', 'discussao'), area('Decisão', 'decisao'), acoes, marca);
+
+    li.append(h3, meta, farol, motivos, mudou, planilha, edicao, impressao);
+    return li;
+  }
+
+  function desenhar(): void {
+    const pauta = pautaDaBase(dados.base, campoDesde.value || dados.desdePadrao);
+    const r = pauta.resumo;
+    resumo.replaceChildren(cartaoResumo(r.total, 'projetos na pauta'), cartaoResumo(r.vermelhos, 'com prazo vencido'), cartaoResumo(r.mudaramDeEtapa, 'mudaram de etapa'), cartaoResumo(r.novos, 'novos projetos'));
+    for (const g of r.porMacroetapa) resumo.append(cartaoResumo(g.qtd, g.nome));
+    const visiveis = pauta.itens.filter((i) => (!campoOrgao.value || (i.orgao ?? 'Sem órgão') === campoOrgao.value) && (!campoMotivo.value || i.motivosNaPauta.includes(campoMotivo.value)));
+    lista.replaceChildren(...visiveis.map(cartao));
+    vazio.hidden = visiveis.length > 0;
+    contador.textContent = `${visiveis.length} de ${r.total} projetos na pauta.`;
+  }
+
+  const discutidos = (): ItemDiscutido[] => {
+    const nomes = new Map(dados.base.map((b) => [b.projeto_id, b.nome]));
+    return [...estados.entries()]
+      .filter(([, e]) => e.discutido)
+      .map(([id, e]) => ({ projeto_id: id, projeto_nome: nomes.get(id) ?? id, discussao: e.discussao, decisao: e.decisao, acoes: e.acoes.map((a) => ({ ...a })) }));
+  };
+
+  const preencherAta = () => {
+    cabImpressao.textContent = `GovNexa — Ata da reunião semanal · ${dataBr(dados.hoje)} · ${dados.prefeitura}`;
+    for (const li of lista.querySelectorAll<HTMLElement>('.ru-item')) {
+      const bloco = li.querySelector<HTMLElement>('.ru-impressao');
+      if (bloco) atualizarImpressao(bloco, estadoDe(li.dataset.projetoId ?? ''));
+    }
+  };
+
+  [campoDesde, campoOrgao, campoMotivo].forEach((c) => c.addEventListener('change', desenhar));
+  campoDesde.addEventListener('input', desenhar);
+  window.addEventListener('beforeprint', preencherAta);
+  q<HTMLButtonElement>('[data-ru-ata]').addEventListener('click', () => {
+    preencherAta();
+    window.print();
+  });
+  q<HTMLButtonElement>('[data-ru-registrar]').addEventListener('click', () => {
+    ok.hidden = true;
+    const itens = discutidos();
+    const faltando = faltandoNaReuniao(itens);
+    if (faltando.length) {
+      mostrarErro(erro, 'Falta preencher:', faltando);
+      return;
+    }
+    erro.hidden = true;
+    const registros = montarRegistrosReuniao(itens, dados.hoje || new Date().toISOString().slice(0, 10), new Date().toISOString());
+    guardarRegistrosReuniao(registros);
+    const texto = `Simulação: ${registros[0].descricao}. Nada foi gravado.`;
+    ok.textContent = texto;
+    ok.hidden = false;
+    avisar(texto);
+  });
+
+  desenhar();
+});
+</script>

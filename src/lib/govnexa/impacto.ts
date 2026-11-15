@@ -35,6 +35,7 @@ export const COMPONENTES: Record<string, string[]> = {
   execucao: ['src/lib/carteira/macroetapas.ts', 'src/components/carteira/Gantt.astro'],
   conclusao: ['src/lib/carteira/macroetapas.ts'],
   fim: ['src/lib/log/**'],
+  reuniao: ['src/lib/reuniao/**', 'src/components/reuniao/**'],
   movimentacao: ['src/lib/carteira/movimentacao.ts', 'src/lib/carteira/simulacao.ts', 'src/components/carteira/Kanban.astro', 'src/components/carteira/PendenciasEtapa.astro'],
   alertas: ['src/lib/dados/alertas.ts', 'src/lib/carteira/visoes.ts'],
   parado: ['src/lib/cronograma/visoes.ts', 'src/components/cronograma/Parado.astro'],
