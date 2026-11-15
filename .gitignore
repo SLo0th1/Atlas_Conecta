@@ -15,3 +15,6 @@ data/raw/*
 # Arquivos volumosos regenerados pelos coletores (as telas usam os resumos enxutos)
 data/core/transferegov-*.json
 data/core/portal-transparencia-*.json
+
+# Insumos internos (reunioes, planilhas, PDFs): nunca publicar
+Doc Referencia/
