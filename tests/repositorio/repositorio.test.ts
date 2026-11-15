@@ -82,3 +82,43 @@ test('Postgres: erro no meio da gravação faz ROLLBACK', async () => {
   await assert.rejects(repo.aplicar({ ...base, projeto_id: projeto.id, tipo: 'registrar_passo', descricao: 'x', data: '2026-11-15' }));
   assert.equal(chamadas.at(-1)!.sql, 'ROLLBACK');
 });
+
+test('JSON: listarHistorico traz o histórico de exemplo, mais recentes primeiro', async () => {
+  const repo = criarRepositorioJson();
+  const h = await repo.listarHistorico();
+  assert.ok(h.length >= 20);
+  for (let i = 1; i < h.length; i++) assert.ok(h[i - 1].em >= h[i].em);
+  assert.ok(h.some((r) => r.tipo === 'carga' && r.projeto_id === '*'));
+  assert.ok(h.some((r) => r.projeto_id === 'P-900' && r.projeto_nome));
+});
+
+test('Postgres: listarHistorico e historico leem a visão log_alteracoes só com parâmetros e dentro da transação', async () => {
+  const chamadas: { sql: string; params: unknown[] }[] = [];
+  const linha = { id: 'x-1', projeto_id: 'P-900', projeto_nome: 'Projeto Exemplo', tipo: 'atualizar_campos', origem: 'ficha', autor: 'Pessoa Fictícia 1', em: new Date('2026-11-01T12:00:00Z'), de: null, para: null, campos: [{ campo: 'nome', antes: 'A', depois: 'B' }], motivo: null, forcado: null, descricao: null };
+  const cliente: ClienteSql = {
+    async query(sql, params) {
+      chamadas.push({ sql, params });
+      return { rows: /FROM log_alteracoes/.test(sql) ? [linha] : [] };
+    },
+  };
+  const repo = criarRepositorioPostgres(cliente, 5208707);
+  const todos = await repo.listarHistorico();
+  assert.equal(todos.length, 1);
+  assert.equal(todos[0].em, '2026-11-01T12:00:00.000Z');
+  assert.equal(todos[0].projeto_nome, 'Projeto Exemplo');
+  assert.deepEqual(todos[0].campos, [{ campo: 'nome', antes: 'A', depois: 'B' }]);
+  const consulta = chamadas.find((c) => /FROM log_alteracoes/.test(c.sql))!;
+  assert.match(consulta.sql, /WHERE prefeitura_id = \$1 ORDER BY em DESC/);
+  assert.deepEqual(consulta.params, [5208707]);
+  assert.equal(chamadas[0].sql, 'BEGIN');
+  assert.equal(chamadas.at(-1)!.sql, 'COMMIT');
+
+  chamadas.length = 0;
+  const malicioso = "P-1'; DROP TABLE evento_sistema; --";
+  const porProjeto = await repo.historico(malicioso);
+  assert.equal(porProjeto.length, 1);
+  const c2 = chamadas.find((c) => /FROM log_alteracoes/.test(c.sql))!;
+  assert.match(c2.sql, /projeto_id = \$2/);
+  assert.deepEqual(c2.params, [5208707, malicioso]);
+  for (const c of chamadas) assert.ok(!c.sql.includes('DROP TABLE'), c.sql);
+});

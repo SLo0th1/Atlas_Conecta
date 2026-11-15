@@ -2,6 +2,7 @@
 import type { Evento, RegistroHistorico } from '../carteira/movimentacao.ts';
 import type { Projeto } from '../carteira/tipos.ts';
 import type { Cronograma } from '../cronograma/tipos.ts';
+import type { RegistroLog } from '../log/tipos.ts';
 
 export type ResultadoAplicacao =
   | { ok: true; historico: RegistroHistorico[] }
@@ -12,6 +13,8 @@ export interface RepositorioProjetos {
   listarProjetos(): Promise<Projeto[]>;
   obterProjeto(id: string): Promise<Projeto | null>;
   historico(projetoId: string): Promise<RegistroHistorico[]>;
+  /** Todos os registros do histórico de alterações (inclui importações), mais recentes primeiro. */
+  listarHistorico(): Promise<RegistroLog[]>;
   aplicar(e: Evento): Promise<ResultadoAplicacao>;
   listarCronogramas(): Promise<Cronograma[]>;
 }

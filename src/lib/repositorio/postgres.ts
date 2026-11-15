@@ -5,6 +5,7 @@ import { aplicarEvento } from '../carteira/movimentacao.ts';
 import type { Evento, RegistroHistorico } from '../carteira/movimentacao.ts';
 import type { Projeto } from '../carteira/tipos.ts';
 import type { Cronograma, EtapaCronograma, FaseCronograma } from '../cronograma/tipos.ts';
+import type { RegistroLog } from '../log/tipos.ts';
 import type { RepositorioProjetos, ResultadoAplicacao } from './tipos.ts';
 
 export interface ClienteSql {
@@ -25,6 +26,7 @@ function linhaParaProjeto(r: any): Projeto {
   for (const c of TODAS) p[c] = r[c] ?? (c === 'sei' || c === 'pendencias' ? [] : null);
   return p as Projeto;
 }
+const COLUNAS_LOG = 'id, projeto_id, projeto_nome, tipo, origem, autor, em, de, para, campos, motivo, forcado, descricao';
 const iso = (v: unknown): string => (typeof v === 'string' ? v : new Date(v as any).toISOString());
 function linhaParaHistorico(r: any): RegistroHistorico {
   const h: any = { id: r.id, projeto_id: r.projeto_id, tipo: r.tipo, origem: r.origem, autor: r.autor, em: iso(r.em) };
@@ -35,6 +37,11 @@ function linhaParaHistorico(r: any): RegistroHistorico {
   if (r.forcado) h.forcado = true;
   if (r.descricao != null) h.descricao = r.descricao;
   return h as RegistroHistorico;
+}
+function linhaParaLog(r: any): RegistroLog {
+  const h: any = linhaParaHistorico(r);
+  if (r.projeto_nome != null) h.projeto_nome = r.projeto_nome;
+  return h as RegistroLog;
 }
 
 export function criarRepositorioPostgres(cliente: ClienteSql, prefeituraId: number): RepositorioProjetos {
@@ -70,10 +77,16 @@ export function criarRepositorioPostgres(cliente: ClienteSql, prefeituraId: numb
     historico: (projetoId) =>
       transacao(async () => {
         const r = await cliente.query(
-          'SELECT id, projeto_id, tipo, origem, autor, em, de, para, campos, motivo, forcado, descricao FROM evento_projeto WHERE prefeitura_id = $1 AND projeto_id = $2 ORDER BY em, id',
+          `SELECT ${COLUNAS_LOG} FROM log_alteracoes WHERE prefeitura_id = $1 AND projeto_id = $2 ORDER BY em, id`,
           [prefeituraId, projetoId],
         );
         return r.rows.map(linhaParaHistorico);
+      }),
+    listarHistorico: () =>
+      transacao(async () => {
+        // A visão log_alteracoes une evento_projeto e evento_sistema (security_invoker: a RLS vale para quem consulta).
+        const r = await cliente.query(`SELECT ${COLUNAS_LOG} FROM log_alteracoes WHERE prefeitura_id = $1 ORDER BY em DESC, id DESC`, [prefeituraId]);
+        return r.rows.map(linhaParaLog);
       }),
     listarCronogramas: () =>
       transacao(async () => {

@@ -3,6 +3,8 @@ import { br, reais } from '../dados/formato.ts';
 import type { Detalhe } from '../dados/detalhes.ts';
 import type { Modulo } from '../dados/tipos.ts';
 import { carregarCronogramas } from '../cronograma/carga.ts';
+import { carregarHistorico } from '../log/carga.ts';
+import { dataHoraBr, maisRecentes, resumoRegistro, rotuloAcao } from '../log/visoes.ts';
 import { resumoCronograma } from '../cronograma/visoes.ts';
 import { carregarCarteira } from './carga.ts';
 import { MACROETAPAS, nomeMacroetapa } from './macroetapas.ts';
@@ -110,6 +112,14 @@ function detalheProjeto(p: Projeto, ficticio: boolean, arquivo: string, importad
     });
     links.push({ rotulo: 'Abrir o cronograma detalhado', url: `/plataforma/cronograma/${c.id}/` });
   }
+  const recentes = maisRecentes(carregarHistorico().registros.filter((h) => h.projeto_id === p.id)).slice(0, 5);
+  secoes.push({
+    titulo: 'Histórico',
+    itens: recentes.length
+      ? recentes.map((h) => `${dataHoraBr(h.em)} · ${rotuloAcao(h.tipo)} · ${resumoRegistro(h)} · por ${h.autor}`)
+      : ['Nenhuma alteração registrada ainda'],
+  });
+  links.push({ rotulo: 'Ver histórico completo', url: `/plataforma/projetos-log/?projeto=${encodeURIComponent(p.id)}` });
   secoes.push({ titulo: 'Pendências de dado', itens: p.pendencias.length ? p.pendencias : ['Nenhuma'] });
   secoes.push({
     titulo: 'Origem do dado',

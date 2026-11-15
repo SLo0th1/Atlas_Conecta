@@ -124,3 +124,61 @@ test('govnexa: cronogramas, onde está parado e simulação',async({page})=>{
  // axe: pendências e cronograma, claro e escuro
  for(const theme of ['light','dark'])for(const path of ['/plataforma/projetos-pendencias/',`/plataforma/cronograma/${idCronograma}/`]){await page.goto(path);await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`${path} ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
+
+test('govnexa: histórico de alterações',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const response=await page.goto('/plataforma/projetos-log/');
+ expect(response?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveCount(1);
+ const contador=page.locator('[data-lg-contador]');
+ await expect(contador).toContainText('registros');
+ const numero=async()=>Number((await contador.textContent())!.split(' de ')[0]);
+ const total=await numero();
+ expect(total).toBeGreaterThan(20);
+ // filtro por ação reduz o contador; Limpar restaura
+ await page.locator('[data-lg-acao]').selectOption({label:'Mudança de etapa'});
+ await expect.poll(numero).toBeLessThan(total);
+ expect(await numero()).toBeGreaterThan(0);
+ for(const celula of await page.locator('[data-lg-corpo] tr:not(.lg-detalhe) td:nth-child(3)').all())await expect(celula).toContainText('Mudança de etapa');
+ await page.getByRole('button',{name:'Limpar'}).click();
+ await expect.poll(numero).toBe(total);
+ // linha expansível mostra antes e depois
+ await page.locator('[data-lg-acao]').selectOption({label:'Campos alterados'});
+ const ver=page.locator('.lg-ver').first();
+ await ver.click();
+ await expect(ver).toHaveAttribute('aria-expanded','true');
+ const detalhe=page.locator('.lg-detalhe:not([hidden])').first();
+ await expect(detalhe).toContainText('Antes:');
+ await expect(detalhe).toContainText('Depois:');
+ // exportar CSV baixa o que está filtrado
+ const [baixado]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Exportar CSV'}).click()]);
+ expect(baixado.suggestedFilename()).toMatch(/^historico-govnexa-\d{4}-\d{2}-\d{2}\.csv$/);
+ // pré-filtro pela URL: só o projeto pedido
+ await page.goto('/plataforma/projetos-log/?projeto=P-900');
+ await expect(page.locator('[data-lg-projeto]')).toHaveValue('P-900');
+ await expect.poll(async()=>(await page.locator('[data-lg-corpo] tr:not(.lg-detalhe)').count())).toBeGreaterThan(0);
+ for(const celula of await page.locator('[data-lg-corpo] tr:not(.lg-detalhe) td:nth-child(2)').all())await expect(celula).toContainText('P-900');
+ // simulação no Kanban aparece no topo do log com o selo
+ await page.goto('/plataforma/projetos-kanban/');
+ const coluna=page.locator('.kb-col').filter({has:page.getByRole('heading',{name:'Em estruturação',exact:true})});
+ await coluna.locator('[data-kb-card]').first().getByRole('button',{name:/Mover/}).click();
+ const dialogo=page.locator('#kb-dialog');
+ await dialogo.getByLabel('Para a etapa').selectOption({label:'Planejamento'});
+ await dialogo.getByRole('button',{name:'Aplicar',exact:true}).click();
+ if(await dialogo.evaluate((d:HTMLDialogElement)=>d.open)){
+  await dialogo.getByLabel(/Forçar com motivo/).check();
+  await dialogo.getByLabel(/Motivo/).fill('Teste da simulação no histórico');
+  await dialogo.getByRole('button',{name:'Aplicar',exact:true}).click();
+ }
+ await expect(page.locator('#toast')).toContainText('Simulação');
+ await page.goto('/plataforma/projetos-log/');
+ await expect(page.locator('[data-lg-corpo] tr').first()).toContainText('Simulação (não gravado)');
+ await expect(page.locator('[data-lg-corpo] tr').first()).toContainText('Mudança de etapa');
+ // sem rolagem horizontal em 1280px (página e tabela)
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ expect(await page.$$eval('.lg-tabela',ws=>Math.max(0,...ws.map(e=>e.scrollWidth-e.clientWidth)))).toBeLessThanOrEqual(1);
+ await page.getByRole('button',{name:'Ver detalhes'}).first().click();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ // axe: claro e escuro
+ for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`log ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
+});

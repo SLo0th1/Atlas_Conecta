@@ -1,0 +1,283 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { repositorio } from '../../lib/repositorio/index.ts';
+import { ACOES_FILTRO, ROTULO_ACAO, ROTULO_ORIGEM } from '../../lib/log/tipos.ts';
+
+const registros = await repositorio().listarHistorico();
+const nomes = new Map(carregarCarteira().projetos.map((p) => [p.id, p.nome]));
+const lista = registros.map((r) => (r.projeto_nome || r.projeto_id === '*' ? r : { ...r, projeto_nome: nomes.get(r.projeto_id) ?? null }));
+// JSON dentro de <script type="application/json">: "</" e "<!--" nunca fecham nem comentam o script.
+const dados = JSON.stringify({ registros: lista }).replaceAll('</', '<\\/').replaceAll('<!--', '<\\u0021--');
+const autores = [...new Set(lista.map((r) => r.autor))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+---
+<div data-cart data-log class="lg">
+  <p class="cart-aviso" role="note">As alterações feitas por simulação aparecem no topo com o selo "Simulação (não gravado)" e ficam só neste navegador, durante esta sessão.</p>
+  <form class="lg-filtros" data-lg-form role="search" aria-label="Filtros do histórico">
+    <label>De
+      <input type="date" data-lg-de />
+    </label>
+    <label>Até
+      <input type="date" data-lg-ate />
+    </label>
+    <label>Projeto
+      <input type="text" data-lg-projeto placeholder="ID ou nome" autocomplete="off" />
+    </label>
+    <label>Pessoa
+      <select data-lg-autor>
+        <option value="">Todas</option>
+        {autores.map((a) => <option value={a}>{a}</option>)}
+      </select>
+    </label>
+    <label>Ação
+      <select data-lg-acao>
+        <option value="">Todas</option>
+        {ACOES_FILTRO.map((t) => <option value={t}>{ROTULO_ACAO[t]}</option>)}
+      </select>
+    </label>
+    <label>Origem
+      <select data-lg-origem>
+        <option value="">Todas</option>
+        {Object.entries(ROTULO_ORIGEM).map(([v, r]) => <option value={v}>{r}</option>)}
+      </select>
+    </label>
+    <label class="lg-texto">Texto
+      <input type="search" data-lg-texto placeholder="Buscar no que mudou, motivo ou nome" autocomplete="off" />
+    </label>
+    <div class="lg-botoes">
+      <button type="button" class="secondary" data-lg-limpar>Limpar</button>
+      <button type="button" class="secondary" data-lg-csv>Exportar CSV</button>
+    </div>
+  </form>
+  <p class="cart-resumo" role="status" aria-live="polite" data-lg-contador>Carregando registros…</p>
+  <div class="lg-tabela">
+    <table aria-label="Histórico de alterações dos projetos">
+      <thead>
+        <tr>
+          <th scope="col">Data e hora</th>
+          <th scope="col">Projeto</th>
+          <th scope="col">Ação</th>
+          <th scope="col">O que mudou</th>
+          <th scope="col">Por</th>
+          <th scope="col">Origem</th>
+          <th scope="col">Detalhes</th>
+        </tr>
+      </thead>
+      <tbody data-lg-corpo></tbody>
+    </table>
+  </div>
+  <p class="cart-resumo" data-lg-vazio hidden></p>
+  <nav class="lg-paginas" aria-label="Páginas do histórico" data-lg-paginas hidden>
+    <button type="button" class="secondary" data-lg-anterior>Anterior</button>
+    <span data-lg-pagina>Página 1 de 1</span>
+    <button type="button" class="secondary" data-lg-proxima>Próxima</button>
+  </nav>
+  <script is:inline type="application/json" id="log-dados" set:html={dados}></script>
+</div>
+<script>
+import { avisar, CHAVE_LOG_SIMULACAO } from '../../lib/carteira/simulacao.ts';
+import type { RegistroLog } from '../../lib/log/tipos.ts';
+import { dataHoraBr, filtrarLog, maisRecentes, paraCsv, resumoRegistro, rotuloAcao, rotuloCampo, rotuloOrigem, valorLegivel } from '../../lib/log/visoes.ts';
+
+const POR_PAGINA = 25;
+
+function el<K extends keyof HTMLElementTagNameMap>(tag: K, texto?: string, classe?: string): HTMLElementTagNameMap[K] {
+  const e = document.createElement(tag);
+  if (texto !== undefined) e.textContent = texto;
+  if (classe) e.className = classe;
+  return e;
+}
+
+const registroValido = (x: unknown): x is RegistroLog => {
+  if (!x || typeof x !== 'object') return false;
+  const r = x as Record<string, unknown>;
+  return ['id', 'projeto_id', 'tipo', 'origem', 'autor', 'em'].every((k) => typeof r[k] === 'string');
+};
+
+function lerSimulados(): RegistroLog[] {
+  try {
+    const bruto = JSON.parse(sessionStorage.getItem(CHAVE_LOG_SIMULACAO) || '[]');
+    return Array.isArray(bruto) ? bruto.filter(registroValido).map((r) => ({ ...r, simulado: true })) : [];
+  } catch {
+    return [];
+  }
+}
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-log]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+
+  let reais: RegistroLog[] = [];
+  try {
+    const parsed = JSON.parse(document.querySelector('#log-dados')?.textContent || '{}');
+    reais = Array.isArray(parsed.registros) ? parsed.registros.filter(registroValido) : [];
+  } catch {
+    reais = [];
+  }
+  // Simulados primeiro (mais recentes no topo), depois os gravados.
+  const todos: RegistroLog[] = [...maisRecentes(lerSimulados()), ...maisRecentes(reais)];
+
+  const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+  const campoDe = q<HTMLInputElement>('[data-lg-de]');
+  const campoAte = q<HTMLInputElement>('[data-lg-ate]');
+  const campoProjeto = q<HTMLInputElement>('[data-lg-projeto]');
+  const campoAutor = q<HTMLSelectElement>('[data-lg-autor]');
+  const campoAcao = q<HTMLSelectElement>('[data-lg-acao]');
+  const campoOrigem = q<HTMLSelectElement>('[data-lg-origem]');
+  const campoTexto = q<HTMLInputElement>('[data-lg-texto]');
+  const corpo = q<HTMLElement>('[data-lg-corpo]');
+  const contador = q<HTMLElement>('[data-lg-contador]');
+  const vazio = q<HTMLElement>('[data-lg-vazio]');
+  const paginas = q<HTMLElement>('[data-lg-paginas]');
+  const rotuloPagina = q<HTMLElement>('[data-lg-pagina]');
+  const btnAnterior = q<HTMLButtonElement>('[data-lg-anterior]');
+  const btnProxima = q<HTMLButtonElement>('[data-lg-proxima]');
+
+  // "Simulação" também pode ser escolhida em Pessoa.
+  const autoresExtras = [...new Set(todos.map((r) => r.autor))].filter((a) => ![...campoAutor.options].some((o) => o.value === a));
+  for (const a of autoresExtras.sort((x, y) => x.localeCompare(y, 'pt-BR'))) {
+    const o = el('option', a);
+    o.value = a;
+    campoAutor.append(o);
+  }
+
+  const pre = new URLSearchParams(location.search).get('projeto');
+  if (pre) campoProjeto.value = pre.slice(0, 80);
+
+  let pagina = 1;
+  let filtrados: RegistroLog[] = todos;
+
+  const filtro = () => ({
+    de: campoDe.value || undefined,
+    ate: campoAte.value || undefined,
+    projeto: campoProjeto.value,
+    autor: campoAutor.value,
+    acao: campoAcao.value,
+    origem: campoOrigem.value,
+    texto: campoTexto.value,
+  });
+
+  function linhaDetalhe(r: RegistroLog, id: string): HTMLTableRowElement {
+    const tr = el('tr', undefined, 'lg-detalhe');
+    tr.id = id;
+    tr.hidden = true;
+    const td = el('td');
+    td.colSpan = 7;
+    const dl = el('dl', undefined, 'lg-dl');
+    const par = (rotulo: string, valor: string) => {
+      dl.append(el('dt', rotulo), el('dd', valor));
+    };
+    if (r.descricao) par('Descrição', r.descricao);
+    if (r.de !== undefined || r.para !== undefined) {
+      const etapa = (c?: string | null) => (c ? valorLegivel('macroetapa', c) : 'Sem etapa');
+      par('Etapa', `${etapa(r.de)} → ${etapa(r.para)}`);
+    }
+    par('Motivo', r.motivo && r.motivo.trim() ? r.motivo : 'Não informado');
+    par('Forçado', r.forcado ? 'Sim (a regra foi contornada com motivo)' : 'Não');
+    par('Registrado por', `${r.autor} · ${rotuloOrigem(r.origem)} · ${dataHoraBr(r.em)}`);
+    if (r.simulado) par('Situação', 'Simulação: nada foi gravado.');
+    td.append(dl);
+    if (Array.isArray(r.campos) && r.campos.length) {
+      td.append(el('h3', 'Campos alterados', 'lg-sub'));
+      const ul = el('ul', undefined, 'lg-campos');
+      for (const c of r.campos) {
+        if (!c || typeof c.campo !== 'string') continue;
+        const li = el('li');
+        li.append(el('strong', rotuloCampo(c.campo)), document.createTextNode(` — Antes: ${valorLegivel(c.campo, c.antes)} · Depois: ${valorLegivel(c.campo, c.depois)}`));
+        ul.append(li);
+      }
+      td.append(ul);
+    }
+    tr.append(td);
+    return tr;
+  }
+
+  function linha(r: RegistroLog, id: string): HTMLTableRowElement[] {
+    const tr = el('tr');
+    tr.append(el('td', dataHoraBr(r.em), 'lg-quando'));
+    const tdProj = el('td');
+    if (r.projeto_id === '*') {
+      tdProj.textContent = 'Todos os projetos';
+    } else {
+      const a = el('a', r.projeto_nome ? `${r.projeto_id} · ${r.projeto_nome}` : r.projeto_id);
+      a.setAttribute('href', `/plataforma/projetos-carteira/?q=${encodeURIComponent(r.projeto_id)}`);
+      tdProj.append(a);
+    }
+    tr.append(tdProj);
+    const tdAcao = el('td', rotuloAcao(r.tipo));
+    if (r.forcado) tdAcao.append(el('span', 'Forçado', 'cr-selo'));
+    if (r.simulado) tdAcao.append(el('span', 'Simulação (não gravado)', 'cr-selo'));
+    tr.append(tdAcao, el('td', resumoRegistro(r)), el('td', r.autor), el('td', rotuloOrigem(r.origem)));
+    const tdBtn = el('td', undefined, 'lg-acoes');
+    const btn = el('button', 'Ver detalhes', 'secondary lg-ver');
+    btn.type = 'button';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-controls', id);
+    btn.addEventListener('click', () => {
+      const detalhe = document.getElementById(id) as HTMLTableRowElement | null;
+      if (!detalhe) return;
+      const abrir = detalhe.hidden;
+      detalhe.hidden = !abrir;
+      btn.setAttribute('aria-expanded', String(abrir));
+      btn.textContent = abrir ? 'Ocultar detalhes' : 'Ver detalhes';
+    });
+    tdBtn.append(btn);
+    tr.append(tdBtn);
+    return [tr, linhaDetalhe(r, id)];
+  }
+
+  function desenhar() {
+    filtrados = filtrarLog(todos, filtro());
+    const totalPaginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
+    if (pagina > totalPaginas) pagina = totalPaginas;
+    const inicio = (pagina - 1) * POR_PAGINA;
+    corpo.replaceChildren();
+    filtrados.slice(inicio, inicio + POR_PAGINA).forEach((r, i) => corpo.append(...linha(r, `lg-det-${inicio + i}`)));
+    contador.textContent = `${filtrados.length} de ${todos.length} registros`;
+    vazio.hidden = filtrados.length > 0;
+    vazio.textContent = todos.length === 0 ? 'Ainda não há registros no histórico.' : 'Nenhum registro com esses filtros. Use Limpar para ver tudo.';
+    paginas.hidden = filtrados.length <= POR_PAGINA;
+    rotuloPagina.textContent = `Página ${pagina} de ${totalPaginas}`;
+    btnAnterior.disabled = pagina <= 1;
+    btnProxima.disabled = pagina >= totalPaginas;
+  }
+
+  const refiltrar = () => {
+    pagina = 1;
+    desenhar();
+  };
+  for (const c of [campoDe, campoAte, campoProjeto, campoTexto]) c.addEventListener('input', refiltrar);
+  for (const c of [campoDe, campoAte, campoAutor, campoAcao, campoOrigem]) c.addEventListener('change', refiltrar);
+  q<HTMLFormElement>('[data-lg-form]').addEventListener('submit', (e) => e.preventDefault());
+  btnAnterior.addEventListener('click', () => {
+    pagina--;
+    desenhar();
+  });
+  btnProxima.addEventListener('click', () => {
+    pagina++;
+    desenhar();
+  });
+  q<HTMLButtonElement>('[data-lg-limpar]').addEventListener('click', () => {
+    for (const c of [campoDe, campoAte, campoProjeto, campoTexto]) c.value = '';
+    for (const c of [campoAutor, campoAcao, campoOrigem]) c.value = '';
+    refiltrar();
+  });
+  q<HTMLButtonElement>('[data-lg-csv]').addEventListener('click', () => {
+    const d = new Date();
+    const dois = (n: number) => String(n).padStart(2, '0');
+    const nome = `historico-govnexa-${d.getFullYear()}-${dois(d.getMonth() + 1)}-${dois(d.getDate())}.csv`;
+    const url = URL.createObjectURL(new Blob(['﻿', paraCsv(filtrados)], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nome;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    avisar(`Arquivo ${nome} gerado com ${filtrados.length} registros.`);
+  });
+
+  desenhar();
+});
+</script>

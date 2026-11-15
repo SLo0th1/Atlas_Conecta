@@ -1,0 +1,331 @@
+{
+  "registros": [
+    {
+      "id": "carga-2026-10-01T12:00:00Z-1",
+      "projeto_id": "*",
+      "projeto_nome": null,
+      "tipo": "carga",
+      "origem": "importacao",
+      "autor": "Importação da planilha",
+      "em": "2026-10-01T12:00:00Z",
+      "descricao": "Carga da planilha exemplo-ficticio: 12 projetos (carga inicial)"
+    },
+    {
+      "id": "P-901-2026-10-05T13:10:00Z-2",
+      "projeto_id": "P-901",
+      "projeto_nome": "Ponte Exemplo B",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 1",
+      "em": "2026-10-05T13:10:00Z",
+      "de": "00",
+      "para": "01"
+    },
+    {
+      "id": "P-902-2026-10-06T14:25:00Z-3",
+      "projeto_id": "P-902",
+      "projeto_nome": "Corredor Exemplo C",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 2",
+      "em": "2026-10-06T14:25:00Z",
+      "de": "01",
+      "para": "02"
+    },
+    {
+      "id": "P-903-2026-10-08T11:40:00Z-4",
+      "projeto_id": "P-903",
+      "projeto_nome": "Reforma de Escola Exemplo D",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 2",
+      "em": "2026-10-08T11:40:00Z",
+      "de": "02",
+      "para": "03",
+      "forcado": true,
+      "motivo": "Contratação antecipada por urgência da secretaria; peça técnica será anexada depois."
+    },
+    {
+      "id": "P-900-2026-10-09T17:05:00Z-5",
+      "projeto_id": "P-900",
+      "projeto_nome": "Unidade de Saúde Exemplo A",
+      "tipo": "atualizar_campos",
+      "origem": "ficha",
+      "autor": "Pessoa Fictícia 3",
+      "em": "2026-10-09T17:05:00Z",
+      "motivo": "Orçamento revisado após nova medição do terreno.",
+      "campos": [
+        {
+          "campo": "valores.obra",
+          "antes": 1000000,
+          "depois": 1200000
+        }
+      ]
+    },
+    {
+      "id": "P-904-2026-10-12T12:30:00Z-6",
+      "projeto_id": "P-904",
+      "projeto_nome": "Drenagem Exemplo E",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 1",
+      "em": "2026-10-12T12:30:00Z",
+      "de": "03",
+      "para": "04"
+    },
+    {
+      "id": "P-905-2026-10-13T15:00:00Z-7",
+      "projeto_id": "P-905",
+      "projeto_nome": "Aquisição de Equipamentos Exemplo F",
+      "tipo": "mover_macroetapa",
+      "origem": "ficha",
+      "autor": "Pessoa Fictícia 4",
+      "em": "2026-10-13T15:00:00Z",
+      "de": "04",
+      "para": "05"
+    },
+    {
+      "id": "P-905-2026-10-14T18:20:00Z-8",
+      "projeto_id": "P-905",
+      "projeto_nome": "Aquisição de Equipamentos Exemplo F",
+      "tipo": "registrar_passo",
+      "origem": "ficha",
+      "autor": "Pessoa Fictícia 4",
+      "em": "2026-10-14T18:20:00Z",
+      "descricao": "Ordem de serviço assinada e entregue à empresa."
+    },
+    {
+      "id": "P-906-2026-10-15T13:45:00Z-9",
+      "projeto_id": "P-906",
+      "projeto_nome": "Centro Comunitário Exemplo G",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 3",
+      "em": "2026-10-15T13:45:00Z",
+      "de": "05",
+      "para": "06"
+    },
+    {
+      "id": "P-906-2026-10-16T14:00:00Z-10",
+      "projeto_id": "P-906",
+      "projeto_nome": "Centro Comunitário Exemplo G",
+      "tipo": "registrar_passo",
+      "origem": "sei",
+      "autor": "Pessoa Fictícia 3",
+      "em": "2026-10-16T14:00:00Z",
+      "descricao": "Termo de recebimento definitivo juntado ao processo."
+    },
+    {
+      "id": "P-910-2026-10-19T12:10:00Z-11",
+      "projeto_id": "P-910",
+      "projeto_nome": "Corredor Exemplo K",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 2",
+      "em": "2026-10-19T12:10:00Z",
+      "de": "04",
+      "para": "03",
+      "motivo": "Edital precisou ser republicado."
+    },
+    {
+      "id": "P-907-2026-10-20T12:00:00Z-12",
+      "projeto_id": "P-907",
+      "projeto_nome": "Praça Exemplo H",
+      "tipo": "criado",
+      "origem": "importacao",
+      "autor": "Importação da planilha",
+      "em": "2026-10-20T12:00:00Z",
+      "descricao": "Projeto incluído pela planilha: Praça Exemplo H"
+    },
+    {
+      "id": "P-913-2026-10-20T12:00:01Z-13",
+      "projeto_id": "P-913",
+      "projeto_nome": "Aquisição de Equipamentos Exemplo N",
+      "tipo": "criado",
+      "origem": "importacao",
+      "autor": "Importação da planilha",
+      "em": "2026-10-20T12:00:01Z",
+      "descricao": "Projeto incluído pela planilha: Aquisição de Equipamentos Exemplo N"
+    },
+    {
+      "id": "P-899-2026-10-20T12:00:02Z-14",
+      "projeto_id": "P-899",
+      "projeto_nome": "Quadra Exemplo Retirada",
+      "tipo": "removido",
+      "origem": "importacao",
+      "autor": "Importação da planilha",
+      "em": "2026-10-20T12:00:02Z",
+      "descricao": "Projeto retirado da planilha: Quadra Exemplo Retirada"
+    },
+    {
+      "id": "P-904-2026-10-20T12:00:03Z-15",
+      "projeto_id": "P-904",
+      "projeto_nome": "Drenagem Exemplo E",
+      "tipo": "atualizar_campos",
+      "origem": "importacao",
+      "autor": "Importação da planilha",
+      "em": "2026-10-20T12:00:03Z",
+      "campos": [
+        {
+          "campo": "datas.contratacao",
+          "antes": "2026-09-28",
+          "depois": "2026-10-05"
+        }
+      ]
+    },
+    {
+      "id": "carga-2026-10-20T12:00:04Z-16",
+      "projeto_id": "*",
+      "projeto_nome": null,
+      "tipo": "carga",
+      "origem": "importacao",
+      "autor": "Importação da planilha",
+      "em": "2026-10-20T12:00:04Z",
+      "descricao": "Carga da planilha exemplo-ficticio: 14 projetos (2 incluídos, 1 alterados, 1 retirados)"
+    },
+    {
+      "id": "P-911-2026-10-22T16:30:00Z-17",
+      "projeto_id": "P-911",
+      "projeto_nome": "Reforma de Escola Exemplo L",
+      "tipo": "resolver_pendencia",
+      "origem": "pendencia",
+      "autor": "Pessoa Fictícia 1",
+      "em": "2026-10-22T16:30:00Z",
+      "descricao": "Pendência reprovada: Falta ordem de serviço assinada",
+      "motivo": "Documento sem assinatura da contratada.",
+      "de": "05",
+      "para": "04"
+    },
+    {
+      "id": "P-912-2026-10-26T13:00:00Z-18",
+      "projeto_id": "P-912",
+      "projeto_nome": "Drenagem Exemplo M",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 4",
+      "em": "2026-10-26T13:00:00Z",
+      "de": "03",
+      "para": "05",
+      "forcado": true,
+      "motivo": "Obra já iniciada; regularização do registro de etapas."
+    },
+    {
+      "id": "P-908-2026-10-28T19:15:00Z-19",
+      "projeto_id": "P-908",
+      "projeto_nome": "Unidade de Saúde Exemplo I",
+      "tipo": "atualizar_campos",
+      "origem": "ficha",
+      "autor": "Pessoa Fictícia 3",
+      "em": "2026-10-28T19:15:00Z",
+      "campos": [
+        {
+          "campo": "tipo_contratacao",
+          "antes": null,
+          "depois": "LICITAÇÃO"
+        },
+        {
+          "campo": "orgao_contratacao",
+          "antes": null,
+          "depois": "SEINFRA"
+        }
+      ]
+    },
+    {
+      "id": "P-909-2026-11-03T14:50:00Z-20",
+      "projeto_id": "P-909",
+      "projeto_nome": "Ponte Exemplo J",
+      "tipo": "registrar_passo",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 2",
+      "em": "2026-11-03T14:50:00Z",
+      "descricao": "Reunião com a comunidade realizada; ata anexada."
+    },
+    {
+      "id": "P-900-2026-11-04T12:20:00Z-21",
+      "projeto_id": "P-900",
+      "projeto_nome": "Unidade de Saúde Exemplo A",
+      "tipo": "atualizar_campos",
+      "origem": "ficha",
+      "autor": "Pessoa Fictícia 1",
+      "em": "2026-11-04T12:20:00Z",
+      "motivo": "Prioridade elevada por decisão do comitê.",
+      "campos": [
+        {
+          "campo": "prioridade",
+          "antes": "Alta",
+          "depois": "Muito Alta"
+        }
+      ]
+    },
+    {
+      "id": "P-907-2026-11-05T17:40:00Z-22",
+      "projeto_id": "P-907",
+      "projeto_nome": "Praça Exemplo H",
+      "tipo": "mover_macroetapa",
+      "origem": "kanban",
+      "autor": "Pessoa Fictícia 3",
+      "em": "2026-11-05T17:40:00Z",
+      "de": null,
+      "para": "00",
+      "motivo": "Definição da primeira etapa após inclusão."
+    },
+    {
+      "id": "P-910-2026-11-09T13:35:00Z-23",
+      "projeto_id": "P-910",
+      "projeto_nome": "Corredor Exemplo K",
+      "tipo": "resolver_pendencia",
+      "origem": "pendencia",
+      "autor": "Pessoa Fictícia 2",
+      "em": "2026-11-09T13:35:00Z",
+      "descricao": "Pendência aprovada: Termo de compromisso conferido"
+    },
+    {
+      "id": "P-912-2026-11-10T15:25:00Z-24",
+      "projeto_id": "P-912",
+      "projeto_nome": "Drenagem Exemplo M",
+      "tipo": "atualizar_campos",
+      "origem": "ficha",
+      "autor": "Pessoa Fictícia 4",
+      "em": "2026-11-10T15:25:00Z",
+      "motivo": "Aditivo contratual aprovado.",
+      "campos": [
+        {
+          "campo": "valores.obra",
+          "antes": 21000000,
+          "depois": 22300000
+        },
+        {
+          "campo": "datas.encerramento",
+          "antes": "2027-03-31",
+          "depois": "2027-05-31"
+        }
+      ]
+    },
+    {
+      "id": "P-902-2026-11-12T12:45:00Z-25",
+      "projeto_id": "P-902",
+      "projeto_nome": "Corredor Exemplo C",
+      "tipo": "registrar_passo",
+      "origem": "sei",
+      "autor": "Pessoa Fictícia 1",
+      "em": "2026-11-12T12:45:00Z",
+      "descricao": "Despacho da assessoria jurídica registrado no processo."
+    },
+    {
+      "id": "P-913-2026-11-13T18:00:00Z-26",
+      "projeto_id": "P-913",
+      "projeto_nome": "Aquisição de Equipamentos Exemplo N",
+      "tipo": "atualizar_campos",
+      "origem": "ficha",
+      "autor": "Pessoa Fictícia 3",
+      "em": "2026-11-13T18:00:00Z",
+      "campos": [
+        {
+          "campo": "responsavel",
+          "antes": "Responsável 3",
+          "depois": "Responsável 4"
+        }
+      ]
+    }
+  ]
+}

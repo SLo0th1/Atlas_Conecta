@@ -1,7 +1,7 @@
 // Importador da Carteira de Projetos: lê a planilha (abas PIPELINE e BASE_OPERACIONAL) e grava
 // carteira.json, importacao.json e conciliacao.md. O console mostra só contagens (a planilha tem dados internos).
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import ExcelJS from 'exceljs';
@@ -9,6 +9,78 @@ import { municipioAtivo } from '../src/lib/municipio-ativo.ts';
 import { codigoMacroetapa, MACROETAPAS } from '../src/lib/carteira/macroetapas.ts';
 import { bruto, dataIso, extrairSei, jaccard, normCab, numero, palavras, simNao, texto } from './lib/normalizar.ts';
 import type { Carteira, DadosOperacionais, Projeto, ValoresAno } from '../src/lib/carteira/tipos.ts';
+import type { RegistroLog } from '../src/lib/log/tipos.ts';
+
+// ---------- histórico de alterações (log) da importação ----------
+
+/** Campos comparados entre duas cargas: os mesmos editáveis do motor de movimentação, mais a macroetapa. */
+const CAMPOS_SIMPLES = [
+  'nome', 'orgao', 'responsavel', 'tipo', 'detalhamento', 'sei', 'observacao', 'regiao', 'bairro', 'corredor',
+  'origem_valor', 'tem_projeto', 'prioridade', 'tipo_contratacao', 'orgao_contratacao', 'solicitacoes_financeiras',
+];
+const GRUPOS_COMPARADOS = ['valores', 'recurso', 'datas'] as const;
+const lerCampo = (p: Projeto, campo: string): unknown => {
+  let atual: any = p;
+  for (const parte of campo.split('.')) atual = atual?.[parte];
+  return atual === undefined ? null : atual;
+};
+
+function diferencas(a: Projeto, b: Projeto): { campo: string; antes: unknown; depois: unknown }[] {
+  const campos = [...CAMPOS_SIMPLES];
+  for (const g of GRUPOS_COMPARADOS) {
+    const chaves = new Set([...Object.keys((a as any)[g] ?? {}), ...Object.keys((b as any)[g] ?? {})]);
+    for (const k of chaves) campos.push(`${g}.${k}`);
+  }
+  campos.push('macroetapa');
+  const mudancas: { campo: string; antes: unknown; depois: unknown }[] = [];
+  for (const campo of campos) {
+    const antes = lerCampo(a, campo);
+    const depois = lerCampo(b, campo);
+    if (JSON.stringify(antes) !== JSON.stringify(depois)) mudancas.push({ campo, antes, depois });
+  }
+  return mudancas;
+}
+
+/** Registros do log gerados ao comparar a carga anterior com a nova (sem carga anterior, só o registro da carga inicial). */
+function registrosDaImportacao(anterior: Carteira | null, nova: Carteira, o: { arquivo: string; autor: string; em: string }): RegistroLog[] {
+  const regs: RegistroLog[] = [];
+  let n = 0;
+  const add = (projeto_id: string, projeto_nome: string | null, r: Partial<RegistroLog> & Pick<RegistroLog, 'tipo'>) => {
+    n++;
+    regs.push({ id: `${projeto_id === '*' ? 'carga' : projeto_id}-${o.em}-${n}`, projeto_id, projeto_nome, origem: 'importacao', autor: o.autor, em: o.em, ...r });
+  };
+  let incluidos = 0;
+  let alterados = 0;
+  let retirados = 0;
+  if (anterior) {
+    const antes = new Map(anterior.projetos.map((p) => [p.id, p]));
+    const agoraIds = new Set(nova.projetos.map((p) => p.id));
+    for (const p of nova.projetos) {
+      const a = antes.get(p.id);
+      if (!a) {
+        incluidos++;
+        add(p.id, p.nome, { tipo: 'criado', descricao: `Projeto incluído pela planilha: ${p.nome}` });
+        continue;
+      }
+      const dif = diferencas(a, p);
+      if (dif.length === 0) continue;
+      alterados++;
+      if (dif.length === 1 && dif[0].campo === 'macroetapa') {
+        add(p.id, p.nome, { tipo: 'mover_macroetapa', de: a.macroetapa, para: p.macroetapa ?? undefined });
+      } else {
+        add(p.id, p.nome, { tipo: 'atualizar_campos', campos: dif });
+      }
+    }
+    for (const a of anterior.projetos) {
+      if (agoraIds.has(a.id)) continue;
+      retirados++;
+      add(a.id, a.nome, { tipo: 'removido', descricao: `Projeto retirado da planilha: ${a.nome}` });
+    }
+  }
+  const resumo = anterior ? `${incluidos} incluídos, ${alterados} alterados, ${retirados} retirados` : 'carga inicial';
+  add('*', null, { tipo: 'carga', descricao: `Carga da planilha ${o.arquivo}: ${nova.projetos.length} projetos (${resumo})` });
+  return regs;
+}
 
 // ---------- normalizações ----------
 
@@ -273,7 +345,7 @@ function lerBase(aba: Aba, projetos: Projeto[]) {
 
 // ---------- importação completa ----------
 
-export async function importarCarteira(op: { planilha: string; saida: string; agora?: Date; anonimizar?: boolean }): Promise<{ carteira: Carteira; relatorio: object }> {
+export async function importarCarteira(op: { planilha: string; saida: string; agora?: Date; anonimizar?: boolean; autor?: string }): Promise<{ carteira: Carteira; relatorio: object }> {
   const buf = readFileSync(op.planilha);
   const hash = createHash('sha256').update(buf).digest('hex');
   const agora = (op.agora ?? new Date()).toISOString();
@@ -364,7 +436,25 @@ export async function importarCarteira(op: { planilha: string; saida: string; ag
     pendencias_por_tipo: pendTipo,
   };
 
+  // Histórico: compara com a carteira anterior da pasta de saída (se houver) e ACRESCENTA ao historico.json, sem apagar nada.
+  const caminhoAnterior = join(op.saida, 'carteira.json');
+  let anterior: Carteira | null = null;
+  if (existsSync(caminhoAnterior)) {
+    try {
+      anterior = JSON.parse(readFileSync(caminhoAnterior, 'utf8')) as Carteira;
+      if (!Array.isArray(anterior.projetos)) anterior = null;
+    } catch {
+      anterior = null;
+    }
+  }
+  const caminhoHistorico = join(op.saida, 'historico.json');
+  const historicoAtual: { registros: RegistroLog[] } = existsSync(caminhoHistorico) ? JSON.parse(readFileSync(caminhoHistorico, 'utf8')) : { registros: [] };
+  if (!Array.isArray(historicoAtual.registros)) throw new Error('historico.json existente é inválido: corrija ou mova o arquivo antes de importar.');
+  const autor = op.anonimizar ? 'Importação da planilha' : (op.autor?.trim() || 'Importação da planilha');
+  const novosRegistros = registrosDaImportacao(anterior, carteira, { arquivo: basename(op.planilha), autor, em: agora });
+
   mkdirSync(op.saida, { recursive: true });
+  writeFileSync(caminhoHistorico, JSON.stringify({ ...historicoAtual, registros: [...historicoAtual.registros, ...novosRegistros] }, null, 2) + '\n', 'utf8');
   writeFileSync(join(op.saida, 'carteira.json'), JSON.stringify(carteira, null, 2) + '\n', 'utf8');
   writeFileSync(join(op.saida, 'importacao.json'), JSON.stringify(relatorio, null, 2) + '\n', 'utf8');
   writeFileSync(join(op.saida, 'conciliacao.md'), relatorioMd(relatorio), 'utf8');
@@ -443,12 +533,12 @@ if (executadoDireto) {
   };
   const planilha = pega('--planilha');
   if (!planilha) {
-    console.error('Uso: node scripts/importar-carteira.ts --planilha <caminho> [--saida <pasta>]');
+    console.error('Uso: node scripts/importar-carteira.ts --planilha <caminho> [--saida <pasta>] [--autor <nome>] [--anonimizar]');
     process.exit(1);
   }
   const saida = pega('--saida') ?? join('.govnexa-dados', String(municipioAtivo().codigo_ibge));
   try {
-    const { carteira, relatorio } = await importarCarteira({ planilha, saida, anonimizar: args.includes('--anonimizar') });
+    const { carteira, relatorio } = await importarCarteira({ planilha, saida, anonimizar: args.includes('--anonimizar'), autor: pega('--autor') });
     const rel = relatorio as Relatorio;
     console.log(`Importação concluída: ${carteira.projetos.length} projetos, ${rel.abas.PIPELINE.ignoradas.length} linhas ignoradas, ${rel.abas.BASE_OPERACIONAL.casadas_sei + rel.abas.BASE_OPERACIONAL.casadas_nome} registros da base casados, ${rel.abas.BASE_OPERACIONAL.sem_par.length} sem par.`);
     console.log(`Arquivos gravados em: ${saida}`);
