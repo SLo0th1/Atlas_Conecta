@@ -1,0 +1,14 @@
+{
+  "municipios": [
+    {
+      "codigo_ibge": 5208707,
+      "nome": "Goiânia",
+      "uf": "GO",
+      "conferir": "Confirmar com a prefeitura o decreto de feriados e pontos facultativos do ano",
+      "feriados": [
+        { "mes_dia": "05-24", "nome": "Nossa Senhora Auxiliadora (padroeira)", "abrangencia": "municipal" },
+        { "mes_dia": "10-24", "nome": "Aniversário de Goiânia", "abrangencia": "municipal" }
+      ]
+    }
+  ]
+}

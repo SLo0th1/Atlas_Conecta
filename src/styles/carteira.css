@@ -398,3 +398,33 @@
 @media(max-width:640px){.np-acoes .primary,.np-acoes .secondary{width:100%}}
 /* Paginação compacta: reticências entre a primeira/última página e a janela. */
 .pag-reticencias{display:inline-flex;align-items:center;padding:0 .35rem;color:var(--muted);user-select:none}
+/* Prazos da Lei 14.133 */
+.pz-tabela-caixa{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.pz-tabela{width:100%;border-collapse:collapse;font-size:.85rem;table-layout:fixed}
+.pz-tabela th,.pz-tabela td{border-bottom:1px solid var(--line);padding:.5rem .55rem;text-align:left;vertical-align:top;color:var(--text);overflow-wrap:anywhere;white-space:normal}
+.pz-tabela thead th{background:var(--soft)}
+.pz-tabela tbody th small{display:block;font-weight:400;color:var(--muted);margin-top:.15rem}
+.pz-calc{margin-top:1.5rem}
+.pz-campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.75rem 1rem;margin:.75rem 0}
+.pz-campos label{display:grid;gap:.25rem;font-weight:600}
+.pz-campos label[hidden]{display:none}
+.pz-resultado{padding:.75rem 1rem;border:1px solid var(--line);border-left:6px solid var(--fx-neutro);border-radius:8px;background:var(--surface);color:var(--text)}
+.pz-resultado[data-estado=ok]{border-left-color:var(--cart-verde)}
+.pz-resultado[data-estado=atencao]{border-left-color:var(--cart-amarelo)}
+.pz-resultado[data-estado=alerta]{border-left-color:var(--cart-vermelho)}
+.pz-sit{margin:0 0 .5rem;font-weight:700;max-width:none}
+.pz-dados{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.5rem 1rem;margin:0}
+.pz-dados dt{color:var(--muted);font-size:.85rem}
+.pz-dados dd{margin:0;font-weight:600}
+.pz-ano{display:inline-grid;gap:.25rem;font-weight:600;margin:0 0 .5rem}
+.pz-ano input{max-width:8rem}
+.pz-feriados{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(19rem,1fr));gap:.4rem 1rem}
+.pz-feriados li{padding:.4rem .6rem;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text)}
+@media (max-width:760px){
+.pz-tabela,.pz-tabela tbody,.pz-tabela tr,.pz-tabela th,.pz-tabela td{display:block}
+.pz-tabela thead{position:absolute;left:-9999px}
+.pz-tabela tr{border-bottom:1px solid var(--line);padding:.5rem}
+.pz-tabela th,.pz-tabela td{border:0;padding:.2rem .3rem}
+.pz-tabela td::before{content:attr(data-rotulo) ": ";font-weight:700}
+.pz-feriados{grid-template-columns:minmax(0,1fr)}
+}
