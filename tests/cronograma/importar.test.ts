@@ -43,12 +43,18 @@ before(async () => {
     [null, null, null, null, 'LICITAÇÃO (Inserir submarcos)', null, null, null, null],
     ['EXECUÇÃO DA OBRA (Inserir submarcos)', 'EXECUÇÃO DA OBRA (Inserir submarcos)', null, null, 'EXECUÇÃO DA OBRA (Inserir submarcos)', 'EXECUÇÃO DA OBRA (Inserir submarcos)', null, null, null],
     ['Etapa da obra', 'Pedro Teste - SECAP', null, 3, D('2026-08-01'), D('2026-08-04'), null, null, 0],
+    ['Macroetapa em negrito', null, null, 30, D('2026-09-01'), D('2026-09-30'), null, null, 0],
+    ['Etapa da macroetapa', 'Pedro Teste - SECAP / GEPP*', null, 3, D('2026-09-02'), D('2026-09-05'), null, null, 0],
     ['Orientação de Cores', null, null, null, null, null, null, null, null],
     ['Etapa depois da legenda', 'Pedro Teste - SECAP', null, 3, D('2026-08-01'), D('2026-08-04'), null, null, 0],
     [null, null, null, null, 'OBS: texto', null, null, null, null],
   ]);
   aba(wb, 'Cópia de Praça Alfa', 'Cópia', 'x', 'x', [['Etapa', 'Alguém - X', null, 1, D('2026-01-01'), D('2026-01-02'), null, null, 0]]);
   aba(wb, 'Sugestão de modelo', 'Modelo', 'x', 'x', [['Etapa', 'Alguém - X', null, 1, D('2026-01-01'), D('2026-01-02'), null, null, 0]]);
+  const wsBeta = wb.getWorksheet('Escola Beta')!;
+  wsBeta.eachRow((row) => {
+    if (row.getCell(1).value === 'Macroetapa em negrito') row.getCell(1).font = { bold: true };
+  });
   await wb.xlsx.writeFile(planilha);
   const proj = (id: string, nome: string, sei: string[]) => ({ id, nome, sei });
   writeFileSync(
@@ -143,7 +149,7 @@ test('arquivos gravados e anonimização', () => {
 
 test('data serial do Excel, "-" sem pendência, etapa sem responsável e fase vazia descartada', () => {
   const b = cron.cronogramas.cronogramas[1];
-  assert.equal(etapas(b).length, 3);
+  assert.equal(etapas(b).length, 4);
   const e = etapas(b)[1];
   assert.equal(e.nome, 'Etapa sem dono');
   assert.equal(e.inicio_previsto, '2025-12-09');
@@ -156,10 +162,24 @@ test('data serial do Excel, "-" sem pendência, etapa sem responsável e fase va
 
 test('título de fase em célula de data e legenda no fim da aba', () => {
   const b = cron.cronogramas.cronogramas[1];
-  assert.deepEqual(b.fases.map((f) => f.nome), ['Geral', 'EXECUÇÃO DA OBRA']);
+  assert.deepEqual(b.fases.map((f) => f.nome), ['Geral', 'EXECUÇÃO DA OBRA', 'Macroetapa em negrito']);
   assert.equal(etapas(b)[2].nome, 'Etapa da obra');
   assert.equal(etapas(b)[2].fase, 'EXECUÇÃO DA OBRA');
   assert.ok(etapas(b).every((e: any) => !e.pendencias.some((p: string) => p.startsWith('Data não reconhecida'))));
   assert.ok(!etapas(b).some((e: any) => e.nome === 'Etapa depois da legenda'));
   assert.equal(cron.relatorio.linhas_legenda_ignoradas, 3);
+});
+
+test('linha em negrito e sem responsável é fase, mesmo com datas', () => {
+  const b = cron.cronogramas.cronogramas[1];
+  const f = b.fases.find((x) => x.nome === 'Macroetapa em negrito');
+  assert.ok(f);
+  assert.deepEqual(f.etapas.map((e) => e.nome), ['Etapa da macroetapa']);
+  assert.ok(!etapas(b).some((e: any) => e.nome === 'Macroetapa em negrito'));
+});
+
+test('unidade sem asteriscos e com espaços em volta de "/" colapsados', () => {
+  const b = cron.cronogramas.cronogramas[1];
+  assert.equal(etapas(b).find((e: any) => e.nome === 'Etapa da macroetapa').unidade, 'SECAP/GEPP');
+  assert.equal(etapas(cron.cronogramas.cronogramas[0])[1].unidade, 'PGM');
 });

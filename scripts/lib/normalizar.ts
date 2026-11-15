@@ -68,7 +68,7 @@ export function dataIso(v: unknown, campo: string, pend: string[]): string | nul
   if (typeof b === 'string') {
     const s = b.trim();
     if (s === '' || s === '-' || s === '—') return null;
-    if (/^d{5}(.d+)?$/.test(s) && Number(s) >= 20000 && Number(s) <= 80000) return dataIso(Number(s), campo, pend);
+    if (/^\d{5}(\.\d+)?$/.test(s) && Number(s) >= 20000 && Number(s) <= 80000) return dataIso(Number(s), campo, pend);
     const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
   }

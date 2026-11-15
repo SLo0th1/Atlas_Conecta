@@ -1,0 +1,214 @@
+---
+import '../../styles/carteira.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { MACROETAPAS } from '../../lib/carteira/macroetapas.ts';
+import { portaoPara } from '../../lib/carteira/movimentacao.ts';
+import { AVISO_SIMULACAO, etapaAnterior, nomeEtapa, proximaEtapa } from '../../lib/carteira/simulacao.ts';
+import type { Projeto } from '../../lib/carteira/tipos.ts';
+
+const carteira = carregarCarteira();
+const abertos = carteira.projetos.filter((p) => p.macroetapa !== '06');
+const orgaos = [...new Set(abertos.map((p) => p.orgao ?? 'Sem órgão'))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const grupos = [
+  ...MACROETAPAS.filter((m) => m.codigo !== '06').map((m) => ({ codigo: m.codigo as string, nome: m.nome, projetos: abertos.filter((p) => p.macroetapa === m.codigo) })),
+  { codigo: 'sem', nome: 'Sem macroetapa', projetos: abertos.filter((p) => p.macroetapa === null) },
+].filter((g) => g.projetos.length > 0);
+const situacao = (p: Projeto) => {
+  const prox = proximaEtapa(p.macroetapa);
+  return prox ? { prox, faltando: portaoPara(p, prox) } : { prox: null, faltando: [] as string[] };
+};
+---
+<div data-cart data-pendencias>
+  <p class="cart-aviso" role="note">{AVISO_SIMULACAO}</p>
+  <div class="cart-filtros">
+    <label>Órgão
+      <select data-pd-orgao>
+        <option value="">Todos</option>
+        {orgaos.map((o) => <option value={o}>{o}</option>)}
+      </select>
+    </label>
+    <label>Macroetapa atual
+      <select data-pd-macro>
+        <option value="">Todas</option>
+        {grupos.map((g) => <option value={g.codigo}>{g.nome}</option>)}
+      </select>
+    </label>
+  </div>
+  <p class="cart-resumo" role="status" data-pd-resumo>Mostrando {abertos.length} de {abertos.length} projetos.</p>
+  {grupos.map((g) => (
+    <section class="pd-grupo" data-pd-grupo data-codigo={g.codigo} aria-labelledby={`pd-${g.codigo}`}>
+      <h2 id={`pd-${g.codigo}`}>{g.nome} <span class="pill" data-pd-qtd>{g.projetos.length}</span></h2>
+      <ul class="pd-lista">
+        {g.projetos.map((p) => {
+          const s = situacao(p);
+          const pronto = s.prox !== null && s.faltando.length === 0;
+          return (
+            <li class="pd-linha" data-pd-linha data-projeto={JSON.stringify(p)} data-orgao={p.orgao ?? 'Sem órgão'}>
+              <div class="pd-nome">
+                <strong>{p.nome}</strong>
+                <span>{p.orgao ?? 'Sem órgão'}</span>
+              </div>
+              <div class="pd-etapa" data-pd-etapa>
+                <span>{nomeEtapa(p.macroetapa)} → {s.prox ? nomeEtapa(s.prox) : '—'}</span>
+                <span class="pd-situacao" data-pd-situacao>
+                  {pronto ? 'Pronto para avançar' : s.prox ? `Falta: ${s.faltando.join(', ')}` : 'Sem próxima etapa'}
+                </span>
+              </div>
+              <div class="pd-acoes" data-pd-acoes>
+                {pronto && <button type="button" class="primary" data-pd-aprovar>Aprovar</button>}
+                {pronto && etapaAnterior(p.macroetapa) && <button type="button" class="secondary" data-pd-reprovar>Reprovar</button>}
+                {!pronto && s.prox && <button type="button" class="secondary" data-pd-forcar>Aprovar mesmo assim</button>}
+              </div>
+              <p class="pd-resultado" data-pd-resultado hidden></p>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ))}
+  <p class="cart-resumo" data-pd-vazio hidden>Nenhum projeto com esses filtros.</p>
+  <dialog id="pd-dialog" class="cart-dialogo" aria-labelledby="pd-dialog-titulo">
+    <form data-pd-form>
+      <h2 id="pd-dialog-titulo" data-pd-dlg-titulo>Confirmar</h2>
+      <p data-pd-dlg-projeto></p>
+      <p class="cart-aviso">{AVISO_SIMULACAO}</p>
+      <label>Motivo (obrigatório)
+        <textarea name="motivo" rows="2" data-pd-dlg-motivo></textarea>
+      </label>
+      <div class="cart-erro" role="alert" data-pd-dlg-erro hidden></div>
+      <label class="cart-forcar" data-pd-dlg-forcar-linha hidden>
+        <input type="checkbox" data-pd-dlg-forcar /> Forçar com motivo
+      </label>
+      <div class="actions">
+        <button type="submit" class="primary">Aplicar</button>
+        <button type="button" class="secondary" data-pd-dlg-cancelar>Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+</div>
+<script>
+import { avisar, etapaAnterior, mostrarErro, nomeEtapa, proximaEtapa, simularMovimento } from '../../lib/carteira/simulacao.ts';
+import type { CodigoMacroetapa, Projeto } from '../../lib/carteira/tipos.ts';
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-pendencias]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  const selOrgao = raiz.querySelector<HTMLSelectElement>('[data-pd-orgao]')!;
+  const selMacro = raiz.querySelector<HTMLSelectElement>('[data-pd-macro]')!;
+  const total = raiz.querySelectorAll('[data-pd-linha]').length;
+
+  const filtrar = () => {
+    let visiveis = 0;
+    raiz.querySelectorAll<HTMLElement>('[data-pd-grupo]').forEach((g) => {
+      const doGrupo = !selMacro.value || g.dataset.codigo === selMacro.value;
+      let n = 0;
+      g.querySelectorAll<HTMLElement>('[data-pd-linha]').forEach((l) => {
+        const ok = doGrupo && (!selOrgao.value || l.dataset.orgao === selOrgao.value);
+        l.hidden = !ok;
+        if (ok) n++;
+      });
+      g.hidden = n === 0;
+      g.querySelector('[data-pd-qtd]')!.textContent = String(n);
+      visiveis += n;
+    });
+    raiz.querySelector('[data-pd-resumo]')!.textContent = `Mostrando ${visiveis} de ${total} projetos.`;
+    raiz.querySelector<HTMLElement>('[data-pd-vazio]')!.hidden = visiveis > 0;
+  };
+  selOrgao.addEventListener('change', filtrar);
+  selMacro.addEventListener('change', filtrar);
+
+  const dlg = raiz.querySelector<HTMLDialogElement>('#pd-dialog')!;
+  const form = dlg.querySelector<HTMLFormElement>('[data-pd-form]')!;
+  const campoMotivo = dlg.querySelector<HTMLTextAreaElement>('[data-pd-dlg-motivo]')!;
+  const caixaErro = dlg.querySelector<HTMLElement>('[data-pd-dlg-erro]')!;
+  const linhaForcar = dlg.querySelector<HTMLElement>('[data-pd-dlg-forcar-linha]')!;
+  const campoForcar = dlg.querySelector<HTMLInputElement>('[data-pd-dlg-forcar]')!;
+  let alvo: { linha: HTMLElement; para: CodigoMacroetapa; verbo: string } | null = null;
+
+  const projetoDe = (l: HTMLElement) => JSON.parse(l.dataset.projeto!) as Projeto;
+
+  function abrir(linha: HTMLElement, para: CodigoMacroetapa, titulo: string, verbo: string, forcar: boolean, erro?: { erro: string; faltando?: string[] }) {
+    alvo = { linha, para, verbo };
+    const p = projetoDe(linha);
+    dlg.querySelector('[data-pd-dlg-titulo]')!.textContent = titulo;
+    dlg.querySelector('[data-pd-dlg-projeto]')!.textContent = `${p.nome} · de ${nomeEtapa(p.macroetapa)} para ${nomeEtapa(para)}`;
+    campoMotivo.value = '';
+    campoForcar.checked = forcar;
+    linhaForcar.hidden = !forcar;
+    caixaErro.hidden = true;
+    if (erro) {
+      mostrarErro(caixaErro, erro.erro, erro.faltando);
+      linhaForcar.hidden = false;
+    }
+    dlg.showModal();
+    campoMotivo.focus();
+  }
+
+  function concluir(linha: HTMLElement, novo: Projeto, verbo: string, de: string) {
+    linha.dataset.projeto = JSON.stringify(novo);
+    const texto = `Simulação: ${verbo} para ${nomeEtapa(novo.macroetapa)}`;
+    linha.querySelector('[data-pd-acoes]')!.replaceChildren();
+    const res = linha.querySelector<HTMLElement>('[data-pd-resultado]')!;
+    res.textContent = `${texto}. Nada foi gravado.`;
+    res.hidden = false;
+    const etapa = linha.querySelector('[data-pd-etapa]')!;
+    etapa.replaceChildren();
+    const span = document.createElement('span');
+    span.textContent = `Agora em ${nomeEtapa(novo.macroetapa)} (antes: ${de})`;
+    etapa.append(span);
+    avisar(`${texto}: ${novo.nome}. Nada foi gravado.`);
+  }
+
+  function resolver(linha: HTMLElement, para: CodigoMacroetapa, motivo: string, forcar: boolean) {
+    const p = projetoDe(linha);
+    const r = simularMovimento(p, para, 'pendencia', motivo, forcar);
+    return { r, de: nomeEtapa(p.macroetapa) };
+  }
+
+  raiz.addEventListener('click', (e) => {
+    const botao = (e.target as HTMLElement).closest<HTMLElement>('[data-pd-aprovar],[data-pd-reprovar],[data-pd-forcar]');
+    if (!botao) return;
+    const linha = botao.closest<HTMLElement>('[data-pd-linha]')!;
+    const p = projetoDe(linha);
+    if (botao.hasAttribute('data-pd-reprovar')) {
+      const ant = etapaAnterior(p.macroetapa);
+      if (ant) abrir(linha, ant, 'Reprovar etapa (voltar uma etapa)', 'voltou', false);
+    } else if (botao.hasAttribute('data-pd-forcar')) {
+      const prox = proximaEtapa(p.macroetapa);
+      if (prox) abrir(linha, prox, 'Aprovar mesmo assim (forçar com motivo)', 'avançou', true);
+    } else {
+      const prox = proximaEtapa(p.macroetapa);
+      if (!prox) return;
+      const { r, de } = resolver(linha, prox, '', false);
+      if (r.ok) concluir(linha, r.projeto, 'avançou', de);
+      else abrir(linha, prox, 'Aprovar etapa', 'avançou', false, { erro: r.erro, faltando: r.faltando });
+    }
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!alvo) return;
+    const motivo = campoMotivo.value.trim();
+    if (!motivo) {
+      mostrarErro(caixaErro, 'Informe o motivo.');
+      campoMotivo.focus();
+      return;
+    }
+    const { linha, para, verbo } = alvo;
+    const { r, de } = resolver(linha, para, motivo, campoForcar.checked);
+    if (r.ok) {
+      dlg.close();
+      concluir(linha, r.projeto, verbo, de);
+      const res = linha.querySelector<HTMLElement>('[data-pd-resultado]')!;
+      res.tabIndex = -1;
+      res.focus();
+    } else {
+      mostrarErro(caixaErro, r.erro, r.faltando);
+      linhaForcar.hidden = false;
+      campoMotivo.focus();
+    }
+  });
+  dlg.querySelector('[data-pd-dlg-cancelar]')!.addEventListener('click', () => dlg.close());
+});
+</script>

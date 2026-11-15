@@ -29,11 +29,13 @@ function localizarCabecalho(ws: ExcelJS.Worksheet): { linha: number; colNome: nu
   return null;
 }
 
+const limparUnidade = (u: string): string | null => u.replace(/\*/g, '').replace(/\s*\/\s*/g, '/').replace(/\s+/g, ' ').trim() || null;
+
 function separarResponsavel(t: string | null): { responsavel: string | null; unidade: string | null } {
   if (!t) return { responsavel: null, unidade: null };
   const i = t.lastIndexOf(' - ');
-  if (i >= 0) return { responsavel: t.slice(0, i).trim() || null, unidade: t.slice(i + 3).trim() || null };
-  if (t.includes('/') || (t === t.toUpperCase() && t !== t.toLowerCase())) return { responsavel: null, unidade: t };
+  if (i >= 0) return { responsavel: t.slice(0, i).trim() || null, unidade: limparUnidade(t.slice(i + 3)) };
+  if (t.includes('/') || (t === t.toUpperCase() && t !== t.toLowerCase())) return { responsavel: null, unidade: limparUnidade(t) };
   return { responsavel: t, unidade: null };
 }
 
@@ -160,10 +162,16 @@ export async function importarCronogramas(op: { planilha: string; saida: string;
         break;
       }
       const nomeCelula = celulasTexto[0];
+      if (nomeCelula && row.getCell(cab.colNome).font?.bold && !texto(val(row, cResp))) {
+        // macroetapa: nome em negrito e sem responsável = fase (as datas são o resumo da fase, não uma etapa)
+        faseAtual = { nome: nomeCelula.split(' (')[0].replace(/\s+/g, ' ').trim(), ordem: fases.length + 1, etapas: [] };
+        fases.push(faseAtual);
+        continue;
+      }
       const textoLetras = celulasTexto.slice(1).find((t) => t !== null && /[A-Za-zÀ-ÿ]/.test(t)) ?? null;
       if (textoLetras !== null) {
         // célula de data com letras (título de fase em célula mesclada): vira fase, sem pendência de data
-        const nomeFase = (nomeCelula ?? textoLetras).split(' (')[0].replace(/s+/g, ' ').trim();
+        const nomeFase = (nomeCelula ?? textoLetras).split(' (')[0].replace(/\s+/g, ' ').trim();
         if (nomeFase) {
           faseAtual = { nome: nomeFase, ordem: fases.length + 1, etapas: [] };
           fases.push(faseAtual);

@@ -1,0 +1,67 @@
+---
+import '../../../styles/carteira.css';
+import Platform from '../../../layouts/Platform.astro';
+import LinhaDoTempo from '../../../components/cronograma/LinhaDoTempo.astro';
+import QuadroTarefas from '../../../components/cronograma/QuadroTarefas.astro';
+import { carregarCarteira } from '../../../lib/carteira/carga.ts';
+import { carregarCronogramas } from '../../../lib/cronograma/carga.ts';
+import type { Cronograma } from '../../../lib/cronograma/tipos.ts';
+import { etapasDoCronograma, resumoCronograma, rotuloRitmo } from '../../../lib/cronograma/visoes.ts';
+import { br } from '../../../lib/dados/formato.ts';
+
+export function getStaticPaths() {
+  return carregarCronogramas().cronogramas.map((c) => ({ params: { id: c.id }, props: { cronograma: c } }));
+}
+const { cronograma: c } = Astro.props as { cronograma: Cronograma };
+const hoje = new Date().toISOString().slice(0, 10);
+const r = resumoCronograma(c, hoje);
+const projeto = c.projeto_id ? carregarCarteira().projetos.find((p) => p.id === c.projeto_id) : undefined;
+const pend = [
+  ...c.pendencias.map((t) => `Cronograma: ${t}`),
+  ...etapasDoCronograma(c).flatMap((e) => e.pendencias.map((t) => `${e.nome} (linha ${e.origem.linha}): ${t}`)),
+];
+const pct = (n: number) => `${Math.round(n)}%`;
+---
+<Platform title={c.titulo} slug="projetos-cronogramas">
+  <div class="section-head">
+    <div>
+      <h1>{c.titulo}</h1>
+      <p class="muted"><a href="/plataforma/projetos-cronogramas/">← Todos os cronogramas</a>{c.endereco ? ` · ${c.endereco}` : ''}</p>
+    </div>
+  </div>
+  <p class="cr-resumo" data-cart>
+    <span><strong>Fase atual:</strong> {r.faseAtual}</span>
+    <span><strong>Realizado:</strong> {pct(r.realizadoPct)} × <strong>previsto:</strong> {pct(r.previstoPct)}</span>
+    <span><strong>Ritmo:</strong> {rotuloRitmo(r.ritmo)}</span>
+    <span><strong>Entrega prevista:</strong> {br(r.entregaPrevista)}</span>
+    <span><strong>Projeto da carteira:</strong> {projeto ? <a href={`/plataforma/projetos-carteira/?q=${encodeURIComponent(projeto.id)}`}>{projeto.id} · {projeto.nome}</a> : 'sem correspondência'}</span>
+  </p>
+  <div class="cr-abas" data-cart data-cr-abas>
+    <div class="actions tabs" role="group" aria-label="Visões do cronograma">
+      <button type="button" aria-pressed="true" data-cr-aba="tempo">Linha do tempo</button>
+      <button type="button" aria-pressed="false" data-cr-aba="quadro">Quadro de tarefas</button>
+      <button type="button" aria-pressed="false" data-cr-aba="dados">Pendências de dado <span class="pill">{pend.length}</span></button>
+    </div>
+    <section data-cr-painel="tempo" aria-label="Linha do tempo"><LinhaDoTempo cronograma={c} hoje={hoje} /></section>
+    <section data-cr-painel="quadro" aria-label="Quadro de tarefas" hidden><QuadroTarefas cronograma={c} hoje={hoje} /></section>
+    <section data-cr-painel="dados" aria-label="Pendências de dado" hidden>
+      {pend.length === 0 ? <p>Nenhuma pendência de dado neste cronograma.</p> : <ul>{pend.map((t) => <li>{t}</li>)}</ul>}
+    </section>
+  </div>
+</Platform>
+<script>
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-cr-abas]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  const botoes = raiz.querySelectorAll<HTMLButtonElement>('[data-cr-aba]');
+  botoes.forEach((b) =>
+    b.addEventListener('click', () => {
+      botoes.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      raiz.querySelectorAll<HTMLElement>('[data-cr-painel]').forEach((p) => {
+        p.hidden = p.dataset.crPainel !== b.dataset.crAba;
+      });
+    }),
+  );
+});
+</script>

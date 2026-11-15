@@ -1,0 +1,38 @@
+---
+import type { Cronograma, StatusEtapa } from '../../lib/cronograma/tipos.ts';
+import { ROTULO_STATUS, statusNaData } from '../../lib/cronograma/visoes.ts';
+import { br } from '../../lib/dados/formato.ts';
+
+interface Props {
+  cronograma: Cronograma;
+  hoje: string;
+}
+const { cronograma: c, hoje } = Astro.props;
+const ordem: StatusEtapa[] = ['a_fazer', 'inicio_atrasado', 'em_andamento', 'atrasada', 'concluida'];
+const etapas = c.fases.flatMap((f) => f.etapas).map((e) => ({ e, st: statusNaData(e, hoje) }));
+---
+<div class="cr-quadro-tarefas" data-cart>
+  {ordem.map((st) => {
+    const lista = etapas.filter((x) => x.st === st);
+    return (
+      <section class={`cr-col cr-col-${st}`} aria-labelledby={`cr-col-${st}`}>
+        <header>
+          <h3 id={`cr-col-${st}`}>{ROTULO_STATUS[st]}</h3>
+          <p>{lista.length} etapa{lista.length === 1 ? '' : 's'}</p>
+        </header>
+        <ul class="cr-lista">
+          {lista.map(({ e }) => (
+            <li class="cr-card">
+              <strong>{e.nome}{e.ciclo ? <span class="cr-selo">{e.ciclo}ª entrega</span> : null}</strong>
+              <span>{e.unidade ?? 'Sem unidade'}</span>
+              <span>{e.responsavel ?? 'Sem responsável'}</span>
+              <span>Previsto: {br(e.inicio_previsto)} a {br(e.fim_previsto)}</span>
+              {e.inicio_real && <span>Real: {br(e.inicio_real)} a {e.fim_real ? br(e.fim_real) : 'em curso'}</span>}
+            </li>
+          ))}
+          {lista.length === 0 && <li class="cr-vazio">Nenhuma etapa</li>}
+        </ul>
+      </section>
+    );
+  })}
+</div>

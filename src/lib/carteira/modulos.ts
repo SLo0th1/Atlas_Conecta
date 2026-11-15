@@ -2,6 +2,8 @@
 import { br, reais } from '../dados/formato.ts';
 import type { Detalhe } from '../dados/detalhes.ts';
 import type { Modulo } from '../dados/tipos.ts';
+import { carregarCronogramas } from '../cronograma/carga.ts';
+import { resumoCronograma } from '../cronograma/visoes.ts';
 import { carregarCarteira } from './carga.ts';
 import { MACROETAPAS, nomeMacroetapa } from './macroetapas.ts';
 import type { Projeto } from './tipos.ts';
@@ -99,12 +101,21 @@ function detalheProjeto(p: Projeto, ficticio: boolean, arquivo: string, importad
       ],
     });
   }
+  const links: Detalhe['links'] = [];
+  for (const c of carregarCronogramas().cronogramas.filter((x) => x.projeto_id === p.id)) {
+    const r = resumoCronograma(c);
+    secoes.push({
+      titulo: 'Cronograma detalhado',
+      itens: [`Fase atual: ${r.faseAtual}`, `Realizado ${Math.round(r.realizadoPct)}% × previsto ${Math.round(r.previstoPct)}% até hoje`, `Etapas atrasadas: ${r.atrasadas}`],
+    });
+    links.push({ rotulo: 'Abrir o cronograma detalhado', url: `/plataforma/cronograma/${c.id}/` });
+  }
   secoes.push({ titulo: 'Pendências de dado', itens: p.pendencias.length ? p.pendencias : ['Nenhuma'] });
   secoes.push({
     titulo: 'Origem do dado',
     itens: [`Aba: ${p.origem.aba}, linha ${p.origem.linha}`, `Arquivo: ${arquivo}`, `Importado em: ${br(importadoEm)}`, ...(ficticio ? ['Dados fictícios de exemplo'] : [])],
   });
-  return { titulo: `${p.id} · ${p.nome}`, secoes };
+  return { titulo: `${p.id} · ${p.nome}`, secoes, ...(links.length ? { links } : {}) };
 }
 
 function montarCarteira(): Modulo {

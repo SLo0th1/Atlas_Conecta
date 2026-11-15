@@ -1,6 +1,7 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import modules from '../src/data/modules.json' with {type:'json'};
+import cronogramasExemplo from '../data/exemplo/cronogramas/cronogramas.json' with {type:'json'};
 const publicPages=['/','/compradores/','/setor-publico/','/fornecedores/','/insights/','/tipo/artigo/','/tipo/estudo-de-caso/','/tipo/guia/','/tipo/boletim/','/sobre/','/privacidade/','/termos/','/plataforma/','/demonstracao/'];
 for(const width of [1280,375]){
  test(`páginas públicas e módulos em ${width}px`,async({page})=>{await page.setViewportSize({width,height:900});for(const path of [...publicPages,...modules.filter(m=>m.slug).map(m=>`/plataforma/${m.slug}/`)]){const response=await page.goto(path);expect(response?.status(),path).toBe(200);await expect(page.locator('h1'),path).toHaveCount(1);await expect(page.locator('h1')).not.toBeEmpty();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),path).toBeTruthy();}});
@@ -86,4 +87,40 @@ test('govnexa: tabelas cabem na largura, sem rolagem horizontal',async({page})=>
  await page.setViewportSize({width:1280,height:900});
  for(const slug of ['projetos','projetos-carteira','gestao','captacao','captacao-oportunidades','captacao-acompanhamento','captacao-alertas','captacao-comparativo','captacao-qualidade','captacao-projetos']){await page.goto(`/plataforma/${slug}/`);const sobra=await page.$$eval('.table-wrap',ws=>Math.max(0,...ws.map(e=>e.scrollWidth-e.clientWidth)));expect(sobra,slug).toBeLessThanOrEqual(1);}
  await page.goto('/plataforma/projetos/');await expect(page.locator('table')).toContainText('Total da carteira');await expect(page.locator('table')).not.toContainText('Fase 0');
+});
+
+test('govnexa: cronogramas, onde está parado e simulação',async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ const idCronograma=cronogramasExemplo.cronogramas[0].id;
+ const paginas=['/plataforma/projetos-cronogramas/','/plataforma/projetos-parado/','/plataforma/projetos-pendencias/',`/plataforma/cronograma/${idCronograma}/`];
+ for(const path of paginas){const response=await page.goto(path);expect(response?.status(),path).toBe(200);await expect(page.locator('h1'),path).toHaveCount(1);}
+ // página do cronograma: três abas alternam
+ await page.goto(`/plataforma/cronograma/${idCronograma}/`);
+ const abas=[['Linha do tempo','tempo'],['Quadro de tarefas','quadro'],['Pendências de dado','dados']];
+ for(const [nome,chave] of abas){const botao=page.getByRole('button',{name:nome});await botao.click();await expect(botao).toHaveAttribute('aria-pressed','true');await expect(page.locator(`[data-cr-painel="${chave}"]`)).toBeVisible();for(const [,outra] of abas)if(outra!==chave)await expect(page.locator(`[data-cr-painel="${outra}"]`)).toBeHidden();}
+ // Kanban: botão Mover em modo simulação
+ await page.goto('/plataforma/projetos-kanban/');
+ await expect(page.getByText('Modo simulação: as regras são aplicadas, mas nada é gravado até o banco de dados ser configurado.').first()).toBeVisible();
+ const coluna=page.locator('.kb-col').filter({has:page.getByRole('heading',{name:'Em estruturação',exact:true})});
+ await coluna.locator('[data-kb-card]').first().getByRole('button',{name:/Mover/}).click();
+ await expect(page.locator('#kb-dialog')).toBeVisible();
+ await page.locator('#kb-dialog').getByLabel('Para a etapa').selectOption({label:'Planejamento'});
+ await page.locator('#kb-dialog').getByRole('button',{name:'Aplicar',exact:true}).click();
+ const resultado=page.locator('#toast:not([hidden]), #kb-dialog[open]').first();
+ await expect(resultado).toBeVisible();
+ if(await page.locator('#kb-dialog[open]').count()){await expect(page.locator('#kb-dialog')).toContainText('Faltam requisitos');expect(await page.locator('#kb-dialog [data-kb-dlg-erro] li').count()).toBeGreaterThan(0);}
+ else await expect(page.locator('#toast')).toContainText('Simulação');
+ // Pendências: reprovar exige motivo
+ await page.goto('/plataforma/projetos-pendencias/');
+ await page.getByRole('button',{name:'Reprovar',exact:true}).first().click();
+ const dialogo=page.locator('#pd-dialog');await expect(dialogo).toBeVisible();
+ await dialogo.getByRole('button',{name:'Aplicar',exact:true}).click();
+ await expect(dialogo).toBeVisible();await expect(dialogo.getByRole('alert')).toContainText('motivo');await expect(page.locator('.pd-resultado:visible')).toHaveCount(0);
+ await dialogo.getByLabel('Motivo (obrigatório)').fill('Documento incompleto');
+ await dialogo.getByRole('button',{name:'Aplicar',exact:true}).click();
+ await expect(dialogo).toBeHidden();await expect(page.locator('.pd-resultado:visible').first()).toContainText('Simulação');
+ // sem rolagem horizontal das tabelas
+ for(const path of paginas){await page.goto(path);const sobra=await page.$$eval('.table-wrap',ws=>Math.max(0,...ws.map(e=>e.scrollWidth-e.clientWidth)));expect(sobra,path).toBeLessThanOrEqual(1);}
+ // axe: pendências e cronograma, claro e escuro
+ for(const theme of ['light','dark'])for(const path of ['/plataforma/projetos-pendencias/',`/plataforma/cronograma/${idCronograma}/`]){await page.goto(path);await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`${path} ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
