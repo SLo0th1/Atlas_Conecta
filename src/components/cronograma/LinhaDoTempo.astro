@@ -1,0 +1,91 @@
+---
+import type { Cronograma } from '../../lib/cronograma/tipos.ts';
+import { ROTULO_STATUS, statusNaData } from '../../lib/cronograma/visoes.ts';
+import { br } from '../../lib/dados/formato.ts';
+
+interface Props {
+  cronograma: Cronograma;
+  hoje: string;
+}
+const { cronograma: c, hoje } = Astro.props;
+const dia = (iso: string) => Date.parse(`${iso.slice(0, 10)}T00:00:00Z`);
+const etapas = c.fases.flatMap((f) => f.etapas);
+const datas = etapas.flatMap((e) => [e.inicio_previsto, e.fim_previsto, e.inicio_real, e.fim_real]).filter((d): d is string => !!d);
+const temDatas = datas.length > 0;
+const todas = temDatas ? [...datas, hoje] : [hoje];
+const minIso = todas.reduce((m, d) => (d < m ? d : m), todas[0]);
+const maxIso = todas.reduce((m, d) => (d > m ? d : m), todas[0]);
+const anoIni = Number(minIso.slice(0, 4));
+const mesIni = Number(minIso.slice(5, 7)) - 1;
+const anoFim = Number(maxIso.slice(0, 4));
+const mesFim = Number(maxIso.slice(5, 7)) - 1;
+const nMeses = (anoFim - anoIni) * 12 + (mesFim - mesIni) + 1;
+const t0 = Date.UTC(anoIni, mesIni, 1);
+const t1 = Date.UTC(anoFim, mesFim + 1, 1);
+const pct = (t: number) => Math.min(100, Math.max(0, ((t - t0) / (t1 - t0)) * 100));
+const nomesMes = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+const passo = nMeses > 30 ? 3 : nMeses > 14 ? 2 : 1;
+const meses = Array.from({ length: nMeses }, (_, i) => {
+  const ano = anoIni + Math.floor((mesIni + i) / 12);
+  const mes = (mesIni + i) % 12;
+  return { ano, mes, esq: pct(Date.UTC(ano, mes, 1)), mostra: i % passo === 0 };
+});
+// Barra de um intervalo [ini, fim] (fim inclusive: soma 1 dia para a barra não ficar nula).
+const barra = (ini: string | null, fim: string | null) => {
+  if (!ini || !fim) return null;
+  const a = pct(dia(ini));
+  const b = pct(dia(fim) + 86400000);
+  return { esq: a, larg: Math.max(b - a, 0.4) };
+};
+const fases = c.fases.map((f) => {
+  const ini = f.etapas.map((e) => e.inicio_previsto).filter((d): d is string => !!d).sort()[0] ?? null;
+  const fim = f.etapas.map((e) => e.fim_previsto).filter((d): d is string => !!d).sort().at(-1) ?? null;
+  return { f, resumo: barra(ini, fim), ini, fim };
+});
+const hojeEsq = pct(dia(hoje));
+---
+<div class="cr-gantt" data-cart>
+  <ul class="gt-legenda">
+    <li><span class="cr-chave cr-chave-prev" aria-hidden="true"></span>Previsto (barra vazada)</li>
+    <li><span class="cr-chave cr-chave-real" aria-hidden="true"></span>Realizado (barra cheia)</li>
+    <li><span class="cr-chave cr-chave-hoje" aria-hidden="true"></span>Hoje ({br(hoje)})</li>
+  </ul>
+  {temDatas ? (
+    <div class="cr-quadro">
+      <div class="cr-linha cr-eixo">
+        <div class="cr-rotulo">Fase e etapa</div>
+        <div class="cr-trilha cr-trilha-eixo">
+          {meses.filter((m) => m.mostra).map((m) => <span class="cr-mes" style={`left:${m.esq}%`}>{nomesMes[m.mes]}/{String(m.ano).slice(2)}</span>)}
+        </div>
+      </div>
+      {fases.map(({ f, resumo, ini, fim }) => (
+        <>
+          <div class="cr-linha cr-fase">
+            <div class="cr-rotulo"><strong>{f.nome}</strong><small>{ini ? `${br(ini)} a ${br(fim)}` : 'Sem datas'}</small></div>
+            <div class="cr-trilha">{resumo && <span class="cr-fase-barra" style={`left:${resumo.esq}%;width:${resumo.larg}%`}></span>}</div>
+          </div>
+          {f.etapas.map((e) => {
+            const prev = barra(e.inicio_previsto, e.fim_previsto);
+            const real = barra(e.inicio_real, e.fim_real ?? hoje);
+            const st = statusNaData(e, hoje);
+            return (
+              <div class="cr-linha">
+                <div class="cr-rotulo">
+                  <span>{e.nome}{e.ciclo ? <span class="cr-selo">{e.ciclo}ª entrega</span> : null}</span>
+                  <small>{ROTULO_STATUS[st]} · previsto {br(e.inicio_previsto)} a {br(e.fim_previsto)}{e.inicio_real ? ` · real ${br(e.inicio_real)} a ${e.fim_real ? br(e.fim_real) : 'em curso'}` : ''}</small>
+                </div>
+                <div class="cr-trilha">
+                  {prev && <span class="cr-prev" style={`left:${prev.esq}%;width:${prev.larg}%`}></span>}
+                  {real && <span class={`cr-real ${st === 'atrasada' ? 'cr-real-atraso' : ''}`} style={`left:${real.esq}%;width:${real.larg}%`}></span>}
+                </div>
+              </div>
+            );
+          })}
+        </>
+      ))}
+      <div class="cr-sobreposto" aria-hidden="true"><span class="cr-hoje" style={`left:${hojeEsq}%`}></span></div>
+    </div>
+  ) : (
+    <p>Este cronograma ainda não tem datas previstas para desenhar a linha do tempo.</p>
+  )}
+</div>

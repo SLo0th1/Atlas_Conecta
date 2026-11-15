@@ -1,5 +1,11 @@
 # Changelog
 
+## GovNexa — Fase 2 (cronograma e equipe) e etapa 1.5 (movimentação)
+- 2026-11-15: importador dos cronogramas do GEPP (`npm run importar:cronogramas`): fases, etapas, status calculado, ciclos de retrabalho, pendências de dado, casamento com a carteira, anonimização.
+- 2026-11-15: telas Cronogramas, página de cada cronograma (linha do tempo, quadro de tarefas, pendências), Onde está parado (por unidade e responsável).
+- 2026-11-15: motor de movimentação do projeto (avançar com portões, voltar com motivo, forçar com motivo, aprovar/reprovar pendência, novo passo, edição de campos com histórico); Kanban com arrastar e botão Mover e página Pendências de etapa em MODO SIMULAÇÃO (nada é gravado sem banco).
+- 2026-11-15: preparo do banco (sem ligar): repositório único JSON/PostgreSQL, `db/migracoes/001_govnexa_carteira.sql` com RLS por prefeitura, `scripts/gerar-sql-carga.ts`; validado em postgres:16.
+
 ## GovNexa — Fase 1: Carteira de Projetos
 - 2026-11-15: carteira importada da planilha (aba PIPELINE + BASE_OPERACIONAL), telas Carteira, Kanban por macroetapa, Gantt geral e Visão por órgão (PR #20).
 - 2026-11-15: regra de interface: tabelas da plataforma cabem na largura, sem rolagem horizontal (quebra de linha, colunas secundárias na ficha); teste automático em 1280px.

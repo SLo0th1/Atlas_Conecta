@@ -1,0 +1,42 @@
+---
+import '../../styles/carteira.css';
+import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
+import { ondeEstaParado } from '../../lib/cronograma/visoes.ts';
+
+const hoje = new Date().toISOString().slice(0, 10);
+const { porUnidade, porResponsavel } = ondeEstaParado(carregarCronogramas().cronogramas, hoje);
+const dias = (n: number) => `${n} dia${n === 1 ? '' : 's'}`;
+---
+<div data-cart class="cr-parado">
+  <section class="cr-parado-sec" aria-labelledby="pr-unidades">
+    <h2 id="pr-unidades">Por unidade</h2>
+    <p class="muted">Etapas com prazo vencido, agrupadas pela área responsável. Dias acumulados é a soma dos dias de atraso de todas as etapas da unidade.</p>
+    {porUnidade.length === 0 ? <p>Nenhuma etapa parada na data de hoje.</p> : (
+      <div class="cr-cartoes">
+        {porUnidade.map((u) => (
+          <article class="card cr-cartao">
+            <h3>{u.unidade}</h3>
+            <p><strong>{u.itens}</strong> {u.itens === 1 ? 'item parado' : 'itens parados'} · <strong>{dias(u.diasAcumulados)}</strong> acumulados</p>
+            <p class="muted">Mais antigo: {u.maisAntigo.etapa} ({u.maisAntigo.cronograma}), {dias(u.maisAntigo.dias)} de atraso.</p>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+  <section class="cr-parado-sec" aria-labelledby="pr-resp">
+    <h2 id="pr-resp">Por responsável</h2>
+    {porResponsavel.length === 0 ? <p>Nenhuma etapa parada na data de hoje.</p> : (
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">Etapas paradas por responsável</caption>
+          <thead><tr><th scope="col">Responsável</th><th scope="col">Itens</th><th scope="col">Dias acumulados</th></tr></thead>
+          <tbody>
+            {porResponsavel.map((r) => (
+              <tr><td>{r.responsavel}</td><td>{r.itens}</td><td>{r.diasAcumulados}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </section>
+</div>
