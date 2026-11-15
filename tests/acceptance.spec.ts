@@ -458,3 +458,10 @@ test('govnexa: paginação compacta com reticências',async({page})=>{
  if(total<=7){await expect(n.locator('.pag-reticencias')).toHaveCount(0);return;}
  await expect(n.locator('button').first()).toHaveText('1');await expect(n.locator('.pag-reticencias')).toHaveCount(1);expect(total).toBeLessThanOrEqual(7);
 });
+
+test('govnexa: Novo projeto fora do menu, aberto pelo botão',async({page})=>{
+ await page.goto('/plataforma/projetos/');
+ await expect(page.locator('.sidebar').getByRole('link',{name:'Novo projeto',exact:true})).toHaveCount(0);
+ await page.locator('.workspace').getByRole('link',{name:'Novo projeto',exact:true}).click();await page.waitForURL(/projetos-novo/);
+ await expect(page.locator('h1')).toHaveText('Novo projeto');
+});

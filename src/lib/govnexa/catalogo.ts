@@ -154,12 +154,16 @@ export function catalogoCompleto<T>(base: T[]): T[] {
   return [...base, ...(NOVOS_MODULOS as unknown as T[])];
 }
 
-export function menuPorModulo<T extends { group: string }>(lista: T[]) {
+/** Páginas que existem mas não aparecem no menu lateral (abertas por botão em outra tela). */
+export const FORA_DO_MENU = ['projetos-novo'];
+
+export function menuPorModulo<T extends { group: string; slug?: string }>(lista: T[]) {
   const resultado: { id: ModuloId; nome: string; grupos: { grupo: string; itens: T[] }[] }[] = [];
   for (const mod of MODULOS) {
     if (!mod.ativo) continue;
     const grupos: { grupo: string; itens: T[] }[] = [];
     for (const item of lista) {
+      if (item.slug && FORA_DO_MENU.includes(item.slug)) continue;
       const destino = GRUPO_PARA_MODULO[item.group];
       if (!destino) throw new Error(`Grupo sem módulo: ${item.group}`);
       if (destino !== mod.id) continue;
