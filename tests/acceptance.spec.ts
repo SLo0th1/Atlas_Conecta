@@ -379,6 +379,8 @@ test('govnexa: fluxos detalhados',async({page})=>{
  // mapa geral: 6 fluxos detalhados listados, selo nas caixas e botão no diálogo
  await page.goto('/plataforma/projetos-fluxo/');
  await expect(page.getByRole('heading',{name:'Fluxos detalhados',level:2})).toBeVisible();
+ await page.locator('.fx-subs>summary').click();
+ await expect(page.locator('.fx-subs li').first()).toBeVisible();
  await expect(page.locator('.fx-subs li')).toHaveCount(6);
  await expect(page.locator('svg.fx-svg .fx-selo-sub')).toHaveCount(6);
  await coletar();

@@ -247,8 +247,8 @@ const hex = (g: Geo, m: number) => {
     <span class="muted">Abre a impressão do navegador: em Destino, escolha <strong>Salvar como PDF</strong>. O PDF traz o diagrama e o detalhe de cada etapa.</span>
   </div>
   <p class="fx-so-impressao fx-cab-impressao"><strong>{MARCA.nome} — {tituloDiagrama}</strong> · {municipioAtivo().nomeExibicao} · <span data-fx-data-impressao></span></p>
-  <section class="fx-legenda" aria-labelledby={`${idPrefixo}-leg-t`}>
-    <h2 id={`${idPrefixo}-leg-t`}>Como ler o diagrama</h2>
+  <details class="fx-legenda" data-fx-recolhivel>
+    <summary><h2 id={`${idPrefixo}-leg-t`}>Como ler o diagrama</h2></summary>
     <div class="fx-leg-grupos">
       <div>
         <h3>Formas</h3>
@@ -277,21 +277,28 @@ const hex = (g: Geo, m: number) => {
       </div>
     </div>
     <p class="muted">As colunas são as áreas (raias) e o tempo corre de cima para baixo. Clique em uma caixa, ou use Tab e Enter, para ver o que é feito, processado e validado e abrir a tela correspondente.{geral ? ' Caixas com "+ detalhe" têm um fluxo detalhado próprio.' : ''}</p>
-  </section>
+  </details>
 
   {geral && (
-    <section class="fx-subs" aria-labelledby={`${idPrefixo}-subs-t`}>
-      <h2 id={`${idPrefixo}-subs-t`}>Fluxos detalhados</h2>
+    <details class="fx-subs" data-fx-recolhivel>
+      <summary><h2 id={`${idPrefixo}-subs-t`}>Fluxos detalhados</h2></summary>
       <p class="muted">Algumas caixas têm um processo próprio. Cada fluxo detalhado mostra todas as etapas, as exceções aceitas e o que fica registrado.</p>
       <ul>
         {SUBFLUXOS.map((s) => (
           <li><a href={`/plataforma/fluxo/${s.id}/`} data-astro-reload>{s.titulo}</a> <span class="muted">(detalha: {tituloDe(s.no)})</span></li>
         ))}
       </ul>
-    </section>
+    </details>
   )}
 
-  <div class="fx-quadro">
+  <div class="fx-zoom cart-nao-imprimir" role="group" aria-label="Zoom do diagrama" data-fx-zoom>
+    <button type="button" data-fx-zoom-menos aria-label="Diminuir o zoom">−</button>
+    <output data-fx-zoom-valor aria-live="polite">100%</output>
+    <button type="button" data-fx-zoom-mais aria-label="Aumentar o zoom">+</button>
+    <button type="button" data-fx-zoom-ajustar>Ajustar à tela</button>
+    <button type="button" data-fx-zoom-padrao>Tamanho padrão</button>
+  </div>
+  <div class="fx-quadro" data-fx-quadro>
     <svg class="fx-svg" viewBox={`0 0 ${LARGURA} ${ALTURA.toFixed(0)}`} role="group" aria-label={`Diagrama: ${tituloDiagrama}, do início ao fim, em raias`} preserveAspectRatio="xMidYMin meet">
       <defs>
         <marker id={`${idPrefixo}-m-fluxo`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="fx-seta-fluxo"/></marker>
@@ -422,6 +429,96 @@ document.addEventListener('astro:page-load', () => {
   const dlg = raiz?.querySelector<HTMLDialogElement>('dialog') ?? null;
   const fonte = raiz?.querySelector('[data-fx-dados]') ?? null;
   if (!raiz || !dlg || !fonte || raiz.dataset.pronto) return;
+  // ——— Zoom: 100% = 1 unidade do desenho por pixel (o diagrama geral fica com 1000 px de largura).
+  // "Ajustar" = largura do quadro. Acima da largura do quadro, a rolagem é dentro do quadro (a página não rola de lado).
+  {
+    const svg = raiz.querySelector<SVGSVGElement>('.fx-svg');
+    const quadro = raiz.querySelector<HTMLElement>('[data-fx-quadro]');
+    const valor = raiz.querySelector<HTMLOutputElement>('[data-fx-zoom-valor]');
+    const NIVEIS = [0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
+    const CHAVE = 'govnexa-fluxo-zoom';
+    const largura = svg ? svg.viewBox.baseVal.width : 0;
+    let modo: 'ajustar' | number = 1;
+    let guardado = false; // só conta preferência válida
+    try {
+      const g = localStorage.getItem(CHAVE);
+      if (g === 'ajustar') {
+        modo = 'ajustar';
+        guardado = true;
+      } else if (g && NIVEIS.includes(Number(g))) {
+        modo = Number(g);
+        guardado = true;
+      }
+    } catch {}
+    // Quadro escondido (largura 0) não zera o desenho: fica em 100% até ter largura.
+    const ajuste = () => (quadro && largura && quadro.clientWidth > 0 ? quadro.clientWidth / largura : 1);
+    // Sem preferência guardada: 100%, ou ajustar quando a tela é mais estreita que o diagrama (celular).
+    const efetivo = () => (modo === 'ajustar' ? ajuste() : modo);
+    const aplicar = () => {
+      if (!svg || !largura) return;
+      const z = efetivo();
+      svg.style.width = `${Math.round(largura * z)}px`;
+      svg.style.maxWidth = 'none';
+      svg.style.margin = '0 auto';
+      if (valor) valor.textContent = `${Math.round(z * 100)}%`;
+      raiz.querySelector<HTMLButtonElement>('[data-fx-zoom-menos]')!.disabled = z <= NIVEIS[0] + 0.001;
+      raiz.querySelector<HTMLButtonElement>('[data-fx-zoom-mais]')!.disabled = z >= NIVEIS[NIVEIS.length - 1] - 0.001;
+    };
+    const guardar = () => {
+      try {
+        localStorage.setItem(CHAVE, String(modo));
+      } catch {}
+    };
+    const passo = (dir: 1 | -1) => {
+      const z = efetivo();
+      const prox = dir > 0 ? NIVEIS.find((n) => n > z + 0.001) : [...NIVEIS].reverse().find((n) => n < z - 0.001);
+      if (prox === undefined) return;
+      modo = prox;
+      guardar();
+      aplicar();
+    };
+    if (!guardado && ajuste() < 1) modo = 'ajustar';
+    raiz.querySelector('[data-fx-zoom-menos]')?.addEventListener('click', () => passo(-1));
+    raiz.querySelector('[data-fx-zoom-mais]')?.addEventListener('click', () => passo(1));
+    raiz.querySelector('[data-fx-zoom-ajustar]')?.addEventListener('click', () => {
+      modo = 'ajustar';
+      guardar();
+      aplicar();
+    });
+    raiz.querySelector('[data-fx-zoom-padrao]')?.addEventListener('click', () => {
+      modo = 1;
+      guardar();
+      aplicar();
+    });
+    // Ctrl + roda do mouse sobre o diagrama também aproxima e afasta.
+    // Pinça do trackpad manda muitos eventos pequenos: acumula e dá no máximo um passo a cada 120 ms.
+    let acumulado = 0;
+    let ultimo = 0;
+    quadro?.addEventListener('wheel', (ev) => {
+      if (!ev.ctrlKey) return;
+      ev.preventDefault();
+      acumulado += ev.deltaY;
+      const agora = performance.now();
+      if (Math.abs(acumulado) < 40 || agora - ultimo < 120) return;
+      passo(acumulado < 0 ? 1 : -1);
+      acumulado = 0;
+      ultimo = agora;
+    }, { passive: false });
+    window.addEventListener('resize', () => {
+      if (modo === 'ajustar') aplicar();
+    });
+    aplicar();
+  }
+  // Legenda e fluxos detalhados começam recolhidos na tela; na impressão/PDF saem abertos e depois voltam como estavam.
+  {
+    const recolhiveis = [...raiz.querySelectorAll<HTMLDetailsElement>('[data-fx-recolhivel]')];
+    let antes: boolean[] = [];
+    window.addEventListener('beforeprint', () => {
+      antes = recolhiveis.map((d) => d.open);
+      for (const d of recolhiveis) d.open = true;
+    });
+    window.addEventListener('afterprint', () => recolhiveis.forEach((d, i) => (d.open = antes[i] ?? false)));
+  }
   raiz.querySelector<HTMLButtonElement>('[data-fx-pdf]')?.addEventListener('click', () => {
     const hoje = new Date();
     const alvo = raiz.querySelector('[data-fx-data-impressao]');

@@ -1,5 +1,8 @@
 # Changelog
 
+## GovNexa — Fluxo do sistema: zoom e leitura
+- 2026-11-16: zoom no Fluxo (diminuir, aumentar, Ajustar à tela, Tamanho padrão; Ctrl + roda do mouse sobre o diagrama), lembrado no navegador; padrão 100% (o diagrama geral com 1000 px, menor que antes em telas largas) e, no celular, ajustado à tela; com zoom maior a rolagem é dentro do quadro, sem rolagem lateral da página. Legenda e lista de fluxos detalhados começam recolhidas (abrem com um clique; no PDF saem abertas).
+
 ## GovNexa — Processos no SEI (simulação, Fase 2)
 - 2026-11-16: leitor da página pública do processo no SEI (src/lib/sei/): cabeçalho, documentos (público ou restrito) e andamentos; "Interessados" nunca entra; e-mail e CPF mascarados nos andamentos; página sem as tabelas (captcha ou link vencido) é recusada. Testado nos dois processos reais (258/443 e 324/50 registros).
 - 2026-11-16: análise: documentos-chave da Lei 14.133 (DFD, ETP, TR, parecer jurídico, edital, homologação, contrato, ordem de serviço, medição, recebimento; "Contrato Social" não conta), etapa sugerida (só propõe avançar, com aprovação), onde o processo está e há quantos dias, alerta de paralisação sem reinício.
