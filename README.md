@@ -4,7 +4,11 @@ Portal público **Atlas Goiânia Conecta** e plataforma de gestão pública **Go
 
 - **Produção:** https://atlas.gestaonexus.com.br. A Vercel publica sozinha a cada merge no `main`.
 - **Repositório público:** só entram código, dados públicos e dados fictícios. A carga real da planilha (`data/carga-real/`) está aqui por decisão temporária do dono e sai quando houver banco de dados.
-- **Leia primeiro:** as seções "Situação atual", "O que funciona de verdade e o que é simulação" e "Regras de trabalho".
+- **Para continuar o projeto, leia nesta ordem:**
+  1. este README: o que é, onde estamos, o que falta;
+  2. [docs/govnexa/plano.md](docs/govnexa/plano.md): como o sistema deve ser, em detalhe;
+  3. [docs/govnexa/historico.md](docs/govnexa/historico.md): tudo o que aconteceu, as regras do dono com data, os testes do SEI, o que vem a seguir (inclusive a mudança para o repositório novo e o Cloudflare), as lições técnicas e todos os PRs;
+  4. [CLAUDE.md](CLAUDE.md): as regras de trabalho.
 
 Situação descrita em **16/11/2026**, depois do PR #45.
 
@@ -128,6 +132,7 @@ São módulos independentes que conversam entre si:
 
 | Data | O que | PR |
 | --- | --- | --- |
+| 16/11 | Histórico completo (docs/govnexa/historico.md): tudo o que aconteceu e o que vem a seguir | #49 |
 | 16/11 | Plano completo publicado no repositório para todos (docs/govnexa/plano.md) | #48 |
 | 16/11 | README completo (história, princípios, roteiro) e regra de manter o README sempre atualizado | #46, #47 |
 | 16/11 | Licitação em detalhe: fases da Lei 14.133 com as datas reais do SEI | #45 |
@@ -314,6 +319,7 @@ O site é **estático** (Astro na Vercel). Não há banco de dados nem servidor 
 | Decreto de feriados de Goiânia | Contagem de dias úteis exata (hoje, feriados municipais conhecidos e aviso na tela) |
 | Conta oficial do WhatsApp Business na Meta e aprovação dos 3 modelos | Envio real dos relatórios |
 | Decidir se o SEI fica automático antes do banco (robô do GitHub) ou espera o banco | Leitura diária dos processos |
+| Mudança para o repositório novo e o Cloudflare (novo endereço) | Roteiro combinado em [docs/govnexa/historico.md](docs/govnexa/historico.md), seção 5.4 |
 
 ### Possíveis sem banco
 
@@ -462,6 +468,7 @@ Nas telas novas, tudo que vem de fora (arquivo, link, `sessionStorage`) é valid
 | --- | --- |
 | [CLAUDE.md](CLAUDE.md) | Regras de trabalho no repositório |
 | [docs/govnexa/plano.md](docs/govnexa/plano.md) | **Plano completo do GovNexa** (detalhe de tudo que o README resume) |
+| [docs/govnexa/historico.md](docs/govnexa/historico.md) | **Histórico completo**: linha do tempo, evolução dos %, regras do dono, testes do SEI, o que vem a seguir, lições e todos os PRs |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | Histórico de mudanças, entrega por entrega |
 | [docs/govnexa/visao-geral.md](docs/govnexa/visao-geral.md) | GovNexa: módulos, macroetapas, roteiro e regras de código |
 | [docs/govnexa/modelo-dados.md](docs/govnexa/modelo-dados.md) | Modelo de dados da carteira (JSON e PostgreSQL) |

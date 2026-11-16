@@ -28,6 +28,7 @@ O `README.md` é a fonte para dar continuidade: quem baixar o repositório preci
   - **seção 7:** decisões novas do dono;
   - **seção 8:** pendências e próximos passos.
 - **Mudança de direção do produto:** princípio novo, módulo novo ou nova regra de comportamento entra nas seções 1.1 a 1.3, com a data.
+- **Histórico** em `docs/govnexa/historico.md`: toda entrega acrescenta o seu PR (seção 7) e atualiza os % (seção 2). Regra nova do dono entra na seção 3, decisão pendente e próximos passos na seção 5, e lição técnica na seção 6, sempre com a data.
 - **Plano completo** em `docs/govnexa/plano.md`, de conhecimento de todos: toda entrega atualiza a seção "Andamento" (data e hora, situação e % por fase, linha na tabela de entregas). Decisão, regra ou requisito novo entra na seção correspondente do plano, com a data.
 - **Fora do README e do plano:** nomes de pessoas, credenciais, links privados e conteúdo da pasta `Doc Referencia/`.
 - **Este arquivo (`CLAUDE.md`) é versionado:** quando uma regra de trabalho mudar, atualize-o no mesmo PR.
@@ -39,4 +40,4 @@ O `README.md` é a fonte para dar continuidade: quem baixar o repositório preci
 - Testes usam sempre os dados fictícios de `data/exemplo` (`GOVNEXA_EXEMPLO=1`).
 - Nunca colocar senhas ou chaves no código; usar variáveis de ambiente/segredos.
 
-Mais contexto: `README.md` (comece por ele), `docs/govnexa/plano.md` (plano completo), `docs/govnexa/visao-geral.md`, `docs/govnexa/modelo-dados.md` e `docs/CHANGELOG.md`.
+Mais contexto: `README.md` (comece por ele), `docs/govnexa/plano.md` (plano completo), `docs/govnexa/historico.md` (tudo o que aconteceu e o que vem a seguir), `docs/govnexa/visao-geral.md`, `docs/govnexa/modelo-dados.md` e `docs/CHANGELOG.md`.
