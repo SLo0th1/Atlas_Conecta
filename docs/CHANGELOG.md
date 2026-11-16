@@ -1,5 +1,8 @@
 # Changelog
 
+## GovNexa — Licitação em detalhe (simulação, Fase 4)
+- 2026-11-16: guia Licitações › Licitação em detalhe: a pessoa salva a página pública do processo no SEI (Ctrl+S) e carrega o arquivo (.html em ISO-8859-1 ou UTF-8, ou .mhtml); o arquivo é lido só no navegador. Mostra as fases interna e externa da Lei 14.133 com as datas reais dos documentos (fase sem documento não é inventada), dias entre etapas, fase atual, onde o processo está e há quantos dias, duração da fase interna, externa e total, o prazo mínimo de publicidade (art. 55, por tipo de objeto) e o projeto da carteira com o mesmo número SEI. Até 10 licitações por aba (sessionStorage, validadas ao ler). Fluxo: etapas Parecer jurídico, Publicação, Julgamento e Homologação ligadas à tela nova.
+
 ## GovNexa — Fluxo do sistema: zoom e leitura
 - 2026-11-16: zoom no Fluxo (diminuir, aumentar, Ajustar à tela, Tamanho padrão; Ctrl + roda do mouse sobre o diagrama), lembrado no navegador; padrão 100% (o diagrama geral com 1000 px, menor que antes em telas largas) e, no celular, ajustado à tela; com zoom maior a rolagem é dentro do quadro, sem rolagem lateral da página. Legenda e lista de fluxos detalhados começam recolhidas (abrem com um clique; no PDF saem abertas).
 
