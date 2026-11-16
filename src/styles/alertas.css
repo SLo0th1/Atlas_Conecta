@@ -1,0 +1,46 @@
+/* Central de alertas (Gestão). Prefixo al-. Cores pelas variáveis do tema; a gravidade sempre vem escrita e com símbolo (nada só por cor). */
+.al{display:grid;gap:1.25rem;min-width:0}
+.al p,.al ul{max-width:none}
+.al-linha{margin:0;color:var(--muted)}
+.al-totais{margin:0;font-size:1.1rem}
+.al-bloco{margin:0;max-width:none;padding:1.1rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);min-width:0}
+.al-bloco h2{margin:0 0 .4rem;font-size:1.3rem}
+.al-dica{margin:0 0 .8rem;color:var(--muted);font-size:.92rem}
+.al-cartoes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.6rem}
+.al-cartao{display:grid;gap:.1rem;width:100%;height:100%;padding:.75rem;text-align:left;border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:10px;background:var(--surface);color:var(--text);min-width:0}
+button.al-cartao:hover{background:var(--soft)}
+button.al-cartao[aria-pressed=true]{background:var(--soft);border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.al-cartao-zero{border-top-color:var(--line)}
+.al-cartao-nome{font-weight:600;font-size:.92rem;overflow-wrap:anywhere}
+.al-cartao-numero{font-size:1.6rem;line-height:1.1}
+.al-cartao-nota{font-size:.82rem;color:var(--muted);overflow-wrap:anywhere}
+.al-filtros{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:.75rem;align-items:end;margin:0 0 .6rem}
+.al-filtros label{min-width:0;font-weight:600}
+.al-filtros select{width:100%;min-width:0}
+.al-contagem{margin:0 0 .6rem;color:var(--muted)}
+.al-vazio{margin:0;color:var(--muted)}
+.al-lista{list-style:none;margin:0;padding:0;display:grid;gap:.75rem}
+.al-item{padding:.8rem .9rem;border:1px solid var(--line);border-left:6px solid var(--cart-amarelo);border-radius:8px;background:var(--surface);min-width:0}
+.al-item.al-vermelho{border-left-color:var(--cart-vermelho)}
+.al-item p{margin:.2rem 0;overflow-wrap:anywhere}
+.al-meta{display:flex;flex-wrap:wrap;gap:.35rem .6rem;align-items:center;font-size:.85rem;color:var(--muted)}
+.al-grav{display:inline-flex;gap:.3rem;align-items:center;padding:.05rem .5rem;border:2px solid var(--cart-amarelo);border-radius:20px;font-weight:700;color:var(--text)}
+.al-grav-vermelho{border-color:var(--cart-vermelho)}
+.al-simbolo{color:var(--cart-amarelo)}
+.al-grav-vermelho .al-simbolo{color:var(--cart-vermelho)}
+.al-tipo{font-weight:600;color:var(--text)}
+.al-titulo{margin:.3rem 0 .1rem;font-size:1.08rem;letter-spacing:0;overflow-wrap:anywhere}
+.al-projeto,.al-prazo{font-weight:600}
+.al-detalhe{color:var(--muted)}
+.al-regra{margin:.3rem 0;font-size:.9rem}
+.al-regra summary{font-weight:600}
+.al-regra p{color:var(--muted)}
+.al-link{font-weight:600}
+.al-semfonte{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+.al-semfonte li{padding:.75rem .9rem;border:1px dashed var(--line);border-radius:8px;background:var(--soft);min-width:0}
+.al-semfonte h3{margin:0 0 .3rem;font-size:1.02rem;letter-spacing:0}
+.al-semfonte p{margin:.2rem 0;overflow-wrap:anywhere}
+@media (max-width:1100px){.al-cartoes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:800px){.al-filtros{grid-template-columns:minmax(0,1fr)}.al-semfonte{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:600px){.al-cartoes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.al-campo{display:grid;gap:.4rem;min-width:0}

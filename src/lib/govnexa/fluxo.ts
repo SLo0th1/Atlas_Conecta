@@ -58,6 +58,7 @@ const T = {
   documentos: { rotulo: 'Documentos da licitação', url: '/plataforma/documentos/' },
   gestao: { rotulo: 'Gestão · Painel', url: '/plataforma/gestao/' },
   whatsapp: { rotulo: 'WhatsApp', url: '/plataforma/gestao-whatsapp/' },
+  alertasCentral: { rotulo: 'Gestão · Alertas', url: '/plataforma/gestao-alertas/' },
 } satisfies Record<string, Tela>;
 
 export const NOS: NoFluxo[] = [
@@ -172,7 +173,7 @@ export const NOS: NoFluxo[] = [
   { id: 'alertas', raia: 'gestao', linha: 6, tipo: 'tarefa', titulo: 'Alertas e prazos',
     oQue: 'Cinco alertas principais: cláusula suspensiva, edital na praça, homologação, início e fim de obra; mais saldo sem fonte, etapa parada e dado defasado.',
     valida: ['Prazo da prefeitura (meta) × prazo da lei (teto): passar do teto é alerta vermelho', 'Calendário de dias úteis com feriados nacionais e municipais'], quem: 'Sistema',
-    situacao: 'planejado', fase: 'Fase 4 (Captação já tem alertas)', telas: [T.alertas, T.prazos] },
+    situacao: 'disponivel', fase: 'Fase 4 (edital na praça e homologação real aguardam fonte de dados)', telas: [T.alertasCentral, T.alertas, T.prazos] },
   { id: 'parado', raia: 'gestao', linha: 9, tipo: 'tarefa', titulo: 'Onde está parado',
     oQue: 'Etapas vencidas por unidade e por responsável, com dias acumulados e quantas etapas seguintes cada atraso segura: com quem está cada tarefa e o que precisa ser cobrado.',
     valida: ['Responsável e unidade de cada etapa', 'Sem punição: serve para redistribuir a carga'], quem: 'Gestão de portfólio',
