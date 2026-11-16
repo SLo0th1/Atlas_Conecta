@@ -182,7 +182,10 @@
 /* Fluxo do sistema (guia Projetos › Fluxo): SVG em raias verticais, sem rolagem horizontal */
 .fx{display:block}
 .fx-legenda{margin:0 0 1rem;padding:.75rem 1rem;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}
-.fx-legenda h2{font-size:1.05rem;margin:0 0 .5rem}
+.fx-legenda h2,.fx-subs h2{display:inline;font-size:1.05rem;margin:0}
+.fx-legenda>summary,.fx-subs>summary{cursor:pointer;padding:.1rem 0}
+.fx-legenda[open]>summary,.fx-subs[open]>summary{margin-bottom:.5rem}
+.fx-legenda>summary:focus-visible,.fx-subs>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fx-legenda h3{font-size:.85rem;margin:0 0 .25rem}
 .fx-leg-grupos{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.5rem 1.25rem}
 .fx-legenda ul{list-style:none;margin:0;padding:0;font-size:.85rem}
@@ -192,8 +195,11 @@
 .fx-l-forma{fill:var(--surface);stroke:var(--text);stroke-width:2}
 .fx-l-fino{stroke-width:1.5}
 .fx-l-grosso{stroke-width:4}
-.fx-quadro{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
-.fx-svg{display:block;width:100%;height:auto}
+.fx-quadro{border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:auto;max-width:100%}
+.fx-zoom{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:0 0 .6rem}
+.fx-zoom button{min-width:2.4rem;padding:.35rem .7rem}
+.fx-zoom output{min-width:3.2rem;text-align:center;font-weight:600;color:var(--text)}
+.fx-svg{display:block;width:100%;max-width:1000px;height:auto;margin:0 auto}
 .fx-raia-a{fill:var(--fx-raia-a)}
 .fx-raia-b{fill:var(--fx-raia-b)}
 .fx-raia-nome{font-size:12.5px;font-weight:700;fill:var(--text)}
@@ -225,7 +231,7 @@
 .fx-ver-sub{margin-left:.6rem;font-size:.85rem;color:var(--text);text-decoration:underline;text-underline-offset:2px}
 .fx-ver-sub:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fx-subs{margin:0 0 1rem;padding:.75rem 1rem;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--text)}
-.fx-subs h2{font-size:1.05rem;margin:0 0 .25rem}
+
 .fx-subs p{margin:.1rem 0 .4rem;font-size:.85rem;max-width:none}
 .fx-subs ul{margin:0;padding-left:1.2rem}
 .fx-subs li{margin:.2rem 0}
@@ -256,7 +262,7 @@
 @media print{
  .fx-legenda{break-inside:avoid}
  .fx-quadro{break-inside:avoid;border:0}
- .fx-svg{width:auto;max-width:100%;max-height:235mm;margin:0 auto}
+ .fx-svg{width:auto!important;max-width:100%!important;max-height:235mm;margin:0 auto!important}
  .fx-lista{break-before:page}
  .fx-dialogo{display:none!important}
  .fx-no{cursor:default}
