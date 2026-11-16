@@ -158,6 +158,15 @@ export const NOVOS_MODULOS = [
     source: 'govnexa-log',
   },
   {
+    slug: 'projetos-sei',
+    title: 'Processos no SEI',
+    group: 'Projetos',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-sei',
+  },
+  {
     slug: 'licitacoes-prazos',
     title: 'Prazos da Lei 14.133',
     group: 'Prazos',

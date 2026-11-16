@@ -1,0 +1,39 @@
+/* Projetos › Processos no SEI (simulação). Prefixo sei-. Cores só pelas variáveis do tema; nada depende só de cor. */
+.sei{display:grid;gap:1.25rem;min-width:0}
+.sei p,.sei ul,.sei ol{max-width:none}
+.sei-aviso{margin:0;padding:.85rem 1rem;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;background:var(--surface);color:var(--text)}
+.sei-bloco{margin:0;padding:1.1rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);min-width:0}
+.sei-bloco h2{margin:0 0 .6rem;font-size:1.25rem}
+.sei-bloco h3{margin:1rem 0 .5rem;font-size:1.05rem}
+.sei-bloco>summary{cursor:pointer;font-weight:600;font-size:1.1rem}
+.sei-passos{margin:0;padding-left:1.3rem;display:grid;gap:.4rem}
+.sei-nota{margin:.6rem 0 0;color:var(--muted);overflow-wrap:anywhere}
+.sei-cab-processo{margin:0 0 .5rem;overflow-wrap:anywhere}
+.sei-numeros{display:flex;flex-wrap:wrap;gap:.6rem;margin:0;padding:0;list-style:none}
+.sei-numeros li{padding:.55rem .75rem;border:1px solid var(--line);border-radius:10px;background:var(--soft);overflow-wrap:anywhere;min-width:0}
+.sei-numeros span{color:var(--muted)}
+.sei-tabela-caixa{overflow-x:auto;max-width:100%}
+.sei-tabela{width:100%;border-collapse:collapse;font-size:.95rem;white-space:normal}
+.sei-tabela th{position:static}
+.sei-tabela th,.sei-tabela td{padding:.55rem .5rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.sei-tabela thead th{color:var(--muted);font-weight:600}
+.sei-sugestao{margin:.8rem 0 0;padding:.75rem 1rem;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px}
+.sei-alerta{margin:.6rem 0 0;padding:.75rem 1rem;border:1px solid var(--line);border-left:5px solid var(--danger,var(--accent));border-radius:10px}
+.sei-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:.75rem;align-items:end;margin:.8rem 0}
+.sei-form label,.sei-filtro{display:grid;gap:.3rem;min-width:0}
+.sei-form select,.sei-form input,.sei-filtro input{min-width:0;max-width:100%}
+.sei-acoes{display:flex;gap:.6rem}
+.sei-erro{grid-column:1/-1;margin:0;font-weight:600;color:var(--text)}
+.sei-erro:empty,.sei-status:empty{display:none}
+.sei-status{margin:0 0 .6rem}
+.sei-filtro{max-width:420px;margin:.4rem 0 .6rem}
+.sei-remover{margin-left:.35rem}
+.sei-codigo{margin:.6rem 0 0;padding:.75rem;border-radius:8px;background:var(--soft);overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+@media (max-width:700px){
+  .sei-form{grid-template-columns:1fr}
+  .sei-tabela thead{display:none}
+  .sei-tabela tr{display:grid;gap:.2rem;padding:.6rem 0;border-bottom:1px solid var(--line)}
+  .sei-tabela th,.sei-tabela td{border:0;padding:.1rem 0}
+  .sei-tabela td[data-rotulo]::before{content:attr(data-rotulo) ": ";font-weight:600;color:var(--muted)}
+  .sei-tabela tr[hidden]{display:none}
+}

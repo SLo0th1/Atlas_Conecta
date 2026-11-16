@@ -1,5 +1,10 @@
 # Changelog
 
+## GovNexa — Processos no SEI (simulação, Fase 2)
+- 2026-11-16: leitor da página pública do processo no SEI (src/lib/sei/): cabeçalho, documentos (público ou restrito) e andamentos; "Interessados" nunca entra; e-mail e CPF mascarados nos andamentos; página sem as tabelas (captcha ou link vencido) é recusada. Testado nos dois processos reais (258/443 e 324/50 registros).
+- 2026-11-16: análise: documentos-chave da Lei 14.133 (DFD, ETP, TR, parecer jurídico, edital, homologação, contrato, ordem de serviço, medição, recebimento; "Contrato Social" não conta), etapa sugerida (só propõe avançar, com aprovação), onde o processo está e há quantos dias, alerta de paralisação sem reinício.
+- 2026-11-16: guia Projetos › Processos no SEI: exemplo fictício e links públicos por projeto (validados: só https, só o SEI da prefeitura, só a página do processo; guardados em sessionStorage). Comando npm run sei:ler para a equipe técnica ler um link uma vez, sem gravar nada. Fluxo: etapa SEI passa a simulação.
+
 ## GovNexa — Dependências entre etapas do cronograma (Fase 2)
 - 2026-11-16: página de cada cronograma: aba Dependências (de qual etapa cada uma depende, selo "Aguardando"/"Travada" quando a anterior não terminou, fim projetado) e resumo "Atraso em cascata" com a etapa que mais segura o projeto; Onde está parado mostra quantas etapas seguintes cada unidade segura. Regra (a planilha não tem predecessora): ordem do cronograma, etapas paralelas da mesma fase não dependem entre si; nunca antecipa. Funções em src/lib/cronograma/dependencias.ts.
 
