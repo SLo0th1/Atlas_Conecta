@@ -57,6 +57,7 @@ const T = {
   prazos: { rotulo: 'Prazos da Lei 14.133', url: '/plataforma/licitacoes-prazos/' },
   documentos: { rotulo: 'Documentos da licitação', url: '/plataforma/documentos/' },
   gestao: { rotulo: 'Gestão · Painel', url: '/plataforma/gestao/' },
+  whatsapp: { rotulo: 'WhatsApp', url: '/plataforma/gestao-whatsapp/' },
 } satisfies Record<string, Tela>;
 
 export const NOS: NoFluxo[] = [
@@ -184,6 +185,10 @@ export const NOS: NoFluxo[] = [
     oQue: 'Foto atual de todos os módulos: etapa de cada projeto, licitações (empresa, colocação, valor, 2ª colocada), medições e previsões; histórico a um clique; depois, WhatsApp.',
     valida: ['Somente leitura', 'Totais conciliados', 'Mapa das obras: ícone por tipo, trechos de rua, resumo ao tocar'], quem: 'Prefeito; gabinete',
     situacao: 'disponivel', fase: 'Fase 4 (foto atual com os dados de hoje; licitações em detalhe na Fase 4)', telas: [T.gestao, T.orgaos, T.inicio, T.localizacao] },
+  { id: 'whatsapp', raia: 'gestao', linha: 13, tipo: 'tarefa', titulo: 'Relatórios e perguntas pelo WhatsApp',
+    oQue: 'Números autorizados recebem o relatório dos projetos prioritários (semanal ou diário) e perguntam sobre projetos, SEI, prazos e convênios; cada número vê só o que a sua permissão libera.',
+    valida: ['Permissão por número: órgãos, prioridade, valores e captação', 'Filtro aplicado antes de montar a resposta (e antes da IA, na versão real)', 'Modelos de mensagem aprovados pela Meta; o número precisa aceitar receber'], quem: 'Prefeito; gabinete; secretários; equipe',
+    situacao: 'simulacao', fase: 'Fase 5 (envio real depende do banco e da conta do WhatsApp Business)', telas: [T.whatsapp] },
   { id: 'log', raia: 'gestao', linha: 14, tipo: 'tarefa', titulo: 'Histórico de alterações',
     oQue: 'Toda alteração do ciclo de vida: o que foi feito, por quem, quando, de onde veio, antes e depois, motivo; com filtros e exportação.',
     valida: ['Registro imutável'], quem: 'Todos (consulta)',
@@ -228,6 +233,7 @@ export const LIGACOES: Ligacao[] = [
   { de: 'sala', para: 'painel', tipo: 'apoio' },
   { de: 'painel', para: 'homologacao', tipo: 'apoio' },
   { de: 'log', para: 'conclusao', tipo: 'apoio' },
+  { de: 'painel', para: 'whatsapp', tipo: 'apoio' },
 ];
 
 export const ROTULO_SITUACAO: Record<Situacao, string> = {

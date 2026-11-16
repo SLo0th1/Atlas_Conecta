@@ -1,0 +1,321 @@
+---
+// Gestão › WhatsApp (Fase 5, em simulação): números autorizados, permissão de cada um, relatório automático e prévia da conversa.
+import '../../styles/whatsapp.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { resumoCaptacao } from '../../lib/gestao/painel.ts';
+import { montarBase } from '../../lib/whatsapp/base.ts';
+import { contatosExemplo } from '../../lib/whatsapp/exemplo.ts';
+import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
+import { DIAS_SEMANA, ROTULO_FREQUENCIA, ROTULO_MODELO, ROTULO_PERFIL } from '../../lib/whatsapp/permissoes.ts';
+
+const carteira = carregarCarteira();
+const hoje = hojeEmBrasilia();
+const base = montarBase(carteira, hoje);
+const orgaos = [...new Set(base.map((p) => p.orgao).filter((o): o is string => !!o))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const dados = { base, captacao: resumoCaptacao(), hoje, orgaos, exemplos: contatosExemplo(orgaos) };
+const json = JSON.stringify(dados).replace(/</g, '\\u003c');
+const sugestoes = ['Relatório', 'O que está atrasado?', 'Próximas entregas', 'Como estão os convênios?', 'ajuda'];
+---
+<div class="wa" data-whatsapp>
+  <p class="wa-aviso" role="note"><strong>Modo simulação.</strong> Nada é enviado pelo WhatsApp. Os números cadastrados aqui ficam só nesta aba do navegador e somem ao fechá-la. O envio real entra com o banco de dados e a conta oficial do WhatsApp Business (Fase 5).</p>
+
+  <section class="wa-bloco" aria-labelledby="wa-contatos-t">
+    <div class="wa-cab">
+      <h2 id="wa-contatos-t">Números autorizados</h2>
+      <button type="button" class="primary" data-wa-novo>Adicionar número</button>
+    </div>
+    <p class="wa-status" role="status" aria-live="polite" data-wa-status></p>
+    <div class="wa-tabela-caixa">
+      <table class="wa-tabela">
+        <caption class="sr-only">Números que recebem relatórios e podem fazer perguntas</caption>
+        <thead><tr><th scope="col">Quem</th><th scope="col">Número</th><th scope="col">O que pode ver</th><th scope="col">Relatório</th><th scope="col">Ações</th></tr></thead>
+        <tbody data-wa-lista></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="wa-bloco" data-wa-form-bloco hidden aria-labelledby="wa-form-t">
+    <h2 id="wa-form-t" data-wa-form-titulo>Adicionar número</h2>
+    <form class="wa-form" data-wa-form novalidate>
+      <div class="wa-campos">
+        <label>Quem é (cargo ou equipe, sem nome de pessoa)<input name="rotulo" maxlength="60" autocomplete="off" required /></label>
+        <label>Número do WhatsApp (com DDD)<input name="telefone" inputmode="tel" autocomplete="off" placeholder="(62) 9 9123-4567" required /></label>
+        <label>Perfil<select name="perfil">{Object.entries(ROTULO_PERFIL).map(([v, r]) => <option value={v}>{r}</option>)}</select></label>
+      </div>
+      <fieldset class="wa-grupo">
+        <legend>O que pode ver</legend>
+        <label class="wa-opcao"><input type="radio" name="orgaosModo" value="todos" /> Todos os órgãos</label>
+        <label class="wa-opcao"><input type="radio" name="orgaosModo" value="alguns" /> Só os órgãos marcados abaixo</label>
+        <div class="wa-orgaos" data-wa-orgaos role="group" aria-label="Órgãos liberados">
+          {orgaos.map((o) => <label class="wa-opcao"><input type="checkbox" name="orgao" value={o} /> {o}</label>)}
+        </div>
+        <label class="wa-opcao"><input type="checkbox" name="somentePrioritarios" /> Só projetos de prioridade Muito Alta e Alta</label>
+        <label class="wa-opcao"><input type="checkbox" name="verValores" /> Pode ver valores (R$)</label>
+        <label class="wa-opcao"><input type="checkbox" name="verCaptacao" /> Pode consultar a captação (convênios e emendas)</label>
+        <label>Projetos liberados além do filtro (códigos separados por vírgula, ex.: P-12, P-40)<input name="extras" autocomplete="off" /></label>
+      </fieldset>
+      <fieldset class="wa-grupo">
+        <legend>Relatório automático</legend>
+        <div class="wa-campos">
+          <label>Frequência<select name="frequencia">{Object.entries(ROTULO_FREQUENCIA).map(([v, r]) => <option value={v}>{r}</option>)}</select></label>
+          <label>Dia da semana<select name="diaSemana">{DIAS_SEMANA.map((d, i) => <option value={String(i + 1)}>{d[0].toUpperCase() + d.slice(1)}</option>)}</select></label>
+          <label>Horário<input type="time" name="hora" /></label>
+          <label>Modelo<select name="modelo">{Object.entries(ROTULO_MODELO).map(([v, r]) => <option value={v}>{r}</option>)}</select></label>
+        </div>
+      </fieldset>
+      <label class="wa-opcao"><input type="checkbox" name="ativo" /> Número ativo (recebe relatórios e pode perguntar)</label>
+      <ul class="wa-erros" data-wa-erros role="alert"></ul>
+      <div class="wa-acoes">
+        <button type="submit" class="primary">Salvar (simulação)</button>
+        <button type="button" data-wa-cancelar>Cancelar</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="wa-bloco" aria-labelledby="wa-previa-t">
+    <h2 id="wa-previa-t">Prévia: o que esse número recebe</h2>
+    <label class="wa-quem">Ver como<select data-wa-quem></select></label>
+    <p class="wa-permissao" data-wa-permissao></p>
+    <div class="wa-celular">
+      <div class="wa-conversa" data-wa-conversa role="log" aria-live="polite" aria-label="Conversa simulada" tabindex="0"></div>
+      <form class="wa-pergunta" data-wa-pergunta>
+        <label for="wa-texto" class="sr-only">Mensagem</label>
+        <input id="wa-texto" maxlength="500" autocomplete="off" placeholder="Pergunte sobre um projeto, o SEI ou digite ajuda" />
+        <button type="submit" class="primary">Enviar</button>
+      </form>
+    </div>
+    <div class="wa-sugestoes" role="group" aria-label="Perguntas prontas">
+      {sugestoes.map((s) => <button type="button" data-wa-sugestao={s}>{s}</button>)}
+    </div>
+  </section>
+
+  <details class="wa-bloco">
+    <summary>Como vai funcionar de verdade</summary>
+    <ul class="wa-lista">
+      <li>Envio pela plataforma oficial do WhatsApp Business (Meta), com um número da prefeitura.</li>
+      <li>Relatórios automáticos usam modelos de mensagem aprovados pela Meta; cada número precisa aceitar receber as mensagens.</li>
+      <li>Antes de responder, o sistema separa só os projetos que o número pode ver. A inteligência artificial que entende as perguntas recebe apenas esses dados, nunca a carteira inteira.</li>
+      <li>Toda mensagem enviada e recebida fica registrada no histórico, com data, hora e número.</li>
+      <li>Nesta simulação o filtro de permissão roda no navegador. Na versão real ele roda no servidor: o número e a tela recebem só o que a permissão libera.</li>
+      <li>Depende do banco de dados (para guardar números, permissões e o histórico) e do cadastro da conta na Meta.</li>
+    </ul>
+  </details>
+
+  <script type="application/json" data-wa-dados set:html={json}></script>
+</div>
+
+<script>
+import { descreverPermissao, descreverRelatorio, LIMITE_CONTATOS, mascararTelefone, normalizarTelefone, permissaoDoPerfil, ROTULO_PERFIL, validarContato } from '../../lib/whatsapp/permissoes.ts';
+import { montarRelatorio, responderPergunta } from '../../lib/whatsapp/mensagens.ts';
+import { farolWhats, hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
+import { guardarContatos, lerContatos } from '../../lib/whatsapp/simulacao.ts';
+import type { CaptacaoWhats, Contato, PerfilContato, ProjetoWhats } from '../../lib/whatsapp/tipos.ts';
+
+interface Dados { base: ProjetoWhats[]; captacao: CaptacaoWhats | null; hoje: string; orgaos: string[]; exemplos: Contato[] }
+const MAX_BALOES = 40;
+
+/** Texto com *negrito* do WhatsApp → nós DOM (sempre textContent; nada vira HTML). */
+function textoWhats(destino: HTMLElement, texto: string): void {
+  texto.split(/(\*[^*\n]+\*)/).forEach((parte) => {
+    if (/^\*[^*\n]+\*$/.test(parte)) {
+      const b = document.createElement('strong');
+      b.textContent = parte.slice(1, -1);
+      destino.append(b);
+    } else if (parte) destino.append(document.createTextNode(parte));
+  });
+}
+
+const iniciar = (): void => {
+  const raiz = document.querySelector<HTMLElement>('[data-whatsapp]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  let dados: Dados;
+  try {
+    dados = JSON.parse(raiz.querySelector('[data-wa-dados]')?.textContent || '{}');
+  } catch {
+    dados = { base: [], captacao: null, hoje: new Date().toISOString().slice(0, 10), orgaos: [], exemplos: [] };
+  }
+  // Página estática: a data e o farol são recalculados AGORA, no fuso de Brasília (não ficam com a data da publicação).
+  dados.hoje = hojeEmBrasilia();
+  const base = (dados.base ?? []).map((p) => ({ ...p, ...farolWhats(p, dados.hoje) }));
+  const orgaos = dados.orgaos ?? [];
+  const ids = new Set(base.map((p) => p.id));
+  const valido = (c: unknown, outros: Contato[]): boolean => validarContato(c, orgaos, ids, outros).length === 0;
+  let contatos = lerContatos(dados.exemplos ?? [], valido);
+  let editando: string | null = null;
+
+  const q = <T extends HTMLElement>(s: string): T => raiz.querySelector<T>(s)!;
+  const lista = q<HTMLTableSectionElement>('[data-wa-lista]');
+  const status = q<HTMLElement>('[data-wa-status]');
+  const formBloco = q<HTMLElement>('[data-wa-form-bloco]');
+  const form = q<HTMLFormElement>('[data-wa-form]');
+  const erros = q<HTMLUListElement>('[data-wa-erros]');
+  const quem = q<HTMLSelectElement>('[data-wa-quem]');
+  const conversa = q<HTMLElement>('[data-wa-conversa]');
+  const permissaoTxt = q<HTMLElement>('[data-wa-permissao]');
+  const campo = <T extends HTMLElement = HTMLInputElement>(nome: string): T => form.elements.namedItem(nome) as unknown as T;
+
+  const balao = (de: 'sistema' | 'contato', texto: string): void => {
+    const b = document.createElement('div');
+    b.className = `wa-balao wa-balao-${de}`;
+    const quemFala = document.createElement('span');
+    quemFala.className = 'sr-only';
+    quemFala.textContent = de === 'sistema' ? 'GovNexa: ' : 'Número: ';
+    b.append(quemFala);
+    textoWhats(b, texto);
+    conversa.append(b);
+    while (conversa.children.length > MAX_BALOES) conversa.firstElementChild?.remove();
+    conversa.scrollTop = conversa.scrollHeight;
+  };
+
+  const atual = (): Contato | undefined => contatos.find((c) => c.id === quem.value);
+
+  function mostrarPrevia(): void {
+    conversa.replaceChildren();
+    const c = atual();
+    if (!c) { permissaoTxt.textContent = 'Cadastre um número para ver a prévia.'; return; }
+    permissaoTxt.textContent = `${ROTULO_PERFIL[c.perfil]} · ${descreverPermissao(c.permissao)} · ${descreverRelatorio(c.relatorio)}${c.ativo ? '' : ' · INATIVO'}`;
+    if (!c.ativo) balao('sistema', 'Este número está inativo: não recebe relatórios nem respostas.');
+    else if (c.relatorio.frequencia === 'nenhum') balao('sistema', 'Este número não recebe relatório automático; ele só recebe respostas às perguntas.');
+    else balao('sistema', montarRelatorio(c, base, dados.captacao, dados.hoje));
+  }
+
+  function desenharLista(): void {
+    lista.replaceChildren();
+    for (const c of contatos) {
+      const tr = document.createElement('tr');
+      // data-rotulo = nome da coluna, mostrado no celular (onde o cabeçalho da tabela some).
+      const celula = (texto: string, rotulo: string): HTMLTableCellElement => { const td = document.createElement('td'); td.textContent = texto; td.dataset.rotulo = rotulo; tr.append(td); return td; };
+      const th = document.createElement('th');
+      th.scope = 'row';
+      th.textContent = c.ativo ? c.rotulo : `${c.rotulo} (inativo)`;
+      tr.append(th);
+      celula(mascararTelefone(c.telefone), 'Número');
+      celula(descreverPermissao(c.permissao), 'O que pode ver');
+      celula(descreverRelatorio(c.relatorio), 'Relatório');
+      const acoes = celula('', 'Ações');
+      acoes.className = 'wa-acoes-linha';
+      const editar = document.createElement('button');
+      editar.type = 'button';
+      editar.textContent = 'Editar';
+      editar.setAttribute('aria-label', `Editar ${c.rotulo}`);
+      editar.addEventListener('click', () => abrirForm(c));
+      const ver = document.createElement('button');
+      ver.type = 'button';
+      ver.textContent = 'Ver prévia';
+      ver.setAttribute('aria-label', `Ver prévia de ${c.rotulo}`);
+      ver.addEventListener('click', () => { quem.value = c.id; mostrarPrevia(); q<HTMLElement>('#wa-previa-t').scrollIntoView({ block: 'start' }); });
+      acoes.append(editar, ver);
+      lista.append(tr);
+    }
+    if (!contatos.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 5;
+      td.textContent = 'Nenhum número cadastrado.';
+      tr.append(td);
+      lista.append(tr);
+    }
+    const escolhido = quem.value;
+    quem.replaceChildren(...contatos.map((c) => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.rotulo; return o; }));
+    if (contatos.some((c) => c.id === escolhido)) quem.value = escolhido;
+  }
+
+  function aplicarPermissao(perm: Contato['permissao']): void {
+    (form.querySelector<HTMLInputElement>(`input[name=orgaosModo][value=${perm.orgaos === '*' ? 'todos' : 'alguns'}]`) as HTMLInputElement).checked = true;
+    form.querySelectorAll<HTMLInputElement>('input[name=orgao]').forEach((i) => { i.checked = perm.orgaos !== '*' && perm.orgaos.includes(i.value); });
+    campo('somentePrioritarios').checked = perm.somentePrioritarios;
+    campo('verValores').checked = perm.verValores;
+    campo('verCaptacao').checked = perm.verCaptacao;
+    campo('extras').value = perm.projetosExtras.join(', ');
+    atualizarOrgaos();
+  }
+  function atualizarOrgaos(): void {
+    const todos = (form.querySelector<HTMLInputElement>('input[name=orgaosModo][value=todos]') as HTMLInputElement).checked;
+    form.querySelectorAll<HTMLInputElement>('input[name=orgao]').forEach((i) => { i.disabled = todos; });
+  }
+
+  function abrirForm(c: Contato | null): void {
+    editando = c ? c.id : null;
+    erros.replaceChildren();
+    q<HTMLElement>('[data-wa-form-titulo]').textContent = c ? `Editar: ${c.rotulo}` : 'Adicionar número';
+    const modelo: Contato = c ?? { id: '', rotulo: '', telefone: '', ativo: true, perfil: 'equipe', permissao: permissaoDoPerfil('equipe', orgaos), relatorio: { frequencia: 'semanal', diaSemana: 1, hora: '08:00', modelo: 'prioritarios' } };
+    campo('rotulo').value = modelo.rotulo;
+    campo('telefone').value = modelo.telefone;
+    campo<HTMLSelectElement>('perfil').value = modelo.perfil;
+    aplicarPermissao(modelo.permissao);
+    campo<HTMLSelectElement>('frequencia').value = modelo.relatorio.frequencia;
+    campo<HTMLSelectElement>('diaSemana').value = String(modelo.relatorio.diaSemana);
+    campo('hora').value = modelo.relatorio.hora;
+    campo<HTMLSelectElement>('modelo').value = modelo.relatorio.modelo;
+    campo('ativo').checked = modelo.ativo;
+    formBloco.hidden = false;
+    campo('rotulo').focus();
+  }
+
+  function lerForm(): Contato {
+    const todos = (form.querySelector<HTMLInputElement>('input[name=orgaosModo][value=todos]') as HTMLInputElement).checked;
+    const marcados = [...form.querySelectorAll<HTMLInputElement>('input[name=orgao]:checked')].map((i) => i.value);
+    const extras = campo('extras').value.split(/[,;\s]+/).map((s) => s.trim().toUpperCase()).filter(Boolean).map((s) => (/^P-?\d+$/.test(s) ? `P-${Number(s.replace(/\D/g, ''))}` : s));
+    const id = editando ?? `num-${Date.now().toString(36)}-${Math.floor(Math.random() * 1e6).toString(36)}`;
+    return {
+      id,
+      rotulo: campo('rotulo').value.trim(),
+      telefone: normalizarTelefone(campo('telefone').value),
+      ativo: campo('ativo').checked,
+      perfil: campo<HTMLSelectElement>('perfil').value as PerfilContato,
+      permissao: { orgaos: todos ? '*' : marcados, somentePrioritarios: campo('somentePrioritarios').checked, projetosExtras: [...new Set(extras)], verValores: campo('verValores').checked, verCaptacao: campo('verCaptacao').checked },
+      relatorio: { frequencia: campo<HTMLSelectElement>('frequencia').value as Contato['relatorio']['frequencia'], diaSemana: Number(campo<HTMLSelectElement>('diaSemana').value), hora: campo('hora').value, modelo: campo<HTMLSelectElement>('modelo').value as Contato['relatorio']['modelo'] },
+    };
+  }
+
+  form.addEventListener('change', (e) => {
+    const alvo = e.target as HTMLInputElement;
+    if (alvo.name === 'orgaosModo') atualizarOrgaos();
+    // Só em número NOVO o perfil preenche as permissões; na edição, trocar o perfil não apaga o que já foi ajustado.
+    if (alvo.name === 'perfil' && !editando) {
+      const marcados = [...form.querySelectorAll<HTMLInputElement>('input[name=orgao]:checked')].map((i) => i.value);
+      aplicarPermissao(permissaoDoPerfil(alvo.value as PerfilContato, marcados.length ? marcados : orgaos));
+    }
+  });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const c = lerForm();
+    const msgs = validarContato(c, orgaos, ids, contatos);
+    if (!editando && contatos.length >= LIMITE_CONTATOS) msgs.push(`No máximo ${LIMITE_CONTATOS} números.`);
+    erros.replaceChildren(...msgs.map((m) => { const li = document.createElement('li'); li.textContent = m; return li; }));
+    if (msgs.length) return;
+    contatos = editando ? contatos.map((x) => (x.id === editando ? c : x)) : [...contatos, c];
+    const ok = guardarContatos(contatos);
+    formBloco.hidden = true;
+    editando = null;
+    desenharLista();
+    quem.value = c.id;
+    mostrarPrevia();
+    status.textContent = ok ? `Salvo em simulação: ${c.rotulo}. Nada foi enviado.` : 'O navegador não permitiu guardar; a alteração vale só até recarregar a página.';
+    q<HTMLButtonElement>('[data-wa-novo]').focus();
+  });
+  q<HTMLButtonElement>('[data-wa-cancelar]').addEventListener('click', () => { formBloco.hidden = true; editando = null; erros.replaceChildren(); q<HTMLButtonElement>('[data-wa-novo]').focus(); });
+  q<HTMLButtonElement>('[data-wa-novo]').addEventListener('click', () => abrirForm(null));
+  quem.addEventListener('change', mostrarPrevia);
+
+  const perguntar = (texto: string): void => {
+    const c = atual();
+    const t = texto.trim();
+    if (!c || !t) return;
+    balao('contato', t.slice(0, 500));
+    balao('sistema', c.ativo ? responderPergunta(t, c, base, dados.captacao, dados.hoje) : 'Este número está inativo: não recebe respostas.');
+  };
+  q<HTMLFormElement>('[data-wa-pergunta]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const entrada = q<HTMLInputElement>('#wa-texto');
+    perguntar(entrada.value);
+    entrada.value = '';
+  });
+  raiz.querySelectorAll<HTMLButtonElement>('[data-wa-sugestao]').forEach((b) => b.addEventListener('click', () => perguntar(b.dataset.waSugestao || '')));
+
+  desenharLista();
+  mostrarPrevia();
+};
+document.addEventListener('astro:page-load', iniciar);
+</script>

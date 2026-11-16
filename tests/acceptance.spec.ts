@@ -188,7 +188,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
  const resposta=await page.goto('/plataforma/projetos-fluxo/');
  expect(resposta?.status()).toBe(200);
  await expect(page.locator('h1')).toHaveCount(1);
- await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(31);
+ await expect(page.locator('svg.fx-svg [data-no]')).toHaveCount(32);
  // clique no portão: validações e link para as pendências
  await page.locator('svg.fx-svg [data-no="portao"]').click();
  const dlg=page.locator('#fluxo-detalhe');
@@ -218,7 +218,7 @@ test('govnexa: fluxo do sistema',async({page})=>{
 
 test('govnexa: fluxo exporta em PDF',async({page})=>{
  await page.goto('/plataforma/projetos-fluxo/');await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeVisible();
- await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(31);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
+ await page.emulateMedia({media:'print'});await expect(page.locator('.fx-anexo')).toBeVisible();await expect(page.locator('.fx-anexo-no')).toHaveCount(32);await expect(page.getByRole('button',{name:'Exportar em PDF'})).toBeHidden();
 });
 
 test('govnexa: sala de guerra',async({page})=>{
@@ -697,4 +697,68 @@ test('govnexa: arquivos do build com nome só hexadecimal (a Vercel não serviu 
  await expect(page.locator('#mapa .leaflet-container')).toBeVisible();
  await expect(page.locator('#mapa .mp-filtros [data-mp-situacoes] button').first()).toBeVisible();
  expect(falhas).toEqual([]);
+});
+
+test('govnexa: WhatsApp da Gestão (simulação): números, permissão, prévia e perguntas',async({page})=>{
+ const semRolagem=()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth);
+ await page.setViewportSize({width:1280,height:900});
+ const resp=await page.goto('/plataforma/gestao-whatsapp/');
+ expect(resp?.status()).toBe(200);
+ await expect(page.locator('h1')).toHaveText('WhatsApp');
+ await expect(page.locator('.sidebar a[href="/plataforma/gestao-whatsapp/"]')).toHaveAttribute('aria-current','page');
+ const linhas=page.locator('[data-wa-lista] tr');
+ await expect(linhas).toHaveCount(3);
+ await expect(linhas.first()).toContainText('+55 62 9••••-0001');
+ await expect(page.locator('[data-wa-lista]')).not.toContainText('900000001');
+ // prévia do gabinete: relatório com valores
+ const conversa=page.locator('[data-wa-conversa]');
+ await expect(conversa.locator('.wa-balao').first()).toContainText('GovNexa · Projetos prioritários');
+ await expect(conversa.locator('.wa-balao strong').first()).toHaveText('GovNexa · Projetos prioritários');
+ // pergunta pronta e pergunta digitada
+ await page.getByRole('button',{name:'ajuda',exact:true}).click();
+ await expect(conversa.locator('.wa-balao-sistema').last()).toContainText('O que posso responder');
+ await page.getByLabel('Mensagem').fill('P-905');
+ await page.getByRole('button',{name:'Enviar',exact:true}).click();
+ await expect(conversa.locator('.wa-balao-contato').last()).toHaveText(/P-905/);
+ await expect(conversa.locator('.wa-balao-sistema').last()).toContainText('Código no GovNexa: P-905');
+ // secretaria da SEINFRA não vê projeto de outro órgão (mesma resposta de inexistente)
+ await page.getByLabel('Ver como').selectOption({label:'Secretaria de Infraestrutura (exemplo)'});
+ await page.getByLabel('Mensagem').fill('P-901');
+ await page.getByRole('button',{name:'Enviar',exact:true}).click();
+ await expect(conversa.locator('.wa-balao-sistema').last()).toContainText('Não encontrei esse projeto entre os que você pode consultar');
+ // captação sem permissão
+ await page.getByRole('button',{name:'Como estão os convênios?',exact:true}).click();
+ await expect(conversa.locator('.wa-balao-sistema').last()).toContainText('não tem permissão para consultar a captação');
+ // cadastro: erro claro e depois sucesso
+ await page.getByRole('button',{name:'Adicionar número'}).click();
+ await page.getByLabel('Quem é (cargo ou equipe, sem nome de pessoa)').fill('Equipe da SME (teste)');
+ await page.getByLabel('Número do WhatsApp (com DDD)').fill('(62) 3333-4444');
+ await page.getByRole('button',{name:'Salvar (simulação)'}).click();
+ await expect(page.locator('[data-wa-erros]')).toContainText('Número de celular inválido');
+ await page.getByLabel('Número do WhatsApp (com DDD)').fill('(62) 9 9876-5432');
+ await page.getByRole('button',{name:'Salvar (simulação)'}).click();
+ await expect(page.locator('[data-wa-status]')).toContainText('Salvo em simulação');
+ await expect(linhas).toHaveCount(4);
+ await expect(linhas.nth(3)).toContainText('+55 62 9••••-5432');
+ await expect(page.getByLabel('Ver como')).toHaveValue(/^num-/);
+ // continua depois de recarregar (mesma aba)
+ await page.reload();
+ await expect(linhas).toHaveCount(4);
+ // nada vai para fora: nenhuma requisição a outro domínio
+ const externas:string[]=[];
+ page.on('request',r=>{const u=new URL(r.url());if(!['127.0.0.1','localhost'].includes(u.hostname))externas.push(r.url())});
+ await page.getByRole('button',{name:'Relatório',exact:true}).click();
+ expect(externas).toEqual([]);
+ // sem rolagem horizontal e acessibilidade, claro e escuro, 1280 e 390
+ for(const width of [1280,390]){
+  await page.setViewportSize({width,height:900});
+  await page.goto('/plataforma/gestao-whatsapp/');
+  await expect(linhas.first()).toBeVisible();
+  expect(await semRolagem(),`${width}px`).toBeTruthy();
+  for(const theme of ['light','dark']){
+   await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);
+   const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();
+   expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`${width} ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);
+  }
+ }
 });

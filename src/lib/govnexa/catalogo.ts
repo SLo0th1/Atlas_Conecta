@@ -175,6 +175,15 @@ export const NOVOS_MODULOS = [
     fields: [] as string[],
     source: 'govnexa-modulos',
   },
+  {
+    slug: 'gestao-whatsapp',
+    title: 'WhatsApp',
+    group: 'Gestão',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-whatsapp',
+  },
 ];
 
 /** Base seguida dos módulos novos. Cast único: a forma dos novos itens espelha a de modules.json (slug, title, group, columns, rows, fields, source). */
