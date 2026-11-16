@@ -28,7 +28,8 @@ O `README.md` é a fonte para dar continuidade: quem baixar o repositório preci
   - **seção 7:** decisões novas do dono;
   - **seção 8:** pendências e próximos passos.
 - **Mudança de direção do produto:** princípio novo, módulo novo ou nova regra de comportamento entra nas seções 1.1 a 1.3, com a data.
-- **Fora do README:** nomes de pessoas, credenciais, links privados e conteúdo da pasta `Doc Referencia/`.
+- **Plano completo** em `docs/govnexa/plano.md`, de conhecimento de todos: toda entrega atualiza a seção "Andamento" (data e hora, situação e % por fase, linha na tabela de entregas). Decisão, regra ou requisito novo entra na seção correspondente do plano, com a data.
+- **Fora do README e do plano:** nomes de pessoas, credenciais, links privados e conteúdo da pasta `Doc Referencia/`.
 - **Este arquivo (`CLAUDE.md`) é versionado:** quando uma regra de trabalho mudar, atualize-o no mesmo PR.
 
 ## 5. Cuidados
@@ -38,4 +39,4 @@ O `README.md` é a fonte para dar continuidade: quem baixar o repositório preci
 - Testes usam sempre os dados fictícios de `data/exemplo` (`GOVNEXA_EXEMPLO=1`).
 - Nunca colocar senhas ou chaves no código; usar variáveis de ambiente/segredos.
 
-Mais contexto: `README.md` (comece por ele), `docs/govnexa/visao-geral.md`, `docs/govnexa/modelo-dados.md` e `docs/CHANGELOG.md`.
+Mais contexto: `README.md` (comece por ele), `docs/govnexa/plano.md` (plano completo), `docs/govnexa/visao-geral.md`, `docs/govnexa/modelo-dados.md` e `docs/CHANGELOG.md`.

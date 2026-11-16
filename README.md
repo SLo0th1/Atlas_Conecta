@@ -35,7 +35,7 @@ São módulos independentes que conversam entre si:
 - O MVP roda em JSON, sem banco. O modelo já está pronto para PostgreSQL, com isolamento por prefeitura (RLS) em `db/migracoes/`.
 - O MVP não usa IA. A IA fica para a Fase 5, sempre com revisão humana.
 - **Requisito mínimo:** as transcrições dos áudios do dono, a reunião com a equipe e as planilhas-base. Esses insumos ficam na pasta local `Doc Referencia/`, que **nunca** vai para o Git.
-- **Plano completo:** documento privado do dono, com fases, decisões, riscos e rastreabilidade. Peça o link ao dono. A seção "Andamento" do plano é atualizada a cada entrega.
+- **Plano completo:** [docs/govnexa/plano.md](docs/govnexa/plano.md), de conhecimento de todos os envolvidos. Traz atores, módulos, regras de negócio, prazos da Lei 14.133, integrações (SEI inclusive), segurança e LGPD, roteiro, riscos, decisões e a rastreabilidade dos pedidos. A seção "Andamento" é atualizada a cada entrega.
 - **Este README é a fonte para dar continuidade.** Ele é atualizado em toda entrega: situação, funcionalidades, decisões e pendências. A regra está no [CLAUDE.md](CLAUDE.md).
 
 ### 1.1 Problema, visão e princípios (dos áudios, da reunião e das planilhas)
@@ -128,6 +128,7 @@ São módulos independentes que conversam entre si:
 
 | Data | O que | PR |
 | --- | --- | --- |
+| 16/11 | Plano completo publicado no repositório para todos (docs/govnexa/plano.md) | #48 |
 | 16/11 | README completo (história, princípios, roteiro) e regra de manter o README sempre atualizado | #46, #47 |
 | 16/11 | Licitação em detalhe: fases da Lei 14.133 com as datas reais do SEI | #45 |
 | 16/11 | Fluxo: zoom e legenda recolhida | #44 |
@@ -460,6 +461,7 @@ Nas telas novas, tudo que vem de fora (arquivo, link, `sessionStorage`) é valid
 | Arquivo | Conteúdo |
 | --- | --- |
 | [CLAUDE.md](CLAUDE.md) | Regras de trabalho no repositório |
+| [docs/govnexa/plano.md](docs/govnexa/plano.md) | **Plano completo do GovNexa** (detalhe de tudo que o README resume) |
 | [docs/CHANGELOG.md](docs/CHANGELOG.md) | Histórico de mudanças, entrega por entrega |
 | [docs/govnexa/visao-geral.md](docs/govnexa/visao-geral.md) | GovNexa: módulos, macroetapas, roteiro e regras de código |
 | [docs/govnexa/modelo-dados.md](docs/govnexa/modelo-dados.md) | Modelo de dados da carteira (JSON e PostgreSQL) |
