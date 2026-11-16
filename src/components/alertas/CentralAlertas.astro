@@ -1,4 +1,5 @@
 ---
+import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
 // Central de alertas (Gestão). Monta a lista no build (dados + dia de hoje); os filtros só mostram/escondem itens no navegador.
 import '../../styles/carteira.css';
 import '../../styles/alertas.css';
@@ -11,7 +12,7 @@ import { formatarData } from '../../lib/prazos/calendario.ts';
 import { montarCentral, nomeTipo, SEM_ORGAO, textoDias, type ConvenioEntrada, type TipoAlerta } from '../../lib/alertas/central.ts';
 
 const municipio = municipioAtivo().codigo_ibge;
-const hoje = new Date().toISOString().slice(0, 10);
+const hoje = hojeEmBrasilia();
 const carteira = carregarCarteira();
 const cronos = carregarCronogramas();
 const acompanhamento = dados.acompanhamento(municipio);

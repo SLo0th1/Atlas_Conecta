@@ -192,7 +192,7 @@ export function alertasConvenios(convenios: ConvenioEntrada[], hoje: string): Ba
     const assinatura = paraIso(c.assinatura);
     const faltam = fim ? diasEntre(hoje, fim) : null;
 
-    if ((c.valor_desembolsado ?? 0) === 0 && assinatura && diasEntre(assinatura, hoje) > DIAS_SEM_DESEMBOLSO) {
+    if (c.valor_desembolsado === 0 && assinatura && diasEntre(assinatura, hoje) > DIAS_SEM_DESEMBOLSO) {
       const semDesembolso = diasEntre(assinatura, hoje);
       const vermelho = faltam !== null && faltam <= DIAS_VIGENCIA_AVISO;
       saida.push({

@@ -133,6 +133,7 @@ test('convênios: cláusula suspensiva (indício) e vigência, só para convêni
     conv('4', { assinatura: '01/09/2026' }), // assinado há pouco: sem alerta
     conv('5', { situacao: 'Convênio Anulado', vigencia_fim: '20/11/2026' }), // fora de execução: ignorado
     conv('6', { valor_desembolsado: 50, vigencia_fim: '01/11/2026' }), // vigência já terminou: vermelha
+    conv('7', { valor_desembolsado: null }), // desembolso não informado na coleta: NÃO conta como "sem desembolso"
   ];
   const { alertas } = montarCentral(entrada({ convenios }));
   assert.deepEqual(doTipo(alertas, 'clausula').map((a) => [a.convenio, a.gravidade]).sort(), [['1', 'amarelo'], ['2', 'vermelho']]);

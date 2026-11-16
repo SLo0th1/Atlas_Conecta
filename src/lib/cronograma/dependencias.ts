@@ -14,7 +14,7 @@
 import type { Cronograma, EtapaCronograma } from './tipos.ts';
 import { diasEntre } from './visoes.ts';
 
-const hojePadrao = (): string => new Date().toISOString().slice(0, 10);
+const hojePadrao = (): string => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 const somaDias = (iso: string, n: number): string => new Date(Date.parse(`${iso.slice(0, 10)}T00:00:00Z`) + n * 86400000).toISOString().slice(0, 10);
 const maiorData = (ds: string[]): string => ds.reduce((m, d) => (d > m ? d : m), ds[0]);
 
@@ -102,7 +102,7 @@ export function analisarDependencias(c: Cronograma, hoje: string = hojePadrao())
       etapa: e,
       predecessoras: p,
       aguardando,
-      travada: aguardando.length > 0 && !!e.inicio_previsto && e.inicio_previsto <= hoje,
+      travada: aguardando.length > 0 && !!e.inicio_previsto && e.inicio_previsto < hoje,
       atrasoHerdado,
       atrasoAcumulado,
       fimProjetado,

@@ -1,10 +1,11 @@
 ---
+import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
 import '../../styles/carteira.css';
 import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
 import { itensParados, ondeEstaParado } from '../../lib/cronograma/visoes.ts';
 import { travadasPorUnidade } from '../../lib/cronograma/dependencias.ts';
 
-const hoje = new Date().toISOString().slice(0, 10);
+const hoje = hojeEmBrasilia();
 const cronogramas = carregarCronogramas().cronogramas;
 const { porUnidade, porResponsavel } = ondeEstaParado(cronogramas, hoje);
 const travadas = travadasPorUnidade(cronogramas, itensParados(cronogramas, hoje));
