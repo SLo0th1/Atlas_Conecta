@@ -683,3 +683,18 @@ test('govnexa: mapa das obras',async({page,browser})=>{
   }
  }
 });
+
+test('govnexa: arquivos do build com nome só hexadecimal (a Vercel não serviu simulacao.mqF-P3E_.js)',async({page})=>{
+ const {readdirSync}=await import('node:fs');
+ const nomes=readdirSync('dist/_astro').filter(n=>/\.(js|css)$/.test(n));
+ expect(nomes.length).toBeGreaterThan(0);
+ expect(nomes.filter(n=>!/\.[0-9a-f]{8}\.(js|css)$/.test(n))).toEqual([]);
+ // todo script e folha de estilo da página do mapa responde 200
+ const falhas:string[]=[];
+ page.on('response',r=>{if(r.url().includes('/_astro/')&&r.status()>=400)falhas.push(`${r.status()} ${r.url()}`)});
+ await page.route('https://tile.openstreetmap.org/**',r=>r.abort());
+ await page.goto('/plataforma/gestao/');
+ await expect(page.locator('#mapa .leaflet-container')).toBeVisible();
+ await expect(page.locator('#mapa .mp-filtros [data-mp-situacoes] button').first()).toBeVisible();
+ expect(falhas).toEqual([]);
+});
