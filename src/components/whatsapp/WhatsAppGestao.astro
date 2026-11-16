@@ -7,6 +7,7 @@ import { montarBase } from '../../lib/whatsapp/base.ts';
 import { contatosExemplo } from '../../lib/whatsapp/exemplo.ts';
 import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
 import { DIAS_SEMANA, ROTULO_FREQUENCIA, ROTULO_MODELO, ROTULO_PERFIL } from '../../lib/whatsapp/permissoes.ts';
+import { MODELOS_META, preencherModelo } from '../../lib/whatsapp/modelos.ts';
 
 const carteira = carregarCarteira();
 const hoje = hojeEmBrasilia();
@@ -87,6 +88,27 @@ const sugestoes = ['Relatório', 'O que está atrasado?', 'Próximas entregas', 
     <div class="wa-sugestoes" role="group" aria-label="Perguntas prontas">
       {sugestoes.map((s) => <button type="button" data-wa-sugestao={s}>{s}</button>)}
     </div>
+  </section>
+
+  <section class="wa-bloco" aria-labelledby="wa-modelos-t" data-wa-modelos>
+    <h2 id="wa-modelos-t">Modelos para aprovação da Meta</h2>
+    <p>Mensagens que o sistema envia sem o número ter escrito antes precisam de modelo aprovado pela Meta. Copie o texto de cada modelo e cadastre no gerenciador do WhatsApp Business.</p>
+    <p class="wa-status" role="status" aria-live="polite" data-wa-modelos-status></p>
+    <ul class="wa-modelos">
+      {MODELOS_META.map((m) => (
+        <li class="wa-modelo" data-wa-modelo>
+          <h3>{m.nome}</h3>
+          <p class="wa-modelo-meta">Categoria: {m.categoria} · Idioma: {m.idioma}</p>
+          <p class="wa-modelo-rotulo">Texto com as variáveis</p>
+          <p class="wa-modelo-corpo" data-wa-modelo-corpo>{m.corpo}</p>
+          <p class="wa-modelo-rotulo">Prévia com os exemplos</p>
+          <p class="wa-modelo-corpo wa-modelo-previa">{preencherModelo(m, m.exemplos)}</p>
+          {m.rodape && <p class="wa-modelo-meta">Rodapé: {m.rodape}</p>}
+          {m.botoes && m.botoes.length > 0 && <p class="wa-modelo-meta">Botões de resposta rápida: {m.botoes.map((b) => b.texto).join(', ')}</p>}
+          <button type="button" data-wa-copiar={m.nome} data-texto={m.corpo}>Copiar texto<span class="sr-only"> do modelo {m.nome}</span></button>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <details class="wa-bloco">
@@ -318,4 +340,24 @@ const iniciar = (): void => {
   mostrarPrevia();
 };
 document.addEventListener('astro:page-load', iniciar);
+</script>
+
+<script>
+// Copiar o texto de um modelo da Meta (clipboard com try/catch; aviso em role=status).
+document.addEventListener('astro:page-load', () => {
+  const bloco = document.querySelector<HTMLElement>('[data-wa-modelos]');
+  if (!bloco || bloco.dataset.pronto) return;
+  bloco.dataset.pronto = 'sim';
+  const status = bloco.querySelector<HTMLElement>('[data-wa-modelos-status]');
+  bloco.querySelectorAll<HTMLButtonElement>('[data-wa-copiar]').forEach((b) => b.addEventListener('click', async () => {
+    let msg: string;
+    try {
+      await navigator.clipboard.writeText(b.dataset.texto || '');
+      msg = `Texto do modelo ${b.dataset.waCopiar} copiado.`;
+    } catch {
+      msg = 'Não foi possível copiar. Selecione o texto do modelo e copie manualmente.';
+    }
+    if (status) status.textContent = msg;
+  }));
+});
 </script>
