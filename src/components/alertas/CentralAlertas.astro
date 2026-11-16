@@ -1,0 +1,180 @@
+---
+// Central de alertas (Gestão). Monta a lista no build (dados + dia de hoje); os filtros só mostram/escondem itens no navegador.
+import '../../styles/carteira.css';
+import '../../styles/alertas.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
+import { dados } from '../../lib/dados/index.ts';
+import { avaliarFontes } from '../../lib/dados/qualidade.ts';
+import { municipioAtivo } from '../../lib/municipio-ativo.ts';
+import { formatarData } from '../../lib/prazos/calendario.ts';
+import { montarCentral, nomeTipo, SEM_ORGAO, textoDias, type ConvenioEntrada, type TipoAlerta } from '../../lib/alertas/central.ts';
+
+const municipio = municipioAtivo().codigo_ibge;
+const hoje = new Date().toISOString().slice(0, 10);
+const carteira = carregarCarteira();
+const cronos = carregarCronogramas();
+const acompanhamento = dados.acompanhamento(municipio);
+const central = montarCentral({
+  carteira,
+  cronogramas: cronos.cronogramas,
+  cronogramasImportadosEm: cronos.fonte.importado_em ?? null,
+  convenios: acompanhamento ? ((acompanhamento.convenios ?? []) as ConvenioEntrada[]) : null,
+  fontes: avaliarFontes(new Date(`${hoje}T12:00:00Z`)),
+  eventosLei: [],
+  hoje,
+  municipio,
+});
+
+const TELAS: Record<string, string> = {
+  '/plataforma/projetos-carteira/': 'Ver na Carteira de projetos',
+  '/plataforma/projetos-parado/': 'Ver em Onde está parado',
+  '/plataforma/captacao-acompanhamento/': 'Ver no Acompanhamento de convênios',
+  '/plataforma/captacao-qualidade/': 'Ver em Qualidade dos dados',
+  '/plataforma/projetos-log/': 'Ver no Histórico de alterações',
+  '/plataforma/licitacoes-prazos/': 'Ver em Prazos da Lei 14.133',
+};
+const rotuloLink = (link: string) => TELAS[link.split('?')[0]] ?? 'Ver na tela de origem';
+// Tipos que só existem na seção "Ainda sem fonte" (homologação e cláusula têm alerta parcial, com indício ou previsão).
+const semFonteSo = new Set<TipoAlerta>(central.semFonte.map((s) => s.tipo).filter((t) => t !== 'homologacao' && t !== 'clausula'));
+const plural = (n: number, um: string, varios: string) => `${n} ${n === 1 ? um : varios}`;
+const prazoTexto = (a: (typeof central.alertas)[number]) =>
+  a.prazo === null ? 'Sem data de prazo' : `Prazo ${formatarData(a.prazo)} · ${textoDias(a.dias)}${a.diasUteis !== null && a.dias !== 0 ? ` (${plural(Math.abs(a.diasUteis), 'dia útil', 'dias úteis')})` : ''}`;
+---
+<div class="al" data-alertas>
+  <p class="al-linha">
+    Situação em {formatarData(hoje)}. Prazos em dias corridos e em dias úteis (sem fins de semana e feriados nacionais e municipais).
+  </p>
+  <p class="al-totais" data-al-totais>
+    <strong>{plural(central.totais.total, 'alerta', 'alertas')}</strong>: {plural(central.totais.vermelho, 'vermelho', 'vermelhos')} e {plural(central.totais.amarelo, 'amarelo', 'amarelos')}.
+  </p>
+
+  <section class="al-bloco" aria-labelledby="al-resumo">
+    <h2 id="al-resumo">Resumo por tipo</h2>
+    <p class="al-dica">Escolha um tipo para filtrar a lista.</p>
+    <ul class="al-cartoes">
+      {central.porTipo.map((t) => (
+        <li>
+          {t.total > 0 ? (
+            <button type="button" class="al-cartao" data-al-cartao={t.tipo} aria-pressed="false">
+              <span class="al-cartao-nome">{t.nome}</span>
+              <strong class="al-cartao-numero">{t.total}</strong>
+              <span class="al-cartao-nota">{plural(t.vermelho, 'vermelho', 'vermelhos')} · {plural(t.amarelo, 'amarelo', 'amarelos')}</span>
+            </button>
+          ) : (
+            <div class="al-cartao al-cartao-zero" data-al-cartao-zero={t.tipo}>
+              <span class="al-cartao-nome">{t.nome}</span>
+              <strong class="al-cartao-numero">0</strong>
+              <span class="al-cartao-nota">{semFonteSo.has(t.tipo) ? 'Ainda sem fonte de dados' : 'Nenhum alerta'}</span>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="al-bloco" aria-labelledby="al-lista-titulo">
+    <h2 id="al-lista-titulo">Alertas</h2>
+    <form class="al-filtros" data-al-filtros>
+      <div class="al-campo"><label for="al-f-tipo">Tipo</label>
+        <select id="al-f-tipo" name="tipo" data-al-filtro="tipo">
+          <option value="">Todos os tipos</option>
+          {central.porTipo.filter((t) => t.total > 0).map((t) => <option value={t.tipo}>{t.nome} ({t.total})</option>)}
+        </select>
+      </div>
+      <div class="al-campo"><label for="al-f-gravidade">Gravidade</label>
+        <select id="al-f-gravidade" name="gravidade" data-al-filtro="gravidade">
+          <option value="">Vermelho e amarelo</option>
+          <option value="vermelho">Vermelho ({central.totais.vermelho})</option>
+          <option value="amarelo">Amarelo ({central.totais.amarelo})</option>
+        </select>
+      </div>
+      <div class="al-campo"><label for="al-f-orgao">Órgão</label>
+        <select id="al-f-orgao" name="orgao" data-al-filtro="orgao">
+          <option value="">Todos os órgãos</option>
+          {central.porOrgao.map((o) => <option value={o.orgao}>{o.orgao} ({o.total})</option>)}
+        </select>
+      </div>
+      <button type="reset" data-al-limpar>Limpar filtros</button>
+    </form>
+    <p class="al-contagem" data-al-contagem aria-live="polite">Mostrando {central.alertas.length} de {central.alertas.length}.</p>
+    <p class="al-vazio" data-al-vazio hidden>Nenhum alerta com estes filtros.</p>
+    {central.alertas.length === 0 && <p class="al-vazio">Nenhum alerta hoje.</p>}
+    <ul class="al-lista" data-al-lista>
+      {central.alertas.map((a) => (
+        <li class={`al-item al-${a.gravidade}`} data-tipo={a.tipo} data-gravidade={a.gravidade} data-orgao={a.orgao ?? SEM_ORGAO} data-al-item>
+          <p class="al-meta">
+            <span class={`al-grav al-grav-${a.gravidade}`}><span class="al-simbolo" aria-hidden="true">{a.gravidade === 'vermelho' ? '●' : '▲'}</span> {a.gravidade === 'vermelho' ? 'Vermelho' : 'Amarelo'}</span>
+            <span class="al-tipo">{nomeTipo(a.tipo)}</span>
+            <span>{a.orgao ?? SEM_ORGAO}</span>
+          </p>
+          <h3 class="al-titulo">{a.titulo}</h3>
+          {a.projeto && <p class="al-projeto">Projeto: {a.projeto.nome} ({a.projeto.id})</p>}
+          {a.convenio && <p class="al-projeto">Convênio {a.convenio}</p>}
+          <p class="al-prazo">{prazoTexto(a)}</p>
+          <p class="al-detalhe">{a.detalhe}</p>
+          <p class="al-acao"><strong>O que fazer:</strong> {a.acao}</p>
+          <details class="al-regra">
+            <summary>Por que este alerta</summary>
+            <p>{a.regra}</p>
+          </details>
+          <p class="al-link"><a href={a.link}>{rotuloLink(a.link)}<span class="sr-only">: {a.titulo}</span> →</a></p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="al-bloco" aria-labelledby="al-semfonte">
+    <h2 id="al-semfonte">Ainda sem fonte de dados</h2>
+    <p class="al-dica">Estes alertas fazem parte do plano, mas ainda não há dado para gerá-los. Nenhum número é inventado.</p>
+    <ul class="al-semfonte" data-al-semfonte>
+      {central.semFonte.map((s) => (
+        <li>
+          <h3>{s.titulo}</h3>
+          <p><strong>Falta:</strong> {s.falta}</p>
+          <p><strong>Hoje:</strong> {s.hoje}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</div>
+<script>
+function iniciarAlertas() {
+  const raiz = document.querySelector<HTMLElement>('[data-alertas]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = '1';
+  const form = raiz.querySelector<HTMLFormElement>('[data-al-filtros]');
+  const itens = [...raiz.querySelectorAll<HTMLElement>('[data-al-item]')];
+  const contagem = raiz.querySelector<HTMLElement>('[data-al-contagem]');
+  const vazio = raiz.querySelector<HTMLElement>('[data-al-vazio]');
+  const cartoes = [...raiz.querySelectorAll<HTMLButtonElement>('[data-al-cartao]')];
+  const campo = (n: string) => raiz.querySelector<HTMLSelectElement>(`[data-al-filtro="${n}"]`);
+  const aplicar = () => {
+    const tipo = campo('tipo')?.value ?? '';
+    const gravidade = campo('gravidade')?.value ?? '';
+    const orgao = campo('orgao')?.value ?? '';
+    let n = 0;
+    for (const li of itens) {
+      const ok = (!tipo || li.dataset.tipo === tipo) && (!gravidade || li.dataset.gravidade === gravidade) && (!orgao || li.dataset.orgao === orgao);
+      li.hidden = !ok;
+      if (ok) n++;
+    }
+    if (contagem) contagem.textContent = `Mostrando ${n} de ${itens.length}.`;
+    if (vazio) vazio.hidden = n > 0 || itens.length === 0;
+    for (const c of cartoes) c.setAttribute('aria-pressed', String(!!tipo && c.dataset.alCartao === tipo));
+  };
+  form?.addEventListener('change', aplicar);
+  form?.addEventListener('submit', (e) => e.preventDefault());
+  form?.addEventListener('reset', () => setTimeout(aplicar, 0));
+  for (const c of cartoes)
+    c.addEventListener('click', () => {
+      const sel = campo('tipo');
+      if (!sel) return;
+      const alvo = c.dataset.alCartao ?? '';
+      sel.value = sel.value === alvo ? '' : alvo;
+      aplicar();
+    });
+  aplicar();
+}
+document.addEventListener('astro:page-load', iniciarAlertas);
+</script>

@@ -1,5 +1,8 @@
 # Changelog
 
+## GovNexa — Central de alertas (Gestão, Fase 4)
+- 2026-11-16: guia Gestão › Alertas: lista única de alertas (vermelho primeiro, depois pelo prazo) com resumo por tipo, filtros por tipo, gravidade e órgão sem recarregar, ação recomendada e link para a tela de origem. Tipos com dado: cláusula suspensiva (indício: convênio sem desembolso há mais de 180 dias), vigência de convênio, fim da contratação previsto, início e fim de obra, saldo sem fonte, etapa parada e dado defasado; prazos em dias corridos e úteis (feriados nacionais e municipais). Regra meta × teto da Lei 14.133 pronta (passar do teto = vermelho). Edital na praça, homologação real e prazos por licitação aparecem em "Ainda sem fonte de dados". Nenhum nome de pessoa.
+
 ## GovNexa — WhatsApp da Gestão (simulação, Fase 5)
 - 2026-11-15: guia Gestão › WhatsApp: números autorizados (cargo ou equipe, nunca nome de pessoa; número mascarado na lista), permissão por número (órgãos, só prioritários, valores, captação, projetos liberados à parte), relatório automático (semanal ou diário, modelo "Projetos prioritários" ou "Resumo curto") e prévia da conversa com perguntas por nome, código, SEI, atrasados, entregas, execução e convênios.
 - 2026-11-15: regra de segurança: a resposta é montada só com os projetos que a permissão libera (src/lib/whatsapp/permissoes.ts); projeto de fora recebe a mesma resposta de "não encontrado"; o responsável e as observações nunca entram na base do WhatsApp. Tudo em simulação (sessionStorage); envio real depende do banco e da conta oficial do WhatsApp Business.
