@@ -1,5 +1,8 @@
 # Changelog
 
+## GovNexa — Dependências entre etapas do cronograma (Fase 2)
+- 2026-11-16: página de cada cronograma: aba Dependências (de qual etapa cada uma depende, selo "Aguardando"/"Travada" quando a anterior não terminou, fim projetado) e resumo "Atraso em cascata" com a etapa que mais segura o projeto; Onde está parado mostra quantas etapas seguintes cada unidade segura. Regra (a planilha não tem predecessora): ordem do cronograma, etapas paralelas da mesma fase não dependem entre si; nunca antecipa. Funções em src/lib/cronograma/dependencias.ts.
+
 ## GovNexa — WhatsApp da Gestão (simulação, Fase 5)
 - 2026-11-15: guia Gestão › WhatsApp: números autorizados (cargo ou equipe, nunca nome de pessoa; número mascarado na lista), permissão por número (órgãos, só prioritários, valores, captação, projetos liberados à parte), relatório automático (semanal ou diário, modelo "Projetos prioritários" ou "Resumo curto") e prévia da conversa com perguntas por nome, código, SEI, atrasados, entregas, execução e convênios.
 - 2026-11-15: regra de segurança: a resposta é montada só com os projetos que a permissão libera (src/lib/whatsapp/permissoes.ts); projeto de fora recebe a mesma resposta de "não encontrado"; o responsável e as observações nunca entram na base do WhatsApp. Tudo em simulação (sessionStorage); envio real depende do banco e da conta oficial do WhatsApp Business.

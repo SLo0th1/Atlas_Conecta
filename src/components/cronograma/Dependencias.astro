@@ -1,0 +1,73 @@
+---
+// Aba "Dependências" da página do cronograma: de quem cada etapa depende, se está aguardando a anterior e o fim projetado
+// pelo atraso em cascata. Regra em src/lib/cronograma/dependencias.ts.
+import type { Cronograma } from '../../lib/cronograma/tipos.ts';
+import type { CascataProjeto, DependenciaEtapa } from '../../lib/cronograma/dependencias.ts';
+import { ROTULO_STATUS, statusNaData } from '../../lib/cronograma/visoes.ts';
+import { br } from '../../lib/dados/formato.ts';
+
+interface Props {
+  cronograma: Cronograma;
+  deps: DependenciaEtapa[];
+  cascata: CascataProjeto;
+  hoje: string;
+}
+const { cronograma: c, deps, cascata, hoje } = Astro.props;
+const nomes = (ids: number[]) => ids.map((i) => deps[i].etapa.nome).join(', ');
+const dias = (n: number) => `${n} dia${n === 1 ? '' : 's'}`;
+const fases = [...c.fases].sort((a, b) => a.ordem - b.ordem).map((f) => ({ nome: f.nome, itens: deps.filter((d) => d.etapa.fase === f.nome) }));
+const travadas = deps.filter((d) => d.travada).length;
+---
+<div class="dp" data-cart data-dependencias>
+  <p class="muted">
+    A planilha não informa qual etapa depende de qual. A regra usada: cada etapa depende das etapas anteriores na ordem do
+    cronograma; etapas da mesma fase planejadas para acontecer ao mesmo tempo são paralelas e não dependem uma da outra.
+    Quando uma etapa atrasa, as seguintes tendem a atrasar os mesmos dias (fim projetado).
+  </p>
+  <p><strong>{travadas}</strong> {travadas === 1 ? 'etapa travada' : 'etapas travadas'} esperando a anterior terminar (o início previsto já passou).</p>
+  {fases.map((f) => (
+    <section class="dp-fase" aria-label={`Fase ${f.nome}`}>
+      <h2>{f.nome}</h2>
+      <ol class="dp-lista">
+        {f.itens.map((d) => {
+          const e = d.etapa;
+          const st = statusNaData(e, hoje);
+          const mostraProjetado = !e.fim_real && d.fimProjetado !== null && d.fimProjetado !== e.fim_previsto;
+          return (
+            <li class="dp-item" data-dp-etapa={e.nome}>
+              <h3>
+                {e.nome}
+                {cascata.gargalo?.indice === d.indice && <span class="dp-selo dp-selo-gargalo">Mais segura o projeto</span>}
+              </h3>
+              <p class="muted">{ROTULO_STATUS[st]}{e.unidade ? ` · ${e.unidade}` : ''}</p>
+              <p>{d.predecessoras.length ? <>Depende de: {nomes(d.predecessoras)}</> : 'Não depende de outra etapa (é a primeira).'}</p>
+              {d.aguardando.length > 0 && (
+                <p>
+                  <span class={`dp-selo ${d.travada ? 'dp-selo-travada' : ''}`} data-dp-aguardando>{d.travada ? 'Travada · aguardando' : 'Aguardando'}: {nomes(d.aguardando)}</span>
+                  {d.travada && <span class="muted"> (início previsto em {br(e.inicio_previsto)} já passou)</span>}
+                </p>
+              )}
+              <p>
+                Fim previsto: {br(e.fim_previsto)}
+                {e.fim_real && <> · terminou em {br(e.fim_real)}</>}
+                {mostraProjetado && <> · <strong data-dp-projetado>fim projetado: {br(d.fimProjetado)}</strong> ({dias(d.atrasoAcumulado ?? 0)} depois)</>}
+                {!e.fim_previsto && !e.fim_real && <> · sem data prevista, não dá para projetar</>}
+              </p>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  ))}
+</div>
+<style>
+  .dp-fase { margin: 0 0 1.5rem; }
+  .dp-fase h2 { font-size: 1.1rem; margin: 0 0 .5rem; }
+  .dp-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+  .dp-item { padding: .6rem .8rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow-wrap: anywhere; min-width: 0; }
+  .dp-item h3 { font-size: .95rem; margin: 0 0 .2rem; color: var(--text); }
+  .dp-item p { margin: .1rem 0; font-size: .85rem; max-width: none; }
+  .dp-selo { display: inline-block; padding: 0 .5rem; border: 2px solid var(--mc-01); border-radius: 30px; font-size: .78rem; font-weight: 700; color: var(--text); background: var(--surface); }
+  .dp-selo-travada { border-color: var(--cart-vermelho); border-style: dashed; }
+  .dp-selo-gargalo { margin-left: .4rem; border-color: var(--cart-amarelo); vertical-align: middle; }
+</style>
