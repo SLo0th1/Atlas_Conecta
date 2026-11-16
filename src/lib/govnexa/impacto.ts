@@ -45,6 +45,7 @@ export const COMPONENTES: Record<string, string[]> = {
   sala: ['src/lib/sala/**', 'src/components/sala/**', 'src/pages/plataforma/sala-de-guerra/**'],
   painel: ['src/components/carteira/VisaoOrgaos.astro', 'src/lib/govnexa/catalogo.ts', 'src/lib/gestao/**', 'src/components/gestao/**', ...MAPA],
   log: ['src/lib/log/**', 'src/components/log/**', 'db/migracoes/002_*'],
+  whatsapp: ['src/lib/whatsapp/**', 'src/components/whatsapp/**', 'src/lib/gestao/painel.ts', 'src/lib/carteira/visoes.ts'],
 };
 
 /** O próprio mapa: mudar estes arquivos é mudar o Fluxo (sem exigir outra atualização). */
