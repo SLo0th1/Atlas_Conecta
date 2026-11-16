@@ -28,7 +28,7 @@ export const COMPONENTES: Record<string, string[]> = {
   portao: ['src/lib/carteira/movimentacao.ts', 'src/lib/carteira/simulacao.ts', 'src/components/carteira/PendenciasEtapa.astro'],
   preparatorio: ['src/lib/carteira/macroetapas.ts', 'src/lib/cronograma/**'],
   juridico: ['src/lib/cronograma/visoes.ts', 'src/components/cronograma/Parado.astro'],
-  sei: ['scripts/importar-cronogramas.ts'],
+  sei: ['scripts/importar-cronogramas.ts', 'scripts/sei-ler.ts', 'src/lib/sei/**', 'src/components/sei/**'],
   publicacao: ['src/data/modules.json', 'src/lib/prazos/**', 'src/components/prazos/**', 'data/config/feriados.json', 'data/config/prazos-internos.json'],
   pncp: [],
   julgamento: ['src/data/modules.json'],

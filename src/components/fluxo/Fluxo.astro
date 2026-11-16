@@ -39,6 +39,7 @@ const LARGURA = 1000;
 const COL = LARGURA / RAIAS.length;
 const E = RAIAS.length <= 3 ? 1.25 : 1; // poucas raias: formas e letras maiores
 const TOPO = 48;
+const MEIA_RAIA = COL / 2 - 16; // meia-largura máxima de uma forma
 const MAX_LINHA = Math.max(...NOS.map((n) => n.linha));
 type Pt = [number, number];
 interface Geo { no: NoGen; col: number; cx: number; cy: number; hw: number; hh: number; k: number; linhas: string[]; fs: number; passo: number; yTit: number; yExc: number; ySit: number; ySelo: number; temSub: boolean }
@@ -57,7 +58,7 @@ function quebrar(texto: string, max: number): string[] {
   if (atual) linhas.push(atual);
   return linhas;
 }
-const maxPorTipo = { tarefa: 17, decisao: 18, inicio: 12, fim: 12, excecao: 17 } as const;
+const maxPorTipo = { tarefa: 17, decisao: 14, inicio: 12, fim: 12, excecao: 17 } as const;
 const tamFonte = { tarefa: 11.5, decisao: 10.5, inicio: 10.5, fim: 10.5, excecao: 10.5 } as const;
 const BASE: Record<TipoNoGen, [number, number]> = { decisao: [82, 46], tarefa: [62, 33], inicio: [44, 44], fim: [44, 44], excecao: [76, 44] };
 
@@ -98,12 +99,14 @@ for (const no of NOS) {
   if (exc) itens.push({ dy1: yExc - 9 * E * 0.8, dy2: yExc + 3, w: largura('exceção', 9 * E, 0.62) });
   if (temSub) itens.push({ dy1: ySelo - 8.5 * E * 0.8, dy2: ySelo + 3, w: largura('+ detalhe', 8.5 * E, 0.62) });
   const [bw, bh] = BASE[no.tipo];
+  // A forma nunca passa da largura da própria raia (folga para setas e rótulos); se o texto não couber, cresce na altura.
+  const largo = (f: number) => Math.min(bw * E * f, MEIA_RAIA);
   let s = 1;
-  for (; s < 3; s += 0.04) {
-    const hw = bw * E * s, hh = bh * E * s, k = 24 * E * s;
+  for (; s < 4; s += 0.04) {
+    const hw = largo(s), hh = bh * E * s, k = Math.min(24 * E * s, hw / 2);
     if (itens.every((it) => disponivel(no.tipo, hw, hh, k, Math.abs(it.dy1) > Math.abs(it.dy2) ? it.dy1 : it.dy2) >= it.w / 2 + 4 && Math.max(Math.abs(it.dy1), Math.abs(it.dy2)) <= hh - 2)) break;
   }
-  tam.set(no.id, { no, col, cx: (col + 0.5) * COL, cy: 0, hw: bw * E * s, hh: bh * E * s, k: 24 * E * s, linhas, fs, passo, yTit, yExc, ySit, ySelo, temSub });
+  tam.set(no.id, { no, col, cx: (col + 0.5) * COL, cy: 0, hw: largo(s), hh: bh * E * s, k: Math.min(24 * E * s, largo(s) / 2), linhas, fs, passo, yTit, yExc, ySit, ySelo, temSub });
 }
 const LIN = Math.max(100 * E, 2 * Math.max(...[...tam.values()].map((g) => g.hh)) + 14);
 const ALTURA = TOPO + MAX_LINHA * LIN + 16;
@@ -192,18 +195,23 @@ function rotear(de: string, para: string, indice: number): Pt[] {
 }
 
 // Posição do rótulo da ligação: no primeiro trecho com folga
-function posRotulo(pts: Pt[]): { x: number; y: number; ancora: 'start' | 'middle' } {
+function posRotulo(pts: Pt[], texto: string, hhMax: number): { x: number; y: number; ancora: 'start' | 'middle' } {
   const trechos = pts.slice(1).map((q, i) => ({ p: pts[i], q, len: Math.abs(q[0] - pts[i][0]) + Math.abs(q[1] - pts[i][1]) }));
   const t = trechos.find((s) => s.len >= 34) ?? trechos.reduce((a, b) => (b.len > a.len ? b : a));
-  if (t.p[1] === t.q[1]) return { x: (t.p[0] + t.q[0]) / 2, y: t.p[1] + (pts.length === 4 ? 11 : -4), ancora: 'middle' };
+  if (t.p[1] === t.q[1]) {
+    // Trecho horizontal mais curto que o texto (ex.: entre duas raias vizinhas): o rótulo sobe acima das formas para não ser coberto.
+    const curto = Math.abs(t.q[0] - t.p[0]) < texto.length * 9.5 * 0.55 + 8;
+    return { x: (t.p[0] + t.q[0]) / 2, y: curto ? t.p[1] - hhMax - 6 : t.p[1] + (pts.length === 4 ? 11 : -4), ancora: 'middle' };
+  }
   const baixo = t.q[1] > t.p[1];
-  const yAlvo = trechos.length === 3 && t === trechos[1] ? (t.p[1] + t.q[1]) / 2 + 3 : baixo ? t.p[1] + 14 : t.p[1] - 8;
+  const yAlvo = trechos.length === 3 && t === trechos[1] ? (t.p[1] + t.q[1]) / 2 + 3 : baixo ? t.p[1] + 14 : (t.p[1] + t.q[1]) / 2 + 3; // subindo: no meio do trecho, longe da forma de onde sai
   return { x: t.p[0] + 8, y: yAlvo, ancora: 'start' };
 }
 
 const ligacoes = LIGACOES.map((l, i) => {
   const pts = rotear(l.de, l.para, i);
-  const lab = l.rotulo ? posRotulo(pts) : null;
+  const hhMax = Math.max(geo.get(l.de)?.hh ?? 0, geo.get(l.para)?.hh ?? 0);
+  const lab = l.rotulo ? posRotulo(pts, l.rotulo, hhMax) : null;
   return { ...l, tipo: l.tipo ?? 'fluxo', pts, d: pts.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' '), lab };
 });
 

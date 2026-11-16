@@ -547,9 +547,15 @@ test('govnexa: menu lateral com blocos que abrem e fecham',async({page})=>{
  await page.setViewportSize({width:1280,height:900});
  await page.goto('/plataforma/projetos/');
  const bloco=()=>page.locator('.sidebar button[data-sec^="m:"]',{hasText:/licita/i}).first();
- await expect(bloco()).toHaveAttribute('aria-expanded','true');
+ // por padrão os blocos principais começam fechados; o da página atual abre
+ await expect(bloco()).toHaveAttribute('aria-expanded','false');
  const corpo=page.locator('#'+await bloco().getAttribute('aria-controls'));
- await expect(corpo).toBeVisible();
+ await expect(corpo).toBeHidden();
+ await expect(page.locator('.sidebar a[aria-current=page]').first()).toBeVisible();
+ await bloco().click();
+ await expect(bloco()).toHaveAttribute('aria-expanded','true');await expect(corpo).toBeVisible();
+ await page.reload();
+ await expect(bloco()).toHaveAttribute('aria-expanded','true');
  // sub-bloco (Operação, dentro de Licitações)
  const sub=page.locator('.sidebar button[data-sec^="g:Licitações:"]').first();const subCorpo=page.locator('#'+await sub.getAttribute('aria-controls'));
  await sub.click();await expect(sub).toHaveAttribute('aria-expanded','false');await expect(subCorpo).toBeHidden();
@@ -570,7 +576,7 @@ test('govnexa: menu lateral com blocos que abrem e fecham',async({page})=>{
 test('govnexa: menu no celular com menu recolhido salvo continua reabrindo blocos',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await page.goto('/plataforma/projetos/');
- await page.evaluate(()=>{localStorage.setItem('atlas-sidebar','true');localStorage.setItem('govnexa-menu-fechado',JSON.stringify(['m:Licitações']))});
+ await page.evaluate(()=>{localStorage.setItem('atlas-sidebar','true');localStorage.setItem('govnexa-menu-estado',JSON.stringify({'m:Licitações':false}))});
  await page.reload();
  await page.locator('#drawer-toggle').click();
  const bloco=page.locator('.sidebar button[data-sec="m:Licitações"]');

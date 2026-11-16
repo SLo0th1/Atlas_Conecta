@@ -1,0 +1,224 @@
+---
+// Projetos › Processos no SEI (simulação). Mostra a leitura de uma página fictícia com o mesmo leitor que será usado
+// no servidor e deixa colar o link público de cada processo (guardado só nesta aba até o banco existir).
+import '../../styles/sei.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { MACROETAPAS } from '../../lib/carteira/macroetapas.ts';
+import type { CodigoMacroetapa } from '../../lib/carteira/tipos.ts';
+import { lerPaginaProcesso } from '../../lib/sei/leitor.ts';
+import { marcosDoProcesso, ondeEsta, paralisacaoAberta, resumirProcesso, sugerirEtapa } from '../../lib/sei/analise.ts';
+import { paginaExemplo } from '../../lib/sei/exemplo.ts';
+import { HOSTS_SEI } from '../../lib/sei/link.ts';
+import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
+
+const rotulo = (c: CodigoMacroetapa | null) => MACROETAPAS.find((m) => m.codigo === c)?.rotulo ?? 'Sem macroetapa';
+const br = (iso: string | null) => (iso ? iso.slice(0, 10).split('-').reverse().join('/') : '—');
+
+const exemplo = lerPaginaProcesso(paginaExemplo())!;
+const ETAPA_EXEMPLO: CodigoMacroetapa = '02';
+const resumo = resumirProcesso(exemplo);
+const onde = ondeEsta(exemplo, hojeEmBrasilia());
+const marcos = marcosDoProcesso(exemplo);
+const sug = sugerirEtapa(exemplo, ETAPA_EXEMPLO);
+const paralisacao = paralisacaoAberta(exemplo);
+
+const projetos = carregarCarteira()
+  .projetos.filter((p) => p.sei.length > 0)
+  .map((p) => ({ id: p.id, nome: p.nome, orgao: p.orgao ?? '—', etapa: rotulo(p.macroetapa), sei: p.sei.join(', ') }))
+  .sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+const semSei = carregarCarteira().projetos.length - projetos.length;
+---
+<div class="sei" data-sei>
+  <p class="sei-aviso" role="note"><strong>Modo simulação.</strong> O GovNexa ainda não abre o SEI sozinho. O exemplo abaixo é fictício, e os links que você colar ficam só nesta aba do navegador. A leitura diária entra com o banco de dados.</p>
+
+  <section class="sei-bloco" aria-labelledby="sei-como-t">
+    <h2 id="sei-como-t">Como vai funcionar</h2>
+    <ol class="sei-passos">
+      <li>Abra o processo uma vez na <a href={`https://${HOSTS_SEI[0]}/sei/modulos/pesquisa/md_pesq_processo_pesquisar.php?acao_externa=protocolo_pesquisar&acao_origem_externa=protocolo_pesquisar&id_orgao_acesso_externo=0`} rel="noopener noreferrer" target="_blank">pesquisa pública do SEI</a>, resolvendo o captcha você mesmo.</li>
+      <li>Copie o endereço da página do processo e cole aqui, no projeto certo.</li>
+      <li>O GovNexa relê essa página uma vez por dia, um processo por vez, sem captcha e sem senha.</li>
+      <li>Ele mostra onde o processo está e há quantos dias. Quando aparece um documento-chave (edital, contrato, ordem de serviço…), propõe a mudança de etapa para alguém aprovar.</li>
+    </ol>
+    <p class="sei-nota">Documento público: o conteúdo pode ser lido depois. Documento restrito: aparece só o tipo, a data e a unidade, e o conteúdo entra por PDF.</p>
+  </section>
+
+  <section class="sei-bloco" aria-labelledby="sei-ex-t" data-sei-exemplo>
+    <h2 id="sei-ex-t">Exemplo de leitura (processo fictício)</h2>
+    <p class="sei-cab-processo"><strong>Processo {exemplo.numero}</strong> · {exemplo.tipo} · gerado em {br(exemplo.geradoEm)}</p>
+    <ul class="sei-numeros">
+      <li><strong>{resumo.documentos}</strong> documentos <span>({resumo.publicos} públicos, {resumo.restritos} restritos)</span></li>
+      <li><strong>{resumo.andamentos}</strong> andamentos</li>
+      {onde && <li data-sei-onde data-desde={onde.desde}><strong>{onde.unidade}</strong> é onde está agora, desde {br(onde.desde)} (<span data-sei-dias>{onde.dias ?? '?'}</span> dias)</li>}
+    </ul>
+    {onde && <p class="sei-nota">Último andamento: {br(onde.ultimo.dataHora)} às {onde.ultimo.dataHora.slice(11)}, “{onde.ultimo.descricao}”.</p>}
+
+    <h3>Documentos-chave encontrados</h3>
+    <div class="sei-tabela-caixa">
+      <table class="sei-tabela">
+        <caption class="sr-only">Documentos-chave do processo fictício e a etapa que cada um indica</caption>
+        <thead><tr><th scope="col">Documento</th><th scope="col">Primeiro em</th><th scope="col">Quantos</th><th scope="col">Acesso</th><th scope="col">Indica a etapa</th></tr></thead>
+        <tbody>
+          {marcos.map((m) => (
+            <tr data-sei-marco={m.marco.id}>
+              <td data-rotulo="Documento">{m.marco.rotulo}</td>
+              <td data-rotulo="Primeiro em">{br(m.primeiro.data)}</td>
+              <td data-rotulo="Quantos">{m.quantos}</td>
+              <td data-rotulo="Acesso">{m.primeiro.publico ? 'Público' : 'Restrito (PDF)'}</td>
+              <td data-rotulo="Indica a etapa">{m.marco.etapa ? rotulo(m.marco.etapa) : 'Alerta'}{m.marco.confianca === 'media' ? ' (conferir)' : ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="sei-nota">“Contrato Social” é documento da empresa na habilitação; por isso não conta como contrato assinado.</p>
+    <p class="sei-sugestao" data-sei-sugestao>
+      {sug.tipo === 'avancar' ? (
+        <>Etapa registrada no projeto: <strong>{rotulo(ETAPA_EXEMPLO)}</strong>. O SEI já mostra <strong>{sug.base.marco.rotulo}</strong> ({br(sug.base.primeiro.data)}), por isso a proposta é avançar para <strong>{rotulo(sug.etapa)}</strong>. A mudança só vale depois de aprovada em Pendências de etapa.</>
+      ) : sug.tipo === 'sem_marco' ? (
+        <>Nenhum documento-chave ainda; a etapa fica como está.</>
+      ) : (
+        <>Os documentos confirmam a etapa registrada.</>
+      )}
+    </p>
+    {paralisacao && <p class="sei-alerta" role="note"><strong>Alerta:</strong> termo de paralisação em {br(paralisacao.data)} sem termo de reinício depois.</p>}
+  </section>
+
+  <section class="sei-bloco" aria-labelledby="sei-links-t">
+    <h2 id="sei-links-t">Links dos processos</h2>
+    <p class="sei-nota">{projetos.length} projetos têm número de processo SEI na planilha{semSei > 0 ? `; ${semSei} ainda não têm` : ''}. <span data-sei-contagem>Nenhum link colado nesta aba.</span></p>
+    <form class="sei-form" data-sei-form novalidate>
+      <label>Projeto
+        <select name="projeto" required>
+          <option value="">Escolha o projeto</option>
+          {projetos.map((p) => <option value={p.id}>{p.nome} ({p.sei})</option>)}
+        </select>
+      </label>
+      <label>Link público do processo no SEI
+        <input name="link" type="url" inputmode="url" autocomplete="off" placeholder={`https://${HOSTS_SEI[0]}/sei/modulos/pesquisa/md_pesq_processo_exibir.php?…`} required />
+      </label>
+      <div class="sei-acoes"><button type="submit" class="primary">Guardar link</button></div>
+      <p class="sei-erro" role="alert" data-sei-erro></p>
+    </form>
+    <p class="sei-status" role="status" aria-live="polite" data-sei-status></p>
+    <label class="sei-filtro">Procurar projeto ou número SEI<input type="search" data-sei-filtro autocomplete="off" /></label>
+    <div class="sei-tabela-caixa">
+      <table class="sei-tabela" data-sei-tabela>
+        <caption class="sr-only">Projetos com processo SEI e o link público de cada um</caption>
+        <thead><tr><th scope="col">Projeto</th><th scope="col">Órgão</th><th scope="col">Etapa</th><th scope="col">Processo SEI</th><th scope="col">Link</th></tr></thead>
+        <tbody>
+          {projetos.map((p) => (
+            <tr data-sei-projeto={p.id} data-busca={`${p.id} ${p.nome} ${p.sei} ${p.orgao}`.toLowerCase()}>
+              <td data-rotulo="Projeto">{p.nome}</td>
+              <td data-rotulo="Órgão">{p.orgao}</td>
+              <td data-rotulo="Etapa">{p.etapa}</td>
+              <td data-rotulo="Processo SEI">{p.sei}</td>
+              <td data-rotulo="Link" data-sei-link-celula>Sem link</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <details class="sei-bloco">
+    <summary>Para a equipe técnica: testar um link agora</summary>
+    <p>No computador com o projeto instalado, rode o comando abaixo. Ele abre a página uma vez, mostra o resumo e não grava nada.</p>
+    <pre class="sei-codigo"><code>npm run sei:ler -- "LINK_PÚBLICO_DO_PROCESSO"</code></pre>
+  </details>
+</div>
+
+<script>
+import { lerVinculos, guardarVinculos, LIMITE_VINCULOS, type Vinculos } from '../../lib/sei/simulacao.ts';
+import { mascararLinkSei, validarLinkSei } from '../../lib/sei/link.ts';
+import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
+
+const raiz = document.querySelector<HTMLElement>('[data-sei]');
+if (raiz) {
+  // Dias "parado" recalculados aqui: a página estática não pode ficar com o dia da publicação.
+  const onde = raiz.querySelector<HTMLElement>('[data-sei-onde]');
+  const desde = onde?.dataset.desde;
+  const diasEl = raiz.querySelector<HTMLElement>('[data-sei-dias]');
+  if (desde && diasEl) {
+    const d = Math.round((Date.parse(`${hojeEmBrasilia()}T12:00:00Z`) - Date.parse(`${desde}T12:00:00Z`)) / 86_400_000);
+    diasEl.textContent = d >= 0 ? String(d) : '?';
+  }
+
+  const form = raiz.querySelector<HTMLFormElement>('[data-sei-form]')!;
+  const erro = raiz.querySelector<HTMLElement>('[data-sei-erro]')!;
+  const status = raiz.querySelector<HTMLElement>('[data-sei-status]')!;
+  const contagem = raiz.querySelector<HTMLElement>('[data-sei-contagem]')!;
+  const filtro = raiz.querySelector<HTMLInputElement>('[data-sei-filtro]')!;
+  const linhas = [...raiz.querySelectorAll<HTMLTableRowElement>('[data-sei-projeto]')];
+  const ids = new Set(linhas.map((l) => l.dataset.seiProjeto!));
+  let vinculos: Vinculos = lerVinculos();
+
+  const nomeDe = (id: string) => linhas.find((l) => l.dataset.seiProjeto === id)?.cells[0]?.textContent ?? id;
+
+  function desenhar() {
+    for (const l of linhas) {
+      const id = l.dataset.seiProjeto!;
+      const cel = l.querySelector<HTMLElement>('[data-sei-link-celula]')!;
+      cel.replaceChildren();
+      const link = vinculos[id];
+      if (!link) {
+        cel.textContent = 'Sem link';
+        continue;
+      }
+      const txt = document.createElement('span');
+      txt.textContent = mascararLinkSei(link);
+      const bt = document.createElement('button');
+      bt.type = 'button';
+      bt.className = 'sei-remover';
+      bt.textContent = 'Remover';
+      bt.setAttribute('aria-label', `Remover o link de ${nomeDe(id)}`);
+      bt.addEventListener('click', () => {
+        delete vinculos[id];
+        guardarVinculos(vinculos);
+        status.textContent = `Link removido de ${nomeDe(id)}.`;
+        desenhar();
+      });
+      cel.append(txt, ' ', bt);
+    }
+    const n = Object.keys(vinculos).filter((id) => ids.has(id)).length;
+    contagem.textContent = n === 0 ? 'Nenhum link colado nesta aba.' : `${n} ${n === 1 ? 'link colado' : 'links colados'} nesta aba.`;
+  }
+
+  form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    erro.textContent = '';
+    const dados = new FormData(form);
+    const id = String(dados.get('projeto') ?? '');
+    if (!ids.has(id)) {
+      erro.textContent = 'Escolha o projeto.';
+      return;
+    }
+    const r = validarLinkSei(dados.get('link'));
+    if (!r.ok) {
+      erro.textContent = r.erro;
+      return;
+    }
+    if (!(id in vinculos) && Object.keys(vinculos).length >= LIMITE_VINCULOS) {
+      erro.textContent = `Limite de ${LIMITE_VINCULOS} links nesta simulação.`;
+      return;
+    }
+    const outro = Object.entries(vinculos).find(([pid, url]) => url === r.url && pid !== id);
+    if (outro) {
+      erro.textContent = `Esse link já está no projeto ${nomeDe(outro[0])}.`;
+      return;
+    }
+    vinculos = { ...vinculos, [id]: r.url };
+    status.textContent = guardarVinculos(vinculos)
+      ? `Link guardado em ${nomeDe(id)} (só nesta aba).`
+      : 'O navegador não deixou guardar; o link vale só até recarregar a página.';
+    form.reset();
+    desenhar();
+  });
+
+  filtro.addEventListener('input', () => {
+    const q = filtro.value.trim().toLowerCase();
+    for (const l of linhas) l.hidden = q !== '' && !(l.dataset.busca ?? '').includes(q);
+  });
+
+  desenhar();
+}
+</script>

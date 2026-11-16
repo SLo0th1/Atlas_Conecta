@@ -58,6 +58,7 @@ const T = {
   documentos: { rotulo: 'Documentos da licitação', url: '/plataforma/documentos/' },
   gestao: { rotulo: 'Gestão · Painel', url: '/plataforma/gestao/' },
   whatsapp: { rotulo: 'WhatsApp', url: '/plataforma/gestao-whatsapp/' },
+  sei: { rotulo: 'Processos no SEI', url: '/plataforma/projetos-sei/' },
   alertasCentral: { rotulo: 'Gestão · Alertas', url: '/plataforma/gestao-alertas/' },
 } satisfies Record<string, Tela>;
 
@@ -124,8 +125,8 @@ export const NOS: NoFluxo[] = [
     situacao: 'planejado', fase: 'Fase 4', telas: [T.parado] },
   { id: 'sei', raia: 'integracoes', linha: 8, tipo: 'tarefa', titulo: 'SEI (andamentos e documentos)',
     oQue: 'Lê a página pública de cada processo uma vez por dia (andamentos e documentos públicos); documento restrito entra por PDF. Documento-chave (edital, parecer, homologação, contrato) propõe a mudança de etapa.',
-    valida: ['Link público do processo colado na ficha', 'Nunca contornar captcha'], quem: 'Sistema; responsável',
-    situacao: 'planejado', fase: 'Fase 2', telas: [T.carteira] },
+    valida: ['Link público do processo colado na ficha', 'Nunca contornar captcha', 'Mudança de etapa só depois de aprovada'], quem: 'Sistema; responsável',
+    situacao: 'simulacao', fase: 'Fase 2 (leitura diária depende do banco)', telas: [T.sei, T.carteira] },
   { id: 'publicacao', raia: 'contratacao', linha: 8, tipo: 'tarefa', titulo: '03 – Contratação: publicação',
     oQue: 'Aviso e edital publicados no PNCP, Diário Oficial e jornal; começa o prazo mínimo de publicidade.',
     valida: ['Prazo mínimo de publicidade (piso legal, art. 55) — não pode ser encurtado'], quem: 'SECAP (agente de contratação)',
