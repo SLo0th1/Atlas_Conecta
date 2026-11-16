@@ -597,3 +597,89 @@ test('govnexa: painel do prefeito',async({page})=>{
  await page.goto('/plataforma/gestao/');
  for(const theme of ['light','dark']){await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);const results=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`painel ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);}
 });
+
+test('govnexa: mapa das obras',async({page,browser})=>{
+ await page.route('https://tile.openstreetmap.org/**',r=>r.abort());
+ const semRolagem=()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth);
+ const numero=async()=>Number((await page.locator('[data-mp-contagem]').innerText()).match(/^(\d+)/)![1]);
+ // painel do prefeito com o mapa
+ await page.setViewportSize({width:1280,height:900});
+ const resposta=await page.goto('/plataforma/gestao/');
+ expect(resposta?.status()).toBe(200);
+ await expect(page.locator('#mapa')).toBeVisible();
+ await expect(page.locator('#mapa .leaflet-container')).toBeVisible();
+ await expect(page.locator('#mapa .leaflet-marker-icon .mp-marcador').first()).toBeVisible();
+ await expect(page.locator('#mapa path.leaflet-interactive').first()).toBeAttached();
+ const antes=await numero();
+ expect(antes).toBeGreaterThanOrEqual(2);
+ await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/mapa-1280.png',fullPage:false});
+ await page.locator('#mapa .leaflet-marker-icon').first().click();
+ const popup=page.locator('.leaflet-popup-content');
+ await expect(popup.getByRole('link',{name:'Abrir a ficha'})).toHaveAttribute('href',/^\/plataforma\/projetos-carteira\/\?q=/);
+ await expect(popup.getByRole('link',{name:'Editar localização'})).toBeVisible();
+ await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/mapa-popup.png'});
+ await page.keyboard.press('Escape');
+ await page.locator('#mapa').getByRole('button',{name:'Em execução'}).click();
+ await expect(page.locator('#mapa').getByRole('button',{name:'Em execução'})).toHaveAttribute('aria-pressed','false');
+ expect(await numero()).toBeLessThan(antes);
+ await page.locator('#mapa').getByRole('button',{name:'Em execução'}).click();
+ expect(await numero()).toBe(antes);
+ // lista alternativa
+ await page.locator('#mapa summary').click();
+ await expect(page.locator('#mapa [data-mp-lista-corpo] tr')).toHaveCount(antes);
+ // toque (monitor touch): abrir o resumo tocando no ícone
+ const touch=await browser.newContext({hasTouch:true,viewport:{width:390,height:844}});
+ const tp=await touch.newPage();
+ await tp.route('https://tile.openstreetmap.org/**',r=>r.abort());
+ await tp.goto('/plataforma/gestao/');
+ await tp.locator('#mapa').scrollIntoViewIfNeeded();
+ await tp.locator('#mapa .leaflet-marker-icon').first().tap();
+ await expect(tp.locator('.leaflet-popup-content').getByRole('link',{name:'Abrir a ficha'})).toBeVisible();
+ await tp.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/mapa-390.png'});
+ await touch.close();
+ // tela de localização: trocar para ruas e trechos, desenhar 2 pontos e salvar (simulação)
+ await page.goto('/plataforma/projetos-localizacao/?id=P-905');
+ await expect(page.locator('h1')).toHaveText('Localização e fotos');
+ await expect(page.locator('#lp-enviar-fotos')).toBeDisabled();
+ await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/localizacao-1280.png'});
+ await page.getByRole('radio',{name:/Ruas e trechos/}).check();
+ await page.getByLabel('Rua (obrigatório)').fill('Avenida Exemplo');
+ await page.getByRole('button',{name:/Desenhar no mapa/}).click();
+ const areaMapa=page.locator('#lp-loc [data-ed-mapa]');
+ await areaMapa.click({position:{x:120,y:120}});
+ await areaMapa.click({position:{x:260,y:180}});
+ await expect(page.locator('#lp-loc .mp-pontos')).toHaveText('2 pontos');
+ await page.getByRole('button',{name:'Salvar localização (simulação)'}).click();
+ await expect(page.locator('[data-lp-ok]')).toBeVisible();
+ await expect(page.locator('[data-lp-ok]')).toContainText('Modo simulação');
+ // trecho sem rua não salva
+ await page.getByLabel('Rua (obrigatório)').fill('');
+ await page.getByRole('button',{name:'Salvar localização (simulação)'}).click();
+ await expect(page.locator('#lp-loc [data-ed-erros]')).toContainText('informe o nome da rua');
+ // a simulação aparece no mapa do painel (mesma aba)
+ await page.goto('/plataforma/gestao/');
+ await expect(page.locator('#mapa [data-mp-contagem]')).toContainText('obra');
+ // sem rolagem horizontal e axe, claro e escuro
+ for(const width of [1280,390]){
+  await page.setViewportSize({width,height:900});
+  for(const caminho of ['/plataforma/gestao/','/plataforma/projetos-localizacao/?id=P-905']){
+   await page.goto(caminho);
+   await expect(page.locator('.leaflet-container').first()).toBeVisible();
+   expect(await semRolagem(),`${caminho} ${width}px`).toBeTruthy();
+  }
+ }
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/plataforma/projetos-localizacao/?id=P-905');
+ await expect(page.locator('#lp-loc .leaflet-container')).toBeVisible();
+ await page.screenshot({path:'C:/Users/ANIEL_~1/AppData/Local/Temp/claude/4a02c2d203f7e454/dc8f7733-5c4f-49f8-90a6-ea4344865340/scratchpad/localizacao-390.png'});
+ await page.setViewportSize({width:1280,height:900});
+ for(const caminho of ['/plataforma/gestao/','/plataforma/projetos-localizacao/?id=P-905']){
+  await page.goto(caminho);
+  await expect(page.locator('.leaflet-container').first()).toBeVisible();
+  for(const theme of ['light','dark']){
+   await page.evaluate(t=>{document.documentElement.dataset.theme=t},theme);
+   const results=await new AxeBuilder({page}).exclude('.leaflet-tile-pane').withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();
+   expect(results.violations.filter(v=>['serious','critical'].includes(v.impact||'')),`${caminho} ${theme}: ${JSON.stringify(results.violations)}`).toEqual([]);
+  }
+ }
+});

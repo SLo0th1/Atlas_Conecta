@@ -1,5 +1,7 @@
 // Contrato de dados da Carteira de Projetos (GovNexa, Fase 1).
 // Mesma forma do modelo em docs/govnexa/modelo-dados.md; no MVP vem de JSON, na Fase 3 do PostgreSQL.
+import type { Foto, Localizacao } from '../mapa/tipos.ts';
+
 // Regra: valor ausente é null (nunca zero inventado). Datas em ISO 'AAAA-MM-DD'.
 
 /** Códigos oficiais das macroetapas (nomes da aba PIPELINE da planilha). */
@@ -92,6 +94,9 @@ export interface Projeto {
   operacional: DadosOperacionais | null;
   pendencias: string[]; // problemas de dado deste projeto, em português simples
   origem: { aba: string; linha: number };
+  /** Onde fica a obra (ponto ou ruas e trechos). Ausente = o mapa usa o centro do bairro. */
+  localizacao?: Localizacao | null;
+  fotos?: Foto[];
 }
 
 export interface FonteCarteira {

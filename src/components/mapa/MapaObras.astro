@@ -1,0 +1,217 @@
+---
+import '../../styles/mapa.css';
+import { reaisAbreviado } from '../../lib/gestao/painel.ts';
+import type { ObraBasica, ObraMapa } from '../../lib/mapa/obras.ts';
+
+interface Props {
+  obras: ObraMapa[];
+  semLocal: number;
+  /** Projetos sem localização (dados mínimos): só aparecem se houver localização simulada na sessão do navegador. */
+  semLocalLista?: ObraBasica[];
+  altura?: string;
+  id?: string;
+}
+const { obras, semLocal, semLocalLista = [], altura = 'min(70vh, 640px)', id = 'mapa-obras' } = Astro.props;
+const comTexto = <T extends ObraBasica>(o: T): T & { valorTxt: string | null } => ({ ...o, valorTxt: o.valor === null ? null : reaisAbreviado(o.valor) });
+const dados = JSON.stringify({ obras: obras.map(comTexto), semLocalLista: semLocalLista.map(comTexto), semLocal }).replaceAll('<', '\\u003c');
+---
+<div class="mp-secao" data-mapa-obras={id} id={id}>
+  <div class="mp-cab">
+    <h2 id={`${id}-titulo`}>Mapa das obras</h2>
+    <a class="mp-link" href="/plataforma/projetos-localizacao/">Cadastrar localização</a>
+  </div>
+  <p class="mp-contagem" role="status" aria-live="polite" data-mp-contagem></p>
+
+  <div class="mp-filtros">
+    <fieldset class="mp-grupo" data-mp-situacoes>
+      <legend>Situação</legend>
+    </fieldset>
+    <fieldset class="mp-grupo" data-mp-categorias>
+      <legend>Tipo de obra</legend>
+    </fieldset>
+    <div class="mp-acoes">
+      <button type="button" class="mp-btn" data-mp-centralizar>Centralizar Goiânia</button>
+      <button type="button" class="mp-btn" data-mp-tela-cheia hidden>Tela cheia</button>
+    </div>
+  </div>
+
+  <div class="mp-mapa" data-mp-mapa role="region" aria-label="Mapa das obras de Goiânia" style={`height:${altura}`}></div>
+
+  <ul class="mp-legenda" aria-label="Legenda dos tipos de obra" data-mp-legenda></ul>
+  <p class="mp-nota">Ícone com borda tracejada = local aproximado (centro do bairro). Toque ou clique em um ícone ou em uma rua destacada para ver o resumo.</p>
+
+  <details class="mp-lista">
+    <summary>Ver as obras em lista</summary>
+    <div class="table-wrap">
+      <table>
+        <caption class="mp-nota" data-mp-lista-legenda>Obras visíveis com os filtros escolhidos</caption>
+        <thead><tr><th scope="col">Obra</th><th scope="col">Órgão</th><th scope="col">Situação</th><th scope="col">Categoria</th><th scope="col">Local</th></tr></thead>
+        <tbody data-mp-lista-corpo></tbody>
+      </table>
+    </div>
+  </details>
+  <script is:inline type="application/json" data-mp-dados set:html={dados}></script>
+</div>
+
+<script>
+import * as L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { GOIANIA, ROTULO_CATEGORIA, ROTULO_SITUACAO_MAPA, type SituacaoMapa } from '../../lib/mapa/geo.ts';
+import { COR_CATEGORIA, elementoGlifo } from '../../lib/mapa/icones.ts';
+import type { ObraBasica, ObraMapa } from '../../lib/mapa/obras.ts';
+import { lerLocalizacoesSimuladas } from '../../lib/mapa/simulacao.ts';
+import type { CategoriaObra } from '../../lib/mapa/tipos.ts';
+
+type ObraVista = ObraMapa & { valorTxt: string | null; simulada?: boolean };
+type SemLocalVista = ObraBasica & { valorTxt: string | null };
+interface Dados { obras: ObraVista[]; semLocalLista: SemLocalVista[]; semLocal: number }
+
+const SITUACOES = Object.keys(ROTULO_SITUACAO_MAPA) as SituacaoMapa[];
+const CATEGORIAS = Object.keys(ROTULO_CATEGORIA) as CategoriaObra[];
+
+function el<K extends keyof HTMLElementTagNameMap>(tag: K, texto?: string, classe?: string): HTMLElementTagNameMap[K] {
+  const e = document.createElement(tag);
+  if (texto !== undefined) e.textContent = texto;
+  if (classe) e.className = classe;
+  return e;
+}
+const dataBr = (iso: string): string => iso.slice(0, 10).split('-').reverse().join('/');
+
+function marcador(cat: CategoriaObra, aprox: boolean): HTMLElement {
+  const d = el('div', undefined, `mp-marcador${aprox ? ' mp-aprox' : ''}`);
+  d.style.setProperty('--c', COR_CATEGORIA[cat]);
+  d.append(elementoGlifo(cat));
+  return d;
+}
+
+function localTexto(o: ObraVista): string {
+  const l = o.localizacao;
+  if (o.precisao === 'bairro') return `Aproximado: centro do bairro ${o.bairro ?? ''}`.trim();
+  if (l.tipo === 'ponto') return l.endereco ? `Ponto: ${l.endereco}` : 'Ponto marcado no mapa';
+  const ruas = l.trechos.map((t) => t.rua).join(', ');
+  return `${l.trechos.length} ${l.trechos.length === 1 ? 'trecho' : 'trechos'}: ${ruas}`;
+}
+
+function resumo(o: ObraVista): HTMLElement {
+  const r = el('div', undefined, 'mp-res');
+  if (o.foto) {
+    const img = el('img');
+    img.src = o.foto;
+    img.alt = `Foto da obra: ${o.nome}`;
+    img.loading = 'lazy';
+    r.append(img);
+  }
+  r.append(el('strong', o.nome));
+  if (o.simulada) r.append(el('span', 'simulação', 'mp-selo'));
+  r.append(el('p', `${o.orgao ?? 'Sem órgão'} · ${ROTULO_SITUACAO_MAPA[o.situacao]}`));
+  r.append(el('p', `Valor: ${o.valorTxt ?? '—'}`));
+  if (o.percentual !== null) r.append(el('p', `Execução: ${Math.round(o.percentual).toLocaleString('pt-BR')}%`));
+  if (o.prazo) r.append(el('p', `Prazo da etapa: ${dataBr(o.prazo)}`));
+  r.append(el('p', `● ${o.farol.texto}`));
+  if (o.precisao === 'bairro') r.append(el('p', `Local aproximado (centro do bairro ${o.bairro ?? ''})`, 'mp-aviso-local'));
+  const links = el('div', undefined, 'mp-links');
+  const ficha = el('a', 'Abrir a ficha');
+  ficha.href = `/plataforma/projetos-carteira/?q=${encodeURIComponent(o.id)}`;
+  const editar = el('a', 'Editar localização');
+  editar.href = `/plataforma/projetos-localizacao/?id=${encodeURIComponent(o.id)}`;
+  links.append(ficha, editar);
+  r.append(links);
+  return r;
+}
+
+document.addEventListener('astro:page-load', () => {
+  const raiz = document.querySelector<HTMLElement>('[data-mapa-obras]');
+  if (!raiz || raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  let dados: Dados;
+  try {
+    dados = JSON.parse(raiz.querySelector('[data-mp-dados]')?.textContent || '{}');
+  } catch {
+    dados = { obras: [], semLocalLista: [], semLocal: 0 };
+  }
+  dados = { obras: dados.obras ?? [], semLocalLista: dados.semLocalLista ?? [], semLocal: dados.semLocal ?? 0 };
+  const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+
+  // Localização simulada (sessionStorage) substitui a da obra; obras sem local mas com simulação passam a aparecer.
+  const sim = lerLocalizacoesSimuladas();
+  const todas: ObraVista[] = dados.obras.map((o) => (sim[o.id] ? { ...o, localizacao: sim[o.id], precisao: 'cadastrada' as const, simulada: true } : o));
+  let semLocal = dados.semLocal;
+  for (const o of dados.semLocalLista) {
+    if (sim[o.id]) {
+      todas.push({ ...o, localizacao: sim[o.id], precisao: 'cadastrada', simulada: true });
+      semLocal--;
+    }
+  }
+
+  const situacoes = new Set<SituacaoMapa>(['execucao', 'mobilizacao']);
+  const categorias = new Set<CategoriaObra>(CATEGORIAS);
+
+  const mapa = L.map(q('[data-mp-mapa]'), { zoomControl: true, tap: true, minZoom: 10, maxZoom: 18 }).setView([GOIANIA.centro.lat, GOIANIA.centro.lng], 12);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© colaboradores do OpenStreetMap', maxZoom: 18 }).addTo(mapa);
+  const camada = L.layerGroup().addTo(mapa);
+
+  const contagem = q('[data-mp-contagem]');
+  const corpo = q('[data-mp-lista-corpo]');
+
+  function chip(pai: HTMLElement, texto: string, ativo: boolean, aoAlternar: (ligado: boolean) => void): void {
+    const b = el('button', texto, 'mp-chip');
+    b.type = 'button';
+    b.setAttribute('aria-pressed', String(ativo));
+    b.addEventListener('click', () => {
+      const ligado = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(ligado));
+      aoAlternar(ligado);
+      desenhar();
+    });
+    pai.append(b);
+  }
+  for (const s of SITUACOES) chip(q('[data-mp-situacoes]'), ROTULO_SITUACAO_MAPA[s], situacoes.has(s), (l) => (l ? situacoes.add(s) : situacoes.delete(s)));
+  for (const c of CATEGORIAS) chip(q('[data-mp-categorias]'), ROTULO_CATEGORIA[c], true, (l) => (l ? categorias.add(c) : categorias.delete(c)));
+
+  const legenda = q('[data-mp-legenda]');
+  for (const c of CATEGORIAS) {
+    const li = el('li');
+    const ic = marcador(c, false);
+    ic.className = 'mp-icone';
+    li.append(ic, el('span', ROTULO_CATEGORIA[c]));
+    legenda.append(li);
+  }
+
+  function desenhar(): void {
+    camada.clearLayers();
+    const vis = todas.filter((o) => situacoes.has(o.situacao) && categorias.has(o.categoria));
+    for (const o of vis) {
+      const cor = COR_CATEGORIA[o.categoria];
+      const l = o.localizacao;
+      if (l.tipo === 'ponto') {
+        const icone = L.divIcon({ html: marcador(o.categoria, o.precisao === 'bairro'), className: 'mp-marcador-caixa', iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18] });
+        L.marker([l.ponto.lat, l.ponto.lng], { icon: icone, title: o.nome, alt: o.nome, riseOnHover: true }).bindPopup(() => resumo(o), { maxWidth: 300 }).addTo(camada);
+      } else {
+        for (const t of l.trechos) {
+          L.polyline(t.linha.map((p): [number, number] => [p.lat, p.lng]), { color: cor, weight: 7, opacity: 0.85 }).bindPopup(() => resumo(o), { maxWidth: 300 }).addTo(camada);
+        }
+      }
+    }
+    contagem.textContent = `${vis.length} ${vis.length === 1 ? 'obra' : 'obras'} no mapa · ${semLocal} sem localização`;
+    corpo.replaceChildren();
+    for (const o of vis) {
+      const tr = el('tr');
+      tr.append(el('td', o.nome), el('td', o.orgao ?? '—'), el('td', ROTULO_SITUACAO_MAPA[o.situacao]), el('td', ROTULO_CATEGORIA[o.categoria]), el('td', localTexto(o)));
+      corpo.append(tr);
+    }
+  }
+
+  q('[data-mp-centralizar]').addEventListener('click', () => mapa.setView([GOIANIA.centro.lat, GOIANIA.centro.lng], 12));
+  const cheia = q<HTMLButtonElement>('[data-mp-tela-cheia]');
+  if (document.fullscreenEnabled) {
+    cheia.hidden = false;
+    cheia.addEventListener('click', () => {
+      if (document.fullscreenElement) void document.exitFullscreen();
+      else void raiz.requestFullscreen();
+    });
+    document.addEventListener('fullscreenchange', () => setTimeout(() => mapa.invalidateSize(), 100));
+  }
+
+  desenhar();
+});
+</script>

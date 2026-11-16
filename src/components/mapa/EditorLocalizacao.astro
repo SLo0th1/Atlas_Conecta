@@ -1,0 +1,367 @@
+---
+import '../../styles/mapa.css';
+import type { Localizacao, PontoGeo } from '../../lib/mapa/tipos.ts';
+
+interface Props {
+  /** Prefixo dos ids (único na página). */
+  idPrefixo: string;
+  inicial?: Localizacao | null;
+  /** Nomes de bairros com coordenada encontrada (para "Ir para o bairro"). */
+  bairros: string[];
+  /** Nome do bairro → centro. */
+  geo: Record<string, PontoGeo>;
+}
+const { idPrefixo: p, inicial = null, bairros, geo } = Astro.props;
+const dados = JSON.stringify({ inicial, geo }).replaceAll('<', '\\u003c');
+---
+<div class="mp-ed" data-editor-loc id={p}>
+  <fieldset>
+    <legend>Tipo de localização</legend>
+    <label class="mp-opcao" for={`${p}-tipo-ponto`}>
+      <input type="radio" name={`${p}-tipo`} id={`${p}-tipo-ponto`} value="ponto" checked />
+      Um ponto (ex.: reforma de uma unidade de saúde)
+    </label>
+    <label class="mp-opcao" for={`${p}-tipo-trechos`}>
+      <input type="radio" name={`${p}-tipo`} id={`${p}-tipo-trechos`} value="trechos" />
+      Ruas e trechos (ex.: recapeamento)
+    </label>
+  </fieldset>
+
+  <div class="mp-ed-linha">
+    <label for={`${p}-bairro`}>Ir para o bairro
+      <select id={`${p}-bairro`} data-ed-bairro>
+        <option value="">Escolha um bairro</option>
+        {bairros.map((b) => <option value={b}>{b}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <div class="mp-ed-mapa" data-ed-mapa role="region" aria-label="Mapa para marcar a localização"></div>
+  <p class="mp-nota" data-ed-dica></p>
+
+  <div class="mp-ed-linha" data-ed-ponto>
+    <label for={`${p}-lat`}>Latitude
+      <input id={`${p}-lat`} data-ed-lat type="text" inputmode="decimal" autocomplete="off" />
+    </label>
+    <label for={`${p}-lng`}>Longitude
+      <input id={`${p}-lng`} data-ed-lng type="text" inputmode="decimal" autocomplete="off" />
+    </label>
+    <label for={`${p}-endereco`}>Endereço ou referência (opcional)
+      <input id={`${p}-endereco`} data-ed-endereco type="text" maxlength="200" autocomplete="off" />
+    </label>
+  </div>
+
+  <div data-ed-trechos hidden>
+    <ul class="mp-trechos" data-ed-lista></ul>
+    <p><button type="button" class="mp-btn" data-ed-adicionar>Adicionar outro trecho</button></p>
+  </div>
+
+  <div class="mp-erros" role="alert" data-ed-erros hidden></div>
+  <script is:inline type="application/json" data-ed-dados set:html={dados}></script>
+</div>
+
+<script>
+import * as L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { GOIANIA, validarLocalizacao } from '../../lib/mapa/geo.ts';
+import { COR_CATEGORIA, elementoGlifo } from '../../lib/mapa/icones.ts';
+import type { Localizacao, PontoGeo, Trecho } from '../../lib/mapa/tipos.ts';
+
+const MAX_TRECHOS = 20;
+const MAX_PONTOS = 200;
+const arred = (n: number): number => Math.round(n * 1e5) / 1e5;
+const num = (t: string): number | null => {
+  const v = t.trim().replace(',', '.');
+  if (!v || !/^-?\d+(\.\d+)?$/.test(v)) return null;
+  return Number(v);
+};
+function el<K extends keyof HTMLElementTagNameMap>(tag: K, texto?: string, classe?: string): HTMLElementTagNameMap[K] {
+  const e = document.createElement(tag);
+  if (texto !== undefined) e.textContent = texto;
+  if (classe) e.className = classe;
+  return e;
+}
+
+function iniciar(raiz: HTMLElement): void {
+  if (raiz.dataset.pronto) return;
+  raiz.dataset.pronto = 'sim';
+  const p = raiz.id;
+  let dados: { inicial: Localizacao | null; geo: Record<string, PontoGeo> };
+  try {
+    dados = JSON.parse(raiz.querySelector('[data-ed-dados]')?.textContent || '{}');
+  } catch {
+    dados = { inicial: null, geo: {} };
+  }
+  const geo = dados.geo ?? {};
+  const q = <T extends HTMLElement>(s: string) => raiz.querySelector<T>(s)!;
+  const radios = raiz.querySelectorAll<HTMLInputElement>(`input[name="${p}-tipo"]`);
+  const secPonto = q('[data-ed-ponto]');
+  const secTrechos = q('[data-ed-trechos]');
+  const lista = q('[data-ed-lista]');
+  const dica = q('[data-ed-dica]');
+  const campoLat = q<HTMLInputElement>('[data-ed-lat]');
+  const campoLng = q<HTMLInputElement>('[data-ed-lng]');
+  const campoEnd = q<HTMLInputElement>('[data-ed-endereco]');
+  const caixaErros = q('[data-ed-erros]');
+
+  // ——— estado
+  let tipo: 'ponto' | 'trechos' = 'ponto';
+  let ponto: PontoGeo | null = null;
+  let endereco = '';
+  let trechos: Trecho[] = [];
+  let ativo = -1; // trecho que recebe os toques (desenhando)
+
+  const mapa = L.map(q('[data-ed-mapa]'), { zoomControl: true, tap: true, minZoom: 10, maxZoom: 18 }).setView([GOIANIA.centro.lat, GOIANIA.centro.lng], 12);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© colaboradores do OpenStreetMap', maxZoom: 18 }).addTo(mapa);
+  const camada = L.layerGroup().addTo(mapa);
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => mapa.invalidateSize()).observe(q('[data-ed-mapa]'));
+
+  function icone(): L.DivIcon {
+    const d = el('div', undefined, 'mp-marcador');
+    d.style.setProperty('--c', COR_CATEGORIA.edificacao);
+    d.append(elementoGlifo('edificacao'));
+    return L.divIcon({ html: d, className: 'mp-marcador-caixa', iconSize: [36, 36], iconAnchor: [18, 18] });
+  }
+
+  function montar(): Localizacao | null {
+    if (tipo === 'ponto') return ponto ? { tipo: 'ponto', ponto: { ...ponto }, endereco: endereco.trim() ? endereco.trim() : null } : null;
+    const usados = trechos.filter((t) => t.rua.trim() || t.de?.trim() || t.ate?.trim() || t.linha.length > 0);
+    if (usados.length === 0) return null;
+    return {
+      tipo: 'trechos',
+      trechos: usados.map((t) => ({ rua: t.rua.trim(), de: t.de?.trim() ? t.de.trim() : null, ate: t.ate?.trim() ? t.ate.trim() : null, linha: t.linha.map((x) => ({ ...x })) })),
+    };
+  }
+
+  function emitir(): void {
+    const v = montar();
+    raiz.dataset.valor = v ? JSON.stringify(v) : '';
+    raiz.dispatchEvent(new CustomEvent('localizacao-mudou', { detail: v, bubbles: true }));
+  }
+
+  function mostrarErros(erros: string[]): void {
+    caixaErros.replaceChildren();
+    if (erros.length === 0) {
+      caixaErros.hidden = true;
+      return;
+    }
+    caixaErros.append(el('p', `Corrija ${erros.length === 1 ? 'este ponto' : 'estes pontos'} na localização:`));
+    const ul = el('ul');
+    for (const e of erros) ul.append(el('li', e));
+    caixaErros.append(ul);
+    caixaErros.hidden = false;
+  }
+
+  function desenhar(): void {
+    camada.clearLayers();
+    if (tipo === 'ponto') {
+      if (ponto) {
+        const m = L.marker([ponto.lat, ponto.lng], { icon: icone(), draggable: true, title: 'Local da obra (arraste para mover)', alt: 'Local da obra' }).addTo(camada);
+        m.on('dragend', () => {
+          const c = m.getLatLng();
+          ponto = { lat: arred(c.lat), lng: arred(c.lng) };
+          escreverCampos();
+          emitir();
+        });
+      }
+      return;
+    }
+    trechos.forEach((t, i) => {
+      const eAtivo = i === ativo;
+      if (t.linha.length >= 2) L.polyline(t.linha.map((x): [number, number] => [x.lat, x.lng]), { color: eAtivo ? COR_CATEGORIA.via : COR_CATEGORIA.edificacao, weight: eAtivo ? 9 : 5, opacity: 0.85 }).addTo(camada);
+      if (eAtivo) for (const x of t.linha) L.circleMarker([x.lat, x.lng], { radius: 5, color: '#fff', weight: 2, fillColor: COR_CATEGORIA.via, fillOpacity: 1 }).addTo(camada);
+    });
+  }
+
+  function escreverCampos(): void {
+    campoLat.value = ponto ? ponto.lat.toFixed(5) : '';
+    campoLng.value = ponto ? ponto.lng.toFixed(5) : '';
+  }
+
+  function textoDica(): void {
+    dica.textContent = tipo === 'ponto'
+      ? 'Toque ou clique no mapa para colocar o ponto; arraste o ícone para ajustar. Também é possível digitar latitude e longitude.'
+      : ativo >= 0
+        ? `Desenhando o trecho ${ativo + 1}: cada toque no mapa acrescenta um ponto à linha, na ordem em que a rua segue.`
+        : 'Escolha "Desenhar no mapa" em um trecho e toque no mapa ao longo da rua, do começo ao fim do trecho.';
+  }
+
+  function contadorPontos(i: number): string {
+    const n = trechos[i].linha.length;
+    return `${n} ${n === 1 ? 'ponto' : 'pontos'}`;
+  }
+
+  function renderLista(): void {
+    lista.replaceChildren();
+    trechos.forEach((t, i) => {
+      const n = i + 1;
+      const li = el('li', undefined, 'mp-trecho');
+      li.dataset.ativo = String(i === ativo);
+      li.append(el('h3', `Trecho ${n}`));
+      const campo = (rotulo: string, chave: 'rua' | 'de' | 'ate', max: number, dicaTexto?: string): HTMLLabelElement => {
+        const l = el('label', rotulo);
+        l.htmlFor = `${p}-t${n}-${chave}`;
+        const inp = el('input');
+        inp.id = `${p}-t${n}-${chave}`;
+        inp.type = 'text';
+        inp.maxLength = max;
+        inp.autocomplete = 'off';
+        if (dicaTexto) inp.placeholder = dicaTexto;
+        if (chave === 'rua') inp.setAttribute('aria-required', 'true');
+        inp.value = (t[chave] as string | null) ?? '';
+        inp.addEventListener('input', () => {
+          t[chave] = inp.value as never;
+          emitir();
+        });
+        l.append(inp);
+        return l;
+      };
+      const linha = el('div', undefined, 'mp-ed-linha');
+      linha.append(campo('Rua (obrigatório)', 'rua', 120), campo('De (opcional)', 'de', 120, 'Ex.: Rua 10'), campo('Até (opcional)', 'ate', 120, 'Ex.: Av. T-63'));
+      li.append(linha);
+      const pts = el('p', contadorPontos(i), 'mp-pontos');
+      pts.dataset.pts = String(i);
+      li.append(pts);
+      const botoes = el('div', undefined, 'mp-acoes');
+      const botao = (texto: string, aoClicar: () => void): HTMLButtonElement => {
+        const b = el('button', texto, 'mp-btn');
+        b.type = 'button';
+        b.setAttribute('aria-label', `${texto} (trecho ${n})`);
+        b.addEventListener('click', aoClicar);
+        botoes.append(b);
+        return b;
+      };
+      const desenhando = botao('Desenhar no mapa', () => {
+        ativo = i;
+        renderLista();
+        desenhar();
+        textoDica();
+      });
+      desenhando.setAttribute('aria-pressed', String(i === ativo));
+      botao('Desfazer último ponto', () => {
+        t.linha.pop();
+        atualizarContador(i);
+        desenhar();
+        emitir();
+      });
+      botao('Limpar linha', () => {
+        t.linha = [];
+        atualizarContador(i);
+        desenhar();
+        emitir();
+      });
+      botao('Remover trecho', () => {
+        trechos.splice(i, 1);
+        if (ativo === i) ativo = -1;
+        else if (ativo > i) ativo -= 1;
+        renderLista();
+        desenhar();
+        textoDica();
+        emitir();
+      });
+      li.append(botoes);
+      lista.append(li);
+    });
+    (q<HTMLButtonElement>('[data-ed-adicionar]')).disabled = trechos.length >= MAX_TRECHOS;
+  }
+  function atualizarContador(i: number): void {
+    const alvo = lista.querySelector<HTMLElement>(`[data-pts="${i}"]`);
+    if (alvo) alvo.textContent = contadorPontos(i);
+  }
+
+  function adicionarTrecho(): void {
+    trechos.push({ rua: '', de: null, ate: null, linha: [] });
+    ativo = trechos.length - 1;
+    renderLista();
+    desenhar();
+    textoDica();
+    emitir();
+  }
+
+  function mostrarTipo(): void {
+    secPonto.hidden = tipo !== 'ponto';
+    secTrechos.hidden = tipo !== 'trechos';
+    if (tipo === 'trechos' && trechos.length === 0) {
+      trechos.push({ rua: '', de: null, ate: null, linha: [] });
+      renderLista();
+    }
+    desenhar();
+    textoDica();
+  }
+
+  function aplicar(v: Localizacao | null): void {
+    ponto = null;
+    endereco = '';
+    trechos = [];
+    ativo = -1;
+    tipo = 'ponto';
+    if (v?.tipo === 'ponto') {
+      ponto = { ...v.ponto };
+      endereco = v.endereco ?? '';
+    } else if (v?.tipo === 'trechos') {
+      tipo = 'trechos';
+      trechos = v.trechos.map((t) => ({ rua: t.rua, de: t.de, ate: t.ate, linha: t.linha.map((x) => ({ ...x })) }));
+    }
+    radios.forEach((r) => { r.checked = r.value === tipo; });
+    campoEnd.value = endereco;
+    escreverCampos();
+    renderLista();
+    mostrarTipo();
+    mostrarErros([]);
+    if (tipo === 'ponto' && ponto) mapa.setView([ponto.lat, ponto.lng], 16);
+    else if (tipo === 'trechos') {
+      const todos = trechos.flatMap((t) => t.linha).map((x): [number, number] => [x.lat, x.lng]);
+      if (todos.length) mapa.fitBounds(L.latLngBounds(todos), { maxZoom: 17, padding: [20, 20] });
+    } else mapa.setView([GOIANIA.centro.lat, GOIANIA.centro.lng], 12);
+    emitir();
+  }
+
+  // ——— interações
+  mapa.on('click', (e: L.LeafletMouseEvent) => {
+    const novo = { lat: arred(e.latlng.lat), lng: arred(e.latlng.lng) };
+    if (tipo === 'ponto') {
+      ponto = novo;
+      escreverCampos();
+    } else if (ativo >= 0 && trechos[ativo]) {
+      if (trechos[ativo].linha.length >= MAX_PONTOS) {
+        mostrarErros([`O trecho ${ativo + 1} já tem ${MAX_PONTOS} pontos (o máximo).`]);
+        return;
+      }
+      trechos[ativo].linha.push(novo);
+      atualizarContador(ativo);
+    } else return;
+    desenhar();
+    emitir();
+  });
+  radios.forEach((r) => r.addEventListener('change', () => {
+    if (!r.checked) return;
+    tipo = r.value === 'trechos' ? 'trechos' : 'ponto';
+    mostrarTipo();
+    emitir();
+  }));
+  const lerCampos = (): void => {
+    const lat = num(campoLat.value);
+    const lng = num(campoLng.value);
+    ponto = lat !== null && lng !== null ? { lat: arred(lat), lng: arred(lng) } : null;
+    if (ponto && validarLocalizacao({ tipo: 'ponto', ponto, endereco: null }).length === 0) mapa.panTo([ponto.lat, ponto.lng]);
+    desenhar();
+    emitir();
+  };
+  campoLat.addEventListener('input', lerCampos);
+  campoLng.addEventListener('input', lerCampos);
+  campoEnd.addEventListener('input', () => { endereco = campoEnd.value; emitir(); });
+  q('[data-ed-adicionar]').addEventListener('click', adicionarTrecho);
+  q<HTMLSelectElement>('[data-ed-bairro]').addEventListener('change', (e) => {
+    const c = geo[(e.target as HTMLSelectElement).value];
+    if (c) mapa.setView([c.lat, c.lng], 15);
+  });
+  raiz.addEventListener('localizacao-definir', (e) => aplicar((e as CustomEvent<Localizacao | null>).detail ?? null));
+  raiz.addEventListener('localizacao-erros', (e) => mostrarErros((e as CustomEvent<string[]>).detail ?? []));
+
+  aplicar(dados.inicial ?? null);
+}
+
+document.addEventListener('astro:page-load', () => {
+  document.querySelectorAll<HTMLElement>('[data-editor-loc]').forEach(iniciar);
+});
+</script>
