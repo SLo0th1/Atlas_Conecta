@@ -36,6 +36,78 @@ São módulos independentes que conversam entre si:
 - O MVP não usa IA. A IA fica para a Fase 5, sempre com revisão humana.
 - **Requisito mínimo:** as transcrições dos áudios do dono, a reunião com a equipe e as planilhas-base. Esses insumos ficam na pasta local `Doc Referencia/`, que **nunca** vai para o Git.
 - **Plano completo:** documento privado do dono, com fases, decisões, riscos e rastreabilidade. Peça o link ao dono. A seção "Andamento" do plano é atualizada a cada entrega.
+- **Este README é a fonte para dar continuidade.** Ele é atualizado em toda entrega: situação, funcionalidades, decisões e pendências. A regra está no [CLAUDE.md](CLAUDE.md).
+
+### 1.1 Problema, visão e princípios (dos áudios, da reunião e das planilhas)
+
+**Problema.** A carteira, com cerca de 400 projetos, vive em planilhas editadas à mão. Os cronogramas de cada obra ficam em abas separadas, e os painéis são montados manualmente toda semana. Ninguém responde de imediato:
+- onde o projeto está parado;
+- com quem;
+- há quantos dias;
+- quanto do orçamento não tem fonte.
+
+**Visão.** O GovNexa é a base única da carteira de projetos da prefeitura, do desejo do gestor à obra entregue. Ele substitui a planilha de obras prioritárias e conecta captação de recursos, contratação (Lei 14.133/2021) e o painel do prefeito.
+- Um projeto é cadastrado **uma vez**, e todas as telas são visões dele: carteira, Kanban, Gantt, cronograma, captação, licitação, painel e WhatsApp.
+- O sistema **calcula** status, prazos e alertas. A equipe só registra fatos: iniciou, concluiu, enviou, voltou.
+
+**Princípios** (valem para todo código novo):
+
+| Princípio | Na prática |
+| --- | --- |
+| Uma fonte da verdade | O projeto é único; os módulos se ligam a ele por referência |
+| Calcular, não digitar | Status, %, farol, entrega projetada, saldo sem fonte, atraso em cascata e economia saem de regras |
+| Dado ausente não é zero | Fica "—" e entra em pendências de dado; nunca se inventa data ou valor |
+| Toda espera tem dono | Etapa parada mostra quem deve o quê e desde quando |
+| Simples para quem usa | Fichas em texto, poucos cliques, sem rolagem lateral, funciona no celular; a equipe tem dificuldade com planilha e IA |
+| Origem preservada | Todo dado guarda fonte, data e o valor original importado; toda alteração vai para o histórico |
+| Qualquer caminho, mesma regra | O projeto anda ou volta pelo Kanban, pela ficha, pelas Pendências ou pelo SEI, sempre pelo mesmo motor e com o mesmo registro (pedido do dono, 15/11) |
+| Gestão leve | PMBOK para marcos, linha de base e caminho crítico; execução ágil em Kanban; sala de guerra no padrão PMI |
+| Nada fixo em Goiânia | Município, logo, feriados e metas vêm de configuração; cada prefeitura terá acesso e dados isolados |
+| Lei é teto, meta é menor | A prefeitura define metas internas menores que a Lei 14.133; passar do teto legal é alerta grave; o prazo-piso não se encurta |
+
+### 1.2 Como o produto chegou até aqui (histórico das decisões)
+
+1. **09 e 10/11/2026 — Atlas, bloco Captação.** O projeto começou como portal público (Atlas Goiânia Conecta) com o bloco **Captação**: coletores de dados públicos (Transferegov, CAUC, SICONFI, FNS, DOU, INEP, CNES, SINISA), alertas, comparativo entre capitais e parecer de elegibilidade sem IA. Tudo com dados públicos reais e rotinas diárias e mensais no GitHub.
+2. **15/11/2026 — virada para o GovNexa.** Os áudios do dono e a reunião com a equipe mudaram o foco: o problema central é **gerir a carteira de projetos**, não só captar recursos. Decisões:
+   - nome **GovNexa — Inteligência para a gestão pública**;
+   - **começar pelo módulo Projetos**, com a Carteira de Projetos substituindo a planilha como primeira entrega;
+   - módulos independentes e integrados: Projetos (núcleo), Captação (continua, e o parecer passa a referenciar Projetos), Licitações/Contratação (as guias antigas ficam e serão reavaliadas) e a guia **Gestão**, o painel do prefeito, que lê todos os módulos;
+   - PostgreSQL planejado, com o MVP em JSON até a produção;
+   - sem IA no MVP;
+   - o texto "Área do comprador" sai da página;
+   - nenhum nome de pessoa no repositório.
+3. **15/11 — Fases 0, 1, 1.5 e 2:**
+   - marca e menu por módulo;
+   - carteira importada da planilha (334 projetos);
+   - Kanban, Gantt e Visão por órgão;
+   - motor de movimentação e histórico;
+   - cronogramas do GEPP e Onde está parado;
+   - Reunião semanal e Sala de guerra;
+   - o **Fluxo do sistema**, que vira o mapa oficial e é atualizado a cada mudança.
+4. **15 e 16/11 — Fase 4 e início da 5:**
+   - Prazos da Lei 14.133 com metas internas;
+   - Painel do prefeito e Mapa das obras;
+   - Central de alertas;
+   - WhatsApp em simulação.
+   - O dono também decidiu publicar **temporariamente** a carga real da planilha no repositório, até existir o banco.
+5. **16/11 — SEI e licitações.**
+   - **Teste e reteste do link público do SEI:** abre sem captcha.
+   - **Regra do dono:** documento público é lido automaticamente; documento restrito entra por PDF; nunca contornar captcha.
+   - **Entregas:** Processos no SEI e Licitação em detalhe, em simulação.
+   - **Dependências entre etapas:** opção A, deduzidas pela ordem e pelas datas, a revisar com o cliente.
+   - **Pedidos de interface do dono:** Fluxo legível com zoom e menu com blocos fechados.
+
+### 1.3 Roteiro por fases
+
+| Fase | Objetivo | Portão de aceite |
+| --- | --- | --- |
+| 0 · Base e identidade | Marca, menu por módulos, município configurável | Plataforma com a marca e o menu novos |
+| 1 · Carteira de Projetos | Substituir a planilha: carteira, ficha, Kanban, Gantt, por órgão | Carga real conciliada com a planilha |
+| 1.5 · Cadastro e movimentação | Projeto nasce no cadastro e anda ou volta por qualquer caminho, com histórico | Gravar de verdade (precisa do banco) |
+| 2 · Cronograma e equipe | Cronogramas, quem está com cada tarefa, onde está parado, reunião semanal, SEI | Leitura diária do SEI (precisa do banco) |
+| 3 · Produção com banco | PostgreSQL, perfis por secretaria, isolamento por prefeitura | Simulações viram gravação real |
+| 4 · Contratação, convênios e Gestão | Lei 14.133 ponta a ponta, cláusula suspensiva, painel do prefeito, medições | PNCP e datas reais por licitação |
+| 5 · Integrações e inteligência | PNCP, SIMEC, SISMOB, SINAPI e GOINFRA, WhatsApp real, IA com revisão humana | Conta do WhatsApp Business; IA aprovada |
 
 ---
 
@@ -56,6 +128,7 @@ São módulos independentes que conversam entre si:
 
 | Data | O que | PR |
 | --- | --- | --- |
+| 16/11 | README completo (história, princípios, roteiro) e regra de manter o README sempre atualizado | #46, #47 |
 | 16/11 | Licitação em detalhe: fases da Lei 14.133 com as datas reais do SEI | #45 |
 | 16/11 | Fluxo: zoom e legenda recolhida | #44 |
 | 16/11 | Processos no SEI (leitor da página pública); caixas do Fluxo na raia; menu com blocos fechados | #43 |
@@ -301,7 +374,7 @@ As regras completas estão em [CLAUDE.md](CLAUDE.md). Resumo:
    - nunca contornar captcha;
    - revisar os 9 vetores de [docs/seguranca.md](docs/seguranca.md).
 8. **Simulação:** tudo que grava fica em `sessionStorage`, com validação ao ler, até existir o banco.
-9. **Registro:** toda entrega vai para [docs/CHANGELOG.md](docs/CHANGELOG.md).
+9. **Registro:** toda entrega vai para [docs/CHANGELOG.md](docs/CHANGELOG.md) **e atualiza este README** no mesmo PR: situação, funcionalidades, decisões e pendências (regra 4 do [CLAUDE.md](CLAUDE.md)).
 
 ### Armadilhas conhecidas
 
