@@ -6,10 +6,14 @@ import { carregarCarteira } from '../../lib/carteira/carga.ts';
 import { AVISO_SIMULACAO } from '../../lib/carteira/simulacao.ts';
 import { validarLocalizacao } from '../../lib/mapa/geo.ts';
 import { carregarGeoBairros } from '../../lib/mapa/obras.ts';
+import { obrasSemLocalizacao } from '../../lib/mapa/pendentes.ts';
 import type { PontoGeo } from '../../lib/mapa/tipos.ts';
 
-const projetos = carregarCarteira().projetos;
+const carteira = carregarCarteira();
+const projetos = carteira.projetos;
 const geoBairros = carregarGeoBairros();
+const pendentes = obrasSemLocalizacao(carteira, geoBairros);
+const totalPendentes = pendentes.semBairro.length + pendentes.bairroNaoEncontrado.reduce((s, g) => s + g.projetos.length, 0);
 const geo: Record<string, PontoGeo> = {};
 for (const [nome, g] of Object.entries(geoBairros.bairros)) if (g.encontrado && typeof g.lat === 'number' && typeof g.lng === 'number') geo[nome] = { lat: g.lat, lng: g.lng };
 const nomesBairros = Object.keys(geo).sort((a, b) => a.localeCompare(b, 'pt-BR'));
@@ -65,6 +69,30 @@ const dados = JSON.stringify({ projetos: lista }).replaceAll('<', '\\u003c');
       <p data-lp-sem-fotos>Nenhuma foto ainda.</p>
     </section>
   </div>
+  <details class="mp-pendentes" data-lp-pendentes>
+    <summary>Obras que ainda não aparecem no mapa ({totalPendentes})</summary>
+    {totalPendentes === 0 ? <p>Todas as obras já têm localização no mapa.</p> : (
+      <div class="mp-pendentes-lista" tabindex="0" role="region" aria-label="Lista de obras sem localização no mapa">
+        {pendentes.bairroNaoEncontrado.length > 0 && (
+          <section aria-labelledby="lp-pend-bairro">
+            <h3 id="lp-pend-bairro">Bairro não encontrado no mapa</h3>
+            {pendentes.bairroNaoEncontrado.map((g) => (
+              <div>
+                <h4>{g.bairro}</h4>
+                <ul>{g.projetos.map((p) => <li><a href={`/plataforma/projetos-localizacao/?id=${encodeURIComponent(p.id)}`}>Cadastrar localização de {p.nome}</a></li>)}</ul>
+              </div>
+            ))}
+          </section>
+        )}
+        {pendentes.semBairro.length > 0 && (
+          <section aria-labelledby="lp-pend-sem">
+            <h3 id="lp-pend-sem">Sem bairro na planilha</h3>
+            <ul>{pendentes.semBairro.map((p) => <li><a href={`/plataforma/projetos-localizacao/?id=${encodeURIComponent(p.id)}`}>Cadastrar localização de {p.nome}</a></li>)}</ul>
+          </section>
+        )}
+      </div>
+    )}
+  </details>
   <script is:inline type="application/json" data-lp-dados set:html={dados}></script>
 </div>
 

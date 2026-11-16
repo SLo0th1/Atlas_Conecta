@@ -69,3 +69,10 @@
  .mp-grupo{align-items:flex-start}
 }
 @media print{.mp-filtros,.mp-acoes{display:none!important}}
+.mp-pendentes{margin-top:1.5rem;border:1px solid var(--line);border-radius:8px;padding:.7rem .9rem}
+.mp-pendentes summary{cursor:pointer;font-weight:600}
+.mp-pendentes-lista{max-height:360px;overflow-y:auto;margin-top:.6rem;padding:.25rem}
+.mp-pendentes-lista:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.mp-pendentes h3,.mp-pendentes h4{margin:.8rem 0 .3rem}
+.mp-pendentes ul{margin:0;padding-left:1.2rem;display:grid;gap:.3rem}
+.mp-pendentes li,.mp-pendentes a{overflow-wrap:anywhere}

@@ -1,6 +1,7 @@
 # Changelog
 
 ## GovNexa — WhatsApp da Gestão (simulação, Fase 5)
+- 2026-11-16: WhatsApp (simulação): modelos de mensagem para aprovação da Meta (3 modelos com validação das regras e botão Copiar texto); Projetos › Localização e fotos: lista das obras que ainda não aparecem no mapa (bairro não encontrado ou sem bairro), com link para cadastrar a localização.
 - 2026-11-15: guia Gestão › WhatsApp: números autorizados (cargo ou equipe, nunca nome de pessoa; número mascarado na lista), permissão por número (órgãos, só prioritários, valores, captação, projetos liberados à parte), relatório automático (semanal ou diário, modelo "Projetos prioritários" ou "Resumo curto") e prévia da conversa com perguntas por nome, código, SEI, atrasados, entregas, execução e convênios.
 - 2026-11-15: regra de segurança: a resposta é montada só com os projetos que a permissão libera (src/lib/whatsapp/permissoes.ts); projeto de fora recebe a mesma resposta de "não encontrado"; o responsável e as observações nunca entram na base do WhatsApp. Tudo em simulação (sessionStorage); envio real depende do banco e da conta oficial do WhatsApp Business.
 - 2026-11-15: build com nomes de arquivo só hexadecimais (a Vercel não servia `simulacao.mqF-P3E_.js` e o mapa ficava em branco).
