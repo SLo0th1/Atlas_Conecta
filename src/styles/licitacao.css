@@ -1,0 +1,45 @@
+/* Licitações › Licitação em detalhe (simulação). Prefixo ld-. Cores só pelas variáveis do tema; a situação vem sempre escrita. */
+.ld{display:grid;gap:1.25rem;min-width:0}
+.ld p,.ld ul,.ld ol{max-width:none}
+.ld-aviso{margin:0;padding:.85rem 1rem;border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;background:var(--surface);color:var(--text)}
+.ld-bloco{margin:0;padding:1.1rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);min-width:0}
+.ld-bloco h2{margin:0 0 .6rem;font-size:1.25rem}
+.ld-bloco h3{margin:1rem 0 .5rem;font-size:1.05rem}
+.ld-passos{margin:0 0 .8rem;padding-left:1.3rem;display:grid;gap:.3rem}
+.ld-soltar{display:grid;gap:.5rem;place-items:center;padding:1.2rem;border:2px dashed var(--line);border-radius:12px;text-align:center;cursor:pointer;color:var(--text)}
+.ld-soltar:focus-within,.ld-soltar-ativo{border-color:var(--accent)}
+.ld-soltar input{max-width:100%}
+.ld-erro{margin:.6rem 0 0;font-weight:600;color:var(--text)}
+.ld-erro:empty,.ld-status:empty{display:none}
+.ld-status{margin:.6rem 0 0}
+.ld-escolha{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;align-items:end;margin-top:.8rem}
+.ld-escolha label{display:grid;gap:.3rem;min-width:0}
+.ld-escolha select{min-width:0;max-width:100%}
+.ld-acoes{display:flex;gap:.6rem}
+.ld-cab h2{margin:0 0 .2rem;overflow-wrap:anywhere}
+.ld-sub{margin:0 0 .2rem;color:var(--muted);overflow-wrap:anywhere}
+.ld-sub a{color:var(--text)}
+.ld-numeros{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem;margin:.8rem 0 0;padding:0;list-style:none}
+.ld-numeros li{display:grid;gap:.15rem;padding:.6rem .75rem;border:1px solid var(--line);border-radius:10px;background:var(--soft);min-width:0;overflow-wrap:anywhere}
+.ld-numeros span{color:var(--muted);font-size:.9rem}
+.ld-alerta{margin:.8rem 0 0;padding:.75rem 1rem;border:1px solid var(--line);border-left:5px solid var(--danger,var(--accent));border-radius:10px}
+.ld-dur{font-weight:400;color:var(--muted)}
+.ld-fases{list-style:none;margin:0;padding:0;display:grid;gap:.45rem;border-left:3px solid var(--line);padding-left:.9rem}
+.ld-fase{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.15rem .6rem;align-items:baseline;min-width:0}
+.ld-fase-nome{font-weight:600;overflow-wrap:anywhere}
+.ld-fase-det{grid-column:2;color:var(--muted);font-size:.9rem;overflow-wrap:anywhere}
+.ld-selo{display:inline-block;min-width:6.5rem;padding:.1rem .5rem;border:1px solid var(--line);border-radius:999px;font-size:.8rem;font-weight:600;text-align:center;color:var(--text);background:var(--surface)}
+.ld-fase-feita .ld-selo,.ld-prazo-ok .ld-selo{border-color:var(--ok,var(--line));border-width:2px}
+.ld-fase-atual .ld-selo,.ld-prazo-alerta .ld-selo{border-color:var(--accent);border-width:2px}
+.ld-fase-atual .ld-fase-nome{text-decoration:underline;text-underline-offset:3px}
+.ld-fase-pendente .ld-selo,.ld-fase-sem_documento .ld-selo{border-style:dashed}
+.ld-conferir{font-weight:400;color:var(--muted)}
+.ld-prazos ul{list-style:none;margin:0;padding:0;display:grid;gap:.5rem}
+.ld-prazo{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.6rem;align-items:baseline;overflow-wrap:anywhere}
+kbd{padding:0 .3rem;border:1px solid var(--line);border-radius:4px;font-size:.85em}
+@media (max-width:600px){
+  .ld-fase,.ld-prazo{grid-template-columns:1fr}
+  .ld-fase-det{grid-column:1}
+  .ld-selo{justify-self:start}
+}
+.ld-linha,.ld-prazos{margin:1.2rem 0 0;padding:0;border:0;background:none;min-height:0}

@@ -1,0 +1,250 @@
+---
+// Licitações › Licitação em detalhe (simulação). A pessoa salva a página pública do processo no SEI (Ctrl+S) e arrasta o
+// arquivo aqui: ele é lido SÓ no navegador. As fases da Lei 14.133 aparecem com as datas reais dos documentos.
+import '../../styles/licitacao.css';
+import { carregarCarteira } from '../../lib/carteira/carga.ts';
+import { lerPaginaProcesso } from '../../lib/sei/leitor.ts';
+import { paginaExemplo } from '../../lib/sei/exemplo.ts';
+import { PISOS_PUBLICIDADE, digitosProcesso } from '../../lib/licitacao/detalhe.ts';
+import { municipioAtivo } from '../../lib/municipio-ativo.ts';
+
+const exemplo = lerPaginaProcesso(paginaExemplo())!;
+const projetos = carregarCarteira()
+  .projetos.filter((p) => p.sei.length)
+  .map((p) => ({ id: p.id, nome: p.nome, sei: p.sei.map(digitosProcesso) }));
+const json = JSON.stringify({ exemplo, projetos, municipio: municipioAtivo().codigo_ibge }).replace(/</g, '\\u003c');
+---
+<div class="ld" data-ld>
+  <p class="ld-aviso" role="note"><strong>Modo simulação.</strong> O arquivo que você carregar é lido só neste navegador e não é enviado a lugar nenhum. As licitações ficam nesta aba até fechá-la. Com o banco de dados, o GovNexa vai reler o SEI sozinho, todo dia.</p>
+
+  <section class="ld-bloco" aria-labelledby="ld-trazer-t">
+    <h2 id="ld-trazer-t">Trazer uma licitação do SEI</h2>
+    <ol class="ld-passos">
+      <li>Abra o link público do processo no SEI (o mesmo da guia Projetos › Processos no SEI).</li>
+      <li>Aperte <kbd>Ctrl</kbd> + <kbd>S</kbd> e salve a página no computador.</li>
+      <li>Escolha o arquivo abaixo ou arraste-o para a área tracejada.</li>
+    </ol>
+    <label class="ld-soltar" data-ld-soltar>
+      <span>Arraste aqui o arquivo da página do processo (.html ou .mhtml) ou clique para escolher</span>
+      <input type="file" accept=".html,.htm,.mhtml,.mht,text/html" data-ld-arquivo />
+    </label>
+    <p class="ld-erro" role="alert" data-ld-erro></p>
+    <p class="ld-status" role="status" aria-live="polite" data-ld-status></p>
+    <div class="ld-escolha">
+      <label>Licitação mostrada
+        <select data-ld-lista></select>
+      </label>
+      <label>Tipo de objeto (prazo de publicidade)
+        <select data-ld-piso>
+          {PISOS_PUBLICIDADE.map((p) => <option value={p.id}>{p.rotulo}</option>)}
+        </select>
+      </label>
+      <div class="ld-acoes"><button type="button" data-ld-remover>Remover esta licitação</button></div>
+    </div>
+  </section>
+
+  <section class="ld-bloco" aria-label="Detalhe da licitação" data-ld-resultado>
+    <noscript><p>Esta tela precisa de JavaScript para ler o arquivo.</p></noscript>
+  </section>
+
+  <script type="application/json" data-ld-dados set:html={json}></script>
+</div>
+
+<script>
+import { htmlDoArquivo } from '../../lib/sei/arquivo.ts';
+import { lerPaginaProcesso } from '../../lib/sei/leitor.ts';
+import { montarLicitacao, digitosProcesso, type DetalheLicitacao, type Fase } from '../../lib/licitacao/detalhe.ts';
+import { copiaLimpa, guardarLicitacoes, lerLicitacoes, LIMITE_LICITACOES, processoValido } from '../../lib/licitacao/simulacao.ts';
+import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
+import type { ProcessoSei } from '../../lib/sei/tipos.ts';
+
+type Dados = { exemplo: ProcessoSei; projetos: { id: string; nome: string; sei: string[] }[]; municipio: number };
+
+const raiz = document.querySelector<HTMLElement>('[data-ld]');
+const fonte = raiz?.querySelector('[data-ld-dados]');
+if (raiz && fonte && !raiz.dataset.pronto) {
+  raiz.dataset.pronto = '1';
+  const dados = JSON.parse(fonte.textContent || '{}') as Dados;
+  const EXEMPLO = 'exemplo';
+  const lista = raiz.querySelector<HTMLSelectElement>('[data-ld-lista]')!;
+  const piso = raiz.querySelector<HTMLSelectElement>('[data-ld-piso]')!;
+  const erro = raiz.querySelector<HTMLElement>('[data-ld-erro]')!;
+  const status = raiz.querySelector<HTMLElement>('[data-ld-status]')!;
+  const resultado = raiz.querySelector<HTMLElement>('[data-ld-resultado]')!;
+  const entrada = raiz.querySelector<HTMLInputElement>('[data-ld-arquivo]')!;
+  const soltar = raiz.querySelector<HTMLElement>('[data-ld-soltar]')!;
+  const remover = raiz.querySelector<HTMLButtonElement>('[data-ld-remover]')!;
+  let carregadas: ProcessoSei[] = lerLicitacoes();
+
+  const br = (iso: string | null) => (iso ? iso.slice(0, 10).split('-').reverse().join('/') : '—');
+  const nDias = (n: number) => `${n} ${n === 1 ? 'dia' : 'dias'}`;
+  function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Record<string, string> = {}, ...filhos: (Node | string | null | false)[]): HTMLElementTagNameMap[K] {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(props)) k === 'class' ? (e.className = v) : e.setAttribute(k, v);
+    for (const f of filhos) if (f !== null && f !== false) e.append(f);
+    return e;
+  }
+
+  function preencherLista(selecionado: string) {
+    lista.replaceChildren(el('option', { value: EXEMPLO }, 'Exemplo fictício'));
+    carregadas.forEach((p, i) => lista.append(el('option', { value: String(i) }, `Processo ${p.numero ?? `sem número (${i + 1})`}`)));
+    lista.value = selecionado;
+    remover.disabled = lista.value === EXEMPLO;
+  }
+  const atual = (): ProcessoSei => (lista.value === EXEMPLO ? dados.exemplo : carregadas[Number(lista.value)] ?? dados.exemplo);
+
+  const ROTULO_SITUACAO: Record<Fase['situacao'], string> = { feita: 'Feita', sem_documento: 'Sem documento', atual: 'Fase atual', pendente: 'A fazer' };
+
+  function itemFase(f: Fase): HTMLLIElement {
+    const det: (string | Node)[] = [];
+    if (f.data) det.push(`em ${br(f.data)}`);
+    if (f.diasDesdeAnterior !== null) det.push(`${nDias(f.diasDesdeAnterior)} depois da etapa anterior`);
+    if (f.documento) det.push(`documento: ${f.documento}`);
+    if (f.publico === false) det.push('restrito: conteúdo por PDF');
+    if (f.situacao === 'sem_documento') det.push(f.def.opcional ? 'não se aplica ou sem documento no SEI' : 'sem documento desse tipo no SEI');
+    return el(
+      'li',
+      { class: `ld-fase ld-fase-${f.situacao}`, 'data-ld-fase': f.def.id },
+      el('span', { class: 'ld-selo' }, ROTULO_SITUACAO[f.situacao]),
+      el('span', { class: 'ld-fase-nome' }, f.def.rotulo, f.conferir ? el('span', { class: 'ld-conferir' }, ' (conferir)') : null),
+      det.length ? el('span', { class: 'ld-fase-det' }, det.join(' · ')) : null,
+    );
+  }
+
+  function desenhar() {
+    erro.textContent = '';
+    const p = atual();
+    const d: DetalheLicitacao = montarLicitacao(p, hojeEmBrasilia(), dados.municipio, piso.value);
+    const digitos = digitosProcesso(d.numero);
+    const projeto = digitos ? dados.projetos.find((x) => x.sei.includes(digitos)) : undefined;
+
+    const cab = el(
+      'div',
+      { class: 'ld-cab' },
+      el('h2', {}, `Processo ${d.numero ?? '—'}`),
+      el('p', { class: 'ld-sub' }, `${d.tipo ?? 'Tipo não informado'} · gerado em ${br(d.geradoEm)}${lista.value === EXEMPLO ? ' · exemplo fictício' : ''}`),
+      projeto
+        ? el('p', { class: 'ld-sub' }, 'Projeto da carteira: ', el('a', { href: `/plataforma/projetos-carteira/?q=${encodeURIComponent(projeto.id)}` }, projeto.nome))
+        : el('p', { class: 'ld-sub' }, 'Nenhum projeto da carteira tem esse número SEI.'),
+    );
+
+    const numeros = el(
+      'ul',
+      { class: 'ld-numeros' },
+      el('li', {}, el('strong', {}, d.faseAtual ? d.faseAtual.def.rotulo : 'Todas as fases com documento'), el('span', {}, 'próxima fase')),
+      d.onde ? el('li', {}, el('strong', {}, d.onde.unidade), el('span', {}, `onde está, há ${d.onde.dias === null ? '?' : nDias(d.onde.dias)}`)) : null,
+      d.duracao.total !== null ? el('li', {}, el('strong', {}, nDias(d.duracao.total)), el('span', {}, d.duracao.totalAteHoje ? 'desde a demanda, até hoje' : `da demanda ao contrato${d.duracao.conferir ? ' (conferir)' : ''}`)) : null,
+      el('li', {}, el('strong', {}, `${d.resumo.documentos} documentos`), el('span', {}, `${d.resumo.publicos} públicos, ${d.resumo.restritos} restritos`)),
+    );
+
+    const alerta = d.paralisacao ? el('p', { class: 'ld-alerta', role: 'note' }, el('strong', {}, 'Alerta: '), `termo de paralisação em ${br(d.paralisacao)} sem termo de reinício depois.`) : null;
+
+    const blocos = (['interna', 'externa'] as const).map((b) => {
+      const titulo = b === 'interna' ? 'Fase interna (planejamento)' : 'Fase externa (do edital ao início)';
+      const dur = b === 'interna' ? d.duracao.interna : d.duracao.externa;
+      return el(
+        'section',
+        { class: 'ld-linha', 'aria-label': titulo },
+        el('h3', {}, titulo, dur !== null ? el('span', { class: 'ld-dur' }, ` · ${nDias(dur)}`) : null),
+        el('ol', { class: 'ld-fases' }, ...d.fases.filter((f) => f.def.bloco === b).map(itemFase)),
+      );
+    });
+
+    const prazos = el(
+      'section',
+      { class: 'ld-prazos', 'aria-label': 'Prazos da Lei 14.133' },
+      el('h3', {}, 'Prazos da Lei 14.133'),
+      el(
+        'ul',
+        {},
+        ...d.prazos.map((c) =>
+          el(
+            'li',
+            { class: `ld-prazo ld-prazo-${c.situacao}`, 'data-ld-prazo': c.id },
+            el('span', { class: 'ld-selo' }, c.situacao === 'ok' ? 'Dentro do prazo' : c.situacao === 'alerta' ? 'Alerta' : 'Sem dado'),
+            el('span', {}, el('strong', {}, c.rotulo), ` ${c.texto}`),
+          ),
+        ),
+      ),
+    );
+
+    resultado.replaceChildren(cab, numeros, ...(alerta ? [alerta] : []), ...blocos, prazos);
+  }
+
+  async function carregar(arquivo: File) {
+    erro.textContent = '';
+    status.textContent = '';
+    if (arquivo.size > 8_000_000) {
+      erro.textContent = 'Arquivo grande demais para ser a página de um processo.';
+      return;
+    }
+    let p: ProcessoSei | null;
+    try {
+      const r = htmlDoArquivo(new Uint8Array(await arquivo.arrayBuffer()));
+      if (!r.ok) {
+        erro.textContent = r.erro;
+        return;
+      }
+      p = lerPaginaProcesso(r.html);
+    } catch {
+      erro.textContent = 'Não consegui ler esse arquivo. Salve de novo a página do processo e tente outra vez.';
+      return;
+    }
+    if (!p || !processoValido(p)) {
+      erro.textContent = 'O arquivo não traz a página de um processo do SEI (listas de documentos e andamentos). Confira se salvou a página do processo, e não a tela de pesquisa.';
+      return;
+    }
+    const limpo = copiaLimpa(p);
+    const i = carregadas.findIndex((x) => x.numero !== null && x.numero === limpo.numero);
+    if (i >= 0) carregadas[i] = limpo;
+    else {
+      if (carregadas.length >= LIMITE_LICITACOES) carregadas.shift();
+      carregadas.push(limpo);
+    }
+    const ok = guardarLicitacoes(carregadas);
+    const pos = carregadas.findIndex((x) => x === limpo);
+    preencherLista(String(pos));
+    status.textContent = `Processo ${limpo.numero ?? ''} carregado${ok ? ' (fica nesta aba)' : '; o navegador não deixou guardar, vale até recarregar'}.`;
+    desenhar();
+  }
+
+  entrada.addEventListener('change', () => {
+    const f = entrada.files?.[0];
+    if (f) void carregar(f);
+    entrada.value = '';
+  });
+  soltar.addEventListener('dragover', (ev) => {
+    ev.preventDefault();
+    soltar.classList.add('ld-soltar-ativo');
+  });
+  soltar.addEventListener('dragleave', () => soltar.classList.remove('ld-soltar-ativo'));
+  soltar.addEventListener('drop', (ev) => {
+    ev.preventDefault();
+    soltar.classList.remove('ld-soltar-ativo');
+    const f = ev.dataTransfer?.files?.[0];
+    if (f) void carregar(f);
+  });
+  // Arquivo solto fora da área não pode abrir no lugar da tela (perderia o que está carregado).
+  for (const tipo of ['dragover', 'drop'] as const)
+    window.addEventListener(tipo, (ev) => {
+      if (ev.dataTransfer?.types.includes('Files') && !soltar.contains(ev.target as Node)) ev.preventDefault();
+    });
+  lista.addEventListener('change', () => {
+    remover.disabled = lista.value === EXEMPLO;
+    desenhar();
+  });
+  piso.addEventListener('change', desenhar);
+  remover.addEventListener('click', () => {
+    if (lista.value === EXEMPLO) return;
+    const p = carregadas[Number(lista.value)];
+    carregadas = carregadas.filter((_, i) => String(i) !== lista.value);
+    guardarLicitacoes(carregadas);
+    preencherLista(carregadas.length ? String(carregadas.length - 1) : EXEMPLO);
+    status.textContent = `Processo ${p?.numero ?? ''} removido desta aba.`;
+    desenhar();
+  });
+
+  preencherLista(carregadas.length ? String(carregadas.length - 1) : EXEMPLO);
+  desenhar();
+}
+</script>

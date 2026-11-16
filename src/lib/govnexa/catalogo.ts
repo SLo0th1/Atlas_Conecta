@@ -167,6 +167,15 @@ export const NOVOS_MODULOS = [
     source: 'govnexa-sei',
   },
   {
+    slug: 'licitacoes-detalhe',
+    title: 'Licitação em detalhe',
+    group: 'Operação',
+    columns: [] as string[],
+    rows: [] as (string | number)[][],
+    fields: [] as string[],
+    source: 'govnexa-licitacao',
+  },
+  {
     slug: 'licitacoes-prazos',
     title: 'Prazos da Lei 14.133',
     group: 'Prazos',
