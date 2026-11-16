@@ -23,6 +23,8 @@ O sistema está no ar com os dados reais da planilha (334 projetos e 13 cronogra
 
 | Data | Entrega | PR |
 | --- | --- | --- |
+| 16/11 | Histórico completo no repositório (docs/govnexa/historico.md): linha do tempo, evolução dos %, regras do dono, testes do SEI, o que vem a seguir, lições e todos os PRs (aguarda merge) | #49 |
+| 16/11 | Plano completo no repositório, de conhecimento de todos (docs/govnexa/plano.md) (publicado) | #48 |
 | 16/11 | README completo no repositório (história, princípios, roteiro, situação, funcionalidades, decisões, pendências) e regra no CLAUDE.md: toda entrega atualiza o README (publicado) | #46, #47 |
 | 16/11 | Licitação em detalhe (simulação): fases da Lei 14.133 com as datas reais do SEI a partir da página salva, fase atual, duração, prazo de publicidade e projeto da carteira (publicado) | #45 |
 | 16/11 | Fluxo: zoom (diminuir, aumentar, ajustar à tela; padrão menor em telas largas) e legenda recolhida (publicado) | #44 |
