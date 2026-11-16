@@ -1,10 +1,14 @@
 ---
+import { hojeEmBrasilia } from '../../lib/whatsapp/farol.ts';
 import '../../styles/carteira.css';
 import { carregarCronogramas } from '../../lib/cronograma/carga.ts';
-import { ondeEstaParado } from '../../lib/cronograma/visoes.ts';
+import { itensParados, ondeEstaParado } from '../../lib/cronograma/visoes.ts';
+import { travadasPorUnidade } from '../../lib/cronograma/dependencias.ts';
 
-const hoje = new Date().toISOString().slice(0, 10);
-const { porUnidade, porResponsavel } = ondeEstaParado(carregarCronogramas().cronogramas, hoje);
+const hoje = hojeEmBrasilia();
+const cronogramas = carregarCronogramas().cronogramas;
+const { porUnidade, porResponsavel } = ondeEstaParado(cronogramas, hoje);
+const travadas = travadasPorUnidade(cronogramas, itensParados(cronogramas, hoje));
 const dias = (n: number) => `${n} dia${n === 1 ? '' : 's'}`;
 ---
 <div data-cart class="cr-parado">
@@ -17,6 +21,7 @@ const dias = (n: number) => `${n} dia${n === 1 ? '' : 's'}`;
           <article class="card cr-cartao">
             <h3>{u.unidade}</h3>
             <p><strong>{u.itens}</strong> {u.itens === 1 ? 'item parado' : 'itens parados'} · <strong>{dias(u.diasAcumulados)}</strong> acumulados</p>
+            {(travadas.get(u.unidade) ?? 0) > 0 && <p data-pr-travadas>Esses itens seguram <strong>{travadas.get(u.unidade)}</strong> {travadas.get(u.unidade) === 1 ? 'etapa seguinte' : 'etapas seguintes'} que ainda não começaram.</p>}
             <p class="muted">Mais antigo: {u.maisAntigo.etapa} ({u.maisAntigo.cronograma}), {dias(u.maisAntigo.dias)} de atraso.</p>
           </article>
         ))}

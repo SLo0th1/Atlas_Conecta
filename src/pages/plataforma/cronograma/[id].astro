@@ -3,9 +3,11 @@ import '../../../styles/carteira.css';
 import Platform from '../../../layouts/Platform.astro';
 import LinhaDoTempo from '../../../components/cronograma/LinhaDoTempo.astro';
 import QuadroTarefas from '../../../components/cronograma/QuadroTarefas.astro';
+import Dependencias from '../../../components/cronograma/Dependencias.astro';
 import { carregarCarteira } from '../../../lib/carteira/carga.ts';
 import { carregarCronogramas } from '../../../lib/cronograma/carga.ts';
 import type { Cronograma } from '../../../lib/cronograma/tipos.ts';
+import { analisarDependencias, cascataDoProjeto } from '../../../lib/cronograma/dependencias.ts';
 import { etapasDoCronograma, resumoCronograma, rotuloRitmo } from '../../../lib/cronograma/visoes.ts';
 import { br } from '../../../lib/dados/formato.ts';
 
@@ -21,6 +23,10 @@ const pend = [
   ...etapasDoCronograma(c).flatMap((e) => e.pendencias.map((t) => `${e.nome} (linha ${e.origem.linha}): ${t}`)),
 ];
 const pct = (n: number) => `${Math.round(n)}%`;
+const deps = analisarDependencias(c, hoje);
+const cascata = cascataDoProjeto(c, hoje, deps);
+const travadas = deps.filter((d) => d.travada).length;
+const nDias = (n: number) => `${n} dia${n === 1 ? '' : 's'}`;
 ---
 <Platform title={c.titulo} slug="projetos-cronogramas">
   <div class="section-head">
@@ -36,19 +42,34 @@ const pct = (n: number) => `${Math.round(n)}%`;
     <span><strong>Entrega prevista:</strong> {br(r.entregaPrevista)}</span>
     <span><strong>Projeto da carteira:</strong> {projeto ? <a href={`/plataforma/projetos-carteira/?q=${encodeURIComponent(projeto.id)}`}>{projeto.id} · {projeto.nome}</a> : 'sem correspondência'}</span>
   </p>
+  <p class="cr-cascata" data-cart data-cr-cascata>
+    {cascata.diasDeAtraso === null ? (
+      <><strong>Atraso em cascata:</strong> sem datas previstas suficientes para calcular.</>
+    ) : cascata.diasDeAtraso > 0 ? (
+      <><strong>Atraso em cascata:</strong> o projeto tende a terminar em {br(cascata.fimProjetado)}, {nDias(cascata.diasDeAtraso)} depois do previsto ({br(cascata.fimPrevisto)}){cascata.gargalo ? <>, por causa de <strong>{cascata.gargalo.nome}</strong></> : ''}.</>
+    ) : (
+      <><strong>Atraso em cascata:</strong> nenhum; o fim projetado é o previsto ({br(cascata.fimPrevisto)}).</>
+    )}
+    {travadas > 0 && <> {travadas === 1 ? '1 etapa está travada' : `${travadas} etapas estão travadas`} esperando a anterior terminar (veja a aba Dependências).</>}
+  </p>
   <div class="cr-abas" data-cart data-cr-abas>
     <div class="actions tabs" role="group" aria-label="Visões do cronograma">
       <button type="button" aria-pressed="true" data-cr-aba="tempo">Linha do tempo</button>
       <button type="button" aria-pressed="false" data-cr-aba="quadro">Quadro de tarefas</button>
+      <button type="button" aria-pressed="false" data-cr-aba="dependencias">Dependências</button>
       <button type="button" aria-pressed="false" data-cr-aba="dados">Pendências de dado <span class="pill">{pend.length}</span></button>
     </div>
     <section data-cr-painel="tempo" aria-label="Linha do tempo"><LinhaDoTempo cronograma={c} hoje={hoje} /></section>
     <section data-cr-painel="quadro" aria-label="Quadro de tarefas" hidden><QuadroTarefas cronograma={c} hoje={hoje} /></section>
+    <section data-cr-painel="dependencias" aria-label="Dependências entre etapas" hidden><Dependencias cronograma={c} deps={deps} cascata={cascata} hoje={hoje} /></section>
     <section data-cr-painel="dados" aria-label="Pendências de dado" hidden>
       {pend.length === 0 ? <p>Nenhuma pendência de dado neste cronograma.</p> : <ul>{pend.map((t) => <li>{t}</li>)}</ul>}
     </section>
   </div>
 </Platform>
+<style>
+  .cr-cascata { margin: -.5rem 0 1.25rem; padding: .6rem 1rem; border: 1px solid var(--line); border-left: 4px solid var(--cart-amarelo); border-radius: 8px; background: var(--surface); max-width: none; overflow-wrap: anywhere; }
+</style>
 <script>
 document.addEventListener('astro:page-load', () => {
   const raiz = document.querySelector<HTMLElement>('[data-cr-abas]');

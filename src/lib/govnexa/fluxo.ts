@@ -58,6 +58,7 @@ const T = {
   documentos: { rotulo: 'Documentos da licitação', url: '/plataforma/documentos/' },
   gestao: { rotulo: 'Gestão · Painel', url: '/plataforma/gestao/' },
   whatsapp: { rotulo: 'WhatsApp', url: '/plataforma/gestao-whatsapp/' },
+  alertasCentral: { rotulo: 'Gestão · Alertas', url: '/plataforma/gestao-alertas/' },
 } satisfies Record<string, Tela>;
 
 export const NOS: NoFluxo[] = [
@@ -105,7 +106,7 @@ export const NOS: NoFluxo[] = [
     situacao: 'planejado', fase: 'Fase 4', telas: [T.alertas] },
   // ——— Planejamento e preparação
   { id: 'planejamento', raia: 'projetos', linha: 5, tipo: 'tarefa', titulo: '01 – Planejamento',
-    oQue: 'Projeto (arquitetônico, complementares), orçamento por tabela oficial (SINAPI/GOINFRA), licenças e aprovações externas; acompanhado pelo cronograma do GEPP.',
+    oQue: 'Projeto (arquitetônico, complementares), orçamento por tabela oficial (SINAPI/GOINFRA), licenças e aprovações externas; acompanhado pelo cronograma do GEPP, que mostra de qual etapa cada uma depende, quais estão travadas esperando a anterior e o atraso em cascata (fim projetado).',
     valida: ['Projeto entregue e aceito (ART)', 'Orçamento com data-base', 'Licenças e aprovações (Bombeiros, SANEAGO, Equatorial)'], quem: 'Engenharia; parceiros externos; órgãos externos',
     situacao: 'disponivel', fase: 'Fase 2 (cronogramas)', telas: [T.cronogramas, T.gantt] },
   { id: 'portao', raia: 'projetos', linha: 6, tipo: 'decisao', titulo: 'Portão: pronto para contratar?',
@@ -172,9 +173,9 @@ export const NOS: NoFluxo[] = [
   { id: 'alertas', raia: 'gestao', linha: 6, tipo: 'tarefa', titulo: 'Alertas e prazos',
     oQue: 'Cinco alertas principais: cláusula suspensiva, edital na praça, homologação, início e fim de obra; mais saldo sem fonte, etapa parada e dado defasado.',
     valida: ['Prazo da prefeitura (meta) × prazo da lei (teto): passar do teto é alerta vermelho', 'Calendário de dias úteis com feriados nacionais e municipais'], quem: 'Sistema',
-    situacao: 'planejado', fase: 'Fase 4 (Captação já tem alertas)', telas: [T.alertas, T.prazos] },
+    situacao: 'disponivel', fase: 'Fase 4 (edital na praça e homologação real aguardam fonte de dados)', telas: [T.alertasCentral, T.alertas, T.prazos] },
   { id: 'parado', raia: 'gestao', linha: 9, tipo: 'tarefa', titulo: 'Onde está parado',
-    oQue: 'Etapas vencidas por unidade e por responsável, com dias acumulados: com quem está cada tarefa e o que precisa ser cobrado.',
+    oQue: 'Etapas vencidas por unidade e por responsável, com dias acumulados e quantas etapas seguintes cada atraso segura: com quem está cada tarefa e o que precisa ser cobrado.',
     valida: ['Responsável e unidade de cada etapa', 'Sem punição: serve para redistribuir a carga'], quem: 'Gestão de portfólio',
     situacao: 'disponivel', fase: 'Fase 2', telas: [T.parado, T.cronogramas] },
   { id: 'sala', raia: 'gestao', linha: 10, tipo: 'tarefa', titulo: 'Sala de guerra',

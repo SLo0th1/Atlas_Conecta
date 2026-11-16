@@ -1,6 +1,13 @@
 # Changelog
 
+## GovNexa — Dependências entre etapas do cronograma (Fase 2)
+- 2026-11-16: página de cada cronograma: aba Dependências (de qual etapa cada uma depende, selo "Aguardando"/"Travada" quando a anterior não terminou, fim projetado) e resumo "Atraso em cascata" com a etapa que mais segura o projeto; Onde está parado mostra quantas etapas seguintes cada unidade segura. Regra (a planilha não tem predecessora): ordem do cronograma, etapas paralelas da mesma fase não dependem entre si; nunca antecipa. Funções em src/lib/cronograma/dependencias.ts.
+
+## GovNexa — Central de alertas (Gestão, Fase 4)
+- 2026-11-16: guia Gestão › Alertas: lista única de alertas (vermelho primeiro, depois pelo prazo) com resumo por tipo, filtros por tipo, gravidade e órgão sem recarregar, ação recomendada e link para a tela de origem. Tipos com dado: cláusula suspensiva (indício: convênio sem desembolso há mais de 180 dias), vigência de convênio, fim da contratação previsto, início e fim de obra, saldo sem fonte, etapa parada e dado defasado; prazos em dias corridos e úteis (feriados nacionais e municipais). Regra meta × teto da Lei 14.133 pronta (passar do teto = vermelho). Edital na praça, homologação real e prazos por licitação aparecem em "Ainda sem fonte de dados". Nenhum nome de pessoa.
+
 ## GovNexa — WhatsApp da Gestão (simulação, Fase 5)
+- 2026-11-16: WhatsApp (simulação): modelos de mensagem para aprovação da Meta (3 modelos com validação das regras e botão Copiar texto); Projetos › Localização e fotos: lista das obras que ainda não aparecem no mapa (bairro não encontrado ou sem bairro), com link para cadastrar a localização.
 - 2026-11-15: guia Gestão › WhatsApp: números autorizados (cargo ou equipe, nunca nome de pessoa; número mascarado na lista), permissão por número (órgãos, só prioritários, valores, captação, projetos liberados à parte), relatório automático (semanal ou diário, modelo "Projetos prioritários" ou "Resumo curto") e prévia da conversa com perguntas por nome, código, SEI, atrasados, entregas, execução e convênios.
 - 2026-11-15: regra de segurança: a resposta é montada só com os projetos que a permissão libera (src/lib/whatsapp/permissoes.ts); projeto de fora recebe a mesma resposta de "não encontrado"; o responsável e as observações nunca entram na base do WhatsApp. Tudo em simulação (sessionStorage); envio real depende do banco e da conta oficial do WhatsApp Business.
 - 2026-11-15: build com nomes de arquivo só hexadecimais (a Vercel não servia `simulacao.mqF-P3E_.js` e o mapa ficava em branco).

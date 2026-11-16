@@ -48,3 +48,10 @@
   .wa-acoes-linha{white-space:normal}
   .wa-balao{max-width:100%}
 }
+.wa-modelos{list-style:none;margin:.8rem 0 0;padding:0;display:grid;gap:.9rem}
+.wa-modelo{display:grid;gap:.4rem;justify-items:start;padding:.85rem;border:1px solid var(--line);border-radius:10px;min-width:0}
+.wa-modelo h3{margin:0;overflow-wrap:anywhere}
+.wa-modelo p{margin:0;max-width:none}
+.wa-modelo-meta{color:var(--muted);font-size:.9rem}
+.wa-modelo-rotulo{font-weight:600}
+.wa-modelo-corpo{width:100%;padding:.6rem .75rem;border:1px solid var(--line);border-radius:8px;background:var(--soft);overflow-wrap:anywhere}
