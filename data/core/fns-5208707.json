@@ -3,8 +3,8 @@
   "fonte": "Ministério da Saúde — Fundo Nacional de Saúde, Consulta Consolidada Fundo a Fundo",
   "url_origem": "https://consultafns.saude.gov.br/recursos/consulta-consolidada",
   "data_referencia": "exercícios 2026, 2025, 2024 (valores até a data da coleta)",
-  "data_coleta": "2026-11-10T00:33:57.984Z",
-  "id_carga": "fns-2026-11-10"
+  "data_coleta": "2026-11-27T21:39:34.382Z",
+  "id_carga": "fns-2026-11-27"
  },
  "municipio": {
   "codigo_ibge": 5208707,
@@ -18,30 +18,30 @@
     {
      "codigo": 10,
      "nome": "Manutenção das Ações e Serviços Públicos de Saúde",
-     "valor_bruto": 881765598.98,
-     "desconto": 83967230.46,
-     "valor_liquido": 797798368.52,
+     "valor_bruto": 940708322.68,
+     "desconto": 90372180.91,
+     "valor_liquido": 850336141.77,
      "grupos": [
       {
        "codigo": 35,
        "nome": "ASSISTÊNCIA FARMACÊUTICA",
-       "valor_bruto": 10337644,
+       "valor_bruto": 11371408.4,
        "desconto": 0,
-       "valor_liquido": 10337644
+       "valor_liquido": 11371408.4
       },
       {
        "codigo": 14,
        "nome": "ATENÇÃO DE MÉDIA E ALTA COMPLEXIDADE AMBULATORIAL E HOSPITALAR",
-       "valor_bruto": 697115204.69,
-       "desconto": 83967230.46,
-       "valor_liquido": 613147974.23
+       "valor_bruto": 745314066.51,
+       "desconto": 90372180.91,
+       "valor_liquido": 654941885.6
       },
       {
        "codigo": 12,
        "nome": "ATENÇÃO PRIMÁRIA",
-       "valor_bruto": 108083581.99,
+       "valor_bruto": 117793679.47,
        "desconto": 0,
-       "valor_liquido": 108083581.99
+       "valor_liquido": 117793679.47
       },
       {
        "codigo": 17,
@@ -62,16 +62,16 @@
     {
      "codigo": 11,
      "nome": "Estruturação da Rede de Serviços Públicos de Saúde",
-     "valor_bruto": 6483899,
+     "valor_bruto": 6835338,
      "desconto": 0,
-     "valor_liquido": 6483899,
+     "valor_liquido": 6835338,
      "grupos": [
       {
        "codigo": 19,
        "nome": "ATENÇÃO ESPECIALIZADA",
-       "valor_bruto": 1164379,
+       "valor_bruto": 1515818,
        "desconto": 0,
-       "valor_liquido": 1164379
+       "valor_liquido": 1515818
       },
       {
        "codigo": 18,
@@ -83,8 +83,8 @@
      ]
     }
    ],
-   "total_bruto": 888249497.98,
-   "total_liquido": 804282267.52,
+   "total_bruto": 947543660.68,
+   "total_liquido": 857171479.77,
    "entidades": [
     {
      "cnpj": "00544963000156",
